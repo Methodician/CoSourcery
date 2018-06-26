@@ -1,6 +1,8 @@
 <router-outlet></router-outlet>
-
-<div id="fbui-auth-container"></div>
+<button *ngIf="isSignedIn()"
+        (click)="signOut()">sign out</button>
+<div [hidden]="isSignedIn()"
+     id="fbui-auth-container"></div>
 <pre>
   {{ data | json }}
 </pre>
