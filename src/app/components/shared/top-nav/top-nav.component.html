@@ -1,31 +1,31 @@
 <!-- Nav Bar container -->
 <!-- <div class="navBarWrapper" [ngClass]="lastScrolledUp() ? 'scrolledUp' : 'scrolledDown'"> -->
-<!-- <div class="navBarWrapper scrolledDown">
+<div class="navBarWrapper scrolledDown">
   <mat-toolbar>
     <!-- Logo and Title container -->
-    <!-- <div class="logoWrapper">
+    <div class="logoWrapper">
       <img height="100px"
            routerLink="home"
            src="../../assets/images/applogo.png"
            alt="Logo of CoSourcery: community made open source tutorials">
       <a routerLink="home"
          class="logoLink">CoSourcery</a>
-    </div> -->
+    </div>
     <!-- Nav Nar content spacer -->
-    <!-- <span class="flexBoxSpacer"></span> -->
+    <span class="flexBoxSpacer"></span>
     <!-- Nav Bar Search Button -->
-    <!-- <button mat-icon-button
+    <button mat-icon-button
             (click)="searchBarFocus(searchInput)"
             class="searchButton">
       <mat-icon>search</mat-icon>
-    </button> -->
+    </button>
     <!-- Nav Bar Search Bar -->
-    <!-- <form role="search"
+    <form role="search"
           [hidden]="searchBarState === 2"
           [class.searchBarIsActive]="searchBarState === 1"
-          [class.searchBarIsInActive]="searchBarState === 2"> -->
+          [class.searchBarIsInActive]="searchBarState === 2">
       <!-- <mat-icon>search</mat-icon> -->
-      <!-- <mat-form-field color="primary">
+      <mat-form-field color="primary">
         <input matInput
                #searchInput
                placeholder="Search Articles"
@@ -33,10 +33,10 @@
                (keyup.enter)="search(searchInput)"
                aria-describedby="basic-addon2">
       </mat-form-field>
-    </form> -->
+    </form>
     <!-- <app-notifications [uid]="uid"></app-notifications> -->
     <!-- Button Container -->
-    <!-- <div class="navButtonWrapper">
+    <div class="navButtonWrapper">
       <button mat-raised-button
               color="primary"
               id="post-article"
@@ -60,17 +60,17 @@
               *ngIf="!authInfo.$uid"
               routerLink="register"
               id="sign-up"
-              class="navButtons">Sign Up</button> -->
+              class="navButtons">Sign Up</button>
       <!-- Mobile Nav Bar Menu Button -->
-      <!-- <button color="primary"
+      <button color="primary"
               id="menu"
               mat-raised-button
               [matMenuTriggerFor]="mobileMenu"
               class="hamburgerButton">
         <mat-icon>menu</mat-icon>
-      </button> -->
+      </button>
       <!-- Option Nav Bar Menu Dropdown  -->
-      <!-- <mat-menu #optionMenu="matMenu">
+      <mat-menu #optionMenu="matMenu">
         <button mat-menu-item
                 *ngIf="authInfo.$uid"
                 (click)="goToProfile()">Profile</button>
@@ -81,9 +81,9 @@
                 *ngIf="authInfo.$uid"
                 (click)="logout()"
                 id="logout">Log Out</button>
-      </mat-menu> -->
+      </mat-menu>
       <!-- Mobile Nav Bar Menu Dropdown  -->
-      <!-- <mat-menu #mobileMenu="matMenu">
+      <mat-menu #mobileMenu="matMenu">
         <button mat-menu-item
                 id="post-article"
                 routerLink="postarticle">Post an article</button>
@@ -108,4 +108,4 @@
       </mat-menu>
     </div>
   </mat-toolbar>
-</div> -->
+</div>

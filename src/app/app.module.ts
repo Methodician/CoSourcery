@@ -1,6 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+// Material Imports
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatMenuModule,
+  MatProgressSpinnerModule,
+  MatCardModule,
+  MatChipsModule,
+  MatSidenavModule,
+  MatTooltipModule,
+  MatTabsModule
+} from '@angular/material';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TopNavComponent } from './components/shared/top-nav/top-nav.component';
@@ -15,7 +30,19 @@ import { LoginComponent } from './login/login.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatButtonModule,
+    MatInputModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatChipsModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatTooltipModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
