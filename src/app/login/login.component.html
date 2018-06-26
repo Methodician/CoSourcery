@@ -2,6 +2,6 @@
         (click)="signOut()">sign out</button>
 <div [hidden]="isSignedIn()"
      id="fbui-auth-container"></div>
-<pre>
+<pre *ngIf="data">
   {{ data | json }}
 </pre>

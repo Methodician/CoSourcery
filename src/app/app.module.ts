@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-// import { TopNavComponent } from './components/shared/top-nav/top-nav.component';
+import { TopNavComponent } from './components/shared/top-nav/top-nav.component';
 import * as fb from 'firebase';
 import { LoginComponent } from './login/login.component';
 
@@ -11,7 +11,7 @@ import { LoginComponent } from './login/login.component';
   declarations: [
     AppComponent,
     LoginComponent,
-    // TopNavComponent
+    TopNavComponent
   ],
   imports: [
     BrowserModule,
@@ -22,12 +22,12 @@ import { LoginComponent } from './login/login.component';
 })
 export class AppModule {
   fbConfig = {
-    apiKey: "AIzaSyBn8hJ2vDLN21aUl9cP-RgeOWZHZOlbtdY",
-    authDomain: "scatterschool-dev.firebaseapp.com",
-    databaseURL: "https://scatterschool-dev.firebaseio.com",
-    projectId: "scatterschool-dev",
-    storageBucket: "scatterschool-dev.appspot.com",
-    messagingSenderId: "945815872407"
+    apiKey: 'AIzaSyBn8hJ2vDLN21aUl9cP-RgeOWZHZOlbtdY',
+    authDomain: 'scatterschool-dev.firebaseapp.com',
+    databaseURL: 'https://scatterschool-dev.firebaseio.com',
+    projectId: 'scatterschool-dev',
+    storageBucket: 'scatterschool-dev.appspot.com',
+    messagingSenderId: '945815872407'
   };
 
   constructor() {

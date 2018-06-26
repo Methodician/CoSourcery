@@ -12,7 +12,7 @@ export class AuthService {
   // https://github.com/firebase/firebaseui-web
   db: any;
   ui: any;
-  authInfo = new BehaviorSubject<AuthInfo>(null);
+  authInfo = new BehaviorSubject<AuthInfo>(new AuthInfo(null));
   accessToken = new BehaviorSubject<string>(null);
 
   //  ===THIS SHOULD BE IMPORTED FROM ANOTHER FILE===
@@ -49,8 +49,8 @@ export class AuthService {
     // Keeps fbui from routing to accountchooser.com
     credentialHelper: fbui.auth.CredentialHelper.NONE
     // Terms of service url.
-    //, tosUrl: '<your-tos-url>'
-  }
+    // , tosUrl: '<your-tos-url>'
+  };
 
   constructor() {
     // this.testAuthSub();
@@ -64,8 +64,7 @@ export class AuthService {
           console.log('token:', token);
           this.accessToken.next(token);
         });
-      }
-      else {
+      } else {
         this.accessToken.next(null);
         this.authInfo.next(null);
       }
@@ -75,7 +74,7 @@ export class AuthService {
   }
 
   startUi(authContainerId: string) {
-    const stringRef = `#${authContainerId}`
+    const stringRef = `#${authContainerId}`;
     // if (this.ui.isPendingRedirect()) {
     this.ui.start(stringRef, this.uiConfig);
     // }

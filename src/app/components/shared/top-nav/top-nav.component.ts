@@ -27,11 +27,15 @@ export class TopNavComponent implements OnInit {
   ) {
     window.onscroll = (event) => {
       this.scrollTop = (event.target as any).scrollingElement.scrollTop;
-    }
+    };
   }
 
   ngOnInit() {
-  }
+  this.authSvc.authInfo.subscribe(data => {
+    console.log(data);
+  });
+}
+
 
 }
 
