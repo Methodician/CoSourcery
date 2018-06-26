@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { TopNavComponent } from './components/shared/top-nav/top-nav.component';
 import * as fb from 'firebase';
 import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './components/general/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    TopNavComponent
+    TopNavComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
