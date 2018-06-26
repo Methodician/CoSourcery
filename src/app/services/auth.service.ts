@@ -45,7 +45,8 @@ export class AuthService {
       fb.auth.EmailAuthProvider.PROVIDER_ID,
       // fb.auth.PhoneAuthProvider.PROVIDER_ID
     ],
-    // Keeps fbui from routing to credentialhelper.com
+
+    // Keeps fbui from routing to accountchooser.com
     credentialHelper: fbui.auth.CredentialHelper.NONE
     // Terms of service url.
     //, tosUrl: '<your-tos-url>'

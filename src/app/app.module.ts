@@ -5,10 +5,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 // import { TopNavComponent } from './components/shared/top-nav/top-nav.component';
 import * as fb from 'firebase';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
     // TopNavComponent
   ],
   imports: [
