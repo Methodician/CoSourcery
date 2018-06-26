@@ -44,7 +44,9 @@ export class AuthService {
       // fb.auth.GithubAuthProvider.PROVIDER_ID,
       fb.auth.EmailAuthProvider.PROVIDER_ID,
       // fb.auth.PhoneAuthProvider.PROVIDER_ID
-    ]
+    ],
+    // Keeps fbui from routing to credentialhelper.com
+    credentialHelper: fbui.auth.CredentialHelper.NONE
     // Terms of service url.
     //, tosUrl: '<your-tos-url>'
   }
