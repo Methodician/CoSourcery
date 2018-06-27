@@ -84,7 +84,7 @@ export class AuthService {
 
   signOut() {
     fb.auth().signOut();
-    this.router.navigate(['/login']);
+    // this.router.navigate(['/login']);
   }
 
   isSignedIn() {
