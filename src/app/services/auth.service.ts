@@ -12,8 +12,9 @@ export class AuthService {
   // https://github.com/firebase/firebaseui-web
   db: any;
   ui: any;
-  authInfo = new BehaviorSubject<AuthInfo>(new AuthInfo(null));
+  authInfo = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
   accessToken = new BehaviorSubject<string>(null);
+
 
   //  ===THIS SHOULD BE IMPORTED FROM ANOTHER FILE===
   uiConfig = {
@@ -66,7 +67,7 @@ export class AuthService {
         });
       } else {
         this.accessToken.next(null);
-        this.authInfo.next(null);
+        this.authInfo.next(new AuthInfo(null, false, '', ''));
       }
     }, (err) => {
       console.log(err);
@@ -87,6 +88,7 @@ export class AuthService {
   isSignedIn() {
     return !!this.accessToken.value;
   }
+
 
   // testing only:
   testAuthSub() {

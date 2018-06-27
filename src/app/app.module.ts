@@ -1,5 +1,23 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AuthService } from './services/auth.service';
+
+// Material and Associated Imports
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatMenuModule,
+  MatProgressSpinnerModule,
+  MatCardModule,
+  MatChipsModule,
+  MatSidenavModule,
+  MatTooltipModule,
+  MatTabsModule
+} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
@@ -121,9 +139,22 @@ import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatButtonModule,
+    MatInputModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatChipsModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatTooltipModule,
+    MatTabsModule,
+    BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

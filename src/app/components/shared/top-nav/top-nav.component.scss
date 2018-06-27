@@ -1,0 +1,141 @@
+// imports for the variable and mixin files found within the sass-variables-mixins folder
+@import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
+// Spacer for the nav bar to push everything to right-side of the toolbar
+.flexBoxSpacer {
+  flex: 1 1 auto;
+}
+// due to specaficity issues these styles needed to go further up on the stylesheet.
+.searchButton {
+  // @include small-button();
+  margin: 10px 5px;
+  background-color: $light-grey;
+  padding: 0;
+  mat-icon {
+    color: $dark-gray;
+  }
+}
+.userWrapper{
+  // terrible remove soonest
+  margin-left: 300px;
+}
+.navBarWrapper {
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2.5%;
+  mat-toolbar {
+    background-color: white;
+    border-radius: 5px;
+    width: 100%;
+    position: relative;
+    .logoWrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      left: -1px;
+      img {
+        cursor: pointer;
+      }
+      .logoLink {
+        color: $primary-color;
+        @include font-size(34px);
+        margin-left: 20px;
+        display: flex;
+        flex-direction: row;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      } // Breakpoint
+      @media only screen and (max-width: 768px) {
+        .logoLink {
+          @include font-size(20px);
+        }
+      }
+      @media only screen and (max-width: 572px) {
+        .logoLink {
+          display: none;
+        }
+      }
+    } // Search Input within nav bar
+    form {
+      width: 300px;
+      position: relative;
+      margin-right: 20px;
+      mat-form-field {
+        margin-top: 23px;
+        font-size: 14px;
+        width: 100%;
+      }
+    } // Search input Breakpoint
+    @media only screen and (max-width: 1200px) {
+      form {
+        width: 225px;
+      }
+    }
+    @media only screen and (max-width: 854px) {
+      form {
+        width: 150px;
+      }
+    } //Button container
+    .navButtonWrapper {
+      // adds margin at breakpoint
+      app-notifications {
+        @media only screen and (max-width: 1120px) { margin: 0 10px 0 5px; }
+      }
+      .navButtons {
+        margin: 10px 10px;
+        @include medium-button();
+      }
+      .hamburgerButton {
+        @include small-button();
+        mat-icon {
+          color: white;
+        }
+      }
+      #menu {
+        display: none;
+        z-index: 10;
+      } // Button break point
+      @media only screen and (max-width: 1120px) {
+        // adds flex so button
+        display: flex;
+        button {
+          display: none;
+        }
+        #menu {
+          display: block;
+        }
+      }
+    }
+  }
+}
+.scrolledDown {
+  margin-top: 0;
+  margin-left: 0;
+  width: 100vw;
+  mat-toolbar {
+    transition: all 150ms ease;
+    background-color: $light-gray;
+    border-radius: 0px;
+    border-bottom: none;
+  }
+  .logoWrapper img {
+    height: 50px;
+    margin-left: 10px;
+  }
+}
+.post-button {
+  color: white;
+  background-color: $primary-color;
+}
+#post-suggestion {
+  color: white;
+  background-color: #0F899E;
+}

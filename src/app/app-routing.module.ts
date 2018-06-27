@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from 'app/components/account/login/login.component';
+
+import { LoginComponent } from './login/login.component';
 import { TopNavComponent } from 'app/components/shared/top-nav/top-nav.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
