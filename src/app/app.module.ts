@@ -34,5 +34,8 @@ export class AppModule {
 
   constructor() {
     fb.initializeApp(this.fbConfig);
+    const fs = fb.firestore();
+    const settings = { timestampsInSnapshots: true };
+    fs.settings(settings);
   }
 }
