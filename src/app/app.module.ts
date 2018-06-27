@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AuthService } from './services/auth.service';
 
 // Material and Associated Imports
 import {
@@ -47,7 +48,7 @@ import { LoginComponent } from './login/login.component';
     MatTabsModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
