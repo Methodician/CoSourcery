@@ -15,6 +15,7 @@ export class AuthService {
   authInfo = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
   accessToken = new BehaviorSubject<string>(null);
 
+
   //  ===THIS SHOULD BE IMPORTED FROM ANOTHER FILE===
   uiConfig = {
     callbacks: { // the callbacks config is optional
@@ -66,8 +67,7 @@ export class AuthService {
         });
       } else {
         this.accessToken.next(null);
-        // WAS CAUSING ERROR CASCADING CONSOLE ERROR
-        // this.authInfo.next(null);
+        this.authInfo.next(new AuthInfo(null, false, '', ''));
       }
     }, (err) => {
       console.log(err);
@@ -88,6 +88,7 @@ export class AuthService {
   isSignedIn() {
     return !!this.accessToken.value;
   }
+
 
   // testing only:
   testAuthSub() {

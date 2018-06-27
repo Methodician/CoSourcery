@@ -4,6 +4,7 @@ import { AuthInfo } from 'app/shared/class/auth-info';
 import { AuthService } from 'app/services/auth.service';
 import { UserService } from 'app/services/user.service';
 import { Router } from '@angular/router';
+import { pipe } from '@angular/core/src/render3/pipe';
 
 
 @Component({
@@ -36,10 +37,11 @@ export class TopNavComponent implements OnInit {
   }
 
   ngOnInit() {
-
-
 }
 
+logOutClick() {
+  this.authSvc.signOut();
+}
 
 }
 
