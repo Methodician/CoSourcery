@@ -13,9 +13,13 @@
     </div>
     <div class="userWrapper">
             <div class="userTest"  *ngIf="displayName">
+                <div>
                     {{displayName}}
+                </div>    
+                <div>
+                        <button (click)="logOutClick()">Logout</button>
+                </div>
             </div>
-        
     </div>
     <!-- Nav Nar content spacer -->
     <span class="flexBoxSpacer"></span>
