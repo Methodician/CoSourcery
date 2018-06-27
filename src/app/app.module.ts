@@ -50,6 +50,15 @@ import { ChatListComponent } from 'app/components/chat/chat-list/chat-list.compo
 import { UserInteractionComponent } from 'app/components/chat/user-interaction/user-interaction.component';
 import { UserListComponent } from 'app/components/chat/user-list/user-list.component';
 import { UserPresenceComponent } from 'app/components/chat/user-presence/user-presence.component';
+import { RelatedArticlePipe } from './shared/pipes/related-article.pipe';
+import { ArticleSearchPipe } from './shared/pipes/article-search.pipe';
+import { ReverseArrayPipe } from './shared/pipes/reverse-array.pipe';
+import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
+import { SafeUrlPipe } from './shared/pipes/safe-url.pipe';
+import { SuggestionSortPipe } from './shared/pipes/suggestion-sort.pipe';
+import { TimeElapsedPipe } from './shared/pipes/time-elapsed.pipe';
+import { TruncateTagsPipe } from './shared/pipes/truncate-tags.pipe';
+import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 
 @NgModule({
   declarations: [
@@ -99,7 +108,16 @@ import { UserPresenceComponent } from 'app/components/chat/user-presence/user-pr
     ChatListComponent,
     UserInteractionComponent,
     UserListComponent,
-    UserPresenceComponent
+    UserPresenceComponent,
+    RelatedArticlePipe,
+    ArticleSearchPipe,
+    ReverseArrayPipe,
+    SafeHtmlPipe,
+    SafeUrlPipe,
+    SuggestionSortPipe,
+    TimeElapsedPipe,
+    TruncateTagsPipe,
+    TruncateStringPipe
   ],
   imports: [
     BrowserModule,
