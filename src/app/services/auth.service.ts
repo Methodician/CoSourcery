@@ -76,7 +76,10 @@ export class AuthService {
   }
 
   startUi(authContainerId: string) {
+    console.log(authContainerId);
     const stringRef = `#${authContainerId}`;
+    console.log(stringRef);
+
     // if (this.ui.isPendingRedirect()) {
     this.ui.start(stringRef, this.uiConfig);
     // }
@@ -84,7 +87,7 @@ export class AuthService {
 
   signOut() {
     fb.auth().signOut();
-    // this.router.navigate(['/login']);
+    this.router.navigate(['login']);
   }
 
   isSignedIn() {
