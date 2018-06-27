@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-// Material Imports
+// Material and Associated Imports
 import {
   MatButtonModule,
   MatInputModule,
@@ -15,6 +15,8 @@ import {
   MatTooltipModule,
   MatTabsModule
 } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -43,6 +45,7 @@ import { LoginComponent } from './login/login.component';
     MatSidenavModule,
     MatTooltipModule,
     MatTabsModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

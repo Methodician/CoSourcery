@@ -15,7 +15,7 @@ export class TopNavComponent implements OnInit {
 
   isCollapsed = true;
   userInfo: UserInfoOpen;
-  authInfo: AuthInfo = new AuthInfo(null, false);
+  authInfo: AuthInfo;
   displayName = '';
   scrollTop = 0;
   searchBarState: searchBarFocus = searchBarFocus.inactive;
@@ -28,12 +28,16 @@ export class TopNavComponent implements OnInit {
     window.onscroll = (event) => {
       this.scrollTop = (event.target as any).scrollingElement.scrollTop;
     };
+    this.authSvc.authInfo.subscribe(data => {
+      this.authInfo = data;
+      console.log(data);
+      this.displayName = this.authInfo.email;
+    });
   }
 
   ngOnInit() {
-  this.authSvc.authInfo.subscribe(data => {
-    console.log(data);
-  });
+
+
 }
 
 

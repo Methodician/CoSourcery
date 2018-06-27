@@ -12,7 +12,7 @@ export class AuthService {
   // https://github.com/firebase/firebaseui-web
   db: any;
   ui: any;
-  authInfo = new BehaviorSubject<AuthInfo>(new AuthInfo(null));
+  authInfo = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
   accessToken = new BehaviorSubject<string>(null);
 
   //  ===THIS SHOULD BE IMPORTED FROM ANOTHER FILE===
@@ -66,7 +66,8 @@ export class AuthService {
         });
       } else {
         this.accessToken.next(null);
-        this.authInfo.next(null);
+        // WAS CAUSING ERROR CASCADING CONSOLE ERROR
+        // this.authInfo.next(null);
       }
     }, (err) => {
       console.log(err);
