@@ -41,6 +41,8 @@ export class TopNavComponent implements OnInit {
 
 logOutClick() {
   this.authSvc.signOut();
+  // this.router.navigate(['/login']);
+
 }
 
 }
