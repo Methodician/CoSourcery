@@ -66,5 +66,5 @@ export class ArticleService {
         array.push(doc.data());
     })
     return array;
-  }
+  }   
 }
