@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { SuggestionService } from '../../../services/suggestion.service';
 
 @Component({
   selector: 'cos-suggestion-preview',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SuggestionPreviewComponent implements OnInit {
 
-  constructor() { }
+  constructor(private service: SuggestionService) { }
+  @Input() suggestion;
+  @Input() currentUserKey;
 
   ngOnInit() {
   }

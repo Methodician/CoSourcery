@@ -1,0 +1,52 @@
+// imports for the variable and mixin files found within the sass-variables-mixins folder
+@import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
+.suggestionsContainer {
+  height: calc( 100vh - 248px);
+}
+h3 {
+  color: #31C2D7;
+  margin-bottom: 40px;
+  font-size: 30px;
+}
+.suggestionBtn {
+  @include medium-button();
+  width: 205px;
+  margin-bottom: 40px;
+  font-size: 18px;
+}
+.suggestionLoop {
+  border-top: 1px solid $dark-gray;
+  margin-bottom: 50px;
+}
+#add-suggestions-wrapper {
+  width: 95%;
+  margin: 0 auto;
+}
+#add-suggestion-form {
+  margin: 0 auto;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  p {
+    margin-bottom: 40px;
+    font-size: 20px;
+    color: $dark-gray;
+  }
+}
+#suggestions {
+  width: 95%;
+  margin: 0 auto;
+}
+#sort-buttons {
+  margin-bottom: 40px;
+  margin-top: -20px;
+  span {
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  span.selected {
+    color: #C4275F;
+  }
+}
