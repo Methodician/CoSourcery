@@ -77,6 +77,8 @@ import { SuggestionSortPipe } from './shared/pipes/suggestion-sort.pipe';
 import { TimeElapsedPipe } from './shared/pipes/time-elapsed.pipe';
 import { TruncateTagsPipe } from './shared/pipes/truncate-tags.pipe';
 import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
+import { SuggestionService } from './services/suggestion.service';
+import { VoteService } from './services/vote.service';
 
 @NgModule({
   declarations: [
@@ -154,7 +156,7 @@ import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
     MatTabsModule,
     BrowserAnimationsModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, SuggestionService, VoteService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
