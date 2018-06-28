@@ -14,9 +14,6 @@ export class LoginComponent implements OnInit {
     this.AuthSvc.authInfo.subscribe(data => {
       this.data = data;
     });
-    this.AuthSvc.startUi('fbui-auth-container');
-
-
   }
 
   isSignedIn() {
@@ -25,6 +22,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.AuthSvc.startUi('fbui-auth-container');
   }
 
 }
