@@ -1,3 +1,4 @@
-<p>
-  suggestion-add works!
-</p>
+<div class="suggestionContainer">
+    <cos-suggestion-form #form></cos-suggestion-form>
+    <button mat-raised-button color="warn" class="suggestion-submit" (click)="saveSuggestion(form.value)" [disabled]="!form.valid">Submit</button>
+</div>
