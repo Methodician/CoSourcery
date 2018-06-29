@@ -79,6 +79,7 @@ import { TruncateTagsPipe } from './shared/pipes/truncate-tags.pipe';
 import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 import { SuggestionService } from './services/suggestion.service';
 import { VoteService } from './services/vote.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -155,6 +156,8 @@ import { VoteService } from './services/vote.service';
     MatTooltipModule,
     MatTabsModule,
     BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [AuthService, SuggestionService, VoteService],
   bootstrap: [AppComponent]

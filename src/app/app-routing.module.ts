@@ -11,7 +11,7 @@ import { SuggestionsComponent } from './components/suggestions/suggestions/sugge
 import { SuggestionDetailComponent } from './components/suggestions/suggestion-detail/suggestion-detail.component';
 import { AboutUsComponent } from './components/general/about-us/about-us.component';
 import { PageNotFoundComponent } from './components/general/page-not-found/page-not-found.component';
-
+import { SuggestionAddComponent } from './components/suggestions/suggestion-add/suggestion-add.component';
 const routes: Routes = [
   { path: 'home', component: HomeComponent, children: [
     {path: 'nav', component: TopNavComponent}
@@ -72,11 +72,7 @@ const routes: Routes = [
   //   ]
   // },
   { path: 'suggestions', component: SuggestionsComponent },
-  // {
-  //   path: 'postsuggestion',
-  //   canActivate: [AuthGuard],
-  //   component: AddSuggestionComponent
-  // },
+  { path: 'postsuggestion',  component: SuggestionAddComponent }, // ADD  canActivate: [AuthGuard],
   { path: 'suggestion/:key', component: SuggestionDetailComponent },
   // {
   //   path: 'editsuggestion/:key',
