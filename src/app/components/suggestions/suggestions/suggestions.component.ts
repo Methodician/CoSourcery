@@ -28,13 +28,11 @@ currentSortOption: SortOptions = SortOptions.upvotes;
   }
 
   isSelected(sortOption: string) {
-    // console.log(sortOption);
     return SortOptions[sortOption] === this.currentSortOption;
   }
 
   sortBy(sortOption: string) {
     this.currentSortOption = SortOptions[sortOption];
-    // console.log(this.currentSortOption);
   }
 
 

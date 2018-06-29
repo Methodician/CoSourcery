@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'suggestionSort'
+  name: 'suggestionSort',
+  pure: false
 })
 export class SuggestionSortPipe implements PipeTransform {
 
@@ -16,11 +17,15 @@ export class SuggestionSortPipe implements PipeTransform {
         });
       case SortOptions.newest:
         return suggestions.sort((a, b) => {
-          return b.lastUpdated - a.lastUpdated;
+          if (a.timestamp > b.timestamp) {return -1; }
+          if (a.timestamp < b.timestamp) {return 1; }
+          return 0;
         });
       case SortOptions.oldest:
         return suggestions.sort((a, b) => {
-          return a.lastUpdated - b.lastUpdated;
+          if (a.timestamp < b.timestamp) {return -1; }
+          if (a.timestamp > b.timestamp) {return 1; }
+          return 0;
         });
       default:
         return suggestions;
