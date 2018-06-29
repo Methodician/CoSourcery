@@ -5,8 +5,7 @@ import * as firestore from 'firebase';
 // require('firebase/firestore');
 import 'firebase/firestore';
 import { Route, Router } from '@angular/router';
-import { Firestore } from '@google-cloud/firestore';
-import { forEach } from '@angular/router/src/utils/collection';
+
 
 @Injectable({
   providedIn: 'root'
