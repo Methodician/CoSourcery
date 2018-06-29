@@ -13,11 +13,10 @@ export class VoteService {
   }
 
   getVoteState(suggestionKey, userKey) {
-    const voteState = firebase.database().ref(`voteData/suggestionVotesPerUser/${userKey}/${suggestionKey}`)
+    const voteState = this.fb.ref(`voteData/suggestionVotesPerUser/${userKey}/${suggestionKey}`)
     .once('value').then(data => {
       return data.val();
     });
-    console.log(voteState);
     return voteState;
   }
 
