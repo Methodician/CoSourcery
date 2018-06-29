@@ -31,7 +31,6 @@ export class TopNavComponent implements OnInit {
     };
     this.authSvc.authInfo.subscribe(data => {
       this.authInfo = data;
-      console.log(data);
       this.displayName = this.authInfo.email;
     });
   }
@@ -41,8 +40,6 @@ export class TopNavComponent implements OnInit {
 
 logOutClick() {
   this.authSvc.signOut();
-  // this.router.navigate(['/login']);
-
 }
 
 }
