@@ -11,8 +11,8 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class SuggestionsComponent implements OnInit {
 suggestions: Suggestion[];
-currentSortOption: SortOptions = SortOptions.upvotes;
 currentUserKey: string;
+currentSortOption: SortOptions = SortOptions.upvotes;
   constructor(private suggestionSvc: SuggestionService, private authSvc: AuthService) { }
 
   ngOnInit() {
@@ -28,11 +28,13 @@ currentUserKey: string;
   }
 
   isSelected(sortOption: string) {
+    // console.log(sortOption);
     return SortOptions[sortOption] === this.currentSortOption;
   }
 
   sortBy(sortOption: string) {
     this.currentSortOption = SortOptions[sortOption];
+    console.log(this.currentSortOption);
   }
 
 
