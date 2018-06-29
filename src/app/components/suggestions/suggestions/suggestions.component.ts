@@ -34,7 +34,7 @@ currentSortOption: SortOptions = SortOptions.upvotes;
 
   sortBy(sortOption: string) {
     this.currentSortOption = SortOptions[sortOption];
-    console.log(this.currentSortOption);
+    // console.log(this.currentSortOption);
   }
 
 
