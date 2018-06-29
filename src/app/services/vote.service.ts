@@ -13,7 +13,12 @@ export class VoteService {
   }
 
   getVoteState(suggestionKey, userKey) {
-    return this.fb.object(`voteData/suggestionVotesPerUser/${userKey}/${suggestionKey}`);
+    const voteState = firebase.database().ref(`voteData/suggestionVotesPerUser/${userKey}/${suggestionKey}`)
+    .once('value').then(data => {
+      return data.val();
+    });
+    console.log(voteState);
+    return voteState;
   }
 
   saveVote(vote: Vote) {
@@ -21,10 +26,10 @@ export class VoteService {
       .doc(`suggestions/${vote.suggestionKey}`)
       .update({ voteCount: vote.voteTotal });
     this.fb
-      .object(`voteData/suggestionVotesPerUser/${vote.userKey}/${vote.suggestionKey}`)
+      .ref(`voteData/suggestionVotesPerUser/${vote.userKey}/${vote.suggestionKey}`)
       .set(vote.dbStatus);
     this.fb
-      .object(`voteData/userVotesPerSuggestion/${vote.suggestionKey}/${vote.userKey}`)
+      .ref(`voteData/userVotesPerSuggestion/${vote.suggestionKey}/${vote.userKey}`)
       .set(vote.dbStatus);
   }
 }
