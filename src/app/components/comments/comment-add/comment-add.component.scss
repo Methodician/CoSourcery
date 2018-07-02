@@ -1,0 +1,23 @@
+// imports for the variable and mixin files found within the sass-variables-mixins folder
+@import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
+#comment-buttons {
+ display: flex;
+ align-items: center;
+ margin: 0 0 20px 0;
+ mat-icon {
+   cursor: pointer;
+   margin-left: 20px;
+   &:hover {
+    color: rgba(196, 39, 95, 0.2);
+   }
+ }
+}
+.add-comment {
+  width: 90%;
+  max-width: 500px;
+}
+h2 {
+  display: inline-block;
+  margin: 0 20px 20px 0;
+}

@@ -17,6 +17,6 @@ export class UserInfoOpen {
 
     // returns true if $key or uid contains a truthy value (is neither null nor an empty string)
     exists() {
-        return !!(this.$key || this.uid)
+        return !!(this.$key || this.uid);
     }
 }
