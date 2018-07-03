@@ -96,11 +96,12 @@ export class CommentService {
   }
 
   getAllComments() {
-    return this.db.collection(`commentData/comments`);
+    return firebase.database().ref(`commentData/comments`)
+    // return this.db.collection(`commentData/comments`);
   }
 
   getCommentsByParentKey(parentKey: string) {
-    const list = this.db.collection(`commentData/comments`, ref => {
+    const list = this.db.ref(`commentData/comments`, ref => {
       return ref
         .orderByChild('parentKey')
         .equalTo(parentKey);

@@ -8,7 +8,7 @@ import { CommentService } from '../../../services/comment.service';
 })
 export class CommentListComponent implements OnInit, OnChanges {
   @Input() parentKey;
-  comments;
+  comments: any[];
   currentUserInfo;
 
   constructor(
@@ -21,20 +21,27 @@ export class CommentListComponent implements OnInit, OnChanges {
       this.currentUserInfo = userInfo;
     });
 
+    // this.commentSvc
+    // .getCommentsByParentKey(this.parentKey)
+    // .subscribe(comments => {
+    //   this.comments = comments;
+    // });
     this.commentSvc
-    .getCommentsByParentKey(this.parentKey)
-    .subscribe(comments => {
-      this.comments = comments;
-    });
+    .getCommentsByParentKey(this.parentKey).forEach(comment => {
+      const commentsArray = [];
+      commentsArray.push(comment);
+      this.comments = commentsArray;
+    })
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['parentKey'] && changes['parentKey'].currentValue){
       this.parentKey = changes['parentKey'].currentValue;
       this.commentSvc
-      .getCommentsByParentKey(this.parentKey)
-      .subscribe(comments => {
-        this.comments = comments;
-      });
+      .getCommentsByParentKey(this.parentKey).forEach(comment => {
+        const commentsArray = [];
+        commentsArray.push(comment);
+        this.comments = commentsArray;
+      })
     }
   }
 

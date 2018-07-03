@@ -29,15 +29,19 @@ export class CommentComponent implements OnInit {
   ngOnInit() {
     this.commentSvc
       .getCommentsByParentKey(this.comment.$key)
-      .subscribe(replies => {
-        this.replies = replies;
+      .forEach(reply => {
+        const repliesArray = [];
+        repliesArray.push(reply)
+        this.replies = repliesArray;
       });
 
     this.userSvc
       .getUserInfo(this.comment.authorKey)
       .subscribe(userInfo => {
+        console.log(' userInfo com comp line 41', userInfo);
+        
         if (userInfo && userInfo.uid) {
-          // console.log( "this is the user of the comment? ", userInfo);
+          console.log( "this is the user of the comment? ", userInfo);
           this.displayName = userInfo.alias || userInfo.fName;
         }
       });
@@ -81,13 +85,11 @@ export class CommentComponent implements OnInit {
   }
 
   tryShowAddReply(addReply) {
-    this.authSvc
-      .isLoggedIn()
-      .subscribe(isLoggedIn => {
-        if (isLoggedIn) {
-          addReply.toggleReplyForm();
-        }
-      });
+    this.authSvc.authInfo.subscribe(user =>{
+      if(user.uid){
+        addReply.toggleReplyForm();
+      }
+    })
   }
 
   toggleEdit() {

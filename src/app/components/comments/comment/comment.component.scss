@@ -100,7 +100,7 @@
   @include respond-to($tablet-sm){
     margin-left: 15px;
   }
-  app-add-reply {
+  cos-comment-add-reply {
     @include respond-to($tablet-sm){
       position: relative;
       left: 20px;

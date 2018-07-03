@@ -30,13 +30,12 @@ export class CommentAddComponent implements OnInit {
   }
 
   postComment(commentData) {
-    this.authSvc
-      .isLoggedIn()
-      .subscribe(isLoggedIn => {
-        if (isLoggedIn) {
-          this.saveComment(commentData);
-        }
-      });
+    this.authSvc.authInfo.subscribe(user => {
+      if (user.uid) {
+        console.log(user.uid);
+        this.saveComment(commentData);
+      }
+    })
   }
 
   saveComment(commentData) {
@@ -57,9 +56,10 @@ export class CommentAddComponent implements OnInit {
 
   toggleCommentForm() {
     this.authSvc
-      .isLoggedIn()
-      .subscribe(isLoggedIn => {
-        if (isLoggedIn) {
+      .authInfo
+      .subscribe(user => {
+        if (user.uid) {
+          console.log(user.uid);
           this.isFormShowing = !this.isFormShowing;
         }
       });

@@ -15,7 +15,7 @@
   </div>
   <!-- <span *ngIf="!editShowing" id="reply-button" (click)="tryShowAddReply(addReply)">Reply</span> -->
   
-  <app-edit-comment *ngIf="editShowing" [currentUserInfo]="currentUserInfo" [initialCommentValue]="comment" (editFormButtonClickSender)="editFormClicked($event)"></app-edit-comment>
+  <cos-comment-edit *ngIf="editShowing" [currentUserInfo]="currentUserInfo" [initialCommentValue]="comment" (editFormButtonClickSender)="editFormClicked($event)"></cos-comment-edit>
 
   <div *ngIf="!editShowing" class="comment-actions">
       <mat-icon tabindex="0" (click)="tryShowAddReply(addReply)">reply</mat-icon>
@@ -36,8 +36,8 @@
 </div>
 
 <div class="replies">
-  <app-add-reply #addReply [currentUserInfo]="currentUserInfo" [parentCommentKey]="comment.$key"></app-add-reply>
+  <cos-comment-add-reply #addReply [currentUserInfo]="currentUserInfo" [parentCommentKey]="comment.$key"></cos-comment-add-reply>
   <div *ngIf="isRepliesShowing()">
-    <app-comment *ngFor="let reply of replies" [comment]="reply" [currentUserInfo]="currentUserInfo"></app-comment>
+    <cos-comment *ngFor="let reply of replies" [comment]="reply" [currentUserInfo]="currentUserInfo"></cos-comment>
   </div>
 </div>
