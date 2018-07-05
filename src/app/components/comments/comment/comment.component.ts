@@ -37,11 +37,11 @@ export class CommentComponent implements OnInit {
 
     this.userSvc
       .getUserInfo(this.comment.authorKey)
-      .subscribe(userInfo => {
+      .then(userInfo => {
         console.log(' userInfo com comp line 41', userInfo);
-        
+
         if (userInfo && userInfo.uid) {
-          console.log( "this is the user of the comment? ", userInfo);
+          console.log("this is the user of the comment? ", userInfo);
           this.displayName = userInfo.alias || userInfo.fName;
         }
       });
@@ -50,7 +50,7 @@ export class CommentComponent implements OnInit {
     this.userSvc
       .getProfileImageUrl(this.comment.authorKey)
       .valueChanges()
-      .subscribe( profileImageUrl => {
+      .subscribe(profileImageUrl => {
         if (profileImageUrl) {
           this.profileImage = profileImageUrl as string;
         }
@@ -85,8 +85,8 @@ export class CommentComponent implements OnInit {
   }
 
   tryShowAddReply(addReply) {
-    this.authSvc.authInfo.subscribe(user =>{
-      if(user.uid){
+    this.authSvc.authInfo.subscribe(user => {
+      if (user.uid) {
         addReply.toggleReplyForm();
       }
     })
@@ -98,7 +98,7 @@ export class CommentComponent implements OnInit {
 
   deleteComment() {
     if (confirm('Are you sure you want to delete this comment?')) {
-    this.commentSvc.deleteComment(this.comment);
+      this.commentSvc.deleteComment(this.comment);
     }
   }
 

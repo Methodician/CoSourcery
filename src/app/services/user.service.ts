@@ -25,30 +25,31 @@ export class UserService {
     private router: Router
   ) {
     this.authSvc.authInfo.subscribe(authInfo => {
-      if (authInfo.uid ){
-       this.getUserInfo(authInfo.uid).then(info => {
-        const userInfo = new UserInfoOpen(
-          info.alias,
-          info.fName,
-          info.lName,
-          info.zipCode,
-          info.$key = authInfo.uid,
-          info.uid,
-          info.bio,
-          info.city,
-          info.state
-        )
-        console.log(userInfo);
-        
-        this.userInfo$.next(userInfo);
-        this.loggedInUserKey = authInfo.uid;
-        this.getUsersFollowed('P25y2PMe0SPz2Aitsfg2QSfc0gw2')
+      if (authInfo.uid) {
+        this.getUserInfo(authInfo.uid).then(info => {
+          const userInfo = new UserInfoOpen(
+            info.alias,
+            info.fName,
+            info.lName,
+            info.zipCode,
+            info.$key = authInfo.uid,
+            info.uid,
+            info.bio,
+            info.city,
+            info.state
+          )
+          console.log(userInfo);
+
+          this.userInfo$.next(userInfo);
+          this.loggedInUserKey = authInfo.uid;
+          this.getUsersFollowedAsync('P25y2PMe0SPz2Aitsfg2QSfc0gw2')
+          // this.getFollowersOfUser('P25y2PMe0SPz2Aitsfg2QSfc0gw2');
         })
-    this.db = firebase.database();
-    }
-  })
-  
-}
+        this.db = firebase.database();
+      }
+    })
+
+  }
 
 
 
@@ -75,10 +76,11 @@ export class UserService {
   }
 
   getUserInfo(uid) {
-    if (uid){
+    // return this.db.ref(`userInfo/open/${uid}`);
+    if (uid) {
       return firebase.database().ref(`userInfo/open/${uid}`).once(`value`).then(data => {
         return data.val();
-      })  
+      })
     }
   }
 
@@ -122,7 +124,7 @@ export class UserService {
   //       return usersPerKey.map((keyUser: any) => {
   //         const userRef = this.db.ref(`userInfo/open/${keyUser.$key}`);
   //         console.log('userRef', userRef);
-          
+
   //         const object = this.injectObjectKey(userRef);
   //         return object.pipe(map((user: any) => {
   //             return new UserInfoOpen(
@@ -148,58 +150,100 @@ export class UserService {
   //   // });
   // }
 
-  UserArrayFromKeyArray(userKeys: string[] ){ 
-      
-    }
-//   getUsersFollowed(uid: string) {
+  UserArrayFromKeyArray(userKeys: string[]) {
 
-//   const usersFollowedKeysList = this.getListFromPromise(firebase.database().ref(`userInfo/usersPerFollower/${uid}`)
-//   .once(`value`).then(data => 
-//   {return data.exportVal()}))
-//   const usersFollowedObservable = this.UserArrayFromKeyArray(usersFollowedKeysList)
-//   console.log(usersFollowedKeysList);
-  
-// };
+  }
+  //   getUsersFollowed(uid: string) {
 
-// getListFromPromise(usersList: Promise<any>) {
-//   var followedList: string[] = new Array() ;
-//    usersList.then(keys => {
-//    keys.forEach(key => {
-//     followedList.push(key);
-//     })
-//   })
-//   return followedList;
-// }
+  //   const usersFollowedKeysList = this.getListFromPromise(firebase.database().ref(`userInfo/usersPerFollower/${uid}`)
+  //   .once(`value`).then(data => 
+  //   {return data.exportVal()}))
+  //   const usersFollowedObservable = this.UserArrayFromKeyArray(usersFollowedKeysList)
+  //   console.log(usersFollowedKeysList);
 
+  // };
+
+  // getListFromPromise(usersList: Promise<any>) {
+  //   var followedList: string[] = new Array() ;
+  //    usersList.then(keys => {
+  //    keys.forEach(key => {
+  //     followedList.push(key);
+  //     })
+  //   })
+  //   return followedList;
+  // }
+
+  // BETTER (+ error handling)
   getUsersFollowed(uid: string) {
-  var usersFollowedList: object[] = new Array<Object>();
-  firebase.database().ref(`userInfo/usersPerFollower/${uid}`)
-  .once(`value`).then(users => {
-    users.forEach(key => {
-      const userRef = firebase.database().ref(`userInfo/open/${key.key}`);
-      userRef.once(`value`).then(x => {
-        const user = x.val()
-        user.$key = key.key;
-        usersFollowedList.push(user)
-      })
-    })        
-  })
-  console.log(usersFollowedList);
-  return usersFollowedList;
-}
-  
+    firebase.database().ref(`userInfo/usersPerFollower/${uid}`).on('value',
+      async users => {
+        let usersFollowedList: object[] = new Array<Object>();
+        const followed = users.val();
+        try {
+          for (const key in followed) {
+            const user$ = await this.db.ref(`userInfo/open/${key}`).once('value');
+            const user = user$.val();
+            user.uid = key;
+            usersFollowedList.push(user);
+          }
+          return usersFollowedList;
+        }
+        catch (err) {
+          console.log('an error in async', err);
+        }
+      },
+      err => {
+        console.log('there was an in the collback', err);
+      });
+  }
+
+  // WORKS
+  // async getUsersFollowedAsync(uid: string) {
+  //   let usersFollowedList: object[] = new Array<Object>();
+  //   const users$ = await this.db.ref(`userInfo/usersPerFollower/${uid}`).once('value');
+  //   const users = users$.val()
+  //   for (const key in users) {
+  //     const user$ = await this.db.ref(`userInfo/open/${key}`).once('value');
+  //     const user = user$.val();
+  //     user.uid = key;
+  //     usersFollowedList.push(user);
+  //   }
+  //   return usersFollowedList;
+  // }
+
+  // IAN'S
+  // getUsersFollowed(uid: string) {
+  //   var usersFollowedList: object[] = new Array<Object>();
+  //   firebase.database().ref(`userInfo/usersPerFollower/${uid}`)
+  //     .once(`value`).then(users => {
+  //       users.forEach(key => {
+  //         const userRef = firebase.database().ref(`userInfo/open/${key.key}`);
+  //         userRef.once(`value`).then(x => {
+  //           const user = x.val()
+  //           user.$key = key.key;
+  //           usersFollowedList.push(user)
+  //         })
+  //       })
+  //     })
+  //   return usersFollowedList;
+  // }
+
   // getUsersFollowed(uid: string): Observable<UserInfoOpen[]> {
   //   const usersFollowedKeysList = this.injectListKeys(this.rtdb.list(`userInfo/usersPerFollower/${uid}`));
   //   const usersFollowedObservable = this.UserArrayFromKeyArray(usersFollowedKeysList);
   //   return usersFollowedObservable;
   // }
-  
 
-  getFollowersOfUser(uid: string): Observable<UserInfoOpen[]> {
+
+  getFollowersOfUser(uid: string) {//: Observable<UserInfoOpen[]>
     const followerKeysList = this.injectListKeys(this.db.ref(`userInfo/followersPerUser/${uid}`));
+    console.log('followerKeysList', followerKeysList);
+    followerKeysList.subscribe(list => {
+      console.log('list', list);
+    });
     const followersListObservable = this.UserArrayFromKeyArray(followerKeysList as any);
-    return followersListObservable;
-  } 
+    // return followersListObservable;
+  }
 
   navigateToProfile(uid: any) {
     this.router.navigate([`profile/${uid}`]);
@@ -230,29 +274,29 @@ export class UserService {
   }
 
   injectObjectKey(object) {
-  //   return object
-  //   .snapshotChanges()
-  //     .pipe(map(element => {
-  //       return {
-  //         $key: element.key,
-  //         ...element.payload.val()
-  //       };
-  //     }));
-  //   return object;
-
-  }
-
-  injectListKeys(list) {
-    // return list
+    //   return object
     //   .snapshotChanges()
-    //   .pipe(map(elements => {
-    //     return elements.map(element => {
+    //     .pipe(map(element => {
     //       return {
     //         $key: element.key,
     //         ...element.payload.val()
     //       };
-    //     });
-    //   }));
+    //     }));
+    //   return object;
+
+  }
+
+  injectListKeys(list) {
+    return list
+      .snapshotChanges()
+      .pipe(map((elements: any) => {
+        return elements.map(element => {
+          return {
+            $key: element.key,
+            ...element.payload.val()
+          };
+        });
+      }));
   }
 
   /*isAdmin() {
