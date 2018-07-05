@@ -42,7 +42,7 @@ export class UserService {
 
           this.userInfo$.next(userInfo);
           this.loggedInUserKey = authInfo.uid;
-          this.getUsersFollowedAsync('P25y2PMe0SPz2Aitsfg2QSfc0gw2')
+          this.getUsersFollowed('P25y2PMe0SPz2Aitsfg2QSfc0gw2')
           // this.getFollowersOfUser('P25y2PMe0SPz2Aitsfg2QSfc0gw2');
         })
         this.db = firebase.database();
