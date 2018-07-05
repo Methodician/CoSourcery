@@ -37,17 +37,15 @@ export class UserService {
           info.bio,
           info.city,
           info.state
-        )
+        );
         console.log(userInfo);
-        
         this.userInfo$.next(userInfo);
         this.loggedInUserKey = authInfo.uid;
         this.getUsersFollowed('P25y2PMe0SPz2Aitsfg2QSfc0gw2')
-        })
+        });
     this.db = firebase.database();
     }
-  })
-  
+  });
 }
 
 
@@ -149,7 +147,7 @@ export class UserService {
   // }
 
   UserArrayFromKeyArray(userKeys: string[] ){ 
-      
+
     }
 //   getUsersFollowed(uid: string) {
 
@@ -171,35 +169,35 @@ export class UserService {
 //   return followedList;
 // }
 
-  getUsersFollowed(uid: string) {
-  var usersFollowedList: object[] = new Array<Object>();
-  firebase.database().ref(`userInfo/usersPerFollower/${uid}`)
-  .once(`value`).then(users => {
+ async getUsersFollowed(uid: string) {
+   const results = await firebase.database().ref(`userInfo/usersPerFollower/${uid}`)
+   .on(`value`, users => {
+    const usersFollowedList: object[] = new Array<Object>();
     users.forEach(key => {
       const userRef = firebase.database().ref(`userInfo/open/${key.key}`);
-      userRef.once(`value`).then(x => {
-        const user = x.val()
-        user.$key = key.key;
-        usersFollowedList.push(user)
-      })
-    })        
-  })
-  console.log(usersFollowedList);
-  return usersFollowedList;
+      userRef.on(`value`, user => {
+        user.val().$key = key.key;
+        usersFollowedList.push(user.val);
+      });
+    });
+    return usersFollowedList;
+  });
+  console.log(results);
+  return results;
 }
-  
+
   // getUsersFollowed(uid: string): Observable<UserInfoOpen[]> {
   //   const usersFollowedKeysList = this.injectListKeys(this.rtdb.list(`userInfo/usersPerFollower/${uid}`));
   //   const usersFollowedObservable = this.UserArrayFromKeyArray(usersFollowedKeysList);
   //   return usersFollowedObservable;
   // }
-  
 
-  getFollowersOfUser(uid: string): Observable<UserInfoOpen[]> {
-    const followerKeysList = this.injectListKeys(this.db.ref(`userInfo/followersPerUser/${uid}`));
-    const followersListObservable = this.UserArrayFromKeyArray(followerKeysList as any);
-    return followersListObservable;
-  } 
+
+  // getFollowersOfUser(uid: string): Observable<UserInfoOpen[]> {
+  //   const followerKeysList = this.injectListKeys(this.db.ref(`userInfo/followersPerUser/${uid}`));
+  //   const followersListObservable = this.UserArrayFromKeyArray(followerKeysList as any);
+  //   return followersListObservable;
+  // } 
 
   navigateToProfile(uid: any) {
     this.router.navigate([`profile/${uid}`]);
