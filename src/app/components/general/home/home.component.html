@@ -1,7 +1,37 @@
-<p>
-  home works!
-</p>
-
-<pre>
-  {{ testData | json }}
-</pre>
+<div class="homeContainer">
+  <div class="heroBgColor">
+    <h1>Empowering Makers and Hackers of the World</h1>
+    <h2>network, collaborate, and share knowledge with the community you love</h2>
+  </div>
+  <div class="bodyBgColor">
+    <!-- Featured Articles Container -->
+    <div class="featuredArticleWrapper">
+      <div id="featured">
+        <h2>Featured Articles</h2>
+        <!-- List View -->
+        <div class="list" *ngIf="currentSelectedFeaturePreview === 1">
+          <cos-article-preview-list [articleData]="article" *ngFor="let article of featuredArticles | reverseArray"></cos-article-preview-list>
+        </div>
+      </div>
+    </div>
+    <!-- Latest and All Article Container -->
+    <div class="latestAndAllWrapper">
+      <div class="article-options">
+        <!-- Latest and All Article Preview Toggle buttons -->
+        <div class="header-style">
+          <h2 (click)="selectLatest()" [class.activeArticleState]="currentSelectedTab === 1">Latest</h2>
+          <h2 (click)="selectAll()" [class.activeArticleState]="currentSelectedTab === 2">All</h2>
+        </div>
+      </div>
+      <!-- Latest Article Preview -->
+      <div class="grid" *ngIf="currentSelectedTab === 1">
+          <cos-article-preview-card [articleData]="article" *ngFor="let article of latestArticles"></cos-article-preview-card>
+        <!-- Latest Article List View -->
+      </div>
+      <!-- All Article Preview -->
+      <div *ngIf="currentSelectedTab === 2" class="allArticleWrapper grid">
+        <cos-article-preview-card [articleData]="article" *ngFor="let article of allArticles | reverseArray"></cos-article-preview-card>
+      </div>
+    </div>
+  </div>
+</div>

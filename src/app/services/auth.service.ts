@@ -60,12 +60,7 @@ export class AuthService {
     fb.auth().onAuthStateChanged((user) => {
       if (user) {
         const authInfo = new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email);
-        console.log('authInfo AS line 63', authInfo);
-        
         this.authInfo.next(authInfo);
-        console.log('user:', user);
-        console.log('authInfo AS line 67', this.authInfo);
-        
         user.getIdToken().then((token) => {
           // console.log('token:', token);
           this.accessToken.next(token);

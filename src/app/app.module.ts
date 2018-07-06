@@ -80,6 +80,9 @@ import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 import { SuggestionService } from './services/suggestion.service';
 import { VoteService } from './services/vote.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UploadService } from './services/upload.service';
+import { NotificationService } from './services/notification.service';
+import { ArticleService } from './services/article.service';
 
 @NgModule({
   declarations: [
@@ -159,7 +162,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [AuthService, SuggestionService, VoteService],
+  providers: [AuthService, SuggestionService, VoteService, UploadService, NotificationService, ArticleService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -21,7 +21,7 @@ export class SuggestionService {
 
   async getAllSuggestions() {
     const suggestionsList = [];
-    const querySnap = await this.fsdb.collection('suggestions').get()
+    await this.fsdb.collection('suggestions').get()
     .then(docs => {
       docs.forEach(doc => {
         suggestionsList.push(doc.data());
