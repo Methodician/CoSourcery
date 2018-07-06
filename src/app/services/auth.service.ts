@@ -62,7 +62,6 @@ export class AuthService {
         const authInfo = new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email);
         this.authInfo.next(authInfo);
         user.getIdToken().then((token) => {
-          // console.log('token:', token);
           this.accessToken.next(token);
         });
       } else {
@@ -75,10 +74,7 @@ export class AuthService {
   }
 
   startUi(authContainerId: string) {
-    console.log(authContainerId);
     const stringRef = `#${authContainerId}`;
-    console.log(stringRef);
-
     // if (this.ui.isPendingRedirect()) {
     this.ui.start(stringRef, this.uiConfig);
     // }
