@@ -96,16 +96,21 @@ export class CommentService {
   }
 
   getAllComments() {
-    return firebase.database().ref(`commentData/comments`)
+    return firebase.database().ref(`commentData/comments`);
     // return this.db.collection(`commentData/comments`);
   }
 
   getCommentsByParentKey(parentKey: string) {
-    const list = this.db.ref(`commentData/comments`, ref => {
-      return ref
-        .orderByChild('parentKey')
-        .equalTo(parentKey);
+    const list = new Array<any> ();
+    firebase.database().ref(`commentData/comments`).on(`value`, ref => {
+      ref.forEach(comment => {
+       const sort = comment.val();
+       if (sort.parentKey === parentKey ){
+            list.push(comment);
+       }
+     });
     });
+    console.log('parentKey', parentKey, 'list', list);
     return this.injectKey(list);
   }
 

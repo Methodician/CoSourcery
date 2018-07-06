@@ -90,8 +90,12 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   checkIfBookmarked() {
-    this.isArticleBookmarked = this.articleSvc
+    // this.isArticleBookmarked = this.articleSvc
+    //   .isBookmarked(this.user.$key, this.articleKey);
+    const rest = this.articleSvc
       .isBookmarked(this.user.$key, this.articleKey);
+      console.log(rest);
+
   }
 
   bookmarkToggle() {
@@ -169,26 +173,17 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   getArticleCoverImage(articleKey) {
     const basePath = 'uploads/articleCoverImages';
-    this.uploadSvc
-      .getImage(articleKey, basePath)
-      .subscribe(articleData => {
-        if (articleData && articleData.url) {
-          this.articleCoverImageUrl = articleData.url;
-        }
-      });
+    const articleCover = this.uploadSvc.getImage(articleKey, basePath);
+    console.log(articleCover);
+
   }
 
   getArticleBody(articleData: any) {
     this.articleSvc
-      .getArticleBody(articleData.bodyId)
-      .valueChanges()
-      .subscribe((articleBody: ArticleBodyFirestore) => {
-        if (articleBody) {
-          articleData.body = articleBody.body;
-          this.article = articleData;
-          this.relatedArticles = this.articleSvc.getArticlesPerTag(this.article.tags);
-        }
+      .getArticleBody(articleData.bodyId).then(data => {
+    console.log(data);
       });
+
   }
 
   getAuthor(authorKey: string) {
@@ -200,13 +195,9 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   followClick() {
-    this.authSvc
-      .isLoggedIn()
-      .subscribe(isLoggedIn => {
-        if (isLoggedIn) {
-          this.userSvc.followUser(this.article.authorKey);
-        }
-      });
+    if ( this.authSvc.isSignedIn() ) {
+      this.userSvc.followUser(this.article.authorKey);
+    }
   }
 
   tagSearch(tag: string) {

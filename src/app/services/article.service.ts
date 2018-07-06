@@ -121,10 +121,12 @@ export class ArticleService {
     });
   }
 
-   isBookmarked(userKey, articleKey) {
-    return this.rtdb
+   async isBookmarked(userKey, articleKey) {
+    return await this.rtdb
       .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`).once(`value`).then(article => {
-        console.log('AS Line 84', article);
+        // console.log('AS Line 84', article.val());
+        if (!article) {console.log(false);
+        }
         return article ? true : false;
       });
       // .valueChanges()
@@ -142,6 +144,8 @@ export class ArticleService {
         array.push(doc.data());
       }
     });
+    console.log('array ', array);
+
     return array;
   }
   navigateToArticleDetail(articleKey: any) {
@@ -151,6 +155,12 @@ export class ArticleService {
     this.router.navigate([`profile/${uid}`]);
   }
 
+  featureArticle(articleKey: string, authorKey: string) {
+    this
+      .getArticleRef(articleKey)
+      .update({ isFeatured: true });
+    this.notifSvc.createFeatureNotification(authorKey);
+  }
 
   unFeatureArticle(articleKey: string) {
     this
@@ -158,6 +168,21 @@ export class ArticleService {
       .update({ isFeatured: false });
   }
 
+  getArticlesPerTag(tagArr) {
+    const articlesArray = [];
+    tagArr.map(tag => {
+      firebase.database().ref(`articleData/articlesPerTag/${tag}`).once(`value`)
+        .then(result => {
+          const tags = result.val();
+          if (tags.length > 1) {
+            tags.map(obj => {
+              articlesArray.push(obj.key);
+            });
+          }
+        });
+    });
+    return articlesArray;
+  }
 
   // Needs Refactoring.
   // primeTags() {

@@ -33,23 +33,23 @@ export class UploadService {
   async uploadImage(upload: Upload, key, basePath) {
     // delete old file from storage
     // this is not working likely.
-    if (upload.url) {
-      this.deleteFileStorage(key, basePath);
-    }
-    const filePath = `${basePath}/${key}`;
-    try {
-      const successSnap2 = await this.storage.upload(filePath, upload.file);
-      const url2 = await successSnap2.ref.getDownloadURL();
-      upload.url = url2;
-      upload.size = successSnap2.metadata.size;
-      upload.type = successSnap2.metadata.contentType;
-      upload.name = successSnap2.metadata.name;
-      upload.timeStamp = firebase.database.ServerValue.TIMESTAMP;
-      upload.progress = null;
-      this.saveImageData(upload, key, basePath);
-    } catch (err) {
-      console.log('errors!', err);
-        alert('There was an error saving this image.');
+    // if (upload.url) {
+    //   this.deleteFileStorage(key, basePath);
+    // }
+    // const filePath = `${basePath}/${key}`;
+    // try {
+      // const successSnap2 = await this.storage.upload(filePath, upload.file);
+    //   const url2 = await successSnap2.ref.getDownloadURL();
+    //   upload.url = url2;
+    //   upload.size = successSnap2.metadata.size;
+    //   upload.type = successSnap2.metadata.contentType;
+    //   upload.name = successSnap2.metadata.name;
+    //   upload.timeStamp = firebase.database.ServerValue.TIMESTAMP;
+    //   upload.progress = null;
+    //   this.saveImageData(upload, key, basePath);
+    // } catch (err) {
+    //   console.log('errors!', err);
+    //     alert('There was an error saving this image.');
     }
 
     // Iteration w/out async/await and then
@@ -70,7 +70,7 @@ export class UploadService {
     //       this.saveImageData(upload, key, basePath);
     //       // alert('success!');
     //     });
-        
+
     //   },
     //   (err) => {
     //     console.log('errors!', err);
@@ -106,14 +106,14 @@ export class UploadService {
     //     return undefined;
     //   }
     // );
-  }
+  // }
 
   // writes metadata to live database
   private saveImageData(upload: Upload, key, basePath) {
     if (basePath === 'uploads/profileImages/') {
       this.updateUserData(upload, key);
     }
-    this.afd.object(`${basePath}/${key}`).set(upload)
+    this.rtdb.ref(`${basePath}/${key}`).set(upload)
       .catch(error => {
         console.log(error);
       });
@@ -121,8 +121,8 @@ export class UploadService {
 
   // update public user data with new profile photo url
   private updateUserData(upload: Upload, key: string): void {
-    this.afd
-      .object(`userInfo/usernames/${key}`)
+    this.rtdb
+      .ref(`userInfo/usernames/${key}`)
       .update({
         photoURL: upload.url
       });
@@ -136,9 +136,9 @@ export class UploadService {
   }
 
   // return an image from the database
-  async getImage(key, basePath) {
-    return firebase.database().ref(`${basePath}/${key}`).once(`value`)
-    .then( async image => {
+  getImage(key, basePath) {
+    return this.rtdb.ref(`${basePath}/${key}`).once(`value`)
+    .then( image => {
       const $image = image.val();
       if (!!$image && !!$image.url ) {
         return $image.url;

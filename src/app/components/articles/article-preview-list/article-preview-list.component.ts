@@ -15,7 +15,6 @@ export class ArticlePreviewListComponent implements OnInit {
   articleCoverImageUrl;
   hoverClass: string;
   hoverBg: string;
-
   constructor(
     private articleService: ArticleService,
     private router: Router,

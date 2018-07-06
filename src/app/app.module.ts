@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AuthService } from './services/auth.service';
 
 // Material and Associated Imports
 import {
@@ -83,6 +82,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UploadService } from './services/upload.service';
 import { NotificationService } from './services/notification.service';
 import { ArticleService } from './services/article.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [

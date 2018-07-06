@@ -31,17 +31,17 @@ export class CommentListComponent implements OnInit, OnChanges {
       const commentsArray = [];
       commentsArray.push(comment);
       this.comments = commentsArray;
-    })
+    });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['parentKey'] && changes['parentKey'].currentValue){
+    if (changes['parentKey'] && changes['parentKey'].currentValue) {
       this.parentKey = changes['parentKey'].currentValue;
       this.commentSvc
       .getCommentsByParentKey(this.parentKey).forEach(comment => {
         const commentsArray = [];
         commentsArray.push(comment);
         this.comments = commentsArray;
-      })
+      });
     }
   }
 

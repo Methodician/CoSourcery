@@ -49,11 +49,11 @@
         </mat-card-content>
     </div>
     <mat-card-footer>
-      <cos-article-related *ngIf="!editingPreview" [parentAllArticles]="allArticles | relatedArticle: relatedArticles" [parentTags]="article?.tags"></cos-article-related>
+      <!-- <cos-article-related *ngIf="!editingPreview" [parentAllArticles]="allArticles | relatedArticle: relatedArticles" [parentTags]="article?.tags"></cos-article-related> -->
       <div id="discussion" #discussion>
         <div *ngIf="!editingPreview"  class="comment-section-wrapper">
-          <cos-add-comment [headerTitle]="'Discussion'" [parentKey]="articleKey"></cos-add-comment>
-          <comment-list [parentKey]="articleKey"></comment-list>
+          <cos-comment-add [headerTitle]="'Discussion'" [parentKey]="articleKey"></cos-comment-add>
+          <cos-comment-list [parentKey]="articleKey"></cos-comment-list>
         </div>
       </div>
     </mat-card-footer>
