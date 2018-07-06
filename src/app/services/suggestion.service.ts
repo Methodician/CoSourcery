@@ -20,13 +20,13 @@ export class SuggestionService {
 
 
   async getAllSuggestions() {
-    const suggestionsList = [];
-    const querySnap = await this.fsdb.collection('suggestions').get()
+    const suggestionsList = new Array<Object>();
+    await this.fsdb.collection('suggestions').get()
     .then(docs => {
       docs.forEach(doc => {
         suggestionsList.push(doc.data());
       });
-    });
+    });        
     return suggestionsList;
   }
 

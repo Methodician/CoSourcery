@@ -38,8 +38,6 @@ export class UserService {
             info.city,
             info.state
           );
-          console.log(userInfo);
-
           this.userInfo$.next(userInfo);
           this.loggedInUserKey = authInfo.uid;
           this.getUsersFollowed('P25y2PMe0SPz2Aitsfg2QSfc0gw2');
@@ -147,8 +145,6 @@ export class UserService {
       follower.uid = key;
       followersList.push(follower);
       }
-      console.log(followersList);
-
       return followersList;
     } catch (err) {
       console.log('an error in async', err);

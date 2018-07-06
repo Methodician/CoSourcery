@@ -59,15 +59,9 @@ export class AuthService {
     this.ui = new fbui.auth.AuthUI(fb.auth());
     fb.auth().onAuthStateChanged((user) => {
       if (user) {
-        const authInfo = new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email);
-        console.log('authInfo AS line 63', authInfo);
-        
-        this.authInfo.next(authInfo);
-        console.log('user:', user);
-        console.log('authInfo AS line 67', this.authInfo);
-        
+        const authInfo = new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email);        
+        this.authInfo.next(authInfo);        
         user.getIdToken().then((token) => {
-          // console.log('token:', token);
           this.accessToken.next(token);
         });
       } else {
@@ -80,10 +74,7 @@ export class AuthService {
   }
 
   startUi(authContainerId: string) {
-    console.log(authContainerId);
     const stringRef = `#${authContainerId}`;
-    console.log(stringRef);
-
     // if (this.ui.isPendingRedirect()) {
     this.ui.start(stringRef, this.uiConfig);
     // }
