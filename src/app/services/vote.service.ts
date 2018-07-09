@@ -14,8 +14,8 @@ export class VoteService {
 
   getVoteState(suggestionKey, userKey) {
     const voteState = this.fb.ref(`voteData/suggestionVotesPerUser/${userKey}/${suggestionKey}`)
-    .once('value').then(data => {
-      return data.val();
+    .once('value').then(voteData => {
+      return voteData.val();
     });
     return voteState;
   }

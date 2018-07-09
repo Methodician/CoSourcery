@@ -19,12 +19,11 @@ import 'firebase/firestore';
 })
 export class ArticleService {
   globalTags: Iterable<GlobalTag>;
-  fsdb: any;
-  rtdb: any;
+  fsdb = firebase.firestore();
+  rtdb = firebase.database();
+
   constructor(private router: Router, private notifSvc: NotificationService) {
     // this.primeTags();
-    this.fsdb = firebase.firestore();
-    this.rtdb = firebase.database();
   }
 
   async getAllArticles() {
@@ -116,8 +115,8 @@ export class ArticleService {
   }
 
    getAuthor(uid: string) {
-    return this.rtdb.ref(`userInfo/open/${uid}`).once(`value`).then(data => {
-      return data.val();
+    return this.rtdb.ref(`userInfo/open/${uid}`).once(`value`).then(authorData => {
+      return authorData.val();
     });
   }
 

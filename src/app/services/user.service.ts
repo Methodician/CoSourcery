@@ -71,8 +71,8 @@ export class UserService {
 
   getUserInfo(uid) {
     if (uid) {
-      return firebase.database().ref(`userInfo/open/${uid}`).once(`value`).then(data => {
-        return data.val();
+      return firebase.database().ref(`userInfo/open/${uid}`).once(`value`).then(userData => {
+        return userData.val();
       });
     }
   }

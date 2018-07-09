@@ -9,10 +9,10 @@ import 'firebase/firestore';
   providedIn: 'root'
 })
 export class CommentService {
-  db: any;
+  db = firebase.database();
+
 
   constructor(private router: Router) {
-    this.db = firebase.database();
   }
   saveComment(commentData) {
     const commentToSave = {
@@ -84,25 +84,25 @@ export class CommentService {
       lastUpdated: firebase.database.ServerValue.TIMESTAMP
     };
     this.db
-      .doc(`commentData/comments/${newCommentData.key}`)
+      .ref(`commentData/comments/${newCommentData.key}`)
       .update(commentDataToUpdate);
   }
 
   deleteComment(comment) {
     this.db
-      .doc(`commentData/comments/${comment.$key}`)
+      .ref(`commentData/comments/${comment.$key}`)
       .update({ isDeleted: true });
     this.updateCommentCount(comment.parentKey, comment.parentType, -1);
   }
 
   getAllComments() {
-    return firebase.database().ref(`commentData/comments`);
+    return this.db.ref(`commentData/comments`);
     // return this.db.collection(`commentData/comments`);
   }
 
   getCommentsByParentKey(parentKey: string) {
     const list = new Array<any> ();
-    firebase.database().ref(`commentData/comments`).on(`value`, ref => {
+    this.db.ref(`commentData/comments`).on(`value`, ref => {
       ref.forEach(comment => {
        const sort = comment.val();
        if (sort.parentKey === parentKey ){

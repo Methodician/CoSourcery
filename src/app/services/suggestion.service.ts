@@ -12,16 +12,15 @@ import { Route, Router } from '@angular/router';
 })
 export class SuggestionService {
 
-  fsdb: any;
+  fsdb = firebase.firestore();
 
   constructor(private router: Router) {
-    this.fsdb = firebase.firestore();
   }
 
 
-  async getAllSuggestions() {
+  getAllSuggestions() {
     const suggestionsList = new Array<Object>();
-    await this.fsdb.collection('suggestions').get()
+     this.fsdb.collection('suggestions').get()
     .then(docs => {
       docs.forEach(doc => {
         suggestionsList.push(doc.data());
@@ -46,7 +45,6 @@ export class SuggestionService {
 
     this.fsdb.collection(`suggestions`).doc(id).set(suggestion);
     this.router.navigate([`suggestions`]);
-
   }
 
   updateSuggestion(id: string, updatedSuggestion) {

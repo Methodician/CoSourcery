@@ -206,13 +206,8 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   getProfileImage(authorKey) {
     const basePath = 'uploads/profileImages/';
-    this.uploadSvc
+    this.profileImageUrl = this.uploadSvc
       .getImage(authorKey, basePath)
-      .subscribe(profileData => {
-        if (profileData.url) {
-          this.profileImageUrl = profileData.url;
-        }
-      });
   }
 
   nextArticle() {

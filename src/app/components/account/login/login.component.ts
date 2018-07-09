@@ -9,10 +9,10 @@ import {UserInfoOpen} from '../../../shared/class/user-info';
 })
 export class LoginComponent implements OnInit {
   title = 'cos';
-  data: {};
+  userData: {};
   constructor(private AuthSvc: AuthService) {
-    this.AuthSvc.authInfo.subscribe(data => {
-      this.data = data;
+    this.AuthSvc.authInfo.subscribe(userData => {
+      this.userData = userData;
     });
   }
 

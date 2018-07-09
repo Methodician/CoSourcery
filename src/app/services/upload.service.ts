@@ -11,14 +11,13 @@ import { async } from 'rxjs/internal/scheduler/async';
 @Injectable()
 export class UploadService {
   uploadPercent: Observable<number>;
-  rtdb;
-  fsdb;
+  fsdb = firebase.firestore();
+  rtdb = firebase.database();
+
   constructor(
     // private afd: AngularFireDatabase,
     // private storage: AngularFireStorage
   ) {
-    this.fsdb = firebase.firestore();
-    this.rtdb = firebase.database();
   }
 
 
@@ -136,9 +135,9 @@ export class UploadService {
   }
 
   // return an image from the database
-  getImage(key, basePath) {
+  async getImage(key, basePath) {
     return this.rtdb.ref(`${basePath}/${key}`).once(`value`)
-    .then( image => {
+    .then(image => {
       const $image = image.val();
       if (!!$image && !!$image.url ) {
         return $image.url;

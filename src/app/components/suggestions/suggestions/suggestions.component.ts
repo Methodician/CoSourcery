@@ -10,7 +10,7 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./suggestions.component.scss']
 })
 export class SuggestionsComponent implements OnInit {
-suggestions: Suggestion[];
+suggestions:any[];
 currentUserKey: string;
 currentSortOption: SortOptions = SortOptions.upvotes;
   constructor(private suggestionSvc: SuggestionService, private authSvc: AuthService) { }
@@ -22,9 +22,10 @@ currentSortOption: SortOptions = SortOptions.upvotes;
       this.currentUserKey = (authInfo.uid) ? authInfo.uid : null;
     });
 
-    this.suggestionSvc.getAllSuggestions().then(data =>
-      this.suggestions = data
-    );
+    this.suggestionSvc.getAllSuggestions().then((suggestions: Suggestion[]) =>{
+      console.log('suggestions', suggestions)
+      this.suggestions = suggestions;
+    });
   }
 
   isSelected(sortOption: string) {
