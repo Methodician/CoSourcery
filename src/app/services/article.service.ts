@@ -25,8 +25,7 @@ export class ArticleService {
     const querySnap = articlesRef.get().then(refReturn => {
       return this.arrayFromCollectionSnapshot(refReturn);
     });
-    // const test = this.arrayFromCollectionSnapshot(querySnap);
-    console.log('querySnap', querySnap);
+        console.log('querySnap', querySnap);
 
     // articles show up in log. Not showing in web. Check the component...
     return querySnap;
@@ -158,12 +157,18 @@ export class ArticleService {
 
   arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
     const array = [];
+    console.log(querySnapshot);
+    
     querySnapshot.forEach(doc => {
-      if (shouldAttachId)
+      // console.log('doc AS 164', doc);
+      // console.log('doc.data', doc.data());
+      if (shouldAttachId){
         array.push({ id: doc.id, ...doc.data() });
-      else
-        array.push(doc.data());
+      } else {
+      array.push(doc.data());
+      }
     })
+    console.log('AS array 169', array);
     return array;
   }
 
