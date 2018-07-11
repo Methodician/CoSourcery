@@ -10,9 +10,8 @@ export class AuthService {
   // DOCS FOR REFERENCE:
   // https://firebase.google.com/docs/auth/web/firebaseui
   // https://github.com/firebase/firebaseui-web
-  db: any;
-  ui: any;
-  authInfo = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
+  ui = new fbui.auth.AuthUI(fb.auth());
+  authInfo$ = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
   accessToken = new BehaviorSubject<string>(null);
 
 
@@ -54,20 +53,16 @@ export class AuthService {
   };
 
   constructor() {
-    // this.testAuthSub();
-    this.ui = new fbui.auth.AuthUI(fb.auth());
     fb.auth().onAuthStateChanged((user) => {
       if (user) {
         const authInfo = new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email);
-        this.authInfo.next(authInfo);
-        // console.log('user:', user);
+        this.authInfo$.next(authInfo);
         user.getIdToken().then((token) => {
-          // console.log('token:', token);
           this.accessToken.next(token);
         });
       } else {
         this.accessToken.next(null);
-        this.authInfo.next(new AuthInfo(null, false, '', ''));
+        this.authInfo$.next(new AuthInfo(null, false, '', ''));
       }
     }, (err) => {
       console.log(err);
@@ -76,9 +71,7 @@ export class AuthService {
 
   startUi(authContainerId: string) {
     const stringRef = `#${authContainerId}`;
-    // if (this.ui.isPendingRedirect()) {
     this.ui.start(stringRef, this.uiConfig);
-    // }
   }
 
   signOut() {
@@ -92,7 +85,7 @@ export class AuthService {
 
   // testing only:
   testAuthSub() {
-    this.authInfo.subscribe(info => {
+    this.authInfo$.subscribe(info => {
       if (info) {
         console.log('auth BehaviorSubject:', info);
         console.log('am I logged in?', info.isLoggedIn());
