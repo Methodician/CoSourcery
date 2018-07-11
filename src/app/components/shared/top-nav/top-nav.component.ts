@@ -29,7 +29,7 @@ export class TopNavComponent implements OnInit {
     window.onscroll = (event) => {
       this.scrollTop = (event.target as any).scrollingElement.scrollTop;
     };
-    this.authSvc.authInfo.subscribe(data => {
+    this.authSvc.authInfo$.subscribe(data => {
       this.authInfo = data;
       console.log(data);
       this.displayName = this.authInfo.email;
