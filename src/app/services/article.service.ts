@@ -25,7 +25,7 @@ export class ArticleService {
     const querySnap = articlesRef.get().then(refReturn => {
       return this.arrayFromCollectionSnapshot(refReturn);
     });
-        console.log('querySnap', querySnap);
+        console.log('querySnap ALL', querySnap);
 
     // articles show up in log. Not showing in web. Check the component...
     return querySnap;
@@ -42,6 +42,8 @@ export class ArticleService {
     const query = articlesRef.where('isFeatured', '==', true);
     const collectionSnapshot = await query.get();
     const articleArray = this.arrayFromCollectionSnapshot(collectionSnapshot);
+    console.log('article array Fetured', articleArray);
+
     return articleArray;
   }
 
@@ -191,7 +193,7 @@ export class ArticleService {
 
   // MASSIVE REFACTOR REQUIRED
   updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
-
+  
   }
 
 }
