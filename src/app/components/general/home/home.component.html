@@ -30,7 +30,7 @@
       </div>
       <!-- All Article Preview -->
       <div *ngIf="currentSelectedTab === 2" class="allArticleWrapper grid">
-        <cos-article-preview-card [articleData]="article" *ngFor="let article of allArticles | reverseArray"></cos-article-preview-card>
+        <cos-article-preview-card [articleData]="article" *ngFor="let article of allArticles | reverseArray "></cos-article-preview-card>
       </div>
     </div>
   </div>

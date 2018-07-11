@@ -22,25 +22,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.initializeArticles();
-
-    // this.articleSvc
-    //   .getFeaturedArticles().then(articles => {
-    //     this.featuredArticles = articles;
-    //     // console.log(this.featuredArticles);
-    //   });
-
-    // // call For Latest Articles
-    // this.articleSvc
-    //   .getLatestArticles().then(latest => {
-    //     this.latestArticles = latest;
-    //     // console.log(this.latestArticles);
-    //   });
-
-    // //  call for All Articles
-    // this.articleSvc
-    //   .getAllArticles().then(responce => {
-    //   this.allArticles = responce; console.log(this.allArticles);
-    //   });
+``
 
   }
 
@@ -49,7 +31,6 @@ export class HomeComponent implements OnInit {
     this.featuredArticles = await this.articleSvc.getFeaturedArticles();
     this.latestArticles = await this.articleSvc.getLatestArticles();
     this.allArticles = await this.articleSvc.getAllArticles();
-    console.log(   this.allArticles);
   }
 
   // Methods for toggling between Latest and All Previews
@@ -59,7 +40,6 @@ export class HomeComponent implements OnInit {
 
   selectAll() {
     this.currentSelectedTab = SelectedTab.all;
-    console.log('all');
   }
 
   // Methods for toggling between Featured Article List and Grid Previews
