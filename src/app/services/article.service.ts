@@ -25,15 +25,14 @@ export class ArticleService {
     const querySnap = articlesRef.get().then(refReturn => {
       return this.arrayFromCollectionSnapshot(refReturn);
     });
-        console.log('querySnap ALL', querySnap);
-
-    // articles show up in log. Not showing in web. Check the component...
+        console.log('querySnap ALL ArtSvc 28', querySnap);
     return querySnap;
   }
 
   async getLatestArticles() {
     const articlesRef = this.fsdb.collection('articleData/articles/articles');
     const querySnap = await articlesRef.orderBy('timestamp', 'desc').limit(12).get();
+    console.log('querySnap latest ArtSvc 35', querySnap);
     return this.arrayFromCollectionSnapshot(querySnap);
   }
 
@@ -42,7 +41,7 @@ export class ArticleService {
     const query = articlesRef.where('isFeatured', '==', true);
     const collectionSnapshot = await query.get();
     const articleArray = this.arrayFromCollectionSnapshot(collectionSnapshot);
-    console.log('article array Fetured', articleArray);
+    console.log('article array Fetured ArtSvc 43', articleArray);
 
     return articleArray;
   }
@@ -158,12 +157,8 @@ export class ArticleService {
   }
 
   arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
-    const array = [];
-    console.log(querySnapshot);
-    
+    const array = [];    
     querySnapshot.forEach(doc => {
-      // console.log('doc AS 164', doc);
-      // console.log('doc.data', doc.data());
       if (shouldAttachId){
         array.push({ id: doc.id, ...doc.data() });
       } else {

@@ -22,15 +22,13 @@ export class AuthService {
         // User successfully signed in.
         // Return type determines whether we continue to the redirect automatically
         // or whether we leave that to the developer to handle.
-        console.log('signInSuccessWithAuthResult, authResult:', authResult);
-        console.log('signInSuccessWithAuthResult, redurectUrl:', redirectUrl);
+
         return true;
       },
       uiShown: () => {
         // The widget is rendered.
         // Hide the loader.
         // eg: document.getElementById('loader').style.display = 'none';
-        console.log('uiShown callback run from uiConfig.');
       }
     },
     // Will use popup for IDP Providers sign-in flow instead of the default, redirect.

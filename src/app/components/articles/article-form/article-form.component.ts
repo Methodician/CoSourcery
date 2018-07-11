@@ -38,7 +38,6 @@ export class ArticleFormComponent implements OnInit, OnChanges {
       this.articleTags.push(value.toLocaleUpperCase());
       this.form.controls.tags.patchValue(this.articleTags);
     }
-    console.log(this.articleTags, 'stuffff ', value);
 
     if (input) {
       input.value = '';
@@ -51,12 +50,10 @@ export class ArticleFormComponent implements OnInit, OnChanges {
       this.articleTags.splice(selectedIndex, 1 );
     }
     // let index = this.articleTags.indexOf(selectedTag);
-    console.log(selectedTag);
 
     // if(index >= 0){
     //   this.articleTags.splice(index, 1);
     // }
-    // console.log(selectedTag);
     const tagToRemove = selectedTag.toUpperCase();
     this.removeTag(tagToRemove);
     this.form.controls.tags.patchValue(this.articleTags);
@@ -88,7 +85,6 @@ export class ArticleFormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     //  Must make sure form is initalized before checking...
     if (changes['initialValue'] && changes['initialValue'].currentValue) {
-      // console.log(changes);
       // We have two methods to set a form's value: setValue and patchValue.
       this.form.patchValue(changes['initialValue'].currentValue);
       this.initializeTags(changes['initialValue'].currentValue.tags);
@@ -120,7 +116,6 @@ export class ArticleFormComponent implements OnInit, OnChanges {
   }
 
   onTagRemoved($event) {
-    // console.log($event);
     const tagToRemove = $event.value.toUpperCase();
     this.removeTag(tagToRemove);
     this.form.controls.tags.patchValue(this.articleTags);
