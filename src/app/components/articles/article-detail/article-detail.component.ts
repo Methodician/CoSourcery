@@ -194,11 +194,6 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   async getAuthor(authorKey: string) {
     const author = await this.articleSvc.getAuthor(authorKey);
     this.author = author;
-    // this.articleSvc
-    //   .getAuthor(authorKey)
-    //   .subscribe(author => {
-    //     this.author = author;
-    //   });
   }
 
   followClick() {
@@ -215,13 +210,6 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     const basePath = 'uploads/profileImages/';
     const imageUrl = await this.uploadSvc.getImageUrl(authorKey, basePath);
     this.profileImageUrl = imageUrl;
-    // this.uploadSvc
-    //   .getImageUrl(authorKey, basePath)
-    //   .subscribe(profileData => {
-    //     if (profileData.url) {
-    //       this.profileImageUrl = profileData.url;
-    //     }
-    //   });
   }
 
   nextArticle() {
