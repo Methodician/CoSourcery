@@ -86,6 +86,9 @@ export class ArticleService {
       return false;
     }
   }
+
+
+
   // async getGlobalTags() {
   //   const tagsSnapshot = await this.fsdb.doc('articleData/tags').get();
   //   return tagsSnapshot.data();

@@ -99,12 +99,14 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     //   .isBookmarked(this.user.$key, this.articleKey);
   }
 
-  bookmarkToggle() {
+  bookmarkToggle() {    
     if (this.authSvc.isSignedIn()) {
       if (this.isArticleBookmarked) {
-        this.articleSvc.unBookmarkArticle(this.user.$key, this.articleKey);
+        this.articleSvc.unBookmarkArticle(this.user.$key, this.articleData.articleId);
+        this.isArticleBookmarked = false;
       } else {
-        this.articleSvc.bookmarkArticle(this.user.$key, this.articleKey);
+        this.articleSvc.bookmarkArticle(this.user.$key, this.articleData.articleId);
+        this.isArticleBookmarked = true;
       }
     }
   }
