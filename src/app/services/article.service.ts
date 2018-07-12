@@ -24,17 +24,31 @@ export class ArticleService {
     const articlesRef = this.fsdb.collection('articleData/articles/articles');
     const querySnap = await articlesRef.get();
     const articleArray = this.arrayFromCollectionSnapshot(querySnap);
-    // const querySnap = articlesRef.get().then(refReturn => {
-    //   return this.arrayFromCollectionSnapshot(refReturn);
-    // });
-    console.log('querySnap ALL ArtSvc 28', articleArray);
+
     return articleArray;
+  }
+
+  getArticleUpdateTime(articleId) {
+    let date: Date = new Date();
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    articleRef.get().then(articleData => {
+      date = articleData.data().lastUpdated.toDate().toString();
+    })
+    return date;
+  }
+
+  getArticleTimeStampTime(articleId) {
+    let date: Date = new Date();
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    articleRef.get().then(articleData => {
+      date = articleData.data().timestamp.toDate().toString();
+    })
+    return date;
   }
 
   async getLatestArticles() {
     const articlesRef = this.fsdb.collection('articleData/articles/articles');
     const querySnap = await articlesRef.orderBy('timestamp', 'desc').limit(12).get();
-    console.log('querySnap latest ArtSvc 35', querySnap);
     return this.arrayFromCollectionSnapshot(querySnap);
   }
 
