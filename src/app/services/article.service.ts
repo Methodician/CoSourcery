@@ -76,13 +76,13 @@ export class ArticleService {
 
   async isBookmarked(userKey, articleKey) {
     const ref = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`);
-    // const snapshot = await ref.once('value').then(snapShot => {
-    //   return snapShot.val()
-    // })
+
     const snapshot = await ref.once('value');
     const val = snapshot.val();
+    
     // Checks if snapshot returns a timestamp
     if (val && val.toString().length === 13) {
+      console.log('length', val.toString().length);
       return true
     } else {
       return false;
@@ -122,12 +122,13 @@ export class ArticleService {
 
 
   unBookmarkArticle(userKey, articleKey) {
-    this.rtdb
-      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
-      .remove();
-    this.rtdb
-      .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
-      .remove();
+    const bpu = this.rtdb
+      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`);
+    bpu.remove();
+    const upb = this.rtdb
+      .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`);
+    upb.remove();
+
   }
 
   bookmarkArticle(userKey, articleKey) {

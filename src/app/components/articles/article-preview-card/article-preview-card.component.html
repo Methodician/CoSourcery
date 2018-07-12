@@ -28,7 +28,8 @@
     </div>
     <div>
       <mat-icon class="bookmark-icon"
-                color="primary">{{ isArticleBookmarked ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+                (click)="bookmarkToggle()"
+                color="primary">{{ isArticleBookmarked? 'bookmark' : 'bookmark_border' }}</mat-icon>
     </div>
   </mat-card-actions>
 </mat-card>

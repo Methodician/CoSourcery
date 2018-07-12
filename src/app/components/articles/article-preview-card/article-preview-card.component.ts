@@ -16,7 +16,7 @@ export class ArticlePreviewCardComponent implements OnInit {
   profileImageUrl;
   articleCoverImageUrl;
   user;
-  isArticleBookmarked;
+  isArticleBookmarked: boolean;
   hoverClass: string;
   hoverBg: string;
   constructor(
@@ -46,6 +46,7 @@ export class ArticlePreviewCardComponent implements OnInit {
         }
       });
     this.getArticleCoverImage(this.articleData.articleId);
+
   }
 
 
@@ -72,9 +73,12 @@ export class ArticlePreviewCardComponent implements OnInit {
 
   async checkIfBookmarked() {
     this.isArticleBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleData.articleId);
+    
   }
 
   bookmarkToggle() {
+    console.log('click');
+    
         if (this.authSvc.isSignedIn()) {
           if (this.isArticleBookmarked) {
             this.articleSvc.unBookmarkArticle(this.user.$key, this.articleData.articleId);

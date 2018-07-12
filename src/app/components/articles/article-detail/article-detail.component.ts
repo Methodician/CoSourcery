@@ -66,7 +66,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.userSvc.userInfo$.subscribe((user: UserInfoOpen) => {
       if (user.exists()) {
         this.user = user;
-        // this.checkIfBookmarked();
+        this.checkIfBookmarked();
       }
     });
     // this.allArticles = this.articleSvc
@@ -91,19 +91,22 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   async checkIfBookmarked() {
     const isBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleKey);
+    console.log('isBM', isBookmarked);
+    
     this.isArticleBookmarked = isBookmarked;
+
     // this.isArticleBookmarked = this.articleSvc
     //   .isBookmarked(this.user.$key, this.articleKey);
   }
 
   bookmarkToggle() {
-    // if (this.authSvc.isSignedIn()) {
-    //   if (this.isArticleBookmarked) {
-    //     this.articleSvc.unBookmarkArticle(this.user.$key, this.articleKey);
-    //   } else {
-    //     this.articleSvc.bookmarkArticle(this.user.$key, this.articleKey);
-    //   }
-    // }
+    if (this.authSvc.isSignedIn()) {
+      if (this.isArticleBookmarked) {
+        this.articleSvc.unBookmarkArticle(this.user.$key, this.articleKey);
+      } else {
+        this.articleSvc.bookmarkArticle(this.user.$key, this.articleKey);
+      }
+    }
   }
 
 
