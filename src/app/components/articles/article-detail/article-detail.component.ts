@@ -19,23 +19,23 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input() articleData: any;
   @Input() editingPreview = false;
   articleKey: string;
-  viewId = '';
-  isArticleBookmarked: Promise<boolean>;
+  // viewId = '';
+  isArticleBookmarked: boolean;
   author;
   article;
   articleCoverImageUrl: string;
-  iFollow: any;
-  followsMe: any;
+  // iFollow: any;
+  // followsMe: any;
   profileImageUrl;
   user: UserInfoOpen = null;
-  viewIncremented = false;
+  // viewIncremented = false;
 
   // kb
-  allArticles: any;
-  currentArticle = 0;
-  relatedArticles: any;
+  // allArticles: any;
+  // currentArticle = 0;
+  // relatedArticles: any;
 
-  SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
+  // SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
 
   constructor(
     private articleSvc: ArticleService,
@@ -66,17 +66,17 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.userSvc.userInfo$.subscribe((user: UserInfoOpen) => {
       if (user.exists()) {
         this.user = user;
-        this.checkIfBookmarked();
+        // this.checkIfBookmarked();
       }
     });
-    this.allArticles = this.articleSvc
-      .getAllArticles();
+    // this.allArticles = this.articleSvc
+    //   .getAllArticles();
   }
 
   ngOnDestroy() {
-    if (this.viewId) {
-      this.articleSvc.captureArticleUnView(this.articleKey, this.viewId);
-    }
+    // if (this.viewId) {
+    //   this.articleSvc.captureArticleUnView(this.articleKey, this.viewId);
+    // }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -89,19 +89,21 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.articleSvc.navigateToProfile(this.author.$key);
   }
 
-  checkIfBookmarked() {
-    this.isArticleBookmarked = this.articleSvc
-      .isBookmarked(this.user.$key, this.articleKey);
+  async checkIfBookmarked() {
+    const isBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleKey);
+    this.isArticleBookmarked = isBookmarked;
+    // this.isArticleBookmarked = this.articleSvc
+    //   .isBookmarked(this.user.$key, this.articleKey);
   }
 
   bookmarkToggle() {
-    if (this.authSvc.isSignedIn()) {
-      if (this.isArticleBookmarked) {
-        this.articleSvc.unBookmarkArticle(this.user.$key, this.articleKey);
-      } else {
-        this.articleSvc.bookmarkArticle(this.user.$key, this.articleKey);
-      }
-    }
+    // if (this.authSvc.isSignedIn()) {
+    //   if (this.isArticleBookmarked) {
+    //     this.articleSvc.unBookmarkArticle(this.user.$key, this.articleKey);
+    //   } else {
+    //     this.articleSvc.bookmarkArticle(this.user.$key, this.articleKey);
+    //   }
+    // }
   }
 
 
@@ -109,24 +111,24 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.router.navigate([`editarticle/${this.articleKey}`]);
   }
 
-  get hasHistory() {
-    return this.articleData && this.articleData.version > 1;
-  }
+  // get hasHistory() {
+  //   return this.articleData && this.articleData.version > 1;
+  // }
 
-  navigateToHistory() {
-    this.router.navigate([`articlehistory/${this.articleKey}`]);
-  }
+  // navigateToHistory() {
+  //   this.router.navigate([`articlehistory/${this.articleKey}`]);
+  // }
 
-  toggleFeatured() {
-    if (this.authSvc.isSignedIn()) {
-      if (this.article.isFeatured) {
-        this.articleSvc.unFeatureArticle(this.articleKey);
-      } else {
-        // kb: changed this
-        this.articleSvc.featureArticle(this.articleKey, this.author.$key);
-      }
-    }
-  }
+  // toggleFeatured() {
+  //   if (this.authSvc.isSignedIn()) {
+  //     if (this.article.isFeatured) {
+  //       this.articleSvc.unFeatureArticle(this.articleKey);
+  //     } else {
+  //       // kb: changed this
+  //       this.articleSvc.featureArticle(this.articleKey, this.author.$key);
+  //     }
+  //   }
+  // }
 
   async getArticleData() {
     const articleData = await this.articleSvc.getFullArticleById(this.articleKey);
@@ -186,6 +188,8 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   async getArticleBody(articleData: any) {
     const articleBody = await this.articleSvc.getArticleBody(articleData.bodyId);
+    console.log(articleBody);
+
     articleData.body = articleBody;
 
 
@@ -196,15 +200,15 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.author = author;
   }
 
-  followClick() {
-    if (this.authSvc.isSignedIn()) {
-      this.userSvc.followUser(this.article.authorKey);
-    }
-  }
+  // followClick() {
+  //   if (this.authSvc.isSignedIn()) {
+  //     this.userSvc.followUser(this.article.authorKey);
+  //   }
+  // }
 
-  tagSearch(tag: string) {
-    this.router.navigate([`/articlesearch/${tag}`]);
-  }
+  // tagSearch(tag: string) {
+  //   this.router.navigate([`/articlesearch/${tag}`]);
+  // }
 
   async getProfileImage(authorKey) {
     const basePath = 'uploads/profileImages/';
@@ -212,33 +216,33 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.profileImageUrl = imageUrl;
   }
 
-  nextArticle() {
-    if (this.currentArticle !== this.allArticles.length - 1) {
-      this.currentArticle++;
-    }
-  }
-  prevArticle() {
-    if (this.currentArticle !== 0) {
-      this.currentArticle--;
-    }
-  }
-  positionWrapper(): string {
-    return `${-320 * this.currentArticle}px`;
-  }
+  // nextArticle() {
+  //   if (this.currentArticle !== this.allArticles.length - 1) {
+  //     this.currentArticle++;
+  //   }
+  // }
+  // prevArticle() {
+  //   if (this.currentArticle !== 0) {
+  //     this.currentArticle--;
+  //   }
+  // }
+  // positionWrapper(): string {
+  //   return `${-320 * this.currentArticle}px`;
+  // }
 
-  swipe(action = this.SWIPE_ACTION.RIGHT) {
-    if (action === this.SWIPE_ACTION.RIGHT) {
-      this.prevArticle();
-    }
-    if (action === this.SWIPE_ACTION.LEFT) {
-      this.nextArticle();
-    }
-  }
+  // swipe(action = this.SWIPE_ACTION.RIGHT) {
+  //   if (action === this.SWIPE_ACTION.RIGHT) {
+  //     this.prevArticle();
+  //   }
+  //   if (action === this.SWIPE_ACTION.LEFT) {
+  //     this.nextArticle();
+  //   }
+  // }
 
-  scroll(el: any) {
-    // make smoother?
-    el.scrollIntoView({ behavior: 'smooth' });
-  }
+  // scroll(el: any) {
+  //   // make smoother?
+  //   el.scrollIntoView({ behavior: 'smooth' });
+  // }
 }
 
 

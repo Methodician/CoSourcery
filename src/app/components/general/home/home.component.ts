@@ -22,13 +22,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.initializeArticles();
-``
-
   }
 
   async initializeArticles() {
     // Doesn't even really need a comment since the code describes the action.
-    this.featuredArticles = await this.articleSvc.getFeaturedArticles();
+    // this.featuredArticles = await this.articleSvc.getFeaturedArticles();
     this.latestArticles = await this.articleSvc.getLatestArticles();
     this.allArticles = await this.articleSvc.getAllArticles();
   }

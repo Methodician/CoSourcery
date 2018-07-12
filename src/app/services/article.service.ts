@@ -12,7 +12,7 @@ import { NotificationService } from '../services/notification.service';
   providedIn: 'root'
 })
 export class ArticleService {
-  globalTags: Iterable<GlobalTag>;
+  // globalTags: Iterable<GlobalTag>;
   fsdb = firebase.firestore();
   rtdb = firebase.database();
   constructor(private router: Router, private notifSvc: NotificationService) {
@@ -22,11 +22,13 @@ export class ArticleService {
 
   async getAllArticles() {
     const articlesRef = this.fsdb.collection('articleData/articles/articles');
-    const querySnap = articlesRef.get().then(refReturn => {
-      return this.arrayFromCollectionSnapshot(refReturn);
-    });
-        console.log('querySnap ALL ArtSvc 28', querySnap);
-    return querySnap;
+    const querySnap = await articlesRef.get();
+    const articleArray = this.arrayFromCollectionSnapshot(querySnap);
+    // const querySnap = articlesRef.get().then(refReturn => {
+    //   return this.arrayFromCollectionSnapshot(refReturn);
+    // });
+    console.log('querySnap ALL ArtSvc 28', articleArray);
+    return articleArray;
   }
 
   async getLatestArticles() {
@@ -36,15 +38,15 @@ export class ArticleService {
     return this.arrayFromCollectionSnapshot(querySnap);
   }
 
-  async getFeaturedArticles() {
-    const articlesRef = this.fsdb.collection('articleData/articles/articles');
-    const query = articlesRef.where('isFeatured', '==', true);
-    const collectionSnapshot = await query.get();
-    const articleArray = this.arrayFromCollectionSnapshot(collectionSnapshot);
-    console.log('article array Fetured ArtSvc 43', articleArray);
+  // async getFeaturedArticles() {
+  //   const articlesRef = this.fsdb.collection('articleData/articles/articles');
+  //   const query = articlesRef.where('isFeatured', '==', true);
+  //   const collectionSnapshot = await query.get();
+  //   const articleArray = this.arrayFromCollectionSnapshot(collectionSnapshot);
+  //   console.log('article array Fetured ArtSvc 43', articleArray);
 
-    return articleArray;
-  }
+  //   return articleArray;
+  // }
 
   async getArticleById(articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
@@ -71,42 +73,44 @@ export class ArticleService {
     return userInfoSnapshot.val();
 
   }
-  
+
   async isBookmarked(userKey, articleKey) {
     const ref = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`);
-    const snapshot = await ref.once('value').then(snapShot =>{
-      return snapShot.val()
-    })
+    // const snapshot = await ref.once('value').then(snapShot => {
+    //   return snapShot.val()
+    // })
+    const snapshot = await ref.once('value');
+    const val = snapshot.val();
     // Checks if snapshot returns a timestamp
-    if (snapshot && snapshot.toString().length === 13 ){
-     return true 
+    if (val && val.toString().length === 13) {
+      return true
     } else {
       return false;
-  }
-}
-  async getGlobalTags() {
-    const tagsSnapshot = await this.fsdb.doc('articleData/tags').get();
-    return tagsSnapshot.data();
-  }
-
-  captureArticleUnView(articleId: string, viewId: string) {
-    // TOUGH: Not registered when browser refreshed or closed or navigate away from app.
-    // Consider using beforeUnload S/O article:
-    // https://stackoverflow.com/questions/37642589/how-can-we-detect-when-user-closes-browser/37642657#37642657
-    // Consider using session storage as started in captureAricleView - maybe can reliably track viewId and timing or something...
-    // Consider using Cloud Functions or use presence scheme
-    const viewFromSession = new Date(sessionStorage.getItem(`unView:${articleId}`));
-    const msPerMinute = 60000;
-    const twoMinutesBack = new Date(new Date().valueOf() - 2 * msPerMinute);
-    if (viewFromSession < twoMinutesBack) {
-      sessionStorage.setItem(`unView:${articleId}`, new Date().toString());
-      const articleDocRef = this.getArticleRef(articleId);
-      return articleDocRef.collection('views').doc(viewId).update({
-        viewEnd: this.fsServerTimestamp()
-        // viewEnd: new Date()
-      });
     }
   }
+  // async getGlobalTags() {
+  //   const tagsSnapshot = await this.fsdb.doc('articleData/tags').get();
+  //   return tagsSnapshot.data();
+  // }
+
+  // captureArticleUnView(articleId: string, viewId: string) {
+  //   // TOUGH: Not registered when browser refreshed or closed or navigate away from app.
+  //   // Consider using beforeUnload S/O article:
+  //   // https://stackoverflow.com/questions/37642589/how-can-we-detect-when-user-closes-browser/37642657#37642657
+  //   // Consider using session storage as started in captureAricleView - maybe can reliably track viewId and timing or something...
+  //   // Consider using Cloud Functions or use presence scheme
+  //   const viewFromSession = new Date(sessionStorage.getItem(`unView:${articleId}`));
+  //   const msPerMinute = 60000;
+  //   const twoMinutesBack = new Date(new Date().valueOf() - 2 * msPerMinute);
+  //   if (viewFromSession < twoMinutesBack) {
+  //     sessionStorage.setItem(`unView:${articleId}`, new Date().toString());
+  //     const articleDocRef = this.getArticleRef(articleId);
+  //     return articleDocRef.collection('views').doc(viewId).update({
+  //       viewEnd: this.fsServerTimestamp()
+  //       // viewEnd: new Date()
+  //     });
+  //   }
+  // }
 
   navigateToArticleDetail(articleKey: any) {
     this.router.navigate([`articledetail/${articleKey}`]);
@@ -117,36 +121,36 @@ export class ArticleService {
   }
 
 
-  unBookmarkArticle(userKey, articleKey) {
-    this.rtdb
-      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
-      .remove();
-    this.rtdb
-      .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
-      .remove();
-  }
+  // unBookmarkArticle(userKey, articleKey) {
+  //   this.rtdb
+  //     .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
+  //     .remove();
+  //   this.rtdb
+  //     .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
+  //     .remove();
+  // }
 
-  bookmarkArticle(userKey, articleKey) {
-    this.rtdb
-      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
-      .set(firebase.database.ServerValue.TIMESTAMP);
-    this.rtdb
-      .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
-      .set(firebase.database.ServerValue.TIMESTAMP);
-  }
+  // bookmarkArticle(userKey, articleKey) {
+  //   this.rtdb
+  //     .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
+  //     .set(firebase.database.ServerValue.TIMESTAMP);
+  //   this.rtdb
+  //     .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
+  //     .set(firebase.database.ServerValue.TIMESTAMP);
+  // }
 
-  featureArticle(articleKey: string, authorKey: string) {
-    this
-      .getArticleRef(articleKey)
-      .update({ isFeatured: true });
-    this.notifSvc.createFeatureNotification(authorKey);
-  }
+  // featureArticle(articleKey: string, authorKey: string) {
+  //   this
+  //     .getArticleRef(articleKey)
+  //     .update({ isFeatured: true });
+  //   this.notifSvc.createFeatureNotification(authorKey);
+  // }
 
-  unFeatureArticle(articleKey: string) {
-    this
-      .getArticleRef(articleKey)
-      .update({ isFeatured: false });
-  }
+  // unFeatureArticle(articleKey: string) {
+  //   this
+  //     .getArticleRef(articleKey)
+  //     .update({ isFeatured: false });
+  // }
 
   fsServerTimestamp() {
     return firebase.firestore.FieldValue.serverTimestamp();
@@ -157,38 +161,38 @@ export class ArticleService {
   }
 
   arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
-    const array = [];    
+    const array = [];
     querySnapshot.forEach(doc => {
-      if (shouldAttachId){
+      if (shouldAttachId) {
         array.push({ id: doc.id, ...doc.data() });
       } else {
-      array.push(doc.data());
+        array.push(doc.data());
       }
     })
     console.log('AS array 169', array);
     return array;
   }
 
-  getArticlesPerTag(tagArr) {
-    const articlesArray = [];
-    tagArr.map(tag => {
-      this.rtdb.ref(`articleData/articlesPerTag/${tag}`).once(`value`)
-        .then(result => {
-          const tags = result.val();
-          if (tags.length > 1) {
-            tags.map(obj => {
-              articlesArray.push(obj.key);
-            });
-          }
-        });
-    });
-    return articlesArray;
-  }
+  // getArticlesPerTag(tagArr) {
+  //   const articlesArray = [];
+  //   tagArr.map(tag => {
+  //     this.rtdb.ref(`articleData/articlesPerTag/${tag}`).once(`value`)
+  //       .then(result => {
+  //         const tags = result.val();
+  //         if (tags.length > 1) {
+  //           tags.map(obj => {
+  //             articlesArray.push(obj.key);
+  //           });
+  //         }
+  //       });
+  //   });
+  //   return articlesArray;
+  // }
 
 
   // MASSIVE REFACTOR REQUIRED
   updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
-  
+
   }
 
 }
