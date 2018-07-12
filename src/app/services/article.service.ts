@@ -79,10 +79,8 @@ export class ArticleService {
 
     const snapshot = await ref.once('value');
     const val = snapshot.val();
-    
     // Checks if snapshot returns a timestamp
     if (val && val.toString().length === 13) {
-      console.log('length', val.toString().length);
       return true
     } else {
       return false;
