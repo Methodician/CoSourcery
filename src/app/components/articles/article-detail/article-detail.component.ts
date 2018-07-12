@@ -30,6 +30,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   user: UserInfoOpen = null;
   // viewIncremented = false;
 
+
   // kb
   // allArticles: any;
   // currentArticle = 0;
@@ -56,6 +57,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
         // this.checkIfFeatured();
         // TODO: Refactor below(142);
         this.getArticleData();
+        
       });
     } else {
       // this.checkIfFeatured();
@@ -83,6 +85,8 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['articleData'] && changes['articleData'].currentValue) {
       this.article = changes['articleData'].currentValue;
     }
+    console.log('changes',this.article);
+    
   }
 
   navigateToProfile() {
@@ -90,22 +94,17 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async checkIfBookmarked() {
-    const isBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleKey);
-    console.log('isBM', isBookmarked);
-    
+    const isBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleKey);    
     this.isArticleBookmarked = isBookmarked;
-
-    // this.isArticleBookmarked = this.articleSvc
-    //   .isBookmarked(this.user.$key, this.articleKey);
   }
 
   bookmarkToggle() {    
     if (this.authSvc.isSignedIn()) {
       if (this.isArticleBookmarked) {
-        this.articleSvc.unBookmarkArticle(this.user.$key, this.articleData.articleId);
+        this.articleSvc.unBookmarkArticle(this.user.$key, this.article.articleId);
         this.isArticleBookmarked = false;
       } else {
-        this.articleSvc.bookmarkArticle(this.user.$key, this.articleData.articleId);
+        this.articleSvc.bookmarkArticle(this.user.$key, this.article.articleId);
         this.isArticleBookmarked = true;
       }
     }
@@ -138,13 +137,33 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   async getArticleData() {
     const articleData = await this.articleSvc.getFullArticleById(this.articleKey);
     if (articleData) {
+      const thisArticle = new ArticleDetailFirestore (
+        articleData.authorId,
+        articleData.bodyId,
+        articleData.title,
+        articleData.introduction,
+        this.articleSvc.getArticleUpdateTime(this.articleKey),
+        this.articleSvc.getArticleTimeStampTime(this.articleKey),
+        articleData.version,
+        articleData.commentCount,
+        articleData.viewCount,
+        articleData.tags,
+        articleData.body,
+)
+      thisArticle.articleId = this.articleKey;
+      this.article = thisArticle;
       this.articleData = articleData;
-      this.getArticleBody(articleData);
-      this.getAuthor(articleData.authorId);
-      this.getProfileImage(articleData.authorId);
+      this.getAuthor(this.article.authorId);
+      this.getProfileImage(this.article.authorId);
       this.getArticleCoverImage(this.articleKey);
     }
   }
+
+  // async testTimeStamp() {
+    
+  //   this.testTime = 
+    
+  // }
   //  TODO: Refactor and Reimplement
   // getArticleData() {
   //   //  Firestore way:
@@ -193,11 +212,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   async getArticleBody(articleData: any) {
     const articleBody = await this.articleSvc.getArticleBody(articleData.bodyId);
-    console.log(articleBody);
-
     articleData.body = articleBody;
-
-
   }
 
   async getAuthor(authorKey: string) {
