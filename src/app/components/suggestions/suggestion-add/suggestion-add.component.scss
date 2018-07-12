@@ -1,0 +1,17 @@
+// imports for the variable and mixin files found within the sass-variables-mixins folder
+@import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
+.suggestionContainer {
+  height: calc(100vh - 248px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.buttonWrapper {
+  display: flex;
+  justify-content: center;
+}
+.suggestion-submit {
+  @include medium-button();
+}

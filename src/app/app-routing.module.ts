@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from 'app/components/account/login/login.component';
 import { TopNavComponent } from 'app/components/shared/top-nav/top-nav.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
@@ -11,9 +11,12 @@ import { SuggestionsComponent } from './components/suggestions/suggestions/sugge
 import { SuggestionDetailComponent } from './components/suggestions/suggestion-detail/suggestion-detail.component';
 import { AboutUsComponent } from './components/general/about-us/about-us.component';
 import { PageNotFoundComponent } from './components/general/page-not-found/page-not-found.component';
-
+import { SuggestionAddComponent } from './components/suggestions/suggestion-add/suggestion-add.component';
+import { SuggestionEditComponent } from './components/suggestions/suggestion-edit/suggestion-edit.component';
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent, children: [
+    {path: 'nav', component: TopNavComponent}
+  ] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   // {
@@ -70,17 +73,9 @@ const routes: Routes = [
   //   ]
   // },
   { path: 'suggestions', component: SuggestionsComponent },
-  // {
-  //   path: 'postsuggestion',
-  //   canActivate: [AuthGuard],
-  //   component: AddSuggestionComponent
-  // },
+  { path: 'postsuggestion',  component: SuggestionAddComponent }, // ADD  canActivate: [AuthGuard],
   { path: 'suggestion/:key', component: SuggestionDetailComponent },
-  // {
-  //   path: 'editsuggestion/:key',
-  //   canActivate: [AuthGuard],
-  //   component: EditSuggestionComponent
-  // },
+  { path: 'editsuggestion/:key', component: SuggestionEditComponent }, // ADD  canActivate: [AuthGuard],
   { path: 'aboutus', component: AboutUsComponent },
   { path: '', component: HomeComponent },
   // ATTN: this route MUST live at the end of all the routes in this array.

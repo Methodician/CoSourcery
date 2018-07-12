@@ -3,6 +3,7 @@ import * as fb from 'firebase';
 import * as fbui from 'firebaseui';
 import { BehaviorSubject } from 'rxjs';
 import { AuthInfo } from '../shared/class/auth-info';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
@@ -53,16 +54,14 @@ export class AuthService {
     // , tosUrl: '<your-tos-url>'
   };
 
-  constructor() {
+  constructor(private router: Router) {
     // this.testAuthSub();
     this.ui = new fbui.auth.AuthUI(fb.auth());
     fb.auth().onAuthStateChanged((user) => {
       if (user) {
         const authInfo = new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email);
         this.authInfo.next(authInfo);
-        // console.log('user:', user);
         user.getIdToken().then((token) => {
-          // console.log('token:', token);
           this.accessToken.next(token);
         });
       } else {
@@ -83,6 +82,7 @@ export class AuthService {
 
   signOut() {
     fb.auth().signOut();
+    this.router.navigate(['login']);
   }
 
   isSignedIn() {

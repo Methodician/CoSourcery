@@ -1,3 +1,43 @@
-<p>
-  comment works!
-</p>
+<div class="comment" *ngIf="!comment.isDeleted" [class.toplevel]="isTopLevelComment()">
+  <div class="replies-toggle">
+      <p>{{replies?.length > 0 ? replies?.length : ''}}</p>
+      <p *ngIf="hasReplies()" class="toggle-collapse" [class.showing]="isRepliesShowing()" (click)="toggleReplies()">&#8250;</p>
+  </div>
+  <!-- <img *ngIf="hasReplies()" src="../../assets/images/chevron.png" class="toggle-collapse" [class.showing]="isRepliesShowing()" (click)="toggleReplies()"/> -->
+  <div class="comment-content">
+    <img [src]="profileImage">
+    <p class="comment-author" (click)="navigateToProfile()">{{ displayName }}</p>
+    <p *ngIf="!editShowing" class="comment-text">{{comment.text}}</p>
+    <p class="comment-date">{{comment.lastUpdated | timeElapsed}}</p>
+    <!-- <span class="date-updated">
+      comments: {{comment.commentCount ? comment.commentCount : '0'}} 
+      {{ comment.lastUpdated | timeElapsed }}</span> -->
+  </div>
+  <!-- <span *ngIf="!editShowing" id="reply-button" (click)="tryShowAddReply(addReply)">Reply</span> -->
+  
+  <cos-comment-edit *ngIf="editShowing" [currentUserInfo]="currentUserInfo" [initialCommentValue]="comment" (editFormButtonClickSender)="editFormClicked($event)"></cos-comment-edit>
+
+  <div *ngIf="!editShowing" class="comment-actions">
+      <mat-icon tabindex="0" (click)="tryShowAddReply(addReply)">reply</mat-icon>
+      <div class="comment-update" *ngIf="isLoggedInUserComment()">
+        <mat-icon [class.active]="editShow" (click)="toggleEdit()">edit</mat-icon>
+        <mat-icon id="delete" (click)="deleteComment()">delete</mat-icon>
+      </div>
+  </div>
+</div>
+
+<div class="comment deleted-comment" *ngIf="comment.isDeleted && hasReplies()">
+  <div class="replies-toggle">
+    <p>{{replies?.length > 0 ? replies?.length : ''}}</p>
+    <p *ngIf="hasReplies()" class="toggle-collapse" [class.showing]="isRepliesShowing()" (click)="toggleReplies()">&#8250;</p>
+  </div>
+    <!-- <img *ngIf="hasReplies()" src="../../assets/images/chevron.png" class="toggle-collapse" [class.showing]="isRepliesShowing()" (click)="toggleReplies()"/> -->
+    <p class="comment-text">Comment deleted.</p>
+</div>
+
+<div class="replies">
+  <cos-comment-add-reply #addReply [currentUserInfo]="currentUserInfo" [parentCommentKey]="comment.$key"></cos-comment-add-reply>
+  <div *ngIf="isRepliesShowing()">
+    <cos-comment *ngFor="let reply of replies" [comment]="reply" [currentUserInfo]="currentUserInfo"></cos-comment>
+  </div>
+</div>

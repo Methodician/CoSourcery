@@ -13,7 +13,7 @@ export class RelatedArticlePipe implements PipeTransform {
       } else {
         const articleResults = articlesToFilter.filter(obj => {
           return relatedArticles.includes(obj.articleId);
-        })
+        });
         return articleResults;
       }
     }

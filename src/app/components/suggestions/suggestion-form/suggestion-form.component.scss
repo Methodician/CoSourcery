@@ -1,0 +1,32 @@
+// imports for the variable and mixin files found within the sass-variables-mixins folder
+@import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
+h2 {
+  text-align: center;
+  color: $dark-gray;
+}
+.formContainer {
+  margin-top: 50px;
+}
+.formWrapper {
+  margin: 0 auto;
+  fieldset {
+    mat-form-field {
+      width: 100%;
+    }
+    .pitch-styles {
+      margin-top: 50px;
+    }
+  }
+}
+@media only screen and (max-width:768px) {
+  label:first-child {
+    margin-top: 90px;
+  }
+  textarea {
+    width: 100%;
+  }
+  .formWrapper {
+    width: 95%;
+  }
+}

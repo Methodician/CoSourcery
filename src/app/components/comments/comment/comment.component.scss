@@ -1,0 +1,149 @@
+@import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
+.comment {
+  display: block;
+  position: relative;
+  left: 35px;
+  width: 80%;
+  margin-bottom: 20px;
+  padding: 5px 15px 40px 0;
+  border-top: 0;
+  border-bottom: 1px solid $dark-gray-20;
+  border-left: 5px solid $primary-color;
+  @include respond-to($tablet-sm){
+    padding: 5px 10px 20px 0;
+  }
+  img {
+    width: 25px;
+    height: 25px;
+    border-radius: 12px;
+    object-fit: cover;
+    grid-area: 1/1/span 3/2;
+    margin: 10px;
+    @include respond-to($tablet-sm){
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+    }
+  }
+  .replies-toggle {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    p:first-of-type {
+      font-weight: bold;
+      font-size: 18px;
+      margin: 15px 0 0 0;
+    }
+  }
+
+  .comment-content {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: repeat(3, max-content);
+    .comment-date {
+      font-size: 14px;
+      color: gray
+    } 
+  }
+  p.comment-text {
+    white-space: pre-wrap;
+  }
+  .toggle-collapse {
+    margin: 0;
+    cursor: pointer;
+    font-size: 36px;
+    font-weight: bold;
+    transition: transform 50ms ease-in, -webkit-transform 50ms ease-in;
+    -webkit-transform: rotate(0) translateX(0);
+    transform: rotate(0) translateX(0);
+    color: $accent-color;
+    &.showing {
+      -webkit-transform: rotate(90deg) translateY(-2px);
+      transform: rotate(90deg) translateY(-2px);
+    }
+    &:hover {
+      color: $accent-color-70;
+    }
+  }
+  .comment-author {
+    font-weight: bold;
+    margin: 10px 0 0 0;
+  }
+}
+.deleted-comment {
+  color: $dark-gray;
+  border-left: 5px solid $dark-grey;
+  padding-top: 25px;
+  padding-bottom: 30px;
+  p {
+    text-align: center;
+    margin: 0px;
+    font-weight: bold;
+  }
+  .comment-text {
+    font-style: italic;
+  }
+  .replies-toggle {
+    p:first-of-type {
+      margin: 0;
+    }
+  }
+}
+// Adds the nesting effect
+.replies {
+  @include respond-to($tablet-sm){
+    margin-left: 15px;
+  }
+  cos-comment-add-reply {
+    @include respond-to($tablet-sm){
+      position: relative;
+      left: 20px;
+      padding-left: 0;
+    }
+  }
+}
+.comment-author {
+  cursor: pointer;
+  color: #C4275F;
+  :hover {
+    text-decoration: underline;
+  }
+}
+.comment-actions {
+  position: absolute;
+  right: 5px;
+  bottom: 15px;
+  .comment-update {
+    display: inline-block;
+  }
+  mat-icon {
+    color: #00BE9C;
+    padding: 0 10px;
+    cursor: pointer;
+    &:hover {
+      color: $accent-color-70;
+    }
+    &#delete {
+      color: $warn-color;
+      &:hover {
+        color: rgba(196, 39, 95, 0.2);
+      }
+    } 
+  }
+}
+.date-updated {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: grey;
+  font-size: 12px;
+}
+.toplevel {
+  border-left: 5px solid transparent;
+}

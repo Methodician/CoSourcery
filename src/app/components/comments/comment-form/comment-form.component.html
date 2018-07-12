@@ -1,3 +1,7 @@
-<p>
-  comment-form works!
-</p>
+<form [formGroup]="form">
+  <mat-form-field color="accent">
+      <textarea matInput [placeholder]="placeholderText" formControlName="text" name="text" matTextareaAutosize
+      matAutosizeMaxRows="10"></textarea>
+    <!-- <textarea matInput name="text" [placeholder]="placeholderText" formControlName="text" class="formControl"></textarea> -->
+  </mat-form-field>
+</form>

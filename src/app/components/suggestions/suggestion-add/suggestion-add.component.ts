@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { SuggestionService } from '../../../services/suggestion.service';
 
 @Component({
   selector: 'cos-suggestion-add',
   templateUrl: './suggestion-add.component.html',
   styleUrls: ['./suggestion-add.component.scss']
 })
-export class SuggestionAddComponent implements OnInit {
+export class SuggestionAddComponent  {
 
-  constructor() { }
+  constructor(private suggestionSvc: SuggestionService) { }
 
-  ngOnInit() {
+  saveSuggestion(formData) {
+    this.suggestionSvc.saveSuggestion(formData);
   }
 
 }

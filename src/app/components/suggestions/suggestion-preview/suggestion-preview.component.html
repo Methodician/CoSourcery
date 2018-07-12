@@ -1,3 +1,10 @@
-<p>
-  suggestion-preview works!
-</p>
+
+<div class="suggestion-preview">
+  <div class="previewWrapper">
+    <div class="suggestion-content">
+      <h3 [routerLink]="['/suggestion', suggestion.id]" class="suggestion-title">{{ suggestion.title }}</h3>
+      <p class="suggestion-pitch">{{ suggestion.pitch }}</p>
+    </div>
+  </div>
+  <cos-suggestion-vote [suggestion]="suggestion" [currentUserKey]="currentUserKey"></cos-suggestion-vote>   
+</div>

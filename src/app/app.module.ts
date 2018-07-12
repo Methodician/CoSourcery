@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AuthService } from './services/auth.service';
 
 // Material and Associated Imports
 import {
@@ -77,6 +76,13 @@ import { SuggestionSortPipe } from './shared/pipes/suggestion-sort.pipe';
 import { TimeElapsedPipe } from './shared/pipes/time-elapsed.pipe';
 import { TruncateTagsPipe } from './shared/pipes/truncate-tags.pipe';
 import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
+import { SuggestionService } from './services/suggestion.service';
+import { VoteService } from './services/vote.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UploadService } from './services/upload.service';
+import { NotificationService } from './services/notification.service';
+import { ArticleService } from './services/article.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -153,8 +159,10 @@ import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
     MatTooltipModule,
     MatTabsModule,
     BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, SuggestionService, VoteService, UploadService, NotificationService, ArticleService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
