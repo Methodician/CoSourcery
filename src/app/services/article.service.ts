@@ -121,23 +121,23 @@ export class ArticleService {
   }
 
 
-  // unBookmarkArticle(userKey, articleKey) {
-  //   this.rtdb
-  //     .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
-  //     .remove();
-  //   this.rtdb
-  //     .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
-  //     .remove();
-  // }
+  unBookmarkArticle(userKey, articleKey) {
+    this.rtdb
+      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
+      .remove();
+    this.rtdb
+      .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
+      .remove();
+  }
 
-  // bookmarkArticle(userKey, articleKey) {
-  //   this.rtdb
-  //     .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
-  //     .set(firebase.database.ServerValue.TIMESTAMP);
-  //   this.rtdb
-  //     .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
-  //     .set(firebase.database.ServerValue.TIMESTAMP);
-  // }
+  bookmarkArticle(userKey, articleKey) {
+    this.rtdb
+      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
+      .set(firebase.database.ServerValue.TIMESTAMP);
+    this.rtdb
+      .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
+      .set(firebase.database.ServerValue.TIMESTAMP);
+  }
 
   // featureArticle(articleKey: string, authorKey: string) {
   //   this

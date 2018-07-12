@@ -7,20 +7,20 @@ import { ArticleService } from '../../../services/article.service';
   styleUrls: ['./article-related.component.scss']
 })
 export class ArticleRelatedComponent implements OnInit, OnChanges {
-  @Input()  any;
+  @Input() any;
   @Input() parentTags: any;
   relatedArticles: any;
   currentArticle = 0;
 
   SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
-  constructor(private articleSvc: ArticleService) {}
+  constructor(private articleSvc: ArticleService) { }
 
   ngOnInit() {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['parentTags'] && changes['parentTags'].currentValue) {
-      this.relatedArticles = this.articleSvc.getArticlesPerTag(this.parentTags);
+      // this.relatedArticles = this.articleSvc.getArticlesPerTag(this.parentTags);
       this.currentArticle = 0;
     }
   }
