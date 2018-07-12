@@ -1,4 +1,10 @@
 <div class="article-detail-wrapper">
+  <div>
+   <p>
+     {{testTime | date}}
+     
+  </p>  
+  </div>
   <mat-card>
     <div class="article-detail">
         <img id="header" [src]="articleCoverImageUrl ? articleCoverImageUrl : '../../../../assets/images/kid-art.jpg'">
@@ -7,9 +13,11 @@
             <h1>{{article?.title}}</h1>
           </mat-card-title>
           <mat-card-subtitle>
-            Last Updated: {{article?.lastUpdated?.toDate() | date}}
+            Last Updated: {{article?.lastUpdated| date}}
           </mat-card-subtitle>
         </mat-card-header>
+        
+
         <mat-card-content>
           <h3>{{article?.introduction}}</h3>
           <div [innerHtml]="article?.body | safeHtml"></div>
@@ -25,16 +33,16 @@
             </div>
             <div class="author-details">
               <h3>By <span class="span-link" (click)="navigateToProfile()">{{author?.alias}}</span></h3>
-              <p>Created {{article?.timestamp?.toDate() | date}}</p>
+              <p>Created {{article?.timestamp | date}}</p>
             </div>
             <div class="icons">
               <div matTooltip="comments" (click)="scroll(discussion)">
                 <mat-icon color="accent">comment</mat-icon>
-                <p>{{articleData?.commentCount ? article.commentCount : '0'}}</p>
+                <p>{{article?.commentCount ? article.commentCount : '0'}}</p>
               </div>
               <div matTooltip="Revised {{articleData?.version}} time(s)" *ngIf="!editingPreview && hasHistory" (click)="navigateToHistory()">
                   <mat-icon color="accent">border_color</mat-icon>
-                  <p>{{articleData?.version}}</p>
+                  <p>{{article?.version}}</p>
               </div>
               <div>
                 <mat-icon class="bookmark-icon"
@@ -51,9 +59,6 @@
     <mat-card-footer>
       <!-- <cos-article-related *ngIf="!editingPreview" [parentAllArticles]="allArticles | relatedArticle: relatedArticles" [parentTags]="article?.tags"></cos-article-related> -->
       <div id="discussion" #discussion>
-
-        <!-- UNCOMMENT WHEN RE-IMPLEMENTING COMMENTS COMPONENTS -->
-
         <!-- <div *ngIf="!editingPreview"  class="comment-section-wrapper">
           <cos-comment-add [headerTitle]="'Discussion'" [parentKey]="articleKey"></cos-comment-add>
           <cos-comment-list [parentKey]="articleKey"></cos-comment-list>
