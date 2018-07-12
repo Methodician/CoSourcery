@@ -76,9 +76,7 @@ export class ArticlePreviewCardComponent implements OnInit {
     
   }
 
-  bookmarkToggle() {
-    console.log('click');
-    
+  bookmarkToggle() {    
         if (this.authSvc.isSignedIn()) {
           if (this.isArticleBookmarked) {
             this.articleSvc.unBookmarkArticle(this.user.$key, this.articleData.articleId);
