@@ -8,7 +8,7 @@
        alt="article's cover image">
   <mat-card-header (click)="navigateToArticleDetail()">
     <mat-card-title>{{articleData.title | truncateString: 20}}</mat-card-title>
-    <mat-card-subtitle>Last Updated: {{articleData?.lastUpdated?.toDate() | timeElapsed}}</mat-card-subtitle>
+    <mat-card-subtitle>Last Updated: {{articleData?.lastUpdated?.toDate() | date }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content (click)="navigateToArticleDetail()">
     <p>{{articleData.introduction | truncateString: 100}}</p>

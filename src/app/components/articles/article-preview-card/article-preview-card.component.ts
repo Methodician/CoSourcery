@@ -47,7 +47,35 @@ export class ArticlePreviewCardComponent implements OnInit {
       });
     this.getArticleCoverImage(this.articleData.articleId);
 
+console.log(this.articleData);
+
   }
+
+
+//   async getArticleData() {
+//     const articleData = await this.articleSvc.getFullArticleById(this.articleKey);
+//     if (articleData) {
+//       const thisArticle = new ArticleDetailFirestore (
+//         articleData.authorId,
+//         articleData.bodyId,
+//         articleData.title,
+//         articleData.introduction,
+//         this.articleSvc.getArticleUpdateTime(this.articleKey),
+//         this.articleSvc.getArticleTimeStampTime(this.articleKey),
+//         articleData.version,
+//         articleData.commentCount,
+//         articleData.viewCount,
+//         articleData.tags,
+//         articleData.body,
+// )
+//       thisArticle.articleId = this.articleKey;
+//       this.article = thisArticle;
+//       this.articleData = articleData;
+//       this.getAuthor(this.article.authorId);
+//       this.getProfileImage(this.article.authorId);
+//       this.getArticleCoverImage(this.articleKey);
+//     }
+//   }
 
 
   navigateToArticleDetail() {
@@ -70,7 +98,7 @@ export class ArticlePreviewCardComponent implements OnInit {
     this.articleCoverImageUrl = await this.uploadSvc
       .getImageUrl(articleKey, basePath);
   }
-
+  
   async checkIfBookmarked() {
     this.isArticleBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleData.articleId);
     
