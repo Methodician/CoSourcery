@@ -47,8 +47,6 @@ export class ArticlePreviewCardComponent implements OnInit {
       });
     this.getArticleCoverImage(this.articleData.articleId);
 
-console.log(this.articleData);
-
   }
 
 

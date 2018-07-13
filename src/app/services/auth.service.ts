@@ -55,7 +55,7 @@ export class AuthService {
       if (user) {
         const authInfo = new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email);
         this.authInfo$.next(authInfo);
-        user.getIdToken().then((token) => {
+        user.getIdToken(false).then((token) => {
           this.accessToken.next(token);
         });
       } else {
