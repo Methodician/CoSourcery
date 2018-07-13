@@ -20,7 +20,7 @@ export class UploadService {
     const snapshot = await this.rtdb.ref(`${basePath}/${key}`).once(`value`);
     if (snapshot && snapshot.val()) {
       const url = snapshot.val().url;
-      return url || 'https://www.fillmurray.com/200/300';
+      return url || '../../../assets/images/kid-art.jpg';
     }
     return 'https://www.fillmurray.com/200/300';
   }
