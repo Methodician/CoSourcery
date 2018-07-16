@@ -133,7 +133,7 @@ export class UserService {
       });
   }
 
-  getFollowersOfUser(uid: string) { 
+  getFollowersOfUser(uid: string) {
   firebase.database().ref(`userInfo/followersPerUser/${uid}`).on(`value`, async followers => {
     const followersList: object[] = new Array<Object>();
     const following = followers.val();
