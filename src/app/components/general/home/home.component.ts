@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ArticleDetailFirestore } from '../../../shared/class/article-info';
 import { UserService } from '../../../services/user.service';
 import { UserInfoOpen } from '../../../shared/class/user-info';
+import { skip } from '../../../../../node_modules/rxjs/operators';
 @Component({
   selector: 'cos-home',
   templateUrl: './home.component.html',
@@ -40,8 +41,6 @@ export class HomeComponent implements OnInit {
     this.latestArticles = await this.articleSvc.getLatestArticles();
     this.allArticles = await this.articleSvc.getAllArticles();
     this.bookmarkedArticles = await this.articleSvc.getBookmarked(this.uid);
-    console.log(this.bookmarkedArticles);
-    console.log(this.uid);
 
   }
 

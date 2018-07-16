@@ -28,16 +28,16 @@ export class ArticleService {
     return articleArray;
   }
 
-  async getBookmarked(userKey) {
+  getBookmarked(userKey) {
     const articlesList = new Array<any> ();
     const bookmarksRef = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}`);
-    bookmarksRef.on('value', articleKeys => {
-      articleKeys.forEach(key => {
+    bookmarksRef.once('value').then(articleKeys => {
+    articleKeys.forEach(key => {
       this.getArticleById(key.key).then(article => {
-        articlesList.push(article);
-      });
-      });
+      articlesList.push(article);
     });
+    });
+  });
     return articlesList;
   }
 
