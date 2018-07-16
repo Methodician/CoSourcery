@@ -28,12 +28,25 @@ export class ArticleService {
     return articleArray;
   }
 
+  async getBookmarked(userKey) {
+    const articlesList = new Array<any> ();
+    const bookmarksRef = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}`);
+    bookmarksRef.on('value', articleKeys => {
+      articleKeys.forEach(key => {
+      this.getArticleById(key.key).then(article => {
+        articlesList.push(article);
+      });
+      });
+    });
+    return articlesList;
+  }
+
   getArticleUpdateTime(articleId) {
     let date: Date = new Date();
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     articleRef.get().then(articleData => {
       date = articleData.data().lastUpdated.toDate().toString();
-    })
+    });
     return date;
   }
 
@@ -42,7 +55,7 @@ export class ArticleService {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     articleRef.get().then(articleData => {
       date = articleData.data().timestamp.toDate().toString();
-    })
+    });
     return date;
   }
 
@@ -95,7 +108,7 @@ export class ArticleService {
     const val = snapshot.val();
     // Checks if snapshot returns a timestamp
     if (val && val.toString().length === 13) {
-      return true
+      return true;
     } else {
       return false;
     }
@@ -184,7 +197,7 @@ export class ArticleService {
       } else {
         array.push(doc.data());
       }
-    })
+    });
     console.log('AS array 169', array);
     return array;
   }
