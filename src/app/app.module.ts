@@ -4,6 +4,7 @@ import { AuthService } from './services/auth.service';
 import { UploadService } from './services/upload.service';
 import { ArticleService } from './services/article.service';
 import { NotificationService } from './services/notification.service';
+import { UserService } from './services/user.service';
 
 // Material and Associated Imports
 import {
@@ -161,7 +162,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [AuthService, UploadService, NotificationService, ArticleService],
+  providers: [AuthService, UploadService, NotificationService, ArticleService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
