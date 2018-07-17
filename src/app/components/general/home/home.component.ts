@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
 import { ActivatedRoute } from '@angular/router';
 import { ArticleDetailFirestore } from '../../../shared/class/article-info';
-import { UserService } from '../../../services/user.service';
-import { UserInfoOpen } from '../../../shared/class/user-info';
-import { skip } from '../../../../../node_modules/rxjs/operators';
+import { AuthService } from '../../../services/auth.service';
+
 @Component({
   selector: 'cos-home',
   templateUrl: './home.component.html',
@@ -17,20 +16,20 @@ export class HomeComponent implements OnInit {
   featuredArticles: ArticleDetailFirestore[];
   latestArticles: ArticleDetailFirestore[];
   allArticles: ArticleDetailFirestore[];
-  bookmarkedArticles: ArticleDetailFirestore[];
+  bookmarkedArticles;
   currentSelectedFeaturePreview: SelectedPreview = SelectedPreview.latestList;
   currentSelectedLatestPreview: SelectedPreview = SelectedPreview.latestTile;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
   currentSelectedAllPreview: SelectedPreview = SelectedPreview.allTile;
   currentSelectedBookmarkPreview: SelectedPreview = SelectedPreview.bookmarkedList;
 
-  constructor(private route: ActivatedRoute, private articleSvc: ArticleService, private userSvc: UserService) { }
+  constructor(private route: ActivatedRoute, private articleSvc: ArticleService, private authSvc: AuthService) { }
 
   ngOnInit() {
     this.initializeArticles();
-    this.userSvc.userInfo$.subscribe((user: UserInfoOpen) => {
-      if (user.exists()) {
-        this.uid = user.$key;
+    this.authSvc.authInfo$.subscribe(authInfo => {
+      if (authInfo) {
+        this.uid = authInfo.uid;
       }
     });
   }
@@ -40,7 +39,10 @@ export class HomeComponent implements OnInit {
     // this.featuredArticles = await this.articleSvc.getFeaturedArticles();
     this.latestArticles = await this.articleSvc.getLatestArticles();
     this.allArticles = await this.articleSvc.getAllArticles();
-    this.bookmarkedArticles = await this.articleSvc.getBookmarked(this.uid);
+    this.articleSvc.bookmarkedArticles$.subscribe(list => {
+      this.bookmarkedArticles = list;
+    });
+    this.articleSvc.watchBookmarkedArticles(this.uid);
 
   }
 
