@@ -55,7 +55,7 @@ export class AuthService {
       if (user) {
         const authInfo = new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email);
         this.authInfo$.next(authInfo);
-        user.getIdToken(false).then((token) => {
+        user.getIdToken().then((token) => {
           this.accessToken.next(token);
         });
       } else {
@@ -82,13 +82,16 @@ export class AuthService {
 
 
   // testing only:
-  testAuthSub() {
-    this.authInfo$.subscribe(info => {
-      if (info) {
-        console.log('auth BehaviorSubject:', info);
-        console.log('am I logged in?', info.isLoggedIn());
-        console.log('is my email verified?', info.isEmailVerified());
-      }
-    });
-  }
+  // testAuthSub() {
+  //   this.authInfo$.subscribe(info => {
+  //     if (info) {
+  //       console.log('auth BehaviorSubject:', info);
+  //       console.log('am I logged in?', info.isLoggedIn());
+  //       console.log('is my email verified?', info.isEmailVerified());
+  //     }
+  //   });
+  // }
 }
+
+
+// https://console.developers.google.com/apis/api/securetoken.googleapis.com/overview?project=945815872407
