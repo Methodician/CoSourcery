@@ -15,6 +15,8 @@ export class ArticleService {
   // globalTags: Iterable<GlobalTag>;
   fsdb = firebase.firestore();
   rtdb = firebase.database();
+  bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
+
   constructor(private router: Router, private notifSvc: NotificationService) {
     //  primeTags() should be fixed or eliminated
     // this.primeTags();
@@ -28,17 +30,17 @@ export class ArticleService {
     return articleArray;
   }
 
-  getBookmarked(userKey) {
-    const articlesList = new Array<any> ();
+  watchBookmarkedArticles(userKey) {
     const bookmarksRef = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}`);
-    bookmarksRef.once('value').then(articleKeys => {
-    articleKeys.forEach(key => {
-      this.getArticleById(key.key).then(article => {
-      articlesList.push(article);
-    });
-    });
+    bookmarksRef.on('value', articleKeys => {
+      const articlesList = new Array<any> ();
+      articleKeys.forEach(key => {
+          this.getArticleById(key.key).then(article => {
+          articlesList.push(article);
+          this.bookmarkedArticles$.next(articlesList);
+        });
+      });
   });
-    return articlesList;
   }
 
   getArticleUpdateTime(articleId) {
@@ -198,7 +200,6 @@ export class ArticleService {
         array.push(doc.data());
       }
     });
-    console.log('AS array 169', array);
     return array;
   }
 
