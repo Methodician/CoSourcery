@@ -11,6 +11,7 @@ import { SuggestionsComponent } from './components/suggestions/suggestions/sugge
 import { SuggestionDetailComponent } from './components/suggestions/suggestion-detail/suggestion-detail.component';
 import { AboutUsComponent } from './components/general/about-us/about-us.component';
 import { PageNotFoundComponent } from './components/general/page-not-found/page-not-found.component';
+import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -49,11 +50,11 @@ const routes: Routes = [
   //   canActivate: [AuthGuard],
   //   component: PostArticleComponent
   // },
-  // {
-  //   path: 'editarticle/:key',
-  //   canActivate: [AuthGuard],
-  //   component: EditArticleComponent
-  // },
+  {
+    path: 'editarticle/:key',
+    // canActivate: [AuthGuard],
+    component: ArticleEditComponent
+  },
   { path: 'articledetail/:key', component: ArticleDetailComponent },
   { path: 'articlehistory/:key', component: ArticleHistoryComponent },
   // {
