@@ -59,6 +59,7 @@ export class ArticleEditComponent implements OnInit {
       if (res) {
         this.router.navigate([`articledetail/${article.articleId}`]);
       } else {
+        // "res" should be null-or-undefined, maybe need different message?
         alert('trouble editing the article' + res);
       }
     } catch (err) {
