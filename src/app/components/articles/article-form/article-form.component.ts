@@ -29,36 +29,6 @@ export class ArticleFormComponent implements OnInit, OnChanges {
 
   // testTags = [];
 
-  add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    if ((value || '').trim() && !this.articleTags.includes(value.toLocaleUpperCase())) {
-      // this.formTags.push({ display: value.trim()});
-      this.articleTags.push(value.toLocaleUpperCase());
-      this.form.controls.tags.patchValue(this.articleTags);
-    }
-
-    if (input) {
-      input.value = '';
-    }
-    // this.articleTags.push(event.value.toUpperCase());
-  }
-
-  remove(selectedTag: any, selectedIndex: number): void {
-    if (selectedIndex || selectedIndex === 0) {
-      this.articleTags.splice(selectedIndex, 1 );
-    }
-    // let index = this.articleTags.indexOf(selectedTag);
-
-    // if(index >= 0){
-    //   this.articleTags.splice(index, 1);
-    // }
-    const tagToRemove = selectedTag.toUpperCase();
-    this.removeTag(tagToRemove);
-    this.form.controls.tags.patchValue(this.articleTags);
-  }
-
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -129,6 +99,36 @@ export class ArticleFormComponent implements OnInit, OnChanges {
     //   arteTags.splice(index, 1);
     //   index = arteTags.indexOf(tag);
     // }
+  }
+  
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    if ((value || '').trim() && !this.articleTags.includes(value.toLocaleUpperCase())) {
+      // this.formTags.push({ display: value.trim()});
+      this.articleTags.push(value.toLocaleUpperCase());
+      this.form.controls.tags.patchValue(this.articleTags);
+    }
+
+    if (input) {
+      input.value = '';
+    }
+    // this.articleTags.push(event.value.toUpperCase());
+  }
+
+  remove(selectedTag: any, selectedIndex: number): void {
+    if (selectedIndex || selectedIndex === 0) {
+      this.articleTags.splice(selectedIndex, 1 );
+    }
+    // let index = this.articleTags.indexOf(selectedTag);
+
+    // if(index >= 0){
+    //   this.articleTags.splice(index, 1);
+    // }
+    const tagToRemove = selectedTag.toUpperCase();
+    this.removeTag(tagToRemove);
+    this.form.controls.tags.patchValue(this.articleTags);
   }
 
   isErrorVisible(field: string, error: string) {

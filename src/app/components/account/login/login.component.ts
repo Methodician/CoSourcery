@@ -10,6 +10,7 @@ import {UserInfoOpen} from '../../../shared/class/user-info'
 })
 export class LoginComponent implements OnInit {
   title = 'cos';
+  // Is "data" being used or this a vestigial dev tool?
   data: {};
   constructor(private AuthSvc: AuthService) {
     this.AuthSvc.authInfo$.subscribe(data => {
