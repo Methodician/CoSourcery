@@ -82,15 +82,15 @@ export class AuthService {
 
 
   // testing only:
-  // testAuthSub() {
-  //   this.authInfo$.subscribe(info => {
-  //     if (info) {
-  //       console.log('auth BehaviorSubject:', info);
-  //       console.log('am I logged in?', info.isLoggedIn());
-  //       console.log('is my email verified?', info.isEmailVerified());
-  //     }
-  //   });
-  // }
+  testAuthSub() {
+    this.authInfo$.subscribe(info => {
+      if (info) {
+        console.log('auth BehaviorSubject:', info);
+        console.log('am I logged in?', info.isLoggedIn());
+        console.log('is my email verified?', info.isEmailVerified());
+      }
+    });
+  }
 }
 
 
