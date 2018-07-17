@@ -1,3 +1,43 @@
-<p>
-  article-form works!
-</p>
+<form autocomplete="off" novalidate [formGroup]="form">
+  <div class="formWrapper">
+    
+      <mat-form-field color="primary">
+        <input matInput placeholder="Title" #title name="title" maxlength="100" formControlName="title" type="text" [class.input-error]="isErrorVisible('title', 'required')">
+        <mat-hint align="end">{{title.value.length}} / 100</mat-hint>
+        <mat-error *ngIf="isErrorVisible('title','required')">Please give your article a title.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="primary">
+        <textarea matInput placeholder="Introduction" #introduction name="introduction" maxlength="300" formControlName="introduction" type="text" [class.input-error]="isErrorVisible('introduction', 'required')"></textarea>
+        <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
+        <mat-error *ngIf="isErrorVisible('introduction','required')">Please tell us a little something about what this article is about.</mat-error>
+      </mat-form-field>
+
+      <div class="ckEditor">
+        <label>Body</label>
+        <!-- <ckeditor name="body" formControlName="body" [config]="{uiColor: '##dee2e8'}" debounce="500">
+        </ckeditor> -->
+        <textarea formControlName="body"></textarea>
+      </div>
+
+    </div>
+</form>
+<div class="tagWrapper">
+  <h2>Tags</h2>
+  <em>Alphanumeric characters and spaces only</em>
+  <mat-form-field class="chip-tags">
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let articleTag of articleTags; let i = index" [selectable]="selectable"
+                [removable]="removable" (remove)="remove(articleTag, i)">
+        {{articleTag}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Enter a new tag..."
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event)" />
+    </mat-chip-list>
+  </mat-form-field>
+    <!-- <tag-input class="ckEditor" [maxItems]="8" [(ngModel)]="formTags" [validators]="validator" (onAdd)="onTagAdded($event)" (onRemove)="onTagRemoved($event)"></tag-input> -->
+</div>
