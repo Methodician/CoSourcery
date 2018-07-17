@@ -57,7 +57,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
         // this.checkIfFeatured();
         // TODO: Refactor below(142);
         this.getArticleData();
-        
+
       });
     } else {
       // this.checkIfFeatured();
@@ -85,8 +85,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['articleData'] && changes['articleData'].currentValue) {
       this.article = changes['articleData'].currentValue;
     }
-    console.log('changes',this.article);
-    
+    console.log('changes', this.article);
   }
 
   navigateToProfile() {
@@ -94,11 +93,11 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async checkIfBookmarked() {
-    const isBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleKey);    
+    const isBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleKey);
     this.isArticleBookmarked = isBookmarked;
   }
 
-  bookmarkToggle() {    
+  bookmarkToggle() {
     if (this.authSvc.isSignedIn()) {
       if (this.isArticleBookmarked) {
         this.articleSvc.unBookmarkArticle(this.user.$key, this.article.articleId);
@@ -149,7 +148,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
         articleData.viewCount,
         articleData.tags,
         articleData.body,
-)
+);
       thisArticle.articleId = this.articleKey;
       this.article = thisArticle;
       this.articleData = articleData;
@@ -160,9 +159,9 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   // async testTimeStamp() {
-    
-  //   this.testTime = 
-    
+
+  //   this.testTime =
+
   // }
   //  TODO: Refactor and Reimplement
   // getArticleData() {

@@ -96,13 +96,12 @@ export class ArticlePreviewCardComponent implements OnInit {
     this.articleCoverImageUrl = await this.uploadSvc
       .getImageUrl(articleKey, basePath);
   }
-  
+
   async checkIfBookmarked() {
     this.isArticleBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleData.articleId);
-    
   }
 
-  bookmarkToggle() {    
+  bookmarkToggle() {
         if (this.authSvc.isSignedIn()) {
           if (this.isArticleBookmarked) {
             this.articleSvc.unBookmarkArticle(this.user.$key, this.articleData.articleId);
