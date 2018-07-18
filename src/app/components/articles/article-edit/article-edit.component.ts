@@ -8,14 +8,13 @@ import { ArticleDetailFirestore } from 'app/shared/class/article-info';
 @Component({
   selector: 'cos-article-edit',
   templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.scss',
-  // '../article-post.component.scss'
-]
+  styleUrls: [
+    './article-edit.component.scss', '../article-post/article-post.component.scss']
 })
 
 export class ArticleEditComponent implements OnInit {
   article: any;
-  key: any;
+  articleKey: string;
   routeParams: any;
   authInfo = null;
   userInfo = null;
@@ -38,15 +37,23 @@ export class ArticleEditComponent implements OnInit {
   ngOnInit() {
     window.scrollTo(0, 0);
     this.route.params.subscribe(params => {
-      this.key = params['key'];
+      this.articleKey = params['key'];
+      console.log('AE ArtKey 42', this.articleKey);
+
       this.articleSvc
-      .getArticleById(this.key).then((articleToEdit: ArticleDetailFirestore) => {
+      .getArticleById(this.articleKey).then((articleToEdit: ArticleDetailFirestore) => {
+        console.log('ArtToEdt ', articleToEdit);
+        console.log('ArtToEdt.bdID ', articleToEdit.bodyId);
         this.articleSvc
         .getArticleBody(articleToEdit.bodyId)
         .then(articleBody => {
+          console.log('artBdy', articleBody);
+
           if (articleBody) {
             articleToEdit.body = articleBody.body;
                   this.article = articleToEdit;
+                  console.log(this.article);
+
           }
         });
       });
@@ -55,7 +62,7 @@ export class ArticleEditComponent implements OnInit {
 
   async edit(article) {
     try {
-      const res = this.articleSvc.updateArticle(this.authInfo.$uid, this.userInfo, article, this.key);
+      const res = this.articleSvc.updateArticle(this.authInfo.$uid, this.userInfo, article, this.articleKey);
       if (res) {
         this.router.navigate([`articledetail/${article.articleId}`]);
       } else {
