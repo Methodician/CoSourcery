@@ -90,6 +90,8 @@ export class ArticleService {
   }
 
   async getFullArticleById(articleId: string) {
+    console.log(articleId);
+
     const article = await this.getArticleById(articleId);
     const body = await this.getArticleBody(article.bodyId);
     article.body = body.body;
