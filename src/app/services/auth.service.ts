@@ -72,7 +72,12 @@ export class AuthService {
     this.ui.start(stringRef, this.uiConfig);
   }
 
+  forceOut() {
+    this.authInfo$.next(new AuthInfo(null, false, null, null));
+  }
+
   signOut() {
+    this.forceOut();
     fb.auth().signOut();
   }
 
