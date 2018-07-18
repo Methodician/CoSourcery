@@ -9,9 +9,14 @@ form {
       }
     }
   }
+  label{
+    font-size: 20pt;
+    text-decoration: underline;
+  }
   .ckEditor {
     width: 95%;
     align-self: center;
+
   }
   .tagWrapper {
     width: 95%;
