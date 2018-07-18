@@ -9,9 +9,9 @@
       <div id="featured">
         <h2>Featured Articles</h2>
         <!-- List View -->
-        <div class="list" *ngIf="currentSelectedFeaturePreview === 1">
-          <cos-article-preview-list [articleData]="article" *ngFor="let article of featuredArticles | reverseArray"></cos-article-preview-list>
-        </div>
+        <!-- <div class="list" *ngIf="currentSelectedFeaturePreview === 1">
+          <cos-article-preview-list [articleData]="article" *ngFor="let article of featuredArticles | reverseArray"></cos-article-preview-list> -->
+        <!-- </div> -->
       </div>
     </div>
     <!-- Latest and All Article Container -->
@@ -21,7 +21,7 @@
         <div class="header-style">
           <h2 (click)="selectLatest()" [class.activeArticleState]="currentSelectedTab === 1">Latest</h2>
           <h2 (click)="selectAll()" [class.activeArticleState]="currentSelectedTab === 2">All</h2>
-          <h2 (click)="selectBookmark()" [class.activeArticleState]="currentSelectedTab === 3">Bookmarked</h2>
+          <h2  *ngIf="uid" (click)="selectBookmark()" [class.activeArticleState]="currentSelectedTab === 3">Bookmarked</h2>
 
         </div>
       </div>
@@ -35,8 +35,8 @@
         <cos-article-preview-card [articleData]="article" *ngFor="let article of allArticles | reverseArray "></cos-article-preview-card>
       </div>
       <!-- Bookmarked Article Preview -->
-      <div *ngIf="currentSelectedTab === 3" class="allArticleWrapper grid">
-        <cos-article-preview-card [articleData]="article" *ngFor="let article of bookmarkedArticles | reverseArray "></cos-article-preview-card>
+        <div *ngIf="currentSelectedTab === 3" class="allArticleWrapper grid">
+          <cos-article-preview-card [articleData]="article" *ngFor="let article of bookmarkedArticles | reverseArray "></cos-article-preview-card>
       </div>
     </div>
   </div>

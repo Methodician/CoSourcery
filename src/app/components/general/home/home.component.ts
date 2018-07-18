@@ -12,7 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class HomeComponent implements OnInit {
   routeParams;
-  uid;
+  uid = null;
   featuredArticles: ArticleDetailFirestore[];
   latestArticles: ArticleDetailFirestore[];
   allArticles: ArticleDetailFirestore[];
