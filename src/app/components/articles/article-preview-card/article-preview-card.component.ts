@@ -37,10 +37,10 @@ export class ArticlePreviewCardComponent implements OnInit {
         .getAuthor(this.articleData.authorId);
 
 
-    this.userSvc
-      .userInfo$
+    this.authSvc
+      .authInfo$
       .subscribe(user => {
-        if (user.exists()) {
+        if (user.uid) {
           this.user = user;
           this.checkIfBookmarked();
         }
@@ -49,31 +49,6 @@ export class ArticlePreviewCardComponent implements OnInit {
 
   }
 
-
-//   async getArticleData() {
-//     const articleData = await this.articleSvc.getFullArticleById(this.articleKey);
-//     if (articleData) {
-//       const thisArticle = new ArticleDetailFirestore (
-//         articleData.authorId,
-//         articleData.bodyId,
-//         articleData.title,
-//         articleData.introduction,
-//         this.articleSvc.getArticleUpdateTime(this.articleKey),
-//         this.articleSvc.getArticleTimeStampTime(this.articleKey),
-//         articleData.version,
-//         articleData.commentCount,
-//         articleData.viewCount,
-//         articleData.tags,
-//         articleData.body,
-// )
-//       thisArticle.articleId = this.articleKey;
-//       this.article = thisArticle;
-//       this.articleData = articleData;
-//       this.getAuthor(this.article.authorId);
-//       this.getProfileImage(this.article.authorId);
-//       this.getArticleCoverImage(this.articleKey);
-//     }
-//   }
 
 
   navigateToArticleDetail() {
@@ -98,16 +73,16 @@ export class ArticlePreviewCardComponent implements OnInit {
   }
 
   async checkIfBookmarked() {
-    this.isArticleBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleData.articleId);
+    this.isArticleBookmarked = await this.articleSvc.isBookmarked(this.user.uid, this.articleData.articleId);
   }
 
   bookmarkToggle() {
         if (this.authSvc.isSignedIn()) {
           if (this.isArticleBookmarked) {
-            this.articleSvc.unBookmarkArticle(this.user.$key, this.articleData.articleId);
+            this.articleSvc.unBookmarkArticle(this.user.uid, this.articleData.articleId);
             this.isArticleBookmarked = false;
           } else {
-            this.articleSvc.bookmarkArticle(this.user.$key, this.articleData.articleId);
+            this.articleSvc.bookmarkArticle(this.user.uid, this.articleData.articleId);
             this.isArticleBookmarked = true;
           }
         }
