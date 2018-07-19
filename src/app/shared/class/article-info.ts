@@ -11,6 +11,23 @@ export class ArticleDetailOpen {
     ) { }
 }
 
+
+export class ArticleDetailPreview {
+    constructor(
+        public previewId: string,
+        public authorId: string,
+        public title: string,
+        public introduction: string,
+        public lastUpdated: Date,
+        public timeStamp: Date,
+        public version: number,
+        public commentCount: number,
+        public viewCount: number,
+        public tags?: string[]
+    ) { }
+}
+
+
 export class ArticleDetailFirestore {
     constructor(
         public authorId: string,
