@@ -1,17 +1,10 @@
 <div class="wrcoser">
+		<div>
+			<cos-article-cover-image *ngIf="article" [articleKey]="key"></cos-article-cover-image>
+		</div>
 	<div>
 		<cos-article-form #articleForm [initialValue]="article">
 		</cos-article-form>
 		<button mat-raised-button color="warn" (click)="edit(articleForm.value)">Save Changes</button>
 	</div>
-	<div>
-		<cos-article-cover-image *ngIf="article" [articleKey]="key"></cos-article-cover-image>
-	</div>
 </div>
-<br>
-<br>
-<div class="editPreview">
-	<p>Preview</p>
-</div>
-
-<cos-article-detail *ngIf="article" [articleData]="articleForm.value" [editingPreview]="true"></cos-article-detail>
