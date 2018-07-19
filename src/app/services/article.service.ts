@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { GlobalTag, ArticleDetailFirestore, ArticleDetailPreview } from 'app/shared/class/article-info';
+import { GlobalTag, ArticleDetailFirestore } from 'app/shared/class/article-info';
 import { Router } from '@angular/router';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { first, map } from 'rxjs/operators';
@@ -220,21 +220,30 @@ export class ArticleService {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${artId}`);
     const articlePreviewIdRef = this.fsdb.doc(`articleData/articles/previews/${artId}`);
     console.log(artId);
-    const previewObject = new ArticleDetailPreview (
-          artId,
-          article.authorId,
-          article.title,
-          article.introduction,
-          article.lastUpdated,
-          article.timestamp,
-          article.version = 1,
-          article.commentCount = 0,
-          article.viewCount = 0,
-          article.tags,
-    );
-  console.log(previewObject);
+    const previewObject = {
+      id: artId,
+      authorId: article.authorId,
+      title: article.title,
+      introduction: article.introduction,
+      lastUpdated:  firebase.firestore.Timestamp.now(),
+      timestamp: firebase.firestore.Timestamp.now(),
+      version: 1,
+      commentCount: 0,
+      viewCount: 0,
+      tags: article.tags,
+    };
+
+    // for testing
+    const newArt = article;
+    newArt.commentCount = 0;
+    newArt.version = 1;
+    newArt.viewCount = 0;
+    console.log(previewObject);
+    console.log(newArt);
 
 
+articlePreviewIdRef.set(previewObject);
+articleRef.set(newArt);
 
     return 'success';
   }
