@@ -49,7 +49,6 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     window.scrollTo(0, 0);
-    if (!this.editingPreview) {
       this.route.params.subscribe(params => {
         if (params['key']) {
           this.articleKey = params['key'];
@@ -57,22 +56,13 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
         // this.checkIfFeatured();
         // TODO: Refactor below(142);
         this.getArticleData();
-
       });
-    } else {
-      // this.checkIfFeatured();
-      this.getArticleBody(this.articleData);
-      this.getAuthor(this.articleData.authorId);
-      this.getProfileImage(this.articleData.authorId);
-    }
     this.userSvc.userInfo$.subscribe((user: UserInfoOpen) => {
       if (user.exists()) {
         this.user = user;
         this.checkIfBookmarked();
       }
     });
-    // this.allArticles = this.articleSvc
-    //   .getAllArticles();
   }
 
   ngOnDestroy() {
@@ -141,8 +131,8 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
         articleData.bodyId,
         articleData.title,
         articleData.introduction,
-        articleData.lastUpdated.toDate(),
-        articleData.timestamp.toDate(),
+        articleData.lastUpdated,
+        articleData.timestamp,
         articleData.version,
         articleData.commentCount,
         articleData.viewCount,
