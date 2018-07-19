@@ -206,6 +206,7 @@ export class ArticleService {
   // MASSIVE REFACTOR REQUIRED
   updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
 
+
   }
 
 }
