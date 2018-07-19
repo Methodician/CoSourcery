@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { GlobalTag, ArticleDetailFirestore, ArticleBodyFirestore } from 'app/shared/class/article-info';
+import { GlobalTag, ArticleDetailFirestore, ArticleDetailPreview } from 'app/shared/class/article-info';
 import { Router } from '@angular/router';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { first, map } from 'rxjs/operators';
@@ -205,8 +205,38 @@ export class ArticleService {
 
   // MASSIVE REFACTOR REQUIRED
   updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
+  const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+  const bodyeRef = this.fsdb.doc(`articleData/bodies/active/${article.bodyId}`);
+  const editorRef = this.fsdb.doc(`articleData/editorsPerArticle/${articleId}/${editorId}`);
+  articleRef.update(article);
+  console.log('article', article);
+
+  return 'success';
+  }
+
+  createArticle(authorId: string, author: UserInfoOpen, article: ArticleDetailFirestore) {
+    const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
+    const artId = articleIDRef.id;
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${artId}`);
+    const articlePreviewIdRef = this.fsdb.doc(`articleData/articles/previews/${artId}`);
+    console.log(artId);
+    const previewObject = new ArticleDetailPreview (
+          artId,
+          article.authorId,
+          article.title,
+          article.introduction,
+          article.lastUpdated,
+          article.timestamp,
+          article.version = 1,
+          article.commentCount = 0,
+          article.viewCount = 0,
+          article.tags,
+    );
+  console.log(previewObject);
 
 
+
+    return 'success';
   }
 
 }
