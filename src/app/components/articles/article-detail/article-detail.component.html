@@ -13,7 +13,7 @@
             <h1>{{article?.title}}</h1>
           </mat-card-title>
           <mat-card-subtitle>
-            Last Updated: {{article?.lastUpdated| date}}
+            Last Updated: {{article?.lastUpdated?.toDate() | date }}
           </mat-card-subtitle>
         </mat-card-header>
         
@@ -33,7 +33,7 @@
             </div>
             <div class="author-details">
               <h3>By <span class="span-link" (click)="navigateToProfile()">{{author?.alias}}</span></h3>
-              <p>Created {{article?.timestamp | date}}</p>
+              <p>Created {{article?.timestamp?.toDate() | date}}</p>
             </div>
             <div class="icons">
               <div matTooltip="comments" (click)="scroll(discussion)">
