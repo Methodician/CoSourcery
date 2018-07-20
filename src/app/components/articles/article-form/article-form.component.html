@@ -20,6 +20,20 @@
           <mat-error *ngIf="isErrorVisible('introduction','required')">Please tell us a little something about what this article is about.</mat-error>
         </mat-form-field>
 
+        <mat-form-field color="primary">
+            <div>
+              <label for="imgUrl">Image URL</label>
+              <input matInput #imgUrl name="imgUrl" maxlength="300" formControlName="imgUrl" type="text" >
+            </div>
+          </mat-form-field>
+
+          <mat-form-field color="primary">
+              <div>
+                <label for="imgAlt">Image Alt Statment</label>
+                <input matInput #imgAlt name="imgAlt" maxlength="300" formControlName="imgAlt" type="text" >
+              </div>
+            </mat-form-field>
+
         <div class="ckEditor">
             <label>Body</label>
             <!-- <ckeditor name="body" formControlName="body" [config]="{uiColor: '##dee2e8'}" debounce="500">
