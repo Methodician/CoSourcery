@@ -16,6 +16,7 @@ export class ArticleService {
   fsdb = firebase.firestore();
   rtdb = firebase.database();
   bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
+  timestampNow = firebase.firestore.Timestamp.now();
 
   constructor(private router: Router, private notifSvc: NotificationService) {
     //  primeTags() should be fixed or eliminated
@@ -203,7 +204,7 @@ export class ArticleService {
   // }
 
 
-  // MASSIVE REFACTOR REQUIRED
+  // REFACTOR REQUIRED
   async updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
 
   // fsdb reference for article to be updated
@@ -214,18 +215,20 @@ export class ArticleService {
   const articlePreviewRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
   // Reference for position to archive previous version at
   const archiveRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/history/${article.version}`);
+
+  // Retreive and update old article
   const articleSnap = await articleRef.get();
   const oldArticle = articleSnap.data();
-  oldArticle.lastUpdated = firebase.firestore.Timestamp.now(),
-  // console.log('oldArt', oldArticle);
+  oldArticle.lastUpdated = this.timestampNow;
 
+  // Save for now just in case
   // const articlePreviousVersionSnapshot = articleRef.get().then(snapshot => {
   //   const updateArticleObject = {
   //     authorId: snapshot.data().authorId,
   //     bodyId: snapshot.data().bodyId,
   //     title: snapshot.data().title,
   //     introduction: snapshot.data().introduction,
-  //     lastUpdated: firebase.firestore.Timestamp.now(),
+  //     lastUpdated: this.timestampNow;
   //     timestamp: snapshot.data().timestamp,
   //     version: snapshot.data().version,
   //     commentCount: snapshot.data().commentCount,
@@ -242,7 +245,8 @@ export class ArticleService {
 
 
 
-  // Updating article version
+  // Updating article version and lastUpdated
+  article.lastUpdated = this.timestampNow;
   article.version ++;
 
   // Editor info object to be saved
@@ -254,26 +258,28 @@ export class ArticleService {
     authorId: article.authorId,
     title: article.title,
     introduction: article.introduction,
-    lastUpdated:  firebase.firestore.Timestamp.now(),
-    timestamp: firebase.firestore.Timestamp.now(),
-    version: 1,
+    lastUpdated:  this.timestampNow,
+    timestamp: this.timestampNow,
+    version: article.version,
     commentCount: 0,
     viewCount: 0,
     tags: article.tags,
+    imgUrl: article.imgUrl,
+    imgAltL: article.imgAlt,
   };
 
+  articleRef.update(article);
+  editorRef.set(editorObject);
+  articlePreviewRef.set(previewObject);
+  archiveRef.set(oldArticle);
 
+  // For Testing
   console.log('updated article', article);
   console.log('updated preview object', previewObject );
   console.log('updated editor object', editorObject);
   console.log('oldArt', oldArticle);
   console.log('updated article version', article.version);
 
-  articleRef.update(article);
-  editorRef.set(editorObject);
-  articlePreviewRef.set(previewObject);
-  archiveRef.set(oldArticle);
-  return 'success';
   }
 
   createArticle(authorId: string, author: UserInfoOpen, article: ArticleDetailFirestore) {
@@ -288,39 +294,48 @@ export class ArticleService {
     // Creates a ref for saving the editor info for the new article
     const editorRef = this.fsdb.doc(`articleData/articles/articles/${artId}/editors/${authorId}`);
 
-
     // Info to be saved in editor document
     const editorObject = {editorID: author.$key, name: author.fName + ' ' + author.lName };
 
     // Info to be saved in Preview document
     const previewObject = {
       id: artId,
-      authorId: article.authorId,
+      authorId: author.$key,
       title: article.title,
       introduction: article.introduction,
-      lastUpdated:  firebase.firestore.Timestamp.now(),
-      timestamp: firebase.firestore.Timestamp.now(),
+      lastUpdated:  this.timestampNow,
+      timestamp: this.timestampNow,
       version: 1,
       commentCount: 0,
       viewCount: 0,
       tags: article.tags,
+      imgUrl: article.imgUrl,
+      imgAlt: article.imgAlt
     };
 
-    // for testing
+    // Updating New Article Object.
+    // Probably a better way to do this.
     const newArt = article;
+    newArt.authorId = author.$key,
+    newArt.articleId = artId;
     newArt.commentCount = 0;
     newArt.version = 1;
     newArt.viewCount = 0;
+    newArt.lastUpdated = this.timestampNow;
+    newArt.timestamp = this.timestampNow;
+    newArt.imgUrl = article.imgUrl || 'none';
+    newArt.imgAlt = article.imgAlt || 'none';
 
+    // for testing
     console.log('created preview object', previewObject);
     console.log('created new article', newArt);
     console.log('created editor object', editorObject);
-    
 
-// articlePreviewIdRef.set(previewObject);
-// articleRef.set(newArt);
-// editorRef.set(editorObject);
-    return 'success';
+
+articlePreviewIdRef.set(previewObject);
+articleRef.set(newArt);
+editorRef.set(editorObject);
+    // return 'success';
   }
 
 }
