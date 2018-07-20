@@ -73,6 +73,6 @@ export class ArticleEditComponent implements OnInit {
   async create(article) {
     const newArticle = this.articleSvc.createArticle(this.authInfo.uid, this.userInfo, article);
     console.log(newArticle);
-    
+
   }
 }

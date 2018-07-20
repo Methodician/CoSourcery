@@ -204,22 +204,95 @@ export class ArticleService {
 
 
   // MASSIVE REFACTOR REQUIRED
-  updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
-  const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-  const bodyeRef = this.fsdb.doc(`articleData/bodies/active/${article.bodyId}`);
-  const editorRef = this.fsdb.doc(`articleData/editorsPerArticle/${articleId}/${editorId}`);
-  articleRef.update(article);
-  console.log('article', article);
+  async updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
 
+  // fsdb reference for article to be updated
+  const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+  // Reference for editor info to be save at
+  const editorRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/editors/${editorId}`);
+  // Reference of for preview to be updated
+  const articlePreviewRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
+  // Reference for position to archive previous version at
+  const archiveRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/history/${article.version}`);
+  const articleSnap = await articleRef.get();
+  const oldArticle = articleSnap.data();
+  oldArticle.lastUpdated = firebase.firestore.Timestamp.now(),
+  // console.log('oldArt', oldArticle);
+
+  // const articlePreviousVersionSnapshot = articleRef.get().then(snapshot => {
+  //   const updateArticleObject = {
+  //     authorId: snapshot.data().authorId,
+  //     bodyId: snapshot.data().bodyId,
+  //     title: snapshot.data().title,
+  //     introduction: snapshot.data().introduction,
+  //     lastUpdated: firebase.firestore.Timestamp.now(),
+  //     timestamp: snapshot.data().timestamp,
+  //     version: snapshot.data().version,
+  //     commentCount: snapshot.data().commentCount,
+  //     tags: snapshot.data().tags,
+  //     body: snapshot.data().body,
+  //     articleId: snapshot.data().articleId,
+  //     inFeatured: snapshot.data().isFeatured,
+  //     lastEditorId: editorId,
+  //   };
+  //   console.log('updateArticleObject 233', updateArticleObject);
+
+  //   return updateArticleObject;
+  // });
+
+
+
+  // Updating article version
+  article.version ++;
+
+  // Editor info object to be saved
+  const editorObject = {editorID: editorId, name: editor.fName + ' ' + editor.lName };
+
+  // Preview info object to be updated
+  const previewObject = {
+    id: articleId,
+    authorId: article.authorId,
+    title: article.title,
+    introduction: article.introduction,
+    lastUpdated:  firebase.firestore.Timestamp.now(),
+    timestamp: firebase.firestore.Timestamp.now(),
+    version: 1,
+    commentCount: 0,
+    viewCount: 0,
+    tags: article.tags,
+  };
+
+
+  console.log('updated article', article);
+  console.log('updated preview object', previewObject );
+  console.log('updated editor object', editorObject);
+  console.log('oldArt', oldArticle);
+  console.log('updated article version', article.version);
+
+  articleRef.update(article);
+  editorRef.set(editorObject);
+  articlePreviewRef.set(previewObject);
+  archiveRef.set(oldArticle);
   return 'success';
   }
 
   createArticle(authorId: string, author: UserInfoOpen, article: ArticleDetailFirestore) {
+    // Creates new document reference point in fsdb
     const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
+    // Saves the ID of new article reference point
     const artId = articleIDRef.id;
+    // More specific ref to new article
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${artId}`);
+    // Creates new document ref for preview of new article with same id
     const articlePreviewIdRef = this.fsdb.doc(`articleData/articles/previews/${artId}`);
-    console.log(artId);
+    // Creates a ref for saving the editor info for the new article
+    const editorRef = this.fsdb.doc(`articleData/articles/articles/${artId}/editors/${authorId}`);
+
+
+    // Info to be saved in editor document
+    const editorObject = {editorID: author.$key, name: author.fName + ' ' + author.lName };
+
+    // Info to be saved in Preview document
     const previewObject = {
       id: artId,
       authorId: article.authorId,
@@ -238,13 +311,15 @@ export class ArticleService {
     newArt.commentCount = 0;
     newArt.version = 1;
     newArt.viewCount = 0;
-    console.log(previewObject);
-    console.log(newArt);
 
+    console.log('created preview object', previewObject);
+    console.log('created new article', newArt);
+    console.log('created editor object', editorObject);
+    
 
-articlePreviewIdRef.set(previewObject);
-articleRef.set(newArt);
-
+// articlePreviewIdRef.set(previewObject);
+// articleRef.set(newArt);
+// editorRef.set(editorObject);
     return 'success';
   }
 
