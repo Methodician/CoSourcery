@@ -48,7 +48,9 @@ export class ArticleFormComponent implements OnInit, OnChanges {
       lastEditorId: '',
       commentCount: 0,
       viewCount: 0,
-      isFeatured: false
+      isFeatured: false,
+      imgUrl: '',
+      imgAlt: '',
     });
   }
 
