@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ArticleService } from '../../../services/article.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'cos-article-post',
@@ -6,10 +10,29 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./article-post.component.scss']
 })
 export class ArticlePostComponent implements OnInit {
+authInfo;
+userInfo;
+article;
 
-  constructor() { }
+  constructor(
+    private articleSvc: ArticleService,
+    private router: Router,
+    private authSvc: AuthService,
+    private userSvc: UserService,
+  )  {
+    this.authSvc.authInfo$.subscribe(authInfo => {
+      this.authInfo = authInfo;
+    });
+    this.userSvc.userInfo$.subscribe(userInfo => {
+      this.userInfo = userInfo;
+    });
+  }
 
   ngOnInit() {
+  }
+
+  async save(article) {
+   this.articleSvc.createArticle(this.userInfo.$key, this.userInfo, article);
   }
 
 }
