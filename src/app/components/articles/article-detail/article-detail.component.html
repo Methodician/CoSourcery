@@ -32,7 +32,7 @@
               <img (click)="navigateToProfile()" [src]="profileImageUrl ? profileImageUrl : ''">
             </div>
             <div class="author-details">
-              <h3>By <span class="span-link" (click)="navigateToProfile()">{{author?.alias}}</span></h3>
+              <h3>By <span class="span-link" (click)="navigateToProfile()">{{author?.alias || 'unknown' }}</span></h3>
               <p>Created {{article?.timestamp?.toDate() | date}}</p>
             </div>
             <div class="icons">
