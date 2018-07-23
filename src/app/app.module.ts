@@ -165,6 +165,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   providers: [AuthService, UploadService, NotificationService, ArticleService, UserService],
   bootstrap: [AppComponent]
 })
+
+// Original db
 export class AppModule {
   fbConfig = {
     apiKey: 'AIzaSyBn8hJ2vDLN21aUl9cP-RgeOWZHZOlbtdY',
@@ -174,6 +176,19 @@ export class AppModule {
     storageBucket: 'scatterschool-dev.appspot.com',
     messagingSenderId: '945815872407'
   };
+
+
+// Test Firestore db
+// export class AppModule {
+// fbConfig = {
+//   apiKey: 'AIzaSyAb3L-t-WB0rf6A9j8gVSRB9STJJvLUEfw',
+//   authDomain: 'cosourcerytest.firebaseapp.com',
+//   databaseURL: 'https://cosourcerytest.firebaseio.com',
+//   projectId: 'cosourcerytest',
+//   storageBucket: 'cosourcerytest.appspot.com',
+//   messagingSenderId: '146479623747'
+// };
+
 
   constructor() {
     fb.initializeApp(this.fbConfig);
