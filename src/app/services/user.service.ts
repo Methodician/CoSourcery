@@ -31,6 +31,7 @@ export class UserService {
             info.fName,
             info.lName,
             info.zipCode,
+            // Why both $key and uid?
             info.$key = authInfo.uid,
             info.uid,
             info.bio,
@@ -60,7 +61,7 @@ export class UserService {
       .set(accessLevel);
   }
 
-  createUser(userInfo, uid) {
+ createUser(userInfo, uid) {
     this.setUserAccess(10, uid);
     return this.rtdb
       .ref(`userInfo/open/${uid}`)
