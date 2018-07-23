@@ -42,14 +42,19 @@ export class ArticleEditComponent implements OnInit {
       this.key = params['key'];
       this.articleSvc
       .getArticleById(this.key).then((articleToEdit: ArticleDetailFirestore) => {
-        this.articleSvc
-        .getArticleBody(articleToEdit.bodyId)
-        .then(articleBody => {
-          if (articleBody) {
-            articleToEdit.body = articleBody.body;
-                  this.article = articleToEdit;
-          }
-        });
+        // TEMP remove after bodyId refactoerd out.
+        if (articleToEdit.bodyId !== '') {
+          this.articleSvc
+          .getArticleBody(articleToEdit.bodyId)
+          .then(articleBody => {
+            if (articleBody) {
+              articleToEdit.body = articleBody.body;
+                    this.article = articleToEdit;
+            }
+          });
+        } else {
+          this.article = articleToEdit;
+        }
       });
     });
 }
