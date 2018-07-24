@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
-import {UserInfoOpen} from '../../../shared/class/user-info'
-;
+import { Router } from '@angular/router';
+import {UserInfoOpen} from '../../../shared/class/user-info';
 
 @Component({
   selector: 'cos-login',
@@ -12,7 +12,7 @@ export class LoginComponent implements OnInit {
   title = 'cos';
   // Is "data" being used or this a vestigial dev tool?
   data: {};
-  constructor(private AuthSvc: AuthService) {
+  constructor(private AuthSvc: AuthService, private router: Router) {
     this.AuthSvc.authInfo$.subscribe(data => {
       this.data = data;
     });
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
 
   signOut() {
     this.AuthSvc.signOut();
+    this.router.navigate([`home`]);
   }
   ngOnInit() {
   }

@@ -73,6 +73,7 @@ export class AuthService {
   }
 
   signOut() {
+    this.authInfo$.next(new AuthInfo(null, false, null, null));
     fb.auth().signOut();
   }
 
