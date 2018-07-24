@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as fb from 'firebase';
 import * as fbui from 'firebaseui';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, } from 'rxjs';
 import { AuthInfo } from '../shared/class/auth-info';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,6 +11,7 @@ export class AuthService {
   // DOCS FOR REFERENCE:
   // https://firebase.google.com/docs/auth/web/firebaseui
   // https://github.com/firebase/firebaseui-web
+  fbAuth = fb.auth();
   ui = new fbui.auth.AuthUI(fb.auth());
   authInfo$ = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
   accessToken = new BehaviorSubject<string>(null);
@@ -92,6 +94,51 @@ export class AuthService {
       }
     });
   }
+
+  register(email, password) {
+    const userPromise = fb.auth().createUserWithEmailAndPassword(email, password).catch(error => {
+      if (error.code === 'auth/weak-password') {
+        alert('Your password should be stronger.');
+      } else {
+        alert(error.message);
+      }
+    });
+    return this.fromFirebaseAuthPromise(userPromise);
+  }
+
+  fromFirebaseAuthPromise(promise: Promise<any>): Observable<any> {
+    const subject = new Subject<any>();
+    promise.then(res => {
+      const authInfo = new AuthInfo(this.fbAuth.currentUser.uid,
+      res.emailVerified);
+      this.authInfo$.next(authInfo);
+      subject.next(res);
+      subject.complete();
+    }, err => {
+      this.authInfo$.error(err);
+      subject.error(err);
+      subject.complete();
+    });
+    return subject.asObservable();
+  }
+
+  setDisplayName(alias) {
+    const userToSet = this.fbAuth.currentUser;
+    userToSet.updateProfile({
+      displayName: alias,
+      photoURL: null
+    });
+  }
+
+  async sendVerificationEmail() {
+    const user = this.fbAuth.currentUser;
+    try {
+      await user.sendEmailVerification();
+    } catch (err) {
+      alert('It looks like your verification email was not sent. Please try again or contact support.' + err);
+    }
+  }
+
 }
 
 
