@@ -13,7 +13,7 @@
             <h1>{{article?.title}}</h1>
           </mat-card-title>
           <mat-card-subtitle>
-            Last Updated: {{article?.lastUpdated| date}}
+            Last Updated: {{article?.lastUpdated?.toDate() | date }}
           </mat-card-subtitle>
         </mat-card-header>
         
@@ -33,7 +33,7 @@
             </div>
             <div class="author-details">
               <h3>By <span class="span-link" (click)="navigateToProfile()">{{author?.alias}}</span></h3>
-              <p>Created {{article?.timestamp | date}}</p>
+              <p>Created {{article?.timestamp?.toDate() | date}}</p>
             </div>
             <div class="icons">
               <div matTooltip="comments" (click)="scroll(discussion)">
@@ -56,15 +56,15 @@
           <button mat-raised-button color="accent" (click)="edit()">Edit Article</button>
         </mat-card-content>
     </div>
-    <mat-card-footer>
-      <!-- <cos-article-related *ngIf="!editingPreview" [parentAllArticles]="allArticles | relatedArticle: relatedArticles" [parentTags]="article?.tags"></cos-article-related> -->
+    <!-- <mat-card-footer>
+      <cos-article-related [parentAllArticles]="allArticles | relatedArticle: relatedArticles" [parentTags]="article?.tags"></cos-article-related>
       <div id="discussion" #discussion>
-        <!-- <div *ngIf="!editingPreview"  class="comment-section-wrapper">
+        <div  class="comment-section-wrapper">
           <cos-comment-add [headerTitle]="'Discussion'" [parentKey]="articleKey"></cos-comment-add>
           <cos-comment-list [parentKey]="articleKey"></cos-comment-list>
-        </div> -->
+        </div>
       </div>
-    </mat-card-footer>
+    </mat-card-footer> -->
   </mat-card>
 </div>
 

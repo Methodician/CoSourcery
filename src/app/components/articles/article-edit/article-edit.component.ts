@@ -24,10 +24,10 @@ export class ArticleEditComponent implements OnInit {
     private articleSvc: ArticleService,
     private router: Router,
     private route: ActivatedRoute,
-    authSvc: AuthService,
-    userSvc: UserService,
+    private authSvc: AuthService,
+    private userSvc: UserService,
   ) {
-    authSvc.authInfo$.subscribe(info => {
+    this.authSvc.authInfo$.subscribe(info => {
       this.authInfo = info;
     });
     userSvc.userInfo$.subscribe(user => {
@@ -55,7 +55,7 @@ export class ArticleEditComponent implements OnInit {
 
   async edit(article) {
     try {
-      const res = this.articleSvc.updateArticle(this.authInfo.$uid, this.userInfo, article, this.key);
+      const res = this.articleSvc.updateArticle(this.authInfo.uid, this.userInfo, article, this.key);
       if (res) {
         this.router.navigate([`articledetail/${article.articleId}`]);
       } else {

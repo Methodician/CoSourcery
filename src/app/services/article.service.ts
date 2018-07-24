@@ -43,23 +43,6 @@ export class ArticleService {
   });
   }
 
-  getArticleUpdateTime(articleId) {
-    let date: Date = new Date();
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    articleRef.get().then(articleData => {
-      date = articleData.data().lastUpdated.toDate().toString();
-    });
-    return date;
-  }
-
-  getArticleTimeStampTime(articleId) {
-    let date: Date = new Date();
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    articleRef.get().then(articleData => {
-      date = articleData.data().timestamp.toDate().toString();
-    });
-    return date;
-  }
 
   async getLatestArticles() {
     const articlesRef = this.fsdb.collection('articleData/articles/articles');
@@ -222,6 +205,7 @@ export class ArticleService {
 
   // MASSIVE REFACTOR REQUIRED
   updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
+
 
   }
 

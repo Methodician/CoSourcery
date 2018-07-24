@@ -9,6 +9,11 @@ form {
       }
     }
   }
+  textarea{
+    border: solid black 1px;
+    box-shadow: 5px 3px 3px black;
+    margin-bottom: 2em;
+  }
   .ckEditor {
     width: 95%;
     align-self: center;

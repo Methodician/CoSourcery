@@ -100,7 +100,7 @@ export class ArticleFormComponent implements OnInit, OnChanges {
     //   index = arteTags.indexOf(tag);
     // }
   }
-  
+
   add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
