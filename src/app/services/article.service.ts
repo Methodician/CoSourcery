@@ -275,7 +275,8 @@ export class ArticleService {
   editorRef.set(editorObject);
   articlePreviewRef.set(previewObject);
   archiveRef.set(oldArticle);
-  this.router.navigate([`articledetail/${article.articleId}`]);
+  this.navigateToArticleDetail(article.articleId);
+
   // For Testing
   console.log('updated article', article);
   console.log('updated preview object', previewObject );
@@ -338,6 +339,7 @@ export class ArticleService {
 articlePreviewIdRef.set(previewObject);
 articleRef.set(newArt);
 editorRef.set(editorObject);
+this.navigateToArticleDetail(article.articleId);
     // return 'success';
   }
 
