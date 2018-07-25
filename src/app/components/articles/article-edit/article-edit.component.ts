@@ -10,7 +10,7 @@ import { _localeFactory } from '../../../../../node_modules/@angular/core/src/ap
   selector: 'cos-article-edit',
   templateUrl: './article-edit.component.html',
   styleUrls: ['./article-edit.component.scss',
-  // '../article-post.component.scss'
+  '../article-post/article-post.component.scss'
 ]
 })
 
