@@ -275,7 +275,7 @@ export class ArticleService {
   editorRef.set(editorObject);
   articlePreviewRef.set(previewObject);
   archiveRef.set(oldArticle);
-
+  this.router.navigate([`articledetail/${article.articleId}`]);
   // For Testing
   console.log('updated article', article);
   console.log('updated preview object', previewObject );
