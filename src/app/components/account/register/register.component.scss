@@ -26,7 +26,7 @@
     }
   }
   .formWrapper {
-    width: 100%;
+    width: 55vw;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -57,5 +57,9 @@
       @include large-button();
       width: 150px;
     }
+  }
+  .mat-error {
+    color: #c2185b;
+    font-style: oblique;
   }
 }
