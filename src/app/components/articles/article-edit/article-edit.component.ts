@@ -4,12 +4,13 @@ import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ArticleDetailFirestore } from 'app/shared/class/article-info';
+import { _localeFactory } from '../../../../../node_modules/@angular/core/src/application_module';
 
 @Component({
   selector: 'cos-article-edit',
   templateUrl: './article-edit.component.html',
   styleUrls: ['./article-edit.component.scss',
-  // '../article-post.component.scss'
+  '../article-post/article-post.component.scss'
 ]
 })
 
@@ -30,7 +31,7 @@ export class ArticleEditComponent implements OnInit {
     this.authSvc.authInfo$.subscribe(info => {
       this.authInfo = info;
     });
-    userSvc.userInfo$.subscribe(user => {
+    this.userSvc.userInfo$.subscribe(user => {
       this.userInfo = user;
     });
   }
@@ -41,29 +42,42 @@ export class ArticleEditComponent implements OnInit {
       this.key = params['key'];
       this.articleSvc
       .getArticleById(this.key).then((articleToEdit: ArticleDetailFirestore) => {
-        this.articleSvc
-        .getArticleBody(articleToEdit.bodyId)
-        .then(articleBody => {
-          if (articleBody) {
-            articleToEdit.body = articleBody.body;
-                  this.article = articleToEdit;
-          }
-        });
+        // TEMP remove after bodyId refactoerd out.
+        if (articleToEdit.bodyId !== '') {
+          this.articleSvc
+          .getArticleBody(articleToEdit.bodyId)
+          .then(articleBody => {
+            if (articleBody) {
+              articleToEdit.body = articleBody.body;
+                    this.article = articleToEdit;
+            }
+          });
+        } else {
+          this.article = articleToEdit;
+        }
       });
     });
 }
 
   async edit(article) {
-    try {
+    // try {
       const res = this.articleSvc.updateArticle(this.authInfo.uid, this.userInfo, article, this.key);
-      if (res) {
-        this.router.navigate([`articledetail/${article.articleId}`]);
-      } else {
-        // "res" should be null-or-undefined, maybe need different message?
-        alert('trouble editing the article' + res);
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    //   if (res) {
+    //     this.router.navigate([`articledetail/${article.articleId}`]);
+    //   } else {
+    //     // "res" should be null-or-undefined, maybe need different message?
+    //     alert('trouble editing the article' + res);
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    console.log('res', res);
+
+  }
+
+  async create(article) {
+    const newArticle = this.articleSvc.createArticle(this.authInfo.uid, this.userInfo, article);
+    console.log(newArticle);
+
   }
 }

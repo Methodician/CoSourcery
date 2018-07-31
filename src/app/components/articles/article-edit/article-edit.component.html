@@ -3,8 +3,12 @@
 			<cos-article-cover-image *ngIf="article" [articleKey]="key"></cos-article-cover-image>
 		</div>
 	<div>
-		<cos-article-form #articleForm [initialValue]="article">
+		<cos-article-form #form [initialValue]="article">
 		</cos-article-form>
-		<button mat-raised-button color="warn" (click)="edit(articleForm.value)">Save Changes</button>
+		<button (click)="edit(form.value)" mat-raised-button color="warn" 
+				[ngClass]="{'submit': form.valid === true, 'invalid': form.valid === false }"
+			    [disabled]="!form.valid">
+		 Save Changes</button>
 	</div>
 </div>
+

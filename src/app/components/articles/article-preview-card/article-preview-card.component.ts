@@ -45,7 +45,11 @@ export class ArticlePreviewCardComponent implements OnInit {
           this.checkIfBookmarked();
         }
       });
-    this.getArticleCoverImage(this.articleData.articleId);
+      if (this.articleData.imgUrl) {
+        this.articleCoverImageUrl = this.articleData.imgUrl;
+      } else {
+        this.getArticleCoverImage(this.articleData.articleId);
+      }
 
   }
 

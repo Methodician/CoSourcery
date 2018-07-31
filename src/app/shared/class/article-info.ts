@@ -1,3 +1,5 @@
+import { Timestamp } from '../../../../node_modules/rxjs';
+
 export class ArticleDetailOpen {
     constructor(
         public authorKey: string,
@@ -11,14 +13,33 @@ export class ArticleDetailOpen {
     ) { }
 }
 
+
+export class ArticleDetailPreview {
+    constructor(
+        public previewId: string,
+        public authorId: string,
+        public title: string,
+        public introduction: string,
+        public lastUpdated: firebase.firestore.Timestamp,
+        public timeStamp: firebase.firestore.Timestamp,
+        public version: number,
+        public commentCount: number,
+        public viewCount: number,
+        public tags?: string[],
+        public imgUrl?: string,
+        public imgAlt?: string,
+    ) { }
+}
+
+
 export class ArticleDetailFirestore {
     constructor(
         public authorId: string,
         public bodyId: string,
         public title: string,
         public introduction: string,
-        public lastUpdated: Date,
-        public timestamp: Date,
+        public lastUpdated: firebase.firestore.Timestamp,
+        public timestamp: firebase.firestore.Timestamp,
         public version: number,
         public commentCount: number,
         public viewCount: number,
@@ -26,7 +47,9 @@ export class ArticleDetailFirestore {
         public body?: string,
         public articleId?: string,
         public isFeatured?: boolean,
-        public lastEditorId?: string
+        public lastEditorId?: string,
+        public imgUrl?: string,
+        public imgAlt?: string,
     ) { }
 }
 

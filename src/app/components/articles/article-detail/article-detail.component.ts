@@ -4,7 +4,7 @@ import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/cor
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
-import { ArticleDetailFirestore, ArticleBodyFirestore } from 'app/shared/class/article-info';
+import { ArticleDetailFirestore } from 'app/shared/class/article-info';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
@@ -26,7 +26,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   articleCoverImageUrl: string;
   // iFollow: any;
   // followsMe: any;
-  profileImageUrl;
+  profileImageUrl: string;
   user: UserInfoOpen = null;
   // viewIncremented = false;
 
@@ -138,13 +138,21 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
         articleData.viewCount,
         articleData.tags,
         articleData.body,
+        articleData.imgUrl,
+        articleData.imgAlt,
 );
       thisArticle.articleId = this.articleKey;
       this.article = thisArticle;
       this.articleData = articleData;
       this.getAuthor(this.article.authorId);
       this.getProfileImage(this.article.authorId);
-      this.getArticleCoverImage(this.articleKey);
+      // TEMP
+      if (articleData.imgUrl) {
+        console.log(articleData.imgUrl);
+        this.articleCoverImageUrl = articleData.imgUrl;
+      } else {
+        this.getArticleCoverImage(this.articleKey);
+      }
     }
   }
 
@@ -200,8 +208,8 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async getArticleBody(articleData: any) {
-    const articleBody = await this.articleSvc.getArticleBody(articleData.bodyId);
-    articleData.body = articleBody;
+      const articleBody = await this.articleSvc.getArticleBody(articleData.bodyId);
+      articleData.body = articleBody;
   }
 
   async getAuthor(authorKey: string) {
