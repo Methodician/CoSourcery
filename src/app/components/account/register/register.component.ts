@@ -28,6 +28,7 @@ export class RegisterComponent implements OnInit {
       fName: ['', Validators.required],
       lName: ['', Validators.required],
       alias: '',
+      imgUrl: '',
       bio: '',
       city: '',
       state: '',
