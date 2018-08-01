@@ -32,7 +32,7 @@ article;
   }
 
   async save(article) {
-   this.articleSvc.createArticle(this.userInfo.$key, this.userInfo, article);
+   this.articleSvc.createArticle(this.userInfo.uid, this.userInfo, article);
   }
 
 }

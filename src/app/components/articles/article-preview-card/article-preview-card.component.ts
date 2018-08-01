@@ -30,8 +30,8 @@ export class ArticlePreviewCardComponent implements OnInit {
   ngOnInit() {
     this.author = this.articleSvc
     .getAuthor(this.articleData.authorId);
-        if (this.author.$key) {
-          this.getProfileImage(this.author.$key);
+        if (this.author.uid) {
+          this.getProfileImage(this.author.uid);
         }
         this.author = this.articleSvc
         .getAuthor(this.articleData.authorId);

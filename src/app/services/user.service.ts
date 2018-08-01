@@ -31,9 +31,7 @@ export class UserService {
             info.fName,
             info.lName,
             info.zipCode,
-            // Why both $key and uid?
-            info.$key = authInfo.uid,
-            info.uid,
+            info.uid = authInfo.uid,
             info.bio,
             info.city,
             info.state,
