@@ -337,6 +337,7 @@ export class ArticleService {
     newArt.timestamp = this.timestampNow;
     newArt.imgUrl = article.imgUrl || 'none';
     newArt.imgAlt = article.imgAlt || 'none';
+    newArt.authorImgUrl = author.imgUrl || '../../assets/images/noUserImage.png' ;
 
     // for testing
     console.log('created preview object', previewObject);
