@@ -76,8 +76,10 @@ export class ArticleService {
 
   async getFullArticleById(articleId: string) {
     const article = await this.getArticleById(articleId);
+    console.log(article);
+    
     // TEMP Remove after bodyId no longer needed.
-    if (article.bodyId !== '') {
+    if (!article.body && article.bodyId !== '') {
       const body = await this.getArticleBody(article.bodyId);
       article.body = body.body;
     }
