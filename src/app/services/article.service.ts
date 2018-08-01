@@ -17,6 +17,7 @@ export class ArticleService {
   rtdb = firebase.database();
   bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
   timestampNow = firebase.firestore.Timestamp.now();
+  currentArticle$ = new Subject<any>();
 
   constructor(private router: Router, private notifSvc: NotificationService) {
     //  primeTags() should be fixed or eliminated
@@ -101,6 +102,13 @@ export class ArticleService {
     } else {
       return false;
     }
+  }
+
+  async setCurrentArticle(articleId: string) {
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    const docSnapshot = await articleRef.get();
+    const articleData = docSnapshot.data();
+    this.currentArticle$.next(articleData);
   }
 
 
