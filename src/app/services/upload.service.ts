@@ -10,14 +10,14 @@ import { async } from 'rxjs/internal/scheduler/async';
 
 @Injectable()
 export class UploadService {
-  uploadPercent: Observable<number>;
+  storage = firebase.storage();
   rtdb = firebase.database();
   fsdb = firebase.firestore();
   constructor() {
   }
 
-  async getImageUrl(key, basePath) {
-    const snapshot = await this.rtdb.ref(`${basePath}/${key}`).once(`value`);
+  async getImageUrl(uid, basePath) {
+    const snapshot = await this.rtdb.ref(`${basePath}/${uid}`).once(`value`);
     if (snapshot && snapshot.val()) {
       const url = snapshot.val().url;
       return url || '../../../assets/images/kid-art.jpg';
@@ -25,15 +25,39 @@ export class UploadService {
     return 'https://www.fillmurray.com/200/300';
   }
 
+  // NEEDS REFACTOR
+  uploadImage(upload: Upload, uid, basePath) {
+    const storageRef = this.storage.ref(`${basePath}/${uid}`).put(upload.file);
+    storageRef.on(firebase.storage.TaskEvent.STATE_CHANGED,
+     (uploading) => {
+        const snap = storageRef.snapshot;
+          upload.progress = ((snap.bytesTransferred / snap.totalBytes) * 100).toFixed(0);
+     },
+    (error) => {
+      console.log('error: ', error.message);
+      alert(error);
+    },
+    ()=> {
+      storageRef.snapshot.ref.getDownloadURL().then(url => {
+        if (basePath === 'uploads/articleCoverImages') {
+          this.fsdb.collection(`articleData/articles/articles/`).doc(`${uid}`).update({imgUrl: url});
+        } else {
+          this.fsdb.doc(`userInfo/open/${uid}`).update({imgUrl: url});
+        }
+      })
+    }
+  )
+ }
+
 
   // NEEDS REFACTOR
-  async uploadImage(upload: Upload, key, basePath) {
+  //  async uploadImage(upload: Upload, uid, basePath) {
     // delete old file from storage
     // this is not working likely.
     // if (upload.url) {
-    //   this.deleteFileStorage(key, basePath);
+    //   this.deleteFileStorage(uid, basePath);
     // }
-    // const filePath = `${basePath}/${key}`;
+    // const filePath = `${basePath}/${uid}`;
     // try {
     // const successSnap2 = await this.storage.upload(filePath, upload.file);
     //   const url2 = await successSnap2.ref.getDownloadURL();
@@ -43,10 +67,12 @@ export class UploadService {
     //   upload.name = successSnap2.metadata.name;
     //   upload.timeStamp = firebase.database.ServerValue.TIMESTAMP;
     //   upload.progress = null;
-    //   this.saveImageData(upload, key, basePath);
+    //   this.saveImageData(upload, uid, basePath);
     // } catch (err) {
     //   console.log('errors!', err);
     //     alert('There was an error saving this image.');
-  }
+  // }
 
+// }
 }
+
