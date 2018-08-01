@@ -232,30 +232,6 @@ export class ArticleService {
   const oldArticle = articleSnap.data();
   oldArticle.lastUpdated = this.timestampNow;
 
-  // Save for now just in case
-  // const articlePreviousVersionSnapshot = articleRef.get().then(snapshot => {
-  //   const updateArticleObject = {
-  //     authorId: snapshot.data().authorId,
-  //     bodyId: snapshot.data().bodyId,
-  //     title: snapshot.data().title,
-  //     introduction: snapshot.data().introduction,
-  //     lastUpdated: this.timestampNow;
-  //     timestamp: snapshot.data().timestamp,
-  //     version: snapshot.data().version,
-  //     commentCount: snapshot.data().commentCount,
-  //     tags: snapshot.data().tags,
-  //     body: snapshot.data().body,
-  //     articleId: snapshot.data().articleId,
-  //     inFeatured: snapshot.data().isFeatured,
-  //     lastEditorId: editorId,
-  //   };
-  //   console.log('updateArticleObject 233', updateArticleObject);
-
-  //   return updateArticleObject;
-  // });
-
-
-
   // Updating article version and lastUpdated
   article.lastUpdated = this.timestampNow;
   article.version ++;
@@ -284,13 +260,6 @@ export class ArticleService {
   articlePreviewRef.set(previewObject);
   archiveRef.set(oldArticle);
   this.navigateToArticleDetail(article.articleId);
-
-  // For Testing
-  console.log('updated article', article);
-  console.log('updated preview object', previewObject );
-  console.log('updated editor object', editorObject);
-  console.log('oldArt', oldArticle);
-  console.log('updated article version', article.version);
 
   }
 
@@ -338,12 +307,6 @@ export class ArticleService {
     newArt.imgUrl = article.imgUrl || 'none';
     newArt.imgAlt = article.imgAlt || 'none';
     newArt.authorImgUrl = author.imgUrl || '../../assets/images/noUserImage.png' ;
-
-    // for testing
-    console.log('created preview object', previewObject);
-    console.log('created new article', newArt);
-    console.log('created editor object', editorObject);
-
 
 articlePreviewIdRef.set(previewObject);
 articleRef.set(newArt);
