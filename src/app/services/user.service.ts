@@ -36,7 +36,8 @@ export class UserService {
             info.uid,
             info.bio,
             info.city,
-            info.state
+            info.state,
+            info.imgUrl
           );
           this.userInfo$.next(userInfo);
           this.loggedInUserKey = authInfo.uid;
@@ -71,8 +72,8 @@ export class UserService {
 
   getUserInfo(uid) {
     if (uid) {
-      return this.rtdb.ref(`userInfo/open/${uid}`).once(`value`).then(data => {
-        return data.val();
+      return this.rtdb.ref(`userInfo/open/${uid}`).once(`value`).then(userData => {
+        return userData.val();
       });
     }
   }

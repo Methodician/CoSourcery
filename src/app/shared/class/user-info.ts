@@ -9,6 +9,7 @@ export class UserInfoOpen {
         public bio?: string,
         public city?: string,
         public state?: string,
+        public imgUrl?: string
     ) { }
 
     displayName() {
