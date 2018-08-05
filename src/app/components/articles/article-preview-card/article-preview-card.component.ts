@@ -15,6 +15,7 @@ export class ArticlePreviewCardComponent implements OnInit {
   author;
   profileImageUrl;
   articleCoverImageUrl;
+  // We should just be using and @Input() uid: string; instead of using the authSvc for every preview card... User is not needed.
   user;
   isArticleBookmarked: boolean;
   hoverClass: string;
