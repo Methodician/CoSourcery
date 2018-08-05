@@ -79,21 +79,21 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   navigateToProfile() {
-    this.articleSvc.navigateToProfile(this.author.$key);
+    this.articleSvc.navigateToProfile(this.author.uid);
   }
 
   async checkIfBookmarked() {
-    const isBookmarked = await this.articleSvc.isBookmarked(this.user.$key, this.articleKey);
+    const isBookmarked = await this.articleSvc.isBookmarked(this.user.uid, this.articleKey);
     this.isArticleBookmarked = isBookmarked;
   }
 
   bookmarkToggle() {
     if (this.authSvc.isSignedIn()) {
       if (this.isArticleBookmarked) {
-        this.articleSvc.unBookmarkArticle(this.user.$key, this.article.articleId);
+        this.articleSvc.unBookmarkArticle(this.user.uid, this.article.articleId);
         this.isArticleBookmarked = false;
       } else {
-        this.articleSvc.bookmarkArticle(this.user.$key, this.article.articleId);
+        this.articleSvc.bookmarkArticle(this.user.uid, this.article.articleId);
         this.isArticleBookmarked = true;
       }
     }
@@ -118,7 +118,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   //       this.articleSvc.unFeatureArticle(this.articleKey);
   //     } else {
   //       // kb: changed this
-  //       this.articleSvc.featureArticle(this.articleKey, this.author.$key);
+  //       this.articleSvc.featureArticle(this.articleKey, this.author.uid);
   //     }
   //   }
   // }
@@ -214,6 +214,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   async getAuthor(authorKey: string) {
     const author = await this.articleSvc.getAuthor(authorKey);
+    author.uid = authorKey;
     this.author = author;
   }
 

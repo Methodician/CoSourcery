@@ -31,12 +31,11 @@ export class UserService {
             info.fName,
             info.lName,
             info.zipCode,
-            // Why both $key and uid?
-            info.$key = authInfo.uid,
-            info.uid,
+            info.uid = authInfo.uid,
             info.bio,
             info.city,
-            info.state
+            info.state,
+            info.imgUrl
           );
           this.userInfo$.next(userInfo);
           this.loggedInUserKey = authInfo.uid;
@@ -69,11 +68,11 @@ export class UserService {
   }
 
 
-  getUserInfo(uid) {
+  async getUserInfo(uid) {
     if (uid) {
-      return this.rtdb.ref(`userInfo/open/${uid}`).once(`value`).then(data => {
-        return data.val();
-      });
+      const userRef = await this.rtdb.ref(`userInfo/open/${uid}`).once(`value`);
+      const userData = userRef.val();
+      return userData;
     }
   }
 

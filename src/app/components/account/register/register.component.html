@@ -56,6 +56,13 @@
           </div>
           <br>
           <div>
+            <!-- User Image Url Input -->
+            <mat-form-field color="primary" floatLabel="never">
+              <input matInput placeholder="Profile Image: (Optional)" type="text" name="imgUrl" formControlName="imgUrl" />
+            </mat-form-field>
+        </div>
+        <br>
+          <div>
             <!-- Short Bio Input -->
             <mat-form-field color="primary" floatLabel="never">
               <input matInput placeholder="Bio: (Optional, a short bio)" type="text" name="bio" formControlName="bio" />
@@ -64,7 +71,7 @@
           <br>
           <div>
             <!-- City Input -->
-            <mat-form-field color="primary">
+            <mat-form-field color="primary" floatLabel="never">
               <input matInput placeholder="City:" type="text" name="city" formControlName="city" />
             </mat-form-field>
           </div>

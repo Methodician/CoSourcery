@@ -15,6 +15,7 @@ export class ArticlePreviewCardComponent implements OnInit {
   author;
   profileImageUrl;
   articleCoverImageUrl;
+  // We should just be using and @Input() uid: string; instead of using the authSvc for every preview card... User is not needed.
   user;
   isArticleBookmarked: boolean;
   hoverClass: string;
@@ -28,13 +29,7 @@ export class ArticlePreviewCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.author = this.articleSvc
-    .getAuthor(this.articleData.authorId);
-        if (this.author.$key) {
-          this.getProfileImage(this.author.$key);
-        }
-        this.author = this.articleSvc
-        .getAuthor(this.articleData.authorId);
+    this.setAuthor();
 
 
     this.authSvc
@@ -53,7 +48,15 @@ export class ArticlePreviewCardComponent implements OnInit {
 
   }
 
-
+  // May be deprecated - are we even using author or the image any more?
+  async setAuthor() {
+    const author = await this.articleSvc.getAuthor(this.articleData.authorId);
+    if (author) {
+      author.uid = this.articleData.authorId;
+      this.author = author;
+      this.getProfileImage(author.uid);
+    }
+  }
 
   navigateToArticleDetail() {
     window.scrollTo(0, 0);

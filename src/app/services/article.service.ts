@@ -299,12 +299,12 @@ export class ArticleService {
     const editorRef = this.fsdb.doc(`articleData/articles/articles/${artId}/editors/${authorId}`);
 
     // Info to be saved in editor document
-    const editorObject = {editorID: author.$key, name: author.fName + ' ' + author.lName };
+    const editorObject = {editorID: author.uid, name: author.fName + ' ' + author.lName };
 
     // Info to be saved in Preview document
     const previewObject = {
       id: artId,
-      authorId: author.$key,
+      authorId: author.uid,
       title: article.title,
       introduction: article.introduction,
       lastUpdated:  this.timestampNow,
@@ -320,7 +320,7 @@ export class ArticleService {
     // Updating New Article Object.
     // Probably a better way to do this.
     const newArt = article;
-    newArt.authorId = author.$key,
+    newArt.authorId = author.uid,
     newArt.articleId = artId;
     newArt.commentCount = 0;
     newArt.version = 1;
