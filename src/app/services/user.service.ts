@@ -68,11 +68,11 @@ export class UserService {
   }
 
 
-  getUserInfo(uid) {
+  async getUserInfo(uid) {
     if (uid) {
-      return this.rtdb.ref(`userInfo/open/${uid}`).once(`value`).then(userData => {
-        return userData.val();
-      });
+      const userRef = await this.rtdb.ref(`userInfo/open/${uid}`).once(`value`);
+      const userData = userRef.val();
+      return userData;
     }
   }
 
