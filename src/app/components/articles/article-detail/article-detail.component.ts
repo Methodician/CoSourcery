@@ -214,6 +214,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   async getAuthor(authorKey: string) {
     const author = await this.articleSvc.getAuthor(authorKey);
+    author.uid = authorKey;
     this.author = author;
   }
 
