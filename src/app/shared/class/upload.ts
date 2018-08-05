@@ -5,7 +5,7 @@ export class Upload {
     public fullPath: string;
     public name: string;
     public timeStamp: any;
-    public progress: number;
+    public progress: string;
     public size: number;
     public type: string;
     constructor(file: File) {
