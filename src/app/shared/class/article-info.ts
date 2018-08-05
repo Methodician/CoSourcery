@@ -27,7 +27,7 @@ export class ArticleDetailPreview {
         public viewCount: number,
         public tags?: string[],
         public imgUrl?: string,
-        public imgAlt?: string,
+        public imgAlt?: string
     ) { }
 }
 
@@ -50,6 +50,7 @@ export class ArticleDetailFirestore {
         public lastEditorId?: string,
         public imgUrl?: string,
         public imgAlt?: string,
+        public authorImgUrl?: string
     ) { }
 }
 

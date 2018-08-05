@@ -17,6 +17,7 @@ export class ArticleService {
   rtdb = firebase.database();
   bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
   timestampNow = firebase.firestore.Timestamp.now();
+  currentArticle$ = new Subject<any>();
 
   constructor(private router: Router, private notifSvc: NotificationService) {
     //  primeTags() should be fixed or eliminated
@@ -75,8 +76,10 @@ export class ArticleService {
 
   async getFullArticleById(articleId: string) {
     const article = await this.getArticleById(articleId);
+    console.log(article);
+    
     // TEMP Remove after bodyId no longer needed.
-    if (article.bodyId !== '') {
+    if (!article.body && article.bodyId !== '') {
       const body = await this.getArticleBody(article.bodyId);
       article.body = body.body;
     }
@@ -101,6 +104,13 @@ export class ArticleService {
     } else {
       return false;
     }
+  }
+
+  async setCurrentArticle(articleId: string) {
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    const docSnapshot = await articleRef.get();
+    const articleData = docSnapshot.data();
+    this.currentArticle$.next(articleData);
   }
 
 
@@ -224,30 +234,6 @@ export class ArticleService {
   const oldArticle = articleSnap.data();
   oldArticle.lastUpdated = this.timestampNow;
 
-  // Save for now just in case
-  // const articlePreviousVersionSnapshot = articleRef.get().then(snapshot => {
-  //   const updateArticleObject = {
-  //     authorId: snapshot.data().authorId,
-  //     bodyId: snapshot.data().bodyId,
-  //     title: snapshot.data().title,
-  //     introduction: snapshot.data().introduction,
-  //     lastUpdated: this.timestampNow;
-  //     timestamp: snapshot.data().timestamp,
-  //     version: snapshot.data().version,
-  //     commentCount: snapshot.data().commentCount,
-  //     tags: snapshot.data().tags,
-  //     body: snapshot.data().body,
-  //     articleId: snapshot.data().articleId,
-  //     inFeatured: snapshot.data().isFeatured,
-  //     lastEditorId: editorId,
-  //   };
-  //   console.log('updateArticleObject 233', updateArticleObject);
-
-  //   return updateArticleObject;
-  // });
-
-
-
   // Updating article version and lastUpdated
   article.lastUpdated = this.timestampNow;
   article.version ++;
@@ -276,13 +262,6 @@ export class ArticleService {
   articlePreviewRef.set(previewObject);
   archiveRef.set(oldArticle);
   this.navigateToArticleDetail(article.articleId);
-
-  // For Testing
-  console.log('updated article', article);
-  console.log('updated preview object', previewObject );
-  console.log('updated editor object', editorObject);
-  console.log('oldArt', oldArticle);
-  console.log('updated article version', article.version);
 
   }
 
@@ -329,12 +308,7 @@ export class ArticleService {
     newArt.timestamp = this.timestampNow;
     newArt.imgUrl = article.imgUrl || 'none';
     newArt.imgAlt = article.imgAlt || 'none';
-
-    // for testing
-    console.log('created preview object', previewObject);
-    console.log('created new article', newArt);
-    console.log('created editor object', editorObject);
-
+    newArt.authorImgUrl = author.imgUrl || '../../assets/images/noUserImage.png' ;
 
 articlePreviewIdRef.set(previewObject);
 articleRef.set(newArt);

@@ -35,7 +35,7 @@ export class UploadFormComponent implements OnInit {
 
   setBasePath() {
     if (this.articleKey) {
-      const basePath = 'uploads/articleCoverImages';
+      const basePath = 'uploads/articleCoverImages/';
       this.sendImgToUploadSvc(this.articleKey, basePath);
     } else {
       const basePath = 'uploads/profileImages/';
