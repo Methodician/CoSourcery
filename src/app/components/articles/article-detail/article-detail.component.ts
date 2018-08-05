@@ -202,7 +202,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
   // }
 
   async getArticleCoverImage(articleKey) {
-    const basePath = 'uploads/articleCoverImages';
+    const basePath = 'uploads/articleCoverImages/';
     const imageUrl = await this.uploadSvc.getImageUrl(articleKey, basePath);
     this.articleCoverImageUrl = imageUrl;
   }

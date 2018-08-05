@@ -74,7 +74,7 @@ export class ArticlePreviewCardComponent implements OnInit {
   }
 
   async getArticleCoverImage(articleKey) {
-    const basePath = 'uploads/articleCoverImages';
+    const basePath = 'uploads/articleCoverImages/';
     this.articleCoverImageUrl = await this.uploadSvc
       .getImageUrl(articleKey, basePath);
   }
