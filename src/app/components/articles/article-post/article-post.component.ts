@@ -21,10 +21,12 @@ article;
     private userSvc: UserService,
   )  {
     this.authSvc.authInfo$.subscribe(authInfo => {
-      this.authInfo = authInfo;
+      if (authInfo.uid)
+        this.authInfo = authInfo;
     });
     this.userSvc.userInfo$.subscribe(userInfo => {
-      this.userInfo = userInfo;
+      if (userInfo.fName)
+        this.userInfo = userInfo;
     });
   }
 
