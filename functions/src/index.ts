@@ -1,3 +1,4 @@
+
 import * as functions from 'firebase-functions';
 import * as  admin from 'firebase-admin';
 // // Start writing Firebase Functions
@@ -8,24 +9,38 @@ import * as  admin from 'firebase-admin';
 // });
 const fs = admin.firestore();
 
+
 exports.createHistoryObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
     if (context.eventType !== 'onDelete' ) {
+        const articleId = context.params.articleId;
         const articleObject = change.after.data();
         const historyId = articleObject.version;
-        change.after.ref.collection('history').doc(historyId).set(articleObject).catch(error => {
-            console.log(error);
-            
+        const historyRef = fs.doc(`articleData/articles/articles/${articleId}/history/${historyId}`);
+        historyRef.set(articleObject).catch(error => {
+            console.log(error);      
         })
     }
-});
+})
 
+exports.createEditorObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
+    if (context.eventType !== 'onDelete' ) {
+        const articleId = context.params.articleId;
+        const articleData = change.after.data()
+        const authorId = articleData.authorId
+        const editorObject = {editorID: articleData.authorId};
+        const editorRef = fs.doc(`articleData/articles/articles/${articleId}/editors/${authorId}`)
+        editorRef.set(editorObject).catch(error => {
+            console.log(error);
+        })
+    }
+})
 
 exports.createPreviewObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
     const articleObject = change.after.data();
     const id = context.params.articleId;
     const previewRef = fs.doc(`articleData/articles/previews/${id}`)
     const previewObject = {
-        id: articleObject.uid,
+        id: articleObject.artilceId,
         authorId: articleObject.authorId,
         title: articleObject.title,
         introduction: articleObject.introduction,
