@@ -166,7 +166,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   bootstrap: [AppComponent]
 })
 
-// Original db
+
+
 export class AppModule {
   fbConfig = {
     apiKey: 'AIzaSyBn8hJ2vDLN21aUl9cP-RgeOWZHZOlbtdY',
@@ -176,24 +177,22 @@ export class AppModule {
     storageBucket: 'scatterschool-dev.appspot.com',
     messagingSenderId: '945815872407'
   };
+  testDbConfig = {
+    apiKey: 'AIzaSyAb3L-t-WB0rf6A9j8gVSRB9STJJvLUEfw',
+    authDomain: 'cosourcerytest.firebaseapp.com',
+    databaseURL: 'https://cosourcerytest.firebaseio.com',
+    projectId: 'cosourcerytest',
+    storageBucket: 'cosourcerytest.appspot.com',
+    messagingSenderId: '146479623747'
+  };
 
-
-// Test Firestore db
-// export class AppModule {
-// fbConfig = {
-//   apiKey: 'AIzaSyAb3L-t-WB0rf6A9j8gVSRB9STJJvLUEfw',
-//   authDomain: 'cosourcerytest.firebaseapp.com',
-//   databaseURL: 'https://cosourcerytest.firebaseio.com',
-//   projectId: 'cosourcerytest',
-//   storageBucket: 'cosourcerytest.appspot.com',
-//   messagingSenderId: '146479623747'
-// };
-
-
-  constructor() {
-    fb.initializeApp(this.fbConfig);
-    const fs = fb.firestore();
-    const settings = { timestampsInSnapshots: true };
-    fs.settings(settings);
-  }
+    constructor() {
+      fb.initializeApp(this.fbConfig);
+      const test = fb.initializeApp(this.testDbConfig, 'test');
+      const testDb = test.firestore();
+      const fs = fb.firestore();
+      const settings = { timestampsInSnapshots: true };
+      fs.settings(settings);
+      testDb.settings(settings);
+    }
 }
