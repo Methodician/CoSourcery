@@ -12,7 +12,10 @@ exports.createHistoryObject = functions.firestore.document('articleData/articles
     if (context.eventType !== 'onDelete' ) {
         const articleObject = change.after.data();
         const historyId = articleObject.version;
-        change.after.ref.collection('history').doc(historyId).set(articleObject);  
+        change.after.ref.collection('history').doc(historyId).set(articleObject).catch(error => {
+            console.log(error);
+            
+        })
     }
 });
 
@@ -35,5 +38,7 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
         imgUrl: articleObject.imgUrl,
         imgAlt: articleObject.imgAlt
     }
-    previewRef.set(previewObject);    
+    previewRef.set(previewObject).catch(error => {
+        console.log(error);
+    })   
 });
