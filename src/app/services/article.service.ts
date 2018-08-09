@@ -223,44 +223,44 @@ export class ArticleService {
   // fsdb reference for article to be updated
   const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
   // Reference for editor info to be save at
-  const editorRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/editors/${editorId}`);
+  // const editorRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/editors/${editorId}`);
   // Reference of for preview to be updated
-  const articlePreviewRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
+  // const articlePreviewRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
   // Reference for position to archive previous version at
-  const archiveRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/history/${article.version}`);
+  // const archiveRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/history/${article.version}`);
 
   // Retreive and update old article
-  const articleSnap = await articleRef.get();
-  const oldArticle = articleSnap.data();
-  oldArticle.lastUpdated = this.timestampNow;
+  // const articleSnap = await articleRef.get();
+  // const oldArticle = articleSnap.data();
+  // oldArticle.lastUpdated = this.timestampNow;
 
   // Updating article version and lastUpdated
   article.lastUpdated = this.timestampNow;
   article.version ++;
 
   // Editor info object to be saved
-  const editorObject = {editorID: editorId, name: editor.fName + ' ' + editor.lName };
+  // const editorObject = {editorID: editorId, name: editor.fName + ' ' + editor.lName };
 
   // Preview info object to be updated
-  const previewObject = {
-    id: articleId,
-    authorId: article.authorId,
-    title: article.title,
-    introduction: article.introduction,
-    lastUpdated:  this.timestampNow,
-    timestamp: this.timestampNow,
-    version: article.version,
-    commentCount: 0,
-    viewCount: 0,
-    tags: article.tags,
-    imgUrl: article.imgUrl,
-    imgAltL: article.imgAlt,
-  };
+  // const previewObject = {
+  //   id: articleId,
+  //   authorId: article.authorId,
+  //   title: article.title,
+  //   introduction: article.introduction,
+  //   lastUpdated:  this.timestampNow,
+  //   timestamp: this.timestampNow,
+  //   version: article.version,
+  //   commentCount: 0,
+  //   viewCount: 0,
+  //   tags: article.tags,
+  //   imgUrl: article.imgUrl,
+  //   imgAltL: article.imgAlt,
+  // };
 
   articleRef.update(article);
-  editorRef.set(editorObject);
-  articlePreviewRef.set(previewObject);
-  archiveRef.set(oldArticle);
+  // editorRef.set(editorObject);
+  // articlePreviewRef.set(previewObject);
+  // archiveRef.set(oldArticle);
   this.navigateToArticleDetail(article.articleId);
 
   }
