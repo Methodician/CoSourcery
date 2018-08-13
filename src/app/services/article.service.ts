@@ -77,7 +77,7 @@ export class ArticleService {
   async getFullArticleById(articleId: string) {
     const article = await this.getArticleById(articleId);
     console.log(article);
-    
+
     // TEMP Remove after bodyId no longer needed.
     if (!article.body && article.bodyId !== '') {
       const body = await this.getArticleBody(article.bodyId);
@@ -223,44 +223,44 @@ export class ArticleService {
   // fsdb reference for article to be updated
   const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
   // Reference for editor info to be save at
-  const editorRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/editors/${editorId}`);
+  // const editorRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/editors/${editorId}`);
   // Reference of for preview to be updated
-  const articlePreviewRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
+  // const articlePreviewRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
   // Reference for position to archive previous version at
-  const archiveRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/history/${article.version}`);
+  // const archiveRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/history/${article.version}`);
 
   // Retreive and update old article
-  const articleSnap = await articleRef.get();
-  const oldArticle = articleSnap.data();
-  oldArticle.lastUpdated = this.timestampNow;
+  // const articleSnap = await articleRef.get();
+  // const oldArticle = articleSnap.data();
+  // oldArticle.lastUpdated = this.timestampNow;
 
   // Updating article version and lastUpdated
   article.lastUpdated = this.timestampNow;
   article.version ++;
 
   // Editor info object to be saved
-  const editorObject = {editorID: editorId, name: editor.fName + ' ' + editor.lName };
+  // const editorObject = {editorID: editorId, name: editor.fName + ' ' + editor.lName };
 
   // Preview info object to be updated
-  const previewObject = {
-    id: articleId,
-    authorId: article.authorId,
-    title: article.title,
-    introduction: article.introduction,
-    lastUpdated:  this.timestampNow,
-    timestamp: this.timestampNow,
-    version: article.version,
-    commentCount: 0,
-    viewCount: 0,
-    tags: article.tags,
-    imgUrl: article.imgUrl,
-    imgAltL: article.imgAlt,
-  };
+  // const previewObject = {
+  //   id: articleId,
+  //   authorId: article.authorId,
+  //   title: article.title,
+  //   introduction: article.introduction,
+  //   lastUpdated:  this.timestampNow,
+  //   timestamp: this.timestampNow,
+  //   version: article.version,
+  //   commentCount: 0,
+  //   viewCount: 0,
+  //   tags: article.tags,
+  //   imgUrl: article.imgUrl,
+  //   imgAltL: article.imgAlt,
+  // };
 
   articleRef.update(article);
-  editorRef.set(editorObject);
-  articlePreviewRef.set(previewObject);
-  archiveRef.set(oldArticle);
+  // editorRef.set(editorObject);
+  // articlePreviewRef.set(previewObject);
+  // archiveRef.set(oldArticle);
   this.navigateToArticleDetail(article.articleId);
 
   }
@@ -273,28 +273,28 @@ export class ArticleService {
     // More specific ref to new article
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${artId}`);
     // Creates new document ref for preview of new article with same id
-    const articlePreviewIdRef = this.fsdb.doc(`articleData/articles/previews/${artId}`);
+    // const articlePreviewIdRef = this.fsdb.doc(`articleData/articles/previews/${artId}`);
     // Creates a ref for saving the editor info for the new article
-    const editorRef = this.fsdb.doc(`articleData/articles/articles/${artId}/editors/${authorId}`);
+    // const editorRef = this.fsdb.doc(`articleData/articles/articles/${artId}/editors/${authorId}`);
 
     // Info to be saved in editor document
-    const editorObject = {editorID: author.uid, name: author.fName + ' ' + author.lName };
+    // const editorObject = {editorID: author.uid, name: author.fName + ' ' + author.lName };
 
     // Info to be saved in Preview document
-    const previewObject = {
-      id: artId,
-      authorId: author.uid,
-      title: article.title,
-      introduction: article.introduction,
-      lastUpdated:  this.timestampNow,
-      timestamp: this.timestampNow,
-      version: 1,
-      commentCount: 0,
-      viewCount: 0,
-      tags: article.tags,
-      imgUrl: article.imgUrl,
-      imgAlt: article.imgAlt
-    };
+    // const previewObject = {
+    //   id: artId,
+    //   authorId: author.uid,
+    //   title: article.title,
+    //   introduction: article.introduction,
+    //   lastUpdated:  this.timestampNow,
+    //   timestamp: this.timestampNow,
+    //   version: 1,
+    //   commentCount: 0,
+    //   viewCount: 0,
+    //   tags: article.tags,
+    //   imgUrl: article.imgUrl,
+    //   imgAlt: article.imgAlt
+    // };
 
     // Updating New Article Object.
     // Probably a better way to do this.
@@ -310,9 +310,9 @@ export class ArticleService {
     newArt.imgAlt = article.imgAlt || 'none';
     newArt.authorImgUrl = author.imgUrl || '../../assets/images/noUserImage.png' ;
 
-articlePreviewIdRef.set(previewObject);
+// articlePreviewIdRef.set(previewObject);
 articleRef.set(newArt);
-editorRef.set(editorObject);
+// editorRef.set(editorObject);
 this.navigateToArticleDetail(article.articleId);
     // return 'success';
   }

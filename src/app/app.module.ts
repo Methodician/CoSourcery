@@ -167,27 +167,27 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 
 // Original db
-export class AppModule {
-  fbConfig = {
-    apiKey: 'AIzaSyBn8hJ2vDLN21aUl9cP-RgeOWZHZOlbtdY',
-    authDomain: 'scatterschool-dev.firebaseapp.com',
-    databaseURL: 'https://scatterschool-dev.firebaseio.com',
-    projectId: 'scatterschool-dev',
-    storageBucket: 'scatterschool-dev.appspot.com',
-    messagingSenderId: '945815872407'
-  };
+// export class AppModule {
+//   fbConfig = {
+//     apiKey: 'AIzaSyBn8hJ2vDLN21aUl9cP-RgeOWZHZOlbtdY',
+//     authDomain: 'scatterschool-dev.firebaseapp.com',
+//     databaseURL: 'https://scatterschool-dev.firebaseio.com',
+//     projectId: 'scatterschool-dev',
+//     storageBucket: 'scatterschool-dev.appspot.com',
+//     messagingSenderId: '945815872407'
+//   };
 
 
 // Test Firestore db
-// export class AppModule {
-// fbConfig = {
-//   apiKey: 'AIzaSyAb3L-t-WB0rf6A9j8gVSRB9STJJvLUEfw',
-//   authDomain: 'cosourcerytest.firebaseapp.com',
-//   databaseURL: 'https://cosourcerytest.firebaseio.com',
-//   projectId: 'cosourcerytest',
-//   storageBucket: 'cosourcerytest.appspot.com',
-//   messagingSenderId: '146479623747'
-// };
+export class AppModule {
+fbConfig = {
+  apiKey: 'AIzaSyAb3L-t-WB0rf6A9j8gVSRB9STJJvLUEfw',
+  authDomain: 'cosourcerytest.firebaseapp.com',
+  databaseURL: 'https://cosourcerytest.firebaseio.com',
+  projectId: 'cosourcerytest',
+  storageBucket: 'cosourcerytest.appspot.com',
+  messagingSenderId: '146479623747'
+};
 
 
   constructor() {
