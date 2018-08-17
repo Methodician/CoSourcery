@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ArticleService } from '../../../services/article.service';
+import { Subscription } from '../../../../../node_modules/rxjs';
 import { UploadService } from '../../../services/upload.service';
 
 
@@ -7,21 +9,45 @@ import { UploadService } from '../../../services/upload.service';
   templateUrl: './article-cover-image.component.html',
   styleUrls: ['./article-cover-image.component.scss']
 })
-export class ArticleCoverImageComponent implements OnInit {
+export class ArticleCoverImageComponent implements OnInit, OnDestroy {
   @Input() articleKey;
+  editing: boolean;
   articleCoverImageUrl;
-
-  constructor(private uploadSvc: UploadService) { }
+  artilceImageAlt;
+  coverImageSub: Subscription;
+  imageAltSub: Subscription;
+  constructor(private articleSvc: ArticleService, private uploadSvc: UploadService) { }
 
   ngOnInit() {
-    this.getArticleCoverImage(this.articleKey);
+    if (this.articleKey) {
+      this.subscribeToArticle(this.articleKey);
+      // think this is an artifact from previous
+      // approach. Will test on next pass.
+      this.editing = true;
+    }
+
   }
 
-  getArticleCoverImage(articleKey) {
-    const basePath = 'uploads/articleCoverImages/';
-   this.uploadSvc
-         .getImageUrl(articleKey, basePath).then(url => {
-        this.articleCoverImageUrl = url;
-      });
+  subscribeToArticle(articleKey) {
+    this.articleSvc.setCurrentArticle(articleKey);
+    this.coverImageSub =  this.articleSvc.currentArticle$.subscribe(articleData => {
+      if (articleData) {
+         this.articleCoverImageUrl = articleData.imageUrl;
+      }
+
+    });
+    this.imageAltSub = this.articleSvc.currentArticle$.subscribe(articleData => {
+      if (articleData) {
+        this.artilceImageAlt = articleData.imageAlt;
+      }
+    });
   }
+  ngOnDestroy(): void {
+    if (this.editing === true) {
+      this.imageAltSub.unsubscribe();
+      this.coverImageSub.unsubscribe();
+    }
+
+  }
+
 }
