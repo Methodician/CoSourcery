@@ -49,8 +49,8 @@ export class ArticleFormComponent implements OnInit, OnChanges {
       commentCount: 0,
       viewCount: 0,
       isFeatured: false,
-      imgUrl: '',
-      imgAlt: '',
+      imageUrl: '',
+      imageAlt: '',
     });
   }
 
