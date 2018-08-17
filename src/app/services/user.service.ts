@@ -35,7 +35,7 @@ export class UserService {
             info.bio,
             info.city,
             info.state,
-            info.imgUrl
+            info.imageUrl
           );
           this.userInfo$.next(userInfo);
           this.loggedInUserKey = authInfo.uid;

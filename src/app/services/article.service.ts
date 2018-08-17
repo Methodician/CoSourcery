@@ -253,8 +253,8 @@ export class ArticleService {
   //   commentCount: 0,
   //   viewCount: 0,
   //   tags: article.tags,
-  //   imgUrl: article.imgUrl,
-  //   imgAltL: article.imgAlt,
+  //   imageUrl: article.imageUrl,
+  //   imgAltL: article.imageAlt,
   // };
 
   articleRef.update(article);
@@ -292,8 +292,8 @@ export class ArticleService {
     //   commentCount: 0,
     //   viewCount: 0,
     //   tags: article.tags,
-    //   imgUrl: article.imgUrl,
-    //   imgAlt: article.imgAlt
+    //   imageUrl: article.imageUrl,
+    //   imageAlt: article.imageAlt
     // };
 
     // Updating New Article Object.
@@ -306,9 +306,9 @@ export class ArticleService {
     newArt.viewCount = 0;
     newArt.lastUpdated = this.timestampNow;
     newArt.timestamp = this.timestampNow;
-    newArt.imgUrl = article.imgUrl || 'none';
-    newArt.imgAlt = article.imgAlt || 'none';
-    newArt.authorImgUrl = author.imgUrl || '../../assets/images/noUserImage.png' ;
+    newArt.imageUrl = article.imageUrl || 'none';
+    newArt.imageAlt = article.imageAlt || 'none';
+    newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png' ;
 
 // articlePreviewIdRef.set(previewObject);
 articleRef.set(newArt);

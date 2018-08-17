@@ -37,16 +37,16 @@ export class UploadService {
       console.log('error: ', error.message);
       alert(error);
     },
-    ()=> {
+    () => {
       storageRef.snapshot.ref.getDownloadURL().then(url => {
         if (basePath === 'uploads/articleCoverImages/') {
-          this.fsdb.collection(`articleData/articles/articles/`).doc(`${uid}`).update({imgUrl: url});
+          this.fsdb.collection(`articleData/articles/articles/`).doc(`${uid}`).update({imageUrl: url});
         } else {
-          this.rtdb.ref(`userInfo/open/${uid}`).update({imgUrl: url});
+          this.rtdb.ref(`userInfo/open/${uid}`).update({imageUrl: url});
         }
-      })
+      });
     }
-  )
+  );
  }
 
 

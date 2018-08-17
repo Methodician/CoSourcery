@@ -128,6 +128,7 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
     if (articleData) {
       const thisArticle = new ArticleDetailFirestore (
         articleData.authorId,
+        articleData.authorImageUrl,
         articleData.bodyId,
         articleData.title,
         articleData.introduction,
@@ -138,8 +139,8 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
         articleData.viewCount,
         articleData.tags,
         articleData.body,
-        articleData.imgUrl,
-        articleData.imgAlt,
+        articleData.imageUrl,
+        articleData.imageAlt,
 );
       thisArticle.articleId = this.articleKey;
       this.article = thisArticle;
@@ -147,9 +148,9 @@ export class ArticleDetailComponent implements OnInit, OnChanges, OnDestroy {
       this.getAuthor(this.article.authorId);
       this.getProfileImage(this.article.authorId);
       // TEMP
-      if (articleData.imgUrl) {
-        console.log(articleData.imgUrl);
-        this.articleCoverImageUrl = articleData.imgUrl;
+      if (articleData.imageUrl) {
+        console.log(articleData.imageUrl);
+        this.articleCoverImageUrl = articleData.imageUrl;
       } else {
         this.getArticleCoverImage(this.articleKey);
       }
