@@ -1,65 +1,58 @@
 <form autocomplete="off" novalidate [formGroup]="form">
-    <div class="formWrapper">
-      
-        <mat-form-field color="primary">
+  <div class="formWrapper">
+    
+      <mat-form-field color="primary">
+        <div>
+          <label for="title">Title</label>
+          <textarea matInput #title name="title" maxlength="100" formControlName="title" type="text" [class.input-error]="isErrorVisible('title', 'required')"></textarea>
+          <br>
+          <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
+        </div>
+        <mat-error *ngIf="isErrorVisible('title','required')">Please give your article a title.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="primary">
+        <div>
+          <label for="introduction">Introduction</label>
+          <textarea matInput #introduction name="introduction" maxlength="300" formControlName="introduction" type="text" [class.input-error]="isErrorVisible('introduction', 'required')"></textarea>
+          <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
+        </div>
+        <mat-error *ngIf="isErrorVisible('introduction','required')">Please tell us a little something about what this article is about.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="primary">
           <div>
-            <label for="title">Title</label>
-            <textarea matInput #title name="title" maxlength="100" formControlName="title" type="text" [class.input-error]="isErrorVisible('title', 'required')"></textarea>
-            <br>
-            <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
+            <label for="imageAlt">Image Alt Statment</label>
+            <input matInput #imageAlt name="imageAlt" maxlength="300" formControlName="imageAlt" type="text" >
           </div>
-          <mat-error *ngIf="isErrorVisible('title','required')">Please give your article a title.</mat-error>
         </mat-form-field>
-  
-        <mat-form-field color="primary">
+
+      <div class="ckEditor">
+          <label>Body</label>
+          <!-- <ckeditor name="body" formControlName="body" [config]="{uiColor: '##dee2e8'}" debounce="500">
+          </ckeditor> -->
           <div>
-            <label for="introduction">Introduction</label>
-            <textarea matInput #introduction name="introduction" maxlength="300" formControlName="introduction" type="text" [class.input-error]="isErrorVisible('introduction', 'required')"></textarea>
-            <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
-          </div>
-          <mat-error *ngIf="isErrorVisible('introduction','required')">Please tell us a little something about what this article is about.</mat-error>
-        </mat-form-field>
-
-        <mat-form-field color="primary">
-            <div>
-              <label for="imageUrl">Image URL</label>
-              <input matInput #imageUrl name="imageUrl" maxlength="300" formControlName="imageUrl" type="text" >
-            </div>
-          </mat-form-field>
-
-          <mat-form-field color="primary">
-              <div>
-                <label for="imageAlt">Image Alt Statment</label>
-                <input matInput #imageAlt name="imageAlt" maxlength="300" formControlName="imageAlt" type="text" >
-              </div>
-            </mat-form-field>
-
-        <div class="ckEditor">
-            <label>Body</label>
-            <!-- <ckeditor name="body" formControlName="body" [config]="{uiColor: '##dee2e8'}" debounce="500">
-            </ckeditor> -->
-            <div>
-              <textarea formControlName="body"  name="body" cols="150" rows="15" formControlName="body" type="text"></textarea>
-            </div>
+            <textarea formControlName="body"  name="body" cols="150" rows="15" formControlName="body" type="text"></textarea>
           </div>
         </div>
+      </div>
 </form>
 <div class="tagWrapper">
-  <h2>Tags</h2>
-  <em>Alphanumeric characters and spaces only</em>
-  <mat-form-field class="chip-tags">
-    <mat-chip-list #chipList>
-      <mat-chip *ngFor="let articleTag of articleTags; let i = index" [selectable]="selectable"
-                [removable]="removable" (remove)="remove(articleTag, i)">
-        {{articleTag}}
-        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="Enter a new tag..."
-            [matChipInputFor]="chipList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            [matChipInputAddOnBlur]="addOnBlur"
-            (matChipInputTokenEnd)="add($event)" />
-    </mat-chip-list>
-  </mat-form-field>
-    <!-- <tag-input class="ckEditor" [maxItems]="8" [(ngModel)]="formTags" [validators]="validator" (onAdd)="onTagAdded($event)" (onRemove)="onTagRemoved($event)"></tag-input> -->
+<h2>Tags</h2>
+<em>Alphanumeric characters and spaces only</em>
+<mat-form-field class="chip-tags">
+  <mat-chip-list #chipList>
+    <mat-chip *ngFor="let articleTag of articleTags; let i = index" [selectable]="selectable"
+              [removable]="removable" (remove)="remove(articleTag, i)">
+      {{articleTag}}
+      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Enter a new tag..."
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event)" />
+  </mat-chip-list>
+</mat-form-field>
+  <!-- <tag-input class="ckEditor" [maxItems]="8" [(ngModel)]="formTags" [validators]="validator" (onAdd)="onTagAdded($event)" (onRemove)="onTagRemoved($event)"></tag-input> -->
 </div>

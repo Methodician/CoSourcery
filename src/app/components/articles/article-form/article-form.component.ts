@@ -11,46 +11,43 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
 })
 export class ArticleFormComponent implements OnInit, OnChanges {
   @Input() initialValue: any;
+  // do we need these?
   ckeditorContent = '';
   titleError: string;
+  //
+
   form: FormGroup;
   formTags = [];
   articleTags = [];
   validator = [this.tagValidation];
 
-  // kb : for chips
-  visible = true;
-  selectable = true;
-  removable = true;
-  addOnBlur = true;
-
   // enter, comma
   separatorKeysCodes = [ ENTER, COMMA];
 
-  // testTags = [];
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.form = this.fb.group({
-      title: ['',
-        [Validators.required, Validators.maxLength(100)]
-      ],
-      introduction: ['', Validators.required],
-      body: ['', Validators.required],
-      tags: [[]],
-      bodyId: '',
-      lastUpdated: null,
-      timestamp: 0,
-      version: 1,
       articleId: '',
       authorId: '',
+      title: ['',
+      [Validators.required, Validators.maxLength(100)]
+    ],
+      introduction: ['', Validators.required],
+      body: ['', Validators.required],
+      // Why does this need to be commented out? Learn.
+      // imageUrl: '',
+      imageAlt: '',
+      authorImageUrl: '',
+      lastUpdated: null,
+      timestamp: 0,
       lastEditorId: '',
+      version: 1,
       commentCount: 0,
       viewCount: 0,
+      tags: [[]],
       isFeatured: false,
-      imageUrl: '',
-      imageAlt: '',
     });
   }
 
