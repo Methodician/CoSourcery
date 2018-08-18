@@ -1,36 +1,27 @@
-import { AuthService } from '../../../services/auth.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
-import { Component, Input, OnInit } from '@angular/core';
-import { ArticleDetailFirestore } from 'app/shared/class/article-info';
-import { _localeFactory } from '../../../../../node_modules/@angular/core/src/application_module';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'cos-article-edit',
   templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.scss',
-  '../article-post/article-post.component.scss'
-]
+  styleUrls: ['./article-edit.component.scss']
 })
 
-export class ArticleEditComponent implements OnInit {
+export class ArticleEditComponent implements OnInit, OnDestroy {
   article: any;
   key: any;
   routeParams: any;
-  authInfo = null;
   userInfo = null;
+  articleValid: boolean;
+
 
   constructor(
     private articleSvc: ArticleService,
-    private router: Router,
     private route: ActivatedRoute,
-    private authSvc: AuthService,
     private userSvc: UserService,
   ) {
-    this.authSvc.authInfo$.subscribe(info => {
-      this.authInfo = info;
-    });
     this.userSvc.userInfo$.subscribe(user => {
       this.userInfo = user;
     });
@@ -38,46 +29,44 @@ export class ArticleEditComponent implements OnInit {
 
   ngOnInit() {
     window.scrollTo(0, 0);
+
     this.route.params.subscribe(params => {
-      this.key = params['key'];
-      this.articleSvc
-      .getArticleById(this.key).then((articleToEdit: ArticleDetailFirestore) => {
-        // TEMP remove after bodyId refactoerd out.
-        // if (articleToEdit.bodyId !== '') {
-        //   this.articleSvc
-        //   .getArticleBody(articleToEdit.bodyId)
-        //   .then(articleBody => {
-        //     if (articleBody) {
-        //       articleToEdit.body = articleBody.body;
-        //             this.article = articleToEdit;
-        //     }
-          // });
-        // } else {
+      if (params) {
+        this.key = params['key'];
+        this.articleSvc
+        .getArticleById(this.key).then(articleToEdit => {
+          if (articleToEdit) {
+            this.articleValid = true;
+            this.article = articleToEdit;
+          }
           this.article = articleToEdit;
-        // }
-      });
+        });
+      }
     });
-}
+  }
+
 
   async edit(article) {
-    // try {
-      const res = this.articleSvc.updateArticle(this.authInfo.uid, this.userInfo, article, this.key);
-    //   if (res) {
-    //     this.router.navigate([`articledetail/${article.articleId}`]);
-    //   } else {
-    //     // "res" should be null-or-undefined, maybe need different message?
-    //     alert('trouble editing the article' + res);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    console.log('res', res);
-
+    console.log(this.userInfo, article, this.key, this.article);
+    if (!article.articleId) {
+     const creationCheck = this.articleSvc.createArticle(this.userInfo, article, this.key);
+       if (creationCheck === 'success') {
+          this.articleValid = true;
+       }
+    }
+      this.articleSvc.updateArticle(this.userInfo, article, this.key);
   }
 
-  async create(article) {
-    const newArticle = this.articleSvc.createArticle(this.authInfo.uid, this.userInfo, article);
-    console.log(newArticle);
 
+  // Deletes abortive article creation.
+  ngOnDestroy() {
+    console.log('this.article', this.article);
+    console.log('this.articleValid', this.articleValid);
+    console.log('this.key', this.key);
+
+    if (!this.article && !this.articleValid) {
+      this.articleSvc.deleteArticleRef(this.key);
+    }
   }
+
 }
