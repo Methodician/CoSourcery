@@ -1,48 +1,43 @@
-<div class="article-detail-wrapper">
-  <div>
-   <p>
-     {{testTime | date}}
-     
-  </p>  
-  </div>
+<div class="article-detail-wrapper"*ngIf="article" >
+
   <mat-card>
     <div class="article-detail">
-        <img id="header" [src]="articleCoverImageUrl">
+        <img id="header"  src={{article.imageUrl}}>
         <mat-card-header>
           <mat-card-title>
-            <h1>{{article?.title}}</h1>
+            <h1>{{article.title}}</h1>
           </mat-card-title>
           <mat-card-subtitle>
-            Last Updated: {{article?.lastUpdated?.toDate() | date }}
+            Last Updated: {{article.lastUpdated?.toDate() | date }}
           </mat-card-subtitle>
         </mat-card-header>
         
 
         <mat-card-content>
-          <h3>{{article?.introduction}}</h3>
-          <div [innerHtml]="article?.body | safeHtml"></div>
+          <h3>{{article.introduction}}</h3>
+          <div [innerHtml]="article.body | safeHtml"></div>
           <div class="tags">
             <mat-chip-list>
               <!-- maybe change tagsearch to something? -->
-              <mat-chip *ngFor="let tag of article?.tags" (click)="tagSearch(tag)">{{tag}}</mat-chip>
+              <mat-chip *ngFor="let tag of article.tags" (click)="tagSearch(tag)">{{tag}}</mat-chip>
             </mat-chip-list>
           </div>
           <div class="footer">
             <div class="author-img">
-              <img (click)="navigateToProfile()" [src]="profileImageUrl ? profileImageUrl : ''">
+              <img (click)="navigateToProfile()" src={{article.authorImageUrl}} />
             </div>
             <div class="author-details">
               <h3>By <span class="span-link" (click)="navigateToProfile()">{{author?.alias || 'unknown' }}</span></h3>
-              <p>Created {{article?.timestamp?.toDate() | date}}</p>
+              <p>Created {{article.timestamp?.toDate() | date}}</p>
             </div>
             <div class="icons">
               <div matTooltip="comments" (click)="scroll(discussion)">
                 <mat-icon color="accent">comment</mat-icon>
-                <p>{{article?.commentCount ? article.commentCount : '0'}}</p>
+                <p>{{article.commentCount ? article.commentCount : '0'}}</p>
               </div>
               <div matTooltip="Revised {{articleData?.version}} time(s)" *ngIf="!editingPreview && hasHistory" (click)="navigateToHistory()">
                   <mat-icon color="accent">border_color</mat-icon>
-                  <p>{{article?.version}}</p>
+                  <p>{{article.version}}</p>
               </div>
               <div>
                 <mat-icon class="bookmark-icon"
@@ -57,7 +52,7 @@
         </mat-card-content>
     </div>
     <!-- <mat-card-footer>
-      <cos-article-related [parentAllArticles]="allArticles | relatedArticle: relatedArticles" [parentTags]="article?.tags"></cos-article-related>
+      <cos-article-related [parentAllArticles]="allArticles | relatedArticle: relatedArticles" [parentTags]="article.tags"></cos-article-related>
       <div id="discussion" #discussion>
         <div  class="comment-section-wrapper">
           <cos-comment-add [headerTitle]="'Discussion'" [parentKey]="articleKey"></cos-comment-add>
