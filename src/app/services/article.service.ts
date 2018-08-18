@@ -1,28 +1,31 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { GlobalTag, ArticleDetailFirestore } from 'app/shared/class/article-info';
+import { ArticleDetailFirestore } from 'app/shared/class/article-info';
 import { Router } from '@angular/router';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { UserInfoOpen } from 'app/shared/class/user-info';
-import { error } from 'util';
-import { NotificationService } from '../services/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArticleService {
-  // globalTags: Iterable<GlobalTag>;
   fsdb = firebase.firestore();
   rtdb = firebase.database();
   bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
   timestampNow = firebase.firestore.Timestamp.now();
   currentArticle$ = new Subject<any>();
 
-  constructor(private router: Router, private notifSvc: NotificationService) {
-    //  primeTags() should be fixed or eliminated
-    // this.primeTags();
+  constructor(private router: Router) {
+
   }
+
+
+  async getLatestArticles() {
+    const articlesRef = this.fsdb.collection('articleData/articles/articles');
+    const querySnap = await articlesRef.orderBy('timestamp', 'desc').limit(12).get();
+    return this.arrayFromCollectionSnapshot(querySnap);
+  }
+
 
   async getAllArticles() {
     const articlesRef = this.fsdb.collection('articleData/articles/articles');
@@ -31,6 +34,7 @@ export class ArticleService {
 
     return articleArray;
   }
+
 
   watchBookmarkedArticles(userKey) {
     const bookmarksRef = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}`);
@@ -46,45 +50,12 @@ export class ArticleService {
   }
 
 
-  async getLatestArticles() {
-    const articlesRef = this.fsdb.collection('articleData/articles/articles');
-    const querySnap = await articlesRef.orderBy('timestamp', 'desc').limit(12).get();
-    return this.arrayFromCollectionSnapshot(querySnap);
-  }
-
-  // async getFeaturedArticles() {
-  //   const articlesRef = this.fsdb.collection('articleData/articles/articles');
-  //   const query = articlesRef.where('isFeatured', '==', true);
-  //   const collectionSnapshot = await query.get();
-  //   const articleArray = this.arrayFromCollectionSnapshot(collectionSnapshot);
-  //   console.log('article array Fetured ArtSvc 43', articleArray);
-
-  //   return articleArray;
-  // }
-
   async getArticleById(articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     const docSnapshot = await articleRef.get();
     return docSnapshot.data();
   }
 
-  async getArticleBody(bodyId: string) {
-    const articleRef = this.fsdb.doc(`articleData/bodies/active/${bodyId}`);
-    const docSnapshot = await articleRef.get();
-    return docSnapshot.data();
-  }
-
-  async getFullArticleById(articleId: string) {
-    const article = await this.getArticleById(articleId);
-    console.log(article);
-
-    // TEMP Remove after bodyId no longer needed.
-    if (!article.body && article.bodyId !== '') {
-      const body = await this.getArticleBody(article.bodyId);
-      article.body = body.body;
-    }
-    return article;
-  }
 
   async getAuthor(uid: string) {
     const userRef = this.rtdb.ref(`userInfo/open/${uid}`);
@@ -92,6 +63,7 @@ export class ArticleService {
     return userInfoSnapshot.val();
 
   }
+
 
   async isBookmarked(userKey, articleKey) {
     const ref = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`);
@@ -106,6 +78,7 @@ export class ArticleService {
     }
   }
 
+
   async setCurrentArticle(articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     const docSnapshot = await articleRef.get();
@@ -113,31 +86,6 @@ export class ArticleService {
     this.currentArticle$.next(articleData);
   }
 
-
-
-  // async getGlobalTags() {
-  //   const tagsSnapshot = await this.fsdb.doc('articleData/tags').get();
-  //   return tagsSnapshot.data();
-  // }
-
-  // captureArticleUnView(articleId: string, viewId: string) {
-  //   // TOUGH: Not registered when browser refreshed or closed or navigate away from app.
-  //   // Consider using beforeUnload S/O article:
-  //   // https://stackoverflow.com/questions/37642589/how-can-we-detect-when-user-closes-browser/37642657#37642657
-  //   // Consider using session storage as started in captureAricleView - maybe can reliably track viewId and timing or something...
-  //   // Consider using Cloud Functions or use presence scheme
-  //   const viewFromSession = new Date(sessionStorage.getItem(`unView:${articleId}`));
-  //   const msPerMinute = 60000;
-  //   const twoMinutesBack = new Date(new Date().valueOf() - 2 * msPerMinute);
-  //   if (viewFromSession < twoMinutesBack) {
-  //     sessionStorage.setItem(`unView:${articleId}`, new Date().toString());
-  //     const articleDocRef = this.getArticleRef(articleId);
-  //     return articleDocRef.collection('views').doc(viewId).update({
-  //       viewEnd: this.fsServerTimestamp()
-  //       // viewEnd: new Date()
-  //     });
-  //   }
-  // }
 
   navigateToArticleDetail(articleKey: any) {
     this.router.navigate([`articledetail/${articleKey}`]);
@@ -167,26 +115,6 @@ export class ArticleService {
       .set(firebase.database.ServerValue.TIMESTAMP);
   }
 
-  // featureArticle(articleKey: string, authorKey: string) {
-  //   this
-  //     .getArticleRef(articleKey)
-  //     .update({ isFeatured: true });
-  //   this.notifSvc.createFeatureNotification(authorKey);
-  // }
-
-  // unFeatureArticle(articleKey: string) {
-  //   this
-  //     .getArticleRef(articleKey)
-  //     .update({ isFeatured: false });
-  // }
-
-  fsServerTimestamp() {
-    return firebase.firestore.FieldValue.serverTimestamp();
-  }
-
-  getArticleRef(articleId) {
-    return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-  }
 
   arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
     const array = [];
@@ -199,6 +127,85 @@ export class ArticleService {
     });
     return array;
   }
+
+
+  async updateArticle(editor: UserInfoOpen, article, articleId: string) {
+    // fsdb reference for article to be updated
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+
+    // Updating article version, lastUpdated, and lastEditor
+    article.lastUpdated = this.timestampNow;
+    article.version ++;
+    article.lastEditorId = editor.uid;
+    articleRef.update(article);
+    this.navigateToArticleDetail(article.articleId);
+    }
+
+
+    // created new article ref to be passed to upload service
+  createArticleRef() {
+    // Creates new document reference point in fsdb
+    const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
+    // Saves the ID of new article reference point
+    const articleId = articleIDRef.id;
+    return articleId;
+  }
+
+
+  deleteArticleRef(articleId) {
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    articleRef.delete();
+  }
+
+
+  createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    // Updating New Article Object.
+    // Probably a better way to do this.
+    const newArt = article;
+    newArt.authorId = author.uid,
+    newArt.articleId = articleId;
+    newArt.commentCount = 0;
+    newArt.version = 1;
+    newArt.viewCount = 0;
+    newArt.lastUpdated = this.timestampNow;
+    newArt.timestamp = this.timestampNow;
+    newArt.lastEditorId = author.uid;
+    newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png' ;
+
+    articleRef.update(newArt);
+    this.navigateToArticleDetail(article.articleId);
+    return 'success';
+  }
+
+}
+
+ // Unused logic for one and future(?) functionality.
+ // Delete if unwanted.
+
+
+ // async getFeaturedArticles() {
+  //   const articlesRef = this.fsdb.collection('articleData/articles/articles');
+  //   const query = articlesRef.where('isFeatured', '==', true);
+  //   const collectionSnapshot = await query.get();
+  //   const articleArray = this.arrayFromCollectionSnapshot(collectionSnapshot);
+  //   console.log('article array Fetured ArtSvc 43', articleArray);
+
+  //   return articleArray;
+  // }
+
+   // featureArticle(articleKey: string, authorKey: string) {
+  //   this
+  //     .getArticleRef(articleKey)
+  //     .update({ isFeatured: true });
+  //   this.notifSvc.createFeatureNotification(authorKey);
+  // }
+
+  // unFeatureArticle(articleKey: string) {
+  //   this
+  //     .getArticleRef(articleKey)
+  //     .update({ isFeatured: false });
+  // }
 
   // getArticlesPerTag(tagArr) {
   //   const articlesArray = [];
@@ -216,105 +223,26 @@ export class ArticleService {
   //   return articlesArray;
   // }
 
+  // async getGlobalTags() {
+  //   const tagsSnapshot = await this.fsdb.doc('articleData/tags').get();
+  //   return tagsSnapshot.data();
+  // }
 
-  // REFACTOR REQUIRED
-  async updateArticle(editorId: string, editor: UserInfoOpen, article: ArticleDetailFirestore, articleId: string) {
-
-  // fsdb reference for article to be updated
-  const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-  // Reference for editor info to be save at
-  // const editorRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/editors/${editorId}`);
-  // Reference of for preview to be updated
-  // const articlePreviewRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
-  // Reference for position to archive previous version at
-  // const archiveRef = this.fsdb.doc(`articleData/articles/articles/${articleId}/history/${article.version}`);
-
-  // Retreive and update old article
-  // const articleSnap = await articleRef.get();
-  // const oldArticle = articleSnap.data();
-  // oldArticle.lastUpdated = this.timestampNow;
-
-  // Updating article version and lastUpdated
-  article.lastUpdated = this.timestampNow;
-  article.version ++;
-
-  // Editor info object to be saved
-  // const editorObject = {editorID: editorId, name: editor.fName + ' ' + editor.lName };
-
-  // Preview info object to be updated
-  // const previewObject = {
-  //   id: articleId,
-  //   authorId: article.authorId,
-  //   title: article.title,
-  //   introduction: article.introduction,
-  //   lastUpdated:  this.timestampNow,
-  //   timestamp: this.timestampNow,
-  //   version: article.version,
-  //   commentCount: 0,
-  //   viewCount: 0,
-  //   tags: article.tags,
-  //   imageUrl: article.imageUrl,
-  //   imgAltL: article.imageAlt,
-  // };
-
-  articleRef.update(article);
-  // editorRef.set(editorObject);
-  // articlePreviewRef.set(previewObject);
-  // archiveRef.set(oldArticle);
-  this.navigateToArticleDetail(article.articleId);
-
-  }
-
-  createArticle(authorId: string, author: UserInfoOpen, article: ArticleDetailFirestore) {
-    // Creates new document reference point in fsdb
-    const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
-    // Saves the ID of new article reference point
-    const artId = articleIDRef.id;
-    // More specific ref to new article
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${artId}`);
-    // Creates new document ref for preview of new article with same id
-    // const articlePreviewIdRef = this.fsdb.doc(`articleData/articles/previews/${artId}`);
-    // Creates a ref for saving the editor info for the new article
-    // const editorRef = this.fsdb.doc(`articleData/articles/articles/${artId}/editors/${authorId}`);
-
-    // Info to be saved in editor document
-    // const editorObject = {editorID: author.uid, name: author.fName + ' ' + author.lName };
-
-    // Info to be saved in Preview document
-    // const previewObject = {
-    //   id: artId,
-    //   authorId: author.uid,
-    //   title: article.title,
-    //   introduction: article.introduction,
-    //   lastUpdated:  this.timestampNow,
-    //   timestamp: this.timestampNow,
-    //   version: 1,
-    //   commentCount: 0,
-    //   viewCount: 0,
-    //   tags: article.tags,
-    //   imageUrl: article.imageUrl,
-    //   imageAlt: article.imageAlt
-    // };
-
-    // Updating New Article Object.
-    // Probably a better way to do this.
-    const newArt = article;
-    newArt.authorId = author.uid,
-    newArt.articleId = artId;
-    newArt.commentCount = 0;
-    newArt.version = 1;
-    newArt.viewCount = 0;
-    newArt.lastUpdated = this.timestampNow;
-    newArt.timestamp = this.timestampNow;
-    newArt.imageUrl = article.imageUrl || 'none';
-    newArt.imageAlt = article.imageAlt || 'none';
-    newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png' ;
-
-// articlePreviewIdRef.set(previewObject);
-articleRef.set(newArt);
-// editorRef.set(editorObject);
-this.navigateToArticleDetail(article.articleId);
-    // return 'success';
-  }
-
-}
+  // captureArticleUnView(articleId: string, viewId: string) {
+  //   // TOUGH: Not registered when browser refreshed or closed or navigate away from app.
+  //   // Consider using beforeUnload S/O article:
+  //   // https://stackoverflow.com/questions/37642589/how-can-we-detect-when-user-closes-browser/37642657#37642657
+  //   // Consider using session storage as started in captureAricleView - maybe can reliably track viewId and timing or something...
+  //   // Consider using Cloud Functions or use presence scheme
+  //   const viewFromSession = new Date(sessionStorage.getItem(`unView:${articleId}`));
+  //   const msPerMinute = 60000;
+  //   const twoMinutesBack = new Date(new Date().valueOf() - 2 * msPerMinute);
+  //   if (viewFromSession < twoMinutesBack) {
+  //     sessionStorage.setItem(`unView:${articleId}`, new Date().toString());
+  //     const articleDocRef = this.getArticleRef(articleId);
+  //     return articleDocRef.collection('views').doc(viewId).update({
+  //       viewEnd: this.fsServerTimestamp()
+  //       // viewEnd: new Date()
+  //     });
+  //   }
+  // }
