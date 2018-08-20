@@ -2,9 +2,9 @@
   <h2>Main Image</h2>
   <div class="image-wrapper">
     <img *ngIf="articleCoverImageUrl"
-    src={{articleCoverImageUrl}}
+    [src]="articleCoverImageUrl"
     class="imageDisplay"
-    alt={{artilceImageAlt}}>
+    [alt]="artilceImageAlt">
   </div>
   
   <cos-upload-form [articleKey]="articleKey" ></cos-upload-form>
