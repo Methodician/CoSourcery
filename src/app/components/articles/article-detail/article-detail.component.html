@@ -1,8 +1,8 @@
-<div class="article-detail-wrapper"*ngIf="article" >
+<div class="article-detail-wrapper" *ngIf="article" >
 
   <mat-card>
     <div class="article-detail">
-        <img id="header"  src={{article.imageUrl}}>
+        <img id="header"  [src]="article.imageUrl">
         <mat-card-header>
           <mat-card-title>
             <h1>{{article.title}}</h1>
@@ -24,7 +24,7 @@
           </div>
           <div class="footer">
             <div class="author-img">
-              <img (click)="navigateToProfile()" src={{article.authorImageUrl}} />
+              <img (click)="navigateToProfile()" [src]="article.authorImageUrl" />
             </div>
             <div class="author-details">
               <h3>By <span class="span-link" (click)="navigateToProfile()">{{author?.alias || 'unknown' }}</span></h3>
