@@ -10,14 +10,6 @@ export class UploadService {
   constructor() {
   }
 
-  async getImageUrl(uid, basePath) {
-    const snapshot = await this.rtdb.ref(`${basePath}/${uid}`).once(`value`);
-    if (snapshot && snapshot.val()) {
-      const url = snapshot.val().url;
-      return url || '../../../assets/images/kid-art.jpg';
-    }
-    return 'https://www.fillmurray.com/200/300';
-  }
 
   // NEEDS REFACTOR
   uploadImage(upload: Upload, uid, basePath) {
