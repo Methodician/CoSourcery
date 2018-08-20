@@ -33,7 +33,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     window.scrollTo(0, 0);
 
     this.route.params.subscribe(params => {
-      if (params) {
+      if (params['key']) {
         this.key = params['key'];
         this.articleSvc.setCurrentArticle(this.key);
         this.subscribeToCurrentArticle = this.articleSvc.currentArticle$.subscribe(articleData => {
@@ -47,7 +47,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
 
-  async edit(article) {
+  async articleEvent(article) {
     if (!article.articleId) {
      const creationCheck = this.articleSvc.createArticle(this.userInfo, article, this.key);
        if (creationCheck === 'success') {
