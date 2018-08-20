@@ -116,19 +116,6 @@ export class ArticleService {
   }
 
 
-  arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
-    const array = [];
-    querySnapshot.forEach(doc => {
-      if (shouldAttachId) {
-        array.push({ id: doc.id, ...doc.data() });
-      } else {
-        array.push(doc.data());
-      }
-    });
-    return array;
-  }
-
-
   async updateArticle(editor: UserInfoOpen, article, articleId: string) {
     // fsdb reference for article to be updated
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
@@ -137,25 +124,18 @@ export class ArticleService {
     article.lastUpdated = this.timestampNow;
     article.version ++;
     article.lastEditorId = editor.uid;
-    articleRef.update(article);
-    this.navigateToArticleDetail(article.articleId);
+    let outcome = 'success';
+    articleRef.update(article).catch(error => {
+      if (error) {
+        outcome = 'Error';
+      }
+    });
+    if (outcome !== 'success') {
+      return outcome;
     }
-
-
-    // created new article ref to be passed to upload service
-  createArticleRef() {
-    // Creates new document reference point in fsdb
-    const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
-    // Saves the ID of new article reference point
-    const articleId = articleIDRef.id;
-    return articleId;
-  }
-
-
-  deleteArticleRef(articleId) {
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    articleRef.delete();
-  }
+    this.navigateToArticleDetail(article.articleId);
+    return outcome;
+    }
 
 
   createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
@@ -173,9 +153,46 @@ export class ArticleService {
     newArt.lastEditorId = author.uid;
     newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png' ;
 
-    articleRef.update(newArt);
+    let outcome = 'success';
+    articleRef.update(newArt).catch(error => {
+      if (error) {
+        console.log(error);
+        outcome = 'Error';
+      }
+    });
+    if (outcome !== 'success') {
+      return outcome;
+    }
     this.navigateToArticleDetail(article.articleId);
-    return 'success';
+    return outcome;
+  }
+
+  // created new article ref to be passed to upload service
+  createArticleId() {
+    // Creates new document reference point in fsdb
+    const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
+    // Saves the ID of new article reference point
+    const articleId = articleIDRef.id;
+    return articleId;
+  }
+
+
+  deleteArticleRef(articleId) {
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    articleRef.delete();
+  }
+
+
+  arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
+    const array = [];
+    querySnapshot.forEach(doc => {
+      if (shouldAttachId) {
+        array.push({ id: doc.id, ...doc.data() });
+      } else {
+        array.push(doc.data());
+      }
+    });
+    return array;
   }
 
 }
