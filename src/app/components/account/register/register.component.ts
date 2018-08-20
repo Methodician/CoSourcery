@@ -39,8 +39,6 @@ export class RegisterComponent implements OnInit {
 
   register() {
     const val = this.form.value;
-    console.log('val', val);
-
     this.authSvc
       .register(val.email, val.password)
       .subscribe(async res => {
