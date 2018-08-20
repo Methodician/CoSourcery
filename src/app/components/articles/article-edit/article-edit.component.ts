@@ -35,15 +35,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       if (params['key']) {
         this.key = params['key'];
-        this.articleSvc.setCurrentArticle(this.key);
-        this.subscribeToCurrentArticle = this.articleSvc.currentArticle$.subscribe(articleData => {
-          if (articleData) {
-            this.article = articleData;
-            this.articleValid = true;
           }
         });
-      }
-    });
+      this.articleSvc.setCurrentArticle(this.key);
+      this.subscribeToCurrentArticle = this.articleSvc.currentArticle$.subscribe(articleData => {
+        if (articleData) {
+          this.article = articleData;
+          this.articleValid = true;
+        }
+      });
   }
 
 
