@@ -5,7 +5,7 @@
 	<div>
 		<cos-article-form #form [initialValue]="article">
 		</cos-article-form>
-		<button (click)="articleEvent(form.value)" mat-raised-button color="warn" 
+		<button (click)="saveArticle(form.value)" mat-raised-button color="warn" 
 				[ngClass]="{'submit': form.valid === true, 'invalid': form.valid === false }"
 			    [disabled]="!form.valid">
 		 Save Changes</button>
