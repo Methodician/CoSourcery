@@ -22,7 +22,9 @@ export class ArticlePreviewCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkIfBookmarked();
+    if(this.userId){
+       this.checkIfBookmarked();
+    }
   }
 
 
