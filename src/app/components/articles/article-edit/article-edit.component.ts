@@ -16,7 +16,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   routeParams: any;
   userInfo = null;
   articleValid: boolean;
-  subscribeToCurrentArticle: Subscription;
+  currentArticleSubscription: Subscription;
 
 
   constructor(
@@ -36,7 +36,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (params) {
         this.key = params['key'];
         this.articleSvc.setCurrentArticle(this.key);
-        this.subscribeToCurrentArticle = this.articleSvc.currentArticle$.subscribe(articleData => {
+        this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
           if (articleData) {
             this.article = articleData;
             this.articleValid = true;
@@ -63,7 +63,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     console.log('this.article', this.article);
     console.log('this.articleValid', this.articleValid);
     console.log('this.key', this.key);
-    this.subscribeToCurrentArticle.unsubscribe();
+    this.currentArticleSubscription.unsubscribe();
     if (!this.article && !this.articleValid) {
       this.articleSvc.deleteArticleRef(this.key);
     }
