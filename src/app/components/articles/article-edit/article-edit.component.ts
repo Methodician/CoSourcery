@@ -33,21 +33,21 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     window.scrollTo(0, 0);
 
     this.route.params.subscribe(params => {
-      if (params) {
+      if (params['key']) {
         this.key = params['key'];
+          }
+        });
         this.articleSvc.setCurrentArticle(this.key);
         this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
           if (articleData) {
             this.article = articleData;
             this.articleValid = true;
-          }
-        });
-      }
-    });
+        }
+      });
   }
 
 
-  async edit(article) {
+  async saveArticle(article) {
     if (!article.articleId) {
      const creationCheck = this.articleSvc.createArticle(this.userInfo, article, this.key);
        if (creationCheck === 'success') {
