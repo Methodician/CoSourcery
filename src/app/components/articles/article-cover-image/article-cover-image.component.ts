@@ -14,7 +14,7 @@ export class ArticleCoverImageComponent implements OnInit, OnDestroy {
   editing: boolean;
   articleCoverImageUrl;
   artilceImageAlt;
-  articleSubscitptions: Subscription;
+  articleSubscitption: Subscription;
   constructor(private articleSvc: ArticleService, private uploadSvc: UploadService) { }
 
   ngOnInit() {
@@ -27,7 +27,7 @@ export class ArticleCoverImageComponent implements OnInit, OnDestroy {
   }
 
   subscribeToArticle(articleKey) {
-    this.articleSubscitptions =  this.articleSvc.currentArticle$.subscribe(articleData => {
+    this.articleSubscitption =  this.articleSvc.currentArticle$.subscribe(articleData => {
       if (articleData) {
          this.articleCoverImageUrl = articleData.imageUrl;
          this.artilceImageAlt = articleData.imageAlt;
@@ -36,7 +36,7 @@ export class ArticleCoverImageComponent implements OnInit, OnDestroy {
 }
   ngOnDestroy(): void {
     if (this.editing === true) {
-      this.articleSubscitptions.unsubscribe();
+      this.articleSubscitption.unsubscribe();
     }
 
   }
