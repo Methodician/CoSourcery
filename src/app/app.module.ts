@@ -41,7 +41,6 @@ import { ArticleHistoryComponent } from 'app/components/articles/article-history
 import { ArticleHistoryDetailComponent } from 'app/components/articles/article-history-detail/article-history-detail.component';
 import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
-import { ArticlePostComponent } from 'app/components/articles/article-post/article-post.component';
 import { CommentComponent } from 'app/components/comments/comment/comment.component';
 import { CommentFormComponent } from 'app/components/comments/comment-form/comment-form.component';
 import { CommentListComponent } from 'app/components/comments/comment-list/comment-list.component';
@@ -102,7 +101,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ArticleHistoryDetailComponent,
     ArticleRelatedComponent,
     ArticleEditComponent,
-    ArticlePostComponent,
     CommentComponent,
     CommentFormComponent,
     CommentListComponent,
