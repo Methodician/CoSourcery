@@ -2,6 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cos-article-edit',
@@ -15,6 +16,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   routeParams: any;
   userInfo = null;
   articleValid: boolean;
+  currentArticleSubscription: Subscription;
 
 
   constructor(
@@ -33,13 +35,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       if (params) {
         this.key = params['key'];
-        this.articleSvc
-        .getArticleById(this.key).then(articleToEdit => {
-          if (articleToEdit) {
+        this.articleSvc.setCurrentArticle(this.key);
+        this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
+          if (articleData) {
+            this.article = articleData;
             this.articleValid = true;
-            this.article = articleToEdit;
           }
-          this.article = articleToEdit;
         });
       }
     });
@@ -62,7 +63,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     console.log('this.article', this.article);
     console.log('this.articleValid', this.articleValid);
     console.log('this.key', this.key);
-
+    this.currentArticleSubscription.unsubscribe();
     if (!this.article && !this.articleValid) {
       this.articleSvc.deleteArticleRef(this.key);
     }
