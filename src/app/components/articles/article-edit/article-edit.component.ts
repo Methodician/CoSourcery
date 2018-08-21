@@ -47,7 +47,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
 
   async edit(article) {
-    console.log(this.userInfo, article, this.key, this.article);
     if (!article.articleId) {
      const creationCheck = this.articleSvc.createArticle(this.userInfo, article, this.key);
        if (creationCheck === 'success') {
