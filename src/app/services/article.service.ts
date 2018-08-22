@@ -81,9 +81,10 @@ export class ArticleService {
 
   async setCurrentArticle(articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    const docSnapshot = await articleRef.get();
-    const articleData = docSnapshot.data();
-    this.currentArticle$.next(articleData);
+    await articleRef.onSnapshot(snapshotData => {
+      const selectedArticle = snapshotData.data();
+      this.currentArticle$.next(selectedArticle);
+    });
   }
 
 
