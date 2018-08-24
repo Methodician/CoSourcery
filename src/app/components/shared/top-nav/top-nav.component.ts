@@ -39,8 +39,8 @@ export class TopNavComponent implements OnInit {
 }
 
 create() {
-const newArticleId = this.articleSvc.createArticleId();
-this.router.navigate([`createarticle/${newArticleId}`]);
+  this.articleSvc.createArticleId();
+  this.router.navigate(['createarticle']);
 }
 
 logOutClick() {
