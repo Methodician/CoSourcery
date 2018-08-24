@@ -141,33 +141,32 @@ export class ArticleService {
 
 
   createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    // Updating New Article Object.
-    // Probably a better way to do this.
-    const newArt = article;
-    newArt.authorId = author.uid,
-    newArt.articleId = articleId;
-    newArt.commentCount = 0;
-    newArt.version = 1;
-    newArt.viewCount = 0;
-    newArt.lastUpdated = this.timestampNow;
-    newArt.timestamp = this.timestampNow;
-    newArt.lastEditorId = author.uid;
-    newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png' ;
+      const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+      // Updating New Article Object.
+      // Probably a better way to do this.
+      const newArt = article;
+      newArt.authorId = author.uid,
+      newArt.articleId = articleId;
+      newArt.commentCount = 0;
+      newArt.version = 1;
+      newArt.viewCount = 0;
+      newArt.lastUpdated = this.timestampNow;
+      newArt.timestamp = this.timestampNow;
+      newArt.lastEditorId = author.uid;
+      newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png' ;
 
-    let outcome = 'success';
-    articleRef.update(newArt).catch(error => {
-      if (error) {
-        console.log(error);
-        outcome = 'Error';
-      }
-    });
-    if (outcome !== 'success') {
+      let outcome = 'success';
+      try { articleRef.update(newArt)
+        .then(() => {
+          this.navigateToArticleDetail(articleId);
+        });
+          } catch (error) {
+            console.error(error);
+            outcome = 'Error (logged to console)';
+            }
       return outcome;
     }
-    this.navigateToArticleDetail(article.articleId);
-    return outcome;
-  }
+
 
    // created new article ref to be passed to upload service
    createArticleId() {
@@ -198,7 +197,7 @@ export class ArticleService {
 
 }
 
- // Unused logic for one and future(?) functionality.
+ // Unused logic for once and future(?) functionality.
  // Delete if unwanted.
 
 
