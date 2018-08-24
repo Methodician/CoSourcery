@@ -32,20 +32,21 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     window.scrollTo(0, 0);
 
-    this.route.params.subscribe(params => {
+     this.route.params.subscribe(params => {
       if (params['key']) {
         this.key = params['key'];
+          } else {
+            this.key = this.articleSvc.newArticleId$;
           }
         });
-        this.articleSvc.setCurrentArticle(this.key);
-        this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-          if (articleData) {
-            this.article = articleData;
-            this.articleValid = true;
+      this.articleSvc.setCurrentArticle(this.key);
+      this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
+        if (articleData) {
+          this.article = articleData;
+          this.articleValid = true;
         }
       });
   }
-
 
   async articleEvent(article) {
     if (!article.articleId) {
