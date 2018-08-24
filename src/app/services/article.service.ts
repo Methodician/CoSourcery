@@ -14,6 +14,7 @@ export class ArticleService {
   bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
   timestampNow = firebase.firestore.Timestamp.now();
   currentArticle$ = new Subject<any>();
+  newArticleId$: string;
 
   constructor(private router: Router) {
 
@@ -168,13 +169,12 @@ export class ArticleService {
     return outcome;
   }
 
-  // created new article ref to be passed to upload service
-  createArticleId() {
+   // created new article ref to be passed to upload service
+   createArticleId() {
     // Creates new document reference point in fsdb
     const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
     // Saves the ID of new article reference point
-    const articleId = articleIDRef.id;
-    return articleId;
+    this.newArticleId$ = articleIDRef.id;
   }
 
 
