@@ -35,22 +35,24 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
      this.route.params.subscribe(params => {
       if (params['key']) {
         this.key = params['key'];
+        this.articleValid = true;
           } else {
             this.key = this.articleSvc.newArticleId$;
+            this.articleValid = false;
           }
         });
       this.articleSvc.setCurrentArticle(this.key);
       this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
         if (articleData) {
           this.article = articleData;
-          this.articleValid = true;
         }
       });
   }
 
+
   async articleEvent(article) {
     if (!article.articleId) {
-     const creationCheck = this.articleSvc.createArticle(this.userInfo, article, this.key);
+     const creationCheck = await this.articleSvc.createArticle(this.userInfo, article, this.key);
        if (creationCheck === 'success') {
           this.articleValid = true;
        }
@@ -61,11 +63,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Deletes abortive article creation.
   ngOnDestroy() {
-    console.log('this.article', this.article);
-    console.log('this.articleValid', this.articleValid);
-    console.log('this.key', this.key);
     this.currentArticleSubscription.unsubscribe();
-    if (!this.article && !this.articleValid) {
+    if (!this.articleValid) {
       this.articleSvc.deleteArticleRef(this.key);
     }
   }
