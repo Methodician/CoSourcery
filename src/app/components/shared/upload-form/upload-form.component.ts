@@ -11,10 +11,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./upload-form.component.scss']
 })
 export class UploadFormComponent implements OnInit {
-  // Test Code for a possible loading animation
-  // color = 'primary';
-  // mode = 'indeterminate';
-  // test: boolean;
   currentUpload: Upload;
   selectedFiles: any;
   @Input() articleKey;
