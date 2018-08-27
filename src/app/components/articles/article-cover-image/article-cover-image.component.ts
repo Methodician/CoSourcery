@@ -11,22 +11,16 @@ import { UploadService } from '../../../services/upload.service';
 })
 export class ArticleCoverImageComponent implements OnInit, OnDestroy {
   @Input() articleKey;
-  editing: boolean;
   articleCoverImageUrl;
   artilceImageAlt;
   articleSubscitption: Subscription;
   constructor(private articleSvc: ArticleService, private uploadSvc: UploadService) { }
 
   ngOnInit() {
-    if (this.articleKey) {
-      this.subscribeToArticle(this.articleKey);
-      // maybe remove this.
-      this.editing = true;
-    }
-
+    this.subscribeToArticle();
   }
 
-  subscribeToArticle(articleKey) {
+  subscribeToArticle() {
     this.articleSubscitption =  this.articleSvc.currentArticle$.subscribe(articleData => {
       if (articleData) {
          this.articleCoverImageUrl = articleData.imageUrl;
@@ -35,10 +29,7 @@ export class ArticleCoverImageComponent implements OnInit, OnDestroy {
   });
 }
   ngOnDestroy(): void {
-    if (this.editing === true) {
       this.articleSubscitption.unsubscribe();
-    }
-
   }
 
 }
