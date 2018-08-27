@@ -1,8 +1,6 @@
-import { ArticleService } from '../../../services/article.service';
 import { UploadService } from '../../../services/upload.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Upload } from 'app/shared/class/upload';
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -18,8 +16,6 @@ export class UploadFormComponent implements OnInit {
 
   constructor(
     private upSvc: UploadService,
-    private router: Router,
-    private articleSvc: ArticleService
   ) { }
 
   ngOnInit() { }
