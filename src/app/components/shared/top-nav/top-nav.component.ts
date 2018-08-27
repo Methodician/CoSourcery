@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AuthInfo } from 'app/shared/class/auth-info';
 import { AuthService } from 'app/services/auth.service';
@@ -11,7 +11,7 @@ import { ArticleService } from '../../../services/article.service';
   templateUrl: './top-nav.component.html',
   styleUrls: ['./top-nav.component.scss']
 })
-export class TopNavComponent implements OnInit {
+export class TopNavComponent {
 
   isCollapsed = true;
   userInfo: UserInfoOpen;
@@ -34,9 +34,6 @@ export class TopNavComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-
-}
 
 create() {
   this.articleSvc.createArticleId();
