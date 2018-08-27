@@ -11,6 +11,7 @@ import { UploadService } from '../../../services/upload.service';
 })
 export class ArticleCoverImageComponent implements OnInit, OnDestroy {
   @Input() articleKey;
+  @Input() createNew;
   articleCoverImageUrl;
   artilceImageAlt;
   articleSubscitption: Subscription;
