@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import * as firebase from 'firebase';
-import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -18,7 +17,6 @@ export class UserService {
 
   constructor(
     private authSvc: AuthService,
-    private router: Router
   ) {
     this.authSvc.authInfo$.subscribe(authInfo => {
       if (authInfo.uid) {
