@@ -13,6 +13,7 @@ export class UploadFormComponent implements OnInit {
   selectedFiles: any;
   @Input() articleKey;
   @Input() uid;
+  @Input() articleStatus;
 
   constructor(
     private upSvc: UploadService,
@@ -26,7 +27,7 @@ export class UploadFormComponent implements OnInit {
   }
 
   setBasePath() {
-    if (this.articleKey) {
+    if (!!this.articleKey) {
       const basePath = 'uploads/articleCoverImages/';
       this.sendImgToUploadSvc(this.articleKey, basePath);
     } else {
@@ -38,6 +39,6 @@ export class UploadFormComponent implements OnInit {
   sendImgToUploadSvc(key, basePath) {
     const file = this.selectedFiles.item(0);
     this.currentUpload = new Upload(file);
-    this.upSvc.uploadImage(this.currentUpload, key, basePath);
+    this.upSvc.uploadImage(this.currentUpload, key, basePath, this.articleStatus);
   }
 }
