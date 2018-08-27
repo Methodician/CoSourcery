@@ -174,6 +174,7 @@ export class ArticleService {
     const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
     // Saves the ID of new article reference point
     this.newArticleId$ = articleIDRef.id;
+    return articleIDRef.id;
   }
 
 
