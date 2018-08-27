@@ -12,7 +12,7 @@ export class UploadService {
 
 
   // NEEDS REFACTOR
-  uploadImage(upload: Upload, uid, basePath) {
+  uploadImage(upload: Upload, uid, basePath, newStatus ?: boolean) {
     const storageRef = this.storage.ref(`${basePath}/${uid}`).put(upload.file);
     storageRef.on(firebase.storage.TaskEvent.STATE_CHANGED,
      () => {
@@ -20,11 +20,21 @@ export class UploadService {
           upload.progress = ((snap.bytesTransferred / snap.totalBytes) * 100).toFixed(0);
         snap.ref.getDownloadURL().then(url => {
           if (basePath === 'uploads/articleCoverImages/') {
-            this.fsdb.collection(`articleData/articles/articles/`).doc(`${uid}`).set({imageUrl: url});
-            return url;
+            if ( newStatus === true) {
+              this.fsdb.collection(`articleData/articles/articles/`).doc(`${uid}`).set({imageUrl: url});
+              return url;
+            } else if ( newStatus === false) {
+              this.fsdb.collection(`articleData/articles/articles/`).doc(`${uid}`).update({imageUrl: url});
+              return url;
+            }
           } else {
-            this.rtdb.ref(`userInfo/open/${uid}`).set({imageUrl: url});
-            return url;
+            if (newStatus === true) {
+              this.rtdb.ref(`userInfo/open/${uid}`).set({imageUrl: url});
+              return url;
+            } else {
+              this.rtdb.ref(`userInfo/open/${uid}`).update({imageUrl: url});
+              return url;
+            }
           }
         });
      },
