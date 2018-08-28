@@ -7,8 +7,6 @@ import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { ArticleDetailComponent } from './components/articles/article-detail/article-detail.component';
 import { ArticleHistoryComponent } from './components/articles/article-history/article-history.component';
-import { AboutUsComponent } from './components/general/about-us/about-us.component';
-import { PageNotFoundComponent } from './components/general/page-not-found/page-not-found.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
 import { ArticlePostComponent } from './components/articles/article-post/article-post.component';
 
@@ -69,10 +67,7 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  { path: 'aboutus', component: AboutUsComponent },
-  { path: '', component: HomeComponent },
-  // ATTN: PageNotFound should be last route.
-  { path: '**', component: PageNotFoundComponent }
+  { path: '', component: HomeComponent }
 ];
 
 @NgModule({

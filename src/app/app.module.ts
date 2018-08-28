@@ -41,16 +41,9 @@ import { ArticleHistoryDetailComponent } from 'app/components/articles/article-h
 import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
 import { ArticlePostComponent } from 'app/components/articles/article-post/article-post.component';
-import { AboutUsComponent } from 'app/components/general/about-us/about-us.component';
 import { ArticleSearchResultsComponent } from 'app/components/articles/article-search-results/article-search-results.component';
-import { PageNotFoundComponent } from 'app/components/general/page-not-found/page-not-found.component';
-import { NotificationsComponent } from 'app/components/general/notifications/notifications.component';
 import { ArticlePreviewCardComponent } from 'app/components/articles/article-preview-card/article-preview-card.component';
 import { ArticlePreviewListComponent } from 'app/components/articles/article-preview-list/article-preview-list.component';
-import { CharacterCounterComponent } from 'app/components/shared/character-counter/character-counter.component';
-import { FollowBtnComponent } from 'app/components/shared/follow-btn/follow-btn.component';
-import { FooterComponent } from 'app/components/shared/footer/footer.component';
-import { ProfileImageComponent } from 'app/components/shared/profile-image/profile-image.component';
 import { UploadFormComponent } from 'app/components/shared/upload-form/upload-form.component';
 import { RelatedArticlePipe } from './shared/pipes/related-article.pipe';
 import { ArticleSearchPipe } from './shared/pipes/article-search.pipe';
@@ -81,16 +74,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ArticleRelatedComponent,
     ArticleEditComponent,
     ArticlePostComponent,
-    AboutUsComponent,
     ArticleSearchResultsComponent,
-    PageNotFoundComponent,
-    NotificationsComponent,
     ArticlePreviewCardComponent,
     ArticlePreviewListComponent,
-    CharacterCounterComponent,
-    FollowBtnComponent,
-    FooterComponent,
-    ProfileImageComponent,
     UploadFormComponent,
     RelatedArticlePipe,
     ArticleSearchPipe,
