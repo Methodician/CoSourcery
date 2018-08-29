@@ -6,7 +6,11 @@
 }
 
 #navbar, .navbar-spacer {
-  height: 70px;
+  height: 60px;
+
+  @media screen and (min-width: 500px) {
+    height: 70px;
+  }
 }
 
 #navbar {
@@ -25,13 +29,25 @@
   text-decoration: none;
 
   h1 {
-    margin-left: 10px;
+    display: none;
+    margin-right: 15px;
     color: $primary-color;
     font-size: 1.6rem;
   }
 
   img {
-    width: 50px;
+    width: 40px;
+    margin-right: 15px;
+  }
+
+  @media screen and (min-width: 500px) {
+    h1 {
+      display: block;
+    }
+
+    img {
+      width: 50px;
+    }
   }
 }
 
@@ -71,7 +87,7 @@
   input {
     width: 100%;
     max-width: 300px;
-    min-width: 136px;
+    min-width: 75px;
     padding: 5px 10px;
     border-radius: 5px;
     border: 2px solid $primary-color;

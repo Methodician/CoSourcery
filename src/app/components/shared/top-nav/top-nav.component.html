@@ -17,15 +17,8 @@
       <button mat-icon-button title="Search" (click)="searchBarFocus(searchInput)">
         <mat-icon>search</mat-icon>
       </button>
-      <form role="search"
-            [hidden]="searchBarState === 2"
-            [class.searchBarIsActive]="searchBarState === 1"
-            [class.searchBarIsInActive]="searchBarState === 2">
-        <input #searchInput
-               type="text"
-               placeholder="Search Articles"
-               aria-describedby="basic-addon2"
-               (keyup.enter)="search(searchInput)">
+      <form>
+        <input #searchInput type="text" placeholder="Search Articles" (keyup.enter)="search(searchInput)">
       </form>
     </div>
 
