@@ -20,7 +20,10 @@ export class HomeComponent implements OnInit {
   currentSelectedTab: SelectedTab = SelectedTab.latest;
 
 
-  constructor(private route: ActivatedRoute, private articleSvc: ArticleService, private authSvc: AuthService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private articleSvc: ArticleService,
+    private authSvc: AuthService) { }
 
   ngOnInit() {
     this.initializeArticles();
@@ -38,9 +41,7 @@ export class HomeComponent implements OnInit {
       this.bookmarkedArticles = list;
     });
     this.articleSvc.watchBookmarkedArticles(this.uid);
-
   }
-
 
   // Methods for toggling between Latest and All Previews
   selectLatest() {
@@ -54,7 +55,6 @@ export class HomeComponent implements OnInit {
   selectBookmark() {
     this.currentSelectedTab = SelectedTab.bookmark;
   }
-
 
 }
 
