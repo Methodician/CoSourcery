@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthInfo } from '../../../shared/class/auth-info';
@@ -5,16 +6,28 @@ import { UserInfoOpen } from '../../../shared/class/user-info';
 import { AuthService } from '../../../services/auth.service';
 import { ArticleService } from '../../../services/article.service';
 
+
 @Component({
   selector: 'cos-top-nav',
   templateUrl: './top-nav.component.html',
   styleUrls: ['./top-nav.component.scss']
 })
+
 export class TopNavComponent implements OnInit {
+
   userInfo: UserInfoOpen;
   authInfo: AuthInfo;
   displayName;
-  constructor(private router: Router, private authSvc: AuthService, private articleSvc: ArticleService) { }
+  
+constructor(
+    private authSvc: AuthService,
+    private router: Router,
+    private articleSvc: ArticleService
+  ) {
+    window.onscroll = (event) => {
+      this.scrollTop = (event.target as any).scrollingElement.scrollTop;
+    };
+    }
 
   ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
@@ -23,18 +36,20 @@ export class TopNavComponent implements OnInit {
     });
   }
 
+
   onSearch(input) {
     // Need search function.
   }
 
+
   onCreatePost() {
-    // Need actual createArticleId function.
-    // this.articleSvc.createArticleId();
-    this.router.navigate(['createarticle']);
+   this.articleSvc.createArticleId();
+  this.router.navigate(['createarticle']);
   }
 
   onSignOut() {
     this.authSvc.signOut();
   }
+
 
 }

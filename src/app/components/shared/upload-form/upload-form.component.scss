@@ -7,6 +7,16 @@ input {
 progress {
   color: #00BE9C;
 }
+
+.submit{
+  background-color: #00BE9C;
+  box-shadow: 1px 3px 4px 1px #2e2f30;
+}
+
+.invalid{
+  background-color: #C4275F;
+}
+
 .uploadForm {
   display: flex;
   align-items: center;
