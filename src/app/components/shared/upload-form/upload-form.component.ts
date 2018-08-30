@@ -11,7 +11,7 @@ import { Upload } from 'app/shared/class/upload';
 export class UploadFormComponent implements OnInit {
   currentUpload: Upload;
   selectedFiles: any;
-  @Input() articleKey;
+  @Input() articleId;
   @Input() uid;
   @Input() articleStatus;
 
@@ -27,9 +27,9 @@ export class UploadFormComponent implements OnInit {
   }
 
   setBasePath() {
-    if (!!this.articleKey) {
+    if (!!this.articleId) {
       const basePath = 'uploads/articleCoverImages/';
-      this.sendImgToUploadSvc(this.articleKey, basePath);
+      this.sendImgToUploadSvc(this.articleId, basePath);
     } else {
       const basePath = 'uploads/profileImages/';
       this.sendImgToUploadSvc(this.uid, basePath);

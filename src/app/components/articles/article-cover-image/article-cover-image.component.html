@@ -2,11 +2,12 @@
   <h2>Main Image</h2>
   <div class="image-wrapper">
     <img *ngIf="articleCoverImageUrl"
-    [src]="articleCoverImageUrl"
-    class="imageDisplay"
-    [alt]="articleImageAlt">
+         [src]="articleCoverImageUrl"
+         class="imageDisplay"
+         [alt]="articleImageAlt">
   </div>
-  
-  <cos-upload-form [articleKey]="articleKey" [articleStatus]="createNew"></cos-upload-form>
-  
+
+  <cos-upload-form [articleId]="articleId"
+                   [articleStatus]="createNew"></cos-upload-form>
+
 </div>

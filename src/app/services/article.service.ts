@@ -39,9 +39,9 @@ export class ArticleService {
 
   watchBookmarkedArticles(userKey) {
     const bookmarksRef = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}`);
-    bookmarksRef.on('value', articleKeys => {
+    bookmarksRef.on('value', articleIds => {
       const articlesList = new Array<any>();
-      articleKeys.forEach(key => {
+      articleIds.forEach(key => {
         this.getArticleById(key.key).then(article => {
           articlesList.push(article);
           this.bookmarkedArticles$.next(articlesList);
@@ -66,8 +66,8 @@ export class ArticleService {
   }
 
 
-  async isBookmarked(userKey, articleKey) {
-    const ref = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`);
+  async isBookmarked(userKey, articleId) {
+    const ref = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`);
 
     const snapshot = await ref.once('value');
     const val = snapshot.val();
@@ -89,8 +89,8 @@ export class ArticleService {
   }
 
 
-  navigateToArticleDetail(articleKey: any) {
-    this.router.navigate([`articledetail/${articleKey}`]);
+  navigateToArticleDetail(articleId: any) {
+    this.router.navigate([`articledetail/${articleId}`]);
   }
 
   navigateToProfile(uid: any) {
@@ -98,22 +98,22 @@ export class ArticleService {
   }
 
 
-  unBookmarkArticle(userKey, articleKey) {
+  unBookmarkArticle(userKey, articleId) {
     const bpu = this.rtdb
-      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`);
+      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`);
     bpu.remove();
     const upb = this.rtdb
-      .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`);
+      .ref(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`);
     upb.remove();
 
   }
 
-  bookmarkArticle(userKey, articleKey) {
+  bookmarkArticle(userKey, articleId) {
     this.rtdb
-      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleKey}`)
+      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`)
       .set(firebase.database.ServerValue.TIMESTAMP);
     this.rtdb
-      .ref(`articleData/userBookmarksPerArticle/${articleKey}/${userKey}`)
+      .ref(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`)
       .set(firebase.database.ServerValue.TIMESTAMP);
   }
 
@@ -158,9 +158,9 @@ export class ArticleService {
     let outcome = 'success';
     try {
       articleRef.update(newArt)
-      .then(() => {
-        this.navigateToArticleDetail(articleId);
-      });
+        .then(() => {
+          this.navigateToArticleDetail(articleId);
+        });
     } catch (error) {
       console.error(error);
       outcome = 'Error (logged to console)';
