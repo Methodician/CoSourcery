@@ -5,7 +5,7 @@
   <img [class]="hoverClass"
        (click)="navigateToArticleDetail()"
        [src]="articleData.imageUrl"
-      [alt]="articleData.imageAlt">
+       [alt]="articleData.imageAlt">
   <mat-card-header (click)="navigateToArticleDetail()">
     <mat-card-title>{{articleData.title | truncateString: 20}}</mat-card-title>
     <mat-card-subtitle>Last Updated: {{articleData?.lastUpdated?.toDate() | date }}</mat-card-subtitle>
@@ -14,10 +14,8 @@
     <p>{{articleData.introduction | truncateString: 100}}</p>
   </mat-card-content>
   <mat-card-actions>
-    <div>
-      <mat-icon color="primary">comment</mat-icon>
-      <p>{{articleData.commentCount ? article.commentCount: '0'}}</p>
-    </div>
+    <mat-icon color="primary">comment</mat-icon>
+    <p>{{articleData.commentCount ? article.commentCount: '0'}}</p>
     <div matTooltip="Revised {{articleData.version}} time(s)">
       <mat-icon color="primary">border_color</mat-icon>
       <p>{{articleData.version}}</p>
@@ -26,10 +24,10 @@
       <mat-icon color="primary">loyalty</mat-icon>
       <p>{{articleData.tags.length}}</p>
     </div>
-    <div>
-      <mat-icon class="bookmark-icon"
-                (click)="bookmarkToggle()"
-                color="primary">{{ isArticleBookmarked? 'bookmark' : 'bookmark_border' }}</mat-icon>
-    </div>
+    <mat-icon class="bookmark-icon"
+              (click)="bookmarkToggle()"
+              color="primary">
+      {{ isArticleBookmarked? 'bookmark' : 'bookmark_border' }}
+    </mat-icon>
   </mat-card-actions>
 </mat-card>
