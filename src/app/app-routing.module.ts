@@ -6,10 +6,6 @@ import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { ArticleDetailComponent } from './components/articles/article-detail/article-detail.component';
 import { ArticleHistoryComponent } from './components/articles/article-history/article-history.component';
-import { SuggestionsComponent } from './components/suggestions/suggestions/suggestions.component';
-import { SuggestionDetailComponent } from './components/suggestions/suggestion-detail/suggestion-detail.component';
-import { AboutUsComponent } from './components/general/about-us/about-us.component';
-import { PageNotFoundComponent } from './components/general/page-not-found/page-not-found.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
 
 const routes: Routes = [
@@ -64,22 +60,7 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  { path: 'suggestions', component: SuggestionsComponent },
-  // {
-  //   path: 'postsuggestion',
-  //   canActivate: [AuthGuard],
-  //   component: AddSuggestionComponent
-  // },
-  { path: 'suggestion/:key', component: SuggestionDetailComponent },
-  // {
-  //   path: 'editsuggestion/:key',
-  //   canActivate: [AuthGuard],
-  //   component: EditSuggestionComponent
-  // },
-  { path: 'aboutus', component: AboutUsComponent },
-  { path: '', component: HomeComponent },
-  // ATTN: this route MUST live at the end of all the routes in this array.
-  { path: '**', component: PageNotFoundComponent }
+  { path: '', component: HomeComponent }
 ];
 
 @NgModule({
