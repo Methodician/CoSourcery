@@ -10,12 +10,18 @@
         <!-- Latest and All Article Preview Toggle buttons -->
         <div class="header-style">
           <h2 (click)="selectLatest()"
-              [class.activeArticleState]="currentSelectedTab === 1">Latest</h2>
+              [class.activeArticleState]="currentSelectedTab === 1">
+            Latest
+          </h2>
           <h2 (click)="selectAll()"
-              [class.activeArticleState]="currentSelectedTab === 2">All</h2>
+              [class.activeArticleState]="currentSelectedTab === 2">
+            All
+          </h2>
           <h2 *ngIf="uid"
               (click)="selectBookmark()"
-              [class.activeArticleState]="currentSelectedTab === 3">Bookmarked</h2>
+              [class.activeArticleState]="currentSelectedTab === 3">
+            Bookmarked
+          </h2>
 
         </div>
       </div>
@@ -24,7 +30,8 @@
            *ngIf="currentSelectedTab === 1">
         <cos-article-preview-card [userId]="uid"
                                   [articleData]="article"
-                                  *ngFor="let article of latestArticles"></cos-article-preview-card>
+                                  *ngFor="let article of latestArticles">
+        </cos-article-preview-card>
         <!-- Latest Article List View -->
       </div>
       <!-- All Article Preview -->
@@ -32,14 +39,16 @@
            class="allArticleWrapper grid">
         <cos-article-preview-card [userId]="uid"
                                   [articleData]="article"
-                                  *ngFor="let article of allArticles | reverseArray "></cos-article-preview-card>
+                                  *ngFor="let article of allArticles | reverseArray ">
+        </cos-article-preview-card>
       </div>
       <!-- Bookmarked Article Preview -->
       <div *ngIf="currentSelectedTab === 3"
            class="allArticleWrapper grid">
         <cos-article-preview-card [userId]="uid"
                                   [articleData]="article"
-                                  *ngFor="let article of bookmarkedArticles | reverseArray "></cos-article-preview-card>
+                                  *ngFor="let article of bookmarkedArticles | reverseArray ">
+        </cos-article-preview-card>
       </div>
     </div>
   </div>
