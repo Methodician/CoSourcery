@@ -31,8 +31,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    window.scrollTo(0, 0);
-
+    window.scrollTo(0, 0)
     this.route.params.subscribe(params => {
       if (params['key']) {
         this.articleId = params['key'];
@@ -43,12 +42,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.isArticleValid = false;
         this.isArticleNew = true;
       }
-    });
-    this.articleSvc.setCurrentArticle(this.articleId);
-    this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-      if (articleData) {
-        this.article = articleData;
-      }
+      this.articleSvc.setCurrentArticle(this.articleId);
+      this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
+        if (articleData) {
+          this.article = articleData;
+        }
+      });
     });
 
     window.onbeforeunload = () => {
