@@ -16,6 +16,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   routeParams: any;
   userInfo = null;
   articleValid: boolean;
+  articleNew: boolean;
   currentArticleSubscription: Subscription;
 
 
@@ -36,17 +37,31 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (params['key']) {
         this.key = params['key'];
         this.articleValid = true;
-      } else {
-        this.key = this.articleSvc.createArticleId();
-        this.articleValid = false;
-      }
-    });
-    this.articleSvc.setCurrentArticle(this.key);
-    this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-      if (articleData) {
-        this.article = articleData;
-      }
-    });
+        this.articleNew = false;
+          } else {
+            this.key = this.articleSvc.newArticleId$;
+            if (!this.key) {
+              this.key = this.articleSvc.createArticleId();
+              console.log(this.key);
+            }
+            this.articleValid = false;
+            this.articleNew = true;
+          }
+        });
+      this.articleSvc.setCurrentArticle(this.key);
+      this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
+        if (articleData) {
+          this.article = articleData;
+        }
+      });
+
+      window.onbeforeunload = () => {
+        this.currentArticleSubscription.unsubscribe();
+        if (!this.articleValid) {
+          this.articleSvc.deleteArticleRef(this.key);
+        }
+      };
+
   }
 
 
