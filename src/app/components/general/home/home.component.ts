@@ -37,10 +37,10 @@ export class HomeComponent implements OnInit {
   async initializeArticles() {
     this.latestArticles = await this.articleSvc.getLatestArticles();
     this.allArticles = await this.articleSvc.getAllArticles();
+    this.articleSvc.watchBookmarkedArticles(this.uid);
     this.articleSvc.bookmarkedArticles$.subscribe(list => {
       this.bookmarkedArticles = list;
     });
-    this.articleSvc.watchBookmarkedArticles(this.uid);
   }
 
   // Methods for toggling between Latest and All Previews
