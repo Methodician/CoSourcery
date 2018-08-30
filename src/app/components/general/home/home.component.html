@@ -17,7 +17,7 @@
               [class.activeArticleState]="currentSelectedTab === 2">
             All
           </h2>
-          <h2 *ngIf="uid"
+          <h2 *ngIf="UserId"
               (click)="selectBookmark()"
               [class.activeArticleState]="currentSelectedTab === 3">
             Bookmarked
@@ -28,7 +28,7 @@
       <!-- Latest Article Preview -->
       <div class="grid"
            *ngIf="currentSelectedTab === 1">
-        <cos-article-preview-card [userId]="uid"
+        <cos-article-preview-card [userId]="UserId"
                                   [articleData]="article"
                                   *ngFor="let article of latestArticles">
         </cos-article-preview-card>
@@ -37,7 +37,7 @@
       <!-- All Article Preview -->
       <div *ngIf="currentSelectedTab === 2"
            class="allArticleWrapper grid">
-        <cos-article-preview-card [userId]="uid"
+        <cos-article-preview-card [userId]="UserId"
                                   [articleData]="article"
                                   *ngFor="let article of allArticles | reverseArray ">
         </cos-article-preview-card>
@@ -45,7 +45,7 @@
       <!-- Bookmarked Article Preview -->
       <div *ngIf="currentSelectedTab === 3"
            class="allArticleWrapper grid">
-        <cos-article-preview-card [userId]="uid"
+        <cos-article-preview-card [userId]="UserId"
                                   [articleData]="article"
                                   *ngFor="let article of bookmarkedArticles | reverseArray ">
         </cos-article-preview-card>

@@ -12,7 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class HomeComponent implements OnInit {
   routeParams;
-  uid;
+  UserId;
   featuredArticles: ArticleDetailFirestore[];
   latestArticles: ArticleDetailFirestore[];
   allArticles: ArticleDetailFirestore[];
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
     this.initializeArticles();
     this.authSvc.authInfo$.subscribe(authInfo => {
       if (authInfo) {
-        this.uid = authInfo.uid;
+        this.UserId = authInfo.uid;
       }
     });
   }
@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
   async initializeArticles() {
     this.latestArticles = await this.articleSvc.getLatestArticles();
     this.allArticles = await this.articleSvc.getAllArticles();
-    this.articleSvc.watchBookmarkedArticles(this.uid);
+    this.articleSvc.watchBookmarkedArticles(this.UserId);
     this.articleSvc.bookmarkedArticles$.subscribe(list => {
       this.bookmarkedArticles = list;
     });
