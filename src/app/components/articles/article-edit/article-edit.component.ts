@@ -15,7 +15,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleId: any;
   routeParams: any;
   userInfo = null;
-  isArticleValid: boolean;
+  isArticleValid: boolean = true;
   isArticleNew: boolean;
   currentArticleSubscription: Subscription;
 
