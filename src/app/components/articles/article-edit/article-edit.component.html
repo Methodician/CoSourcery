@@ -1,14 +1,17 @@
 <div class="wrcoser">
-		<div>
-			<cos-article-cover-image [articleKey]="key" [createNew]="articleNew" ></cos-article-cover-image>
-		</div>
 	<div>
-		<cos-article-form #form [initialValue]="article">
+		<cos-article-cover-image [articleKey]="articleId"
+		                         [createNew]="articleNew"></cos-article-cover-image>
+	</div>
+	<div>
+		<cos-article-form #form
+		                  [initialValue]="article">
 		</cos-article-form>
-		<button (click)="articleEvent(form.value)" mat-raised-button color="warn" 
-				[ngClass]="{'submit': form.valid === true, 'invalid': form.valid === false }"
-			    [disabled]="!form.valid">
-		 Save Changes</button>
+		<button (click)="articleEvent(form.value)"
+		        mat-raised-button
+		        color="warn"
+		        [ngClass]="{'submit': form.valid === true, 'invalid': form.valid === false }"
+		        [disabled]="!form.valid">
+			Save Changes</button>
 	</div>
 </div>
-
