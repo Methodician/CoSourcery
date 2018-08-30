@@ -1,8 +1,7 @@
-
 <div class="navbar-spacer"></div>
-<nav id="navbar" class="flex-align-center">
+<nav id="navbar" class="flex-center-align">
 
-  <a id="logo" class="flex-align-center" routerLink="home">
+  <a id="logo" class="flex-center-align" routerLink="home">
     <img src="../../assets/images/applogo.png" alt="CoSourcery Logo">
     <h1>CoSourcery</h1>
   </a>
@@ -12,9 +11,9 @@
   </div>
 
   <!-- Menu Buttons & Control Groups -->
-  <div id="menu-controls" class="flex-align-center">
+  <div id="menu-controls" class="flex-center-align">
 
-    <div id="search" class="flex-align-center">
+    <div id="search" class="flex-center-align">
       <input #searchInput type="text" placeholder="Search Articles" (keyup.enter)="onSearch(searchInput)">
       <button mat-icon-button title="Search" (click)="onSearch(searchInput)">
         <mat-icon>search</mat-icon>
@@ -28,4 +27,3 @@
   </div>
 
 </nav>
-

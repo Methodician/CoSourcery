@@ -1,9 +1,5 @@
+// Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
-
-.flex-align-center {
-  display: flex;
-  align-items: center;
-}
 
 #navbar, .navbar-spacer {
   height: 60px;
@@ -31,8 +27,6 @@
   h1 {
     display: none;
     margin-right: 15px;
-    color: $primary-color;
-    font-size: 1.6rem;
   }
 
   img {
@@ -69,12 +63,12 @@
   }
 
   button {
-    box-shadow: 0 2px 2px $dark-gray-20;
     background-color: $primary-color;
     color: #fff;
     transition: background-color 0.25s ease-out;
 
     &:hover {
+      box-shadow: 0 1px 3px $dark-gray;
       background-color: $warn-color;
     }
 
