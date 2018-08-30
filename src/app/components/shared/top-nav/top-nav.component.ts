@@ -41,7 +41,6 @@ export class TopNavComponent implements OnInit {
 
 
   onCreatePost() {
-    this.articleSvc.createArticleId();
     this.router.navigate(['createarticle']);
   }
 

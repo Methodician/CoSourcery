@@ -39,11 +39,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.articleValid = true;
         this.articleNew = false;
       } else {
-        this.articleId = this.articleSvc.newArticleId$;
-        if (!this.articleId) {
-          this.articleId = this.articleSvc.createArticleId();
-          console.log(this.articleId);
-        }
+        this.articleId = this.articleSvc.createArticleId();
         this.articleValid = false;
         this.articleNew = true;
       }
