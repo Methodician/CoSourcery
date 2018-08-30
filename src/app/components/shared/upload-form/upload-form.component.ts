@@ -1,8 +1,6 @@
-import { ArticleService } from '../../../services/article.service';
 import { UploadService } from '../../../services/upload.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Upload } from 'app/shared/class/upload';
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -11,10 +9,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./upload-form.component.scss']
 })
 export class UploadFormComponent implements OnInit {
-  // Test Code for a possible loading animation
-  // color = 'primary';
-  // mode = 'indeterminate';
-  // test: boolean;
   currentUpload: Upload;
   selectedFiles: any;
   @Input() articleKey;
@@ -22,8 +16,6 @@ export class UploadFormComponent implements OnInit {
 
   constructor(
     private upSvc: UploadService,
-    private router: Router,
-    private articleSvc: ArticleService
   ) { }
 
   ngOnInit() { }

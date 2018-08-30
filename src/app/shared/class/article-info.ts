@@ -1,18 +1,3 @@
-import { Timestamp } from '../../../../node_modules/rxjs';
-
-export class ArticleDetailOpen {
-    constructor(
-        public authorKey: string,
-        public title: string,
-        public bodyKey: string,
-        public introduction: string,
-        public lastUpdated: number,
-        public timeStamp: number,
-        public version: number,
-        public tags?: string[]
-    ) { }
-}
-
 
 export class ArticleDetailPreview {
     constructor(
@@ -50,26 +35,5 @@ export class ArticleDetailFirestore {
         public viewCount: number,
         public tags?: string[],
         public isFeatured?: boolean,
-    ) { }
-}
-
-export class ArticleBodyFirestore {
-    constructor(
-        public body: string
-    ) { }
-}
-
-export class GlobalTag {
-    constructor(
-        public count: number,
-        public timestamp: Date
-    ) { }
-}
-
-export class ArticleEditorFirestore {
-    constructor(
-        public uid: string,
-        public name: string,
-        public timestamp: number
     ) { }
 }
