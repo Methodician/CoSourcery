@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+/* GLOBAL DEFAULT STYLES */
 @import "./app/sass-variables-mixins/vars.scss";
 @import "./app/sass-variables-mixins/mixins.scss";
 
@@ -13,7 +13,7 @@ html, body {
   width: 100%;
 }
 
-// Default Typography
+/* Typography */
 *, html, body {
   font-family: $font-family;
   font-size: 100%;
@@ -70,7 +70,7 @@ h5 {
   }
 }
 
-// Text Formatting
+/* Text Formatting */
 .text {
 
   &.left {
@@ -96,4 +96,22 @@ h5 {
   &.italic {
     font-style: italic;
   }
+}
+
+/* Flex Presets */
+.flex, .flex-center, .flex-center-align, .flex-center-justify {
+  display: flex;
+}
+
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-center-align {
+  align-items: center;
+}
+
+.flex-center-justify {
+  justify-content: center;
 }
