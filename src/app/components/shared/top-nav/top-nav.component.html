@@ -14,15 +14,13 @@
   <div id="menu-controls" class="flex-align-center">
 
     <div id="search" class="flex-align-center">
-      <button mat-icon-button title="Search" (click)="searchBarFocus(searchInput)">
+      <input #searchInput type="text" placeholder="Search Articles" (keyup.enter)="onSearch(searchInput)">
+      <button mat-icon-button title="Search" (click)="onSearch(searchInput)">
         <mat-icon>search</mat-icon>
       </button>
-      <form>
-        <input #searchInput type="text" placeholder="Search Articles" (keyup.enter)="search(searchInput)">
-      </form>
     </div>
 
-    <button mat-icon-button title="Post" (click)="create()">
+    <button mat-icon-button title="Post" (click)="onCreatePost()">
       <mat-icon>edit</mat-icon>
     </button>
 

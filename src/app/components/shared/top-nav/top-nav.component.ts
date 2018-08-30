@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UserInfoOpen } from 'app/shared/class/user-info';
-import { AuthInfo } from 'app/shared/class/auth-info';
-import { AuthService } from 'app/services/auth.service';
-import { UserService } from 'app/services/user.service';
 import { Router } from '@angular/router';
-import { pipe } from '@angular/core/src/render3/pipe';
-
+import { AuthInfo } from '../../../shared/class/auth-info';
+import { UserInfoOpen } from '../../../shared/class/user-info';
+import { AuthService } from '../../../services/auth.service';
+import { ArticleService } from '../../../services/article.service';
 
 @Component({
   selector: 'cos-top-nav',
@@ -13,38 +11,30 @@ import { pipe } from '@angular/core/src/render3/pipe';
   styleUrls: ['./top-nav.component.scss']
 })
 export class TopNavComponent implements OnInit {
-
-  isCollapsed = true;
   userInfo: UserInfoOpen;
   authInfo: AuthInfo;
-  displayName = '';
-  scrollTop = 0;
-  searchBarState: searchBarFocus = searchBarFocus.inactive;
+  displayName;
+  constructor(private router: Router, private authSvc: AuthService, private articleSvc: ArticleService) { }
 
-  constructor(
-    private authSvc: AuthService,
-    private userSvc: UserService,
-    private router: Router
-  ) {
-    window.onscroll = (event) => {
-      this.scrollTop = (event.target as any).scrollingElement.scrollTop;
-    };
+  ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
       this.authInfo = userData;
       this.displayName = this.authInfo.email;
     });
   }
 
-  ngOnInit() {
-}
+  onSearch(input) {
+    // Need search function.
+  }
 
-logOutClick() {
-  this.authSvc.signOut();
-}
+  onCreatePost() {
+    // Need actual createArticleId function.
+    // this.articleSvc.createArticleId();
+    this.router.navigate(['createarticle']);
+  }
 
-}
+  onSignOut() {
+    this.authSvc.signOut();
+  }
 
-export enum searchBarFocus {
-  'focus' = 1,
-  'inactive'
 }
