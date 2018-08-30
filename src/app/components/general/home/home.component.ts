@@ -17,11 +17,8 @@ export class HomeComponent implements OnInit {
   latestArticles: ArticleDetailFirestore[];
   allArticles: ArticleDetailFirestore[];
   bookmarkedArticles;
-  currentSelectedFeaturePreview: SelectedPreview = SelectedPreview.latestList;
-  currentSelectedLatestPreview: SelectedPreview = SelectedPreview.latestTile;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
-  currentSelectedAllPreview: SelectedPreview = SelectedPreview.allTile;
-  currentSelectedBookmarkPreview: SelectedPreview = SelectedPreview.bookmarkedList;
+
 
   constructor(private route: ActivatedRoute, private articleSvc: ArticleService, private authSvc: AuthService) { }
 
@@ -35,8 +32,6 @@ export class HomeComponent implements OnInit {
   }
 
   async initializeArticles() {
-    // Doesn't even really need a comment since the code describes the action.
-    // this.featuredArticles = await this.articleSvc.getFeaturedArticles();
     this.latestArticles = await this.articleSvc.getLatestArticles();
     this.allArticles = await this.articleSvc.getAllArticles();
     this.articleSvc.bookmarkedArticles$.subscribe(list => {
@@ -60,41 +55,6 @@ export class HomeComponent implements OnInit {
     this.currentSelectedTab = SelectedTab.bookmark;
   }
 
-  // Methods for toggling between Featured Article List and Grid Previews
-  featuredListView() {
-    this.currentSelectedFeaturePreview = SelectedPreview.featuredList;
-  }
-
-  featuredTileView() {
-    this.currentSelectedFeaturePreview = SelectedPreview.featuredTile;
-  }
-
-  // Methods for toggling between Latest Article List and Grid Preview
-  latestListView() {
-    this.currentSelectedLatestPreview = SelectedPreview.latestList;
-  }
-
-  latestTileView() {
-    this.currentSelectedLatestPreview = SelectedPreview.latestTile;
-  }
-
-  // Methods for Toggling between All Article List and Grid Preview
-  allListView() {
-    this.currentSelectedAllPreview = SelectedPreview.allList;
-  }
-
-  allTileView() {
-    this.currentSelectedAllPreview = SelectedPreview.allTile;
-  }
-
-  // Methods for Toggling between Bookmarked Article List and Grid Preview
-  bookmarkedListView() {
-    this.currentSelectedBookmarkPreview = SelectedPreview.bookmarkedList;
-  }
-
-  bookmarkedTileView() {
-    this.currentSelectedBookmarkPreview = SelectedPreview.bookmarkedTitle;
-  }
 
 }
 
@@ -104,13 +64,4 @@ export enum SelectedTab {
   'bookmark'
 }
 
-export enum SelectedPreview {
-  'featuredList' = 1,
-  'featuredTile',
-  'latestList',
-  'latestTile',
-  'allList',
-  'allTile',
-  'bookmarkedList',
-  'bookmarkedTitle',
-}
+
