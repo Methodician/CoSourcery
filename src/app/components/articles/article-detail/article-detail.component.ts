@@ -14,7 +14,7 @@ import { Subscription } from '../../../../../node_modules/rxjs';
   styleUrls: ['./article-detail.component.scss']
 })
 export class ArticleDetailComponent implements OnInit, OnDestroy {
-  articleKey: string;
+  articleId: string;
   isArticleBookmarked: boolean;
   author;
   article;
@@ -32,16 +32,16 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     window.scrollTo(0, 0);
-      this.route.params.subscribe(params => {
-        if (params['key']) {
-          this.articleKey = params['key'];
-          this.articleSvc.setCurrentArticle(this.articleKey);
-        }
-      });
-      this.articleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-        this.article = articleData;
-        this.getAuthor(articleData.authorId);
-      });
+    this.route.params.subscribe(params => {
+      if (params['key']) {
+        this.articleId = params['key'];
+        this.articleSvc.setCurrentArticle(this.articleId);
+      }
+    });
+    this.articleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
+      this.article = articleData;
+      this.getAuthor(articleData.authorId);
+    });
     this.userSvc.userInfo$.subscribe((user: UserInfoOpen) => {
       if (user.exists()) {
         this.user = user;
@@ -56,7 +56,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   }
 
   async checkIfBookmarked() {
-    const isBookmarked = await this.articleSvc.isBookmarked(this.user.uid, this.articleKey);
+    const isBookmarked = await this.articleSvc.isBookmarked(this.user.uid, this.articleId);
     this.isArticleBookmarked = isBookmarked;
   }
 
@@ -73,7 +73,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   }
 
   edit() {
-    this.router.navigate([`editarticle/${this.articleKey}`]);
+    this.router.navigate([`editarticle/${this.articleId}`]);
   }
 
   async getAuthor(authorKey: string) {

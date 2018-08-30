@@ -18,16 +18,14 @@ export class TopNavComponent implements OnInit {
   userInfo: UserInfoOpen;
   authInfo: AuthInfo;
   displayName;
-  
-constructor(
+
+  constructor(
     private authSvc: AuthService,
     private router: Router,
     private articleSvc: ArticleService
   ) {
-    window.onscroll = (event) => {
-      this.scrollTop = (event.target as any).scrollingElement.scrollTop;
-    };
-    }
+
+  }
 
   ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
@@ -43,8 +41,7 @@ constructor(
 
 
   onCreatePost() {
-   this.articleSvc.createArticleId();
-  this.router.navigate(['createarticle']);
+    this.router.navigate(['createarticle']);
   }
 
   onSignOut() {

@@ -10,7 +10,7 @@ import { UploadService } from '../../../services/upload.service';
   styleUrls: ['./article-cover-image.component.scss']
 })
 export class ArticleCoverImageComponent implements OnInit, OnDestroy {
-  @Input() articleKey;
+  @Input() articleId;
   @Input() createNew;
   articleCoverImageUrl;
   artilceImageAlt;
@@ -22,15 +22,15 @@ export class ArticleCoverImageComponent implements OnInit, OnDestroy {
   }
 
   subscribeToArticle() {
-    this.articleSubscitption =  this.articleSvc.currentArticle$.subscribe(articleData => {
+    this.articleSubscitption = this.articleSvc.currentArticle$.subscribe(articleData => {
       if (articleData) {
-         this.articleCoverImageUrl = articleData.imageUrl;
-         this.artilceImageAlt = articleData.imageAlt;
+        this.articleCoverImageUrl = articleData.imageUrl;
+        this.artilceImageAlt = articleData.imageAlt;
       }
-  });
-}
+    });
+  }
   ngOnDestroy(): void {
-      this.articleSubscitption.unsubscribe();
+    this.articleSubscitption.unsubscribe();
   }
 
 }

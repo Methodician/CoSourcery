@@ -12,11 +12,11 @@ import { Subscription } from 'rxjs';
 
 export class ArticleEditComponent implements OnInit, OnDestroy {
   article: any;
-  key: any;
+  articleId: any;
   routeParams: any;
   userInfo = null;
-  articleValid: boolean;
-  articleNew: boolean;
+  isArticleValid: boolean = true;
+  isArticleNew: boolean;
   currentArticleSubscription: Subscription;
 
 
@@ -31,56 +31,52 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    window.scrollTo(0, 0);
-
+    window.scrollTo(0, 0)
     this.route.params.subscribe(params => {
       if (params['key']) {
-        this.key = params['key'];
-        this.articleValid = true;
-        this.articleNew = false;
-          } else {
-            this.key = this.articleSvc.newArticleId$;
-            if (!this.key) {
-              this.key = this.articleSvc.createArticleId();
-              console.log(this.key);
-            }
-            this.articleValid = false;
-            this.articleNew = true;
-          }
-        });
-      this.articleSvc.setCurrentArticle(this.key);
+        this.articleId = params['key'];
+        this.isArticleValid = true;
+        this.isArticleNew = false;
+      } else {
+        this.articleId = this.articleSvc.createArticleId();
+        this.isArticleValid = false;
+        this.isArticleNew = true;
+      }
+      this.articleSvc.setCurrentArticle(this.articleId);
       this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
         if (articleData) {
           this.article = articleData;
         }
       });
+    });
 
-      window.onbeforeunload = () => {
-        this.currentArticleSubscription.unsubscribe();
-        if (!this.articleValid) {
-          this.articleSvc.deleteArticleRef(this.key);
-        }
-      };
+    window.onbeforeunload = () => {
+      this.currentArticleSubscription.unsubscribe();
+      if (!this.isArticleValid) {
+        this.articleSvc.deleteArticleRef(this.articleId);
+      }
+    };
 
   }
 
 
-  async articleEvent(article) {
+  async saveArticle(article) {
     if (!article.articleId) {
-      const creationCheck = await this.articleSvc.createArticle(this.userInfo, article, this.key);
+      const creationCheck = await this.articleSvc.createArticle(this.userInfo, article, this.articleId);
       if (creationCheck === 'success') {
-        this.articleValid = true;
+        this.isArticleValid = true;
       }
+    } else {
+      this.articleSvc.updateArticle(this.userInfo, article, this.articleId);
     }
-    this.articleSvc.updateArticle(this.userInfo, article, this.key);
   }
 
 
   // Deletes abortive article creation.
   ngOnDestroy() {
     this.currentArticleSubscription.unsubscribe();
-    if (!this.articleValid) {
-      this.articleSvc.deleteArticleRef(this.key);
+    if (!this.isArticleValid) {
+      this.articleSvc.deleteArticleRef(this.articleId);
     }
   }
 
