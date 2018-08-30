@@ -66,8 +66,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (creationCheck === 'success') {
         this.isArticleValid = true;
       }
+    } else {
+      this.articleSvc.updateArticle(this.userInfo, article, this.articleId);
     }
-    this.articleSvc.updateArticle(this.userInfo, article, this.articleId);
   }
 
 
