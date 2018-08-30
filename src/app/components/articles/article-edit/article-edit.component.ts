@@ -33,7 +33,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     window.scrollTo(0, 0);
 
-     this.route.params.subscribe(params => {
+    this.route.params.subscribe(params => {
       if (params['key']) {
         this.key = params['key'];
         this.articleValid = true;
@@ -61,17 +61,18 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           this.articleSvc.deleteArticleRef(this.key);
         }
       };
+
   }
 
 
   async articleEvent(article) {
     if (!article.articleId) {
-     const creationCheck = await this.articleSvc.createArticle(this.userInfo, article, this.key);
-       if (creationCheck === 'success') {
-          this.articleValid = true;
-       }
+      const creationCheck = await this.articleSvc.createArticle(this.userInfo, article, this.key);
+      if (creationCheck === 'success') {
+        this.articleValid = true;
+      }
     }
-      this.articleSvc.updateArticle(this.userInfo, article, this.key);
+    this.articleSvc.updateArticle(this.userInfo, article, this.key);
   }
 
 

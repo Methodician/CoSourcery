@@ -40,14 +40,14 @@ export class ArticleService {
   watchBookmarkedArticles(userKey) {
     const bookmarksRef = this.rtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}`);
     bookmarksRef.on('value', articleKeys => {
-      const articlesList = new Array<any> ();
+      const articlesList = new Array<any>();
       articleKeys.forEach(key => {
-          this.getArticleById(key.key).then(article => {
+        this.getArticleById(key.key).then(article => {
           articlesList.push(article);
           this.bookmarkedArticles$.next(articlesList);
         });
       });
-  });
+    });
   }
 
 
@@ -124,7 +124,7 @@ export class ArticleService {
 
     // Updating article version, lastUpdated, and lastEditor
     article.lastUpdated = this.timestampNow;
-    article.version ++;
+    article.version++;
     article.lastEditorId = editor.uid;
     let outcome = 'success';
     articleRef.update(article).catch(error => {
@@ -137,39 +137,40 @@ export class ArticleService {
     }
     this.navigateToArticleDetail(article.articleId);
     return outcome;
-    }
+  }
 
 
   createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
-      const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-      // Updating New Article Object.
-      // Probably a better way to do this.
-      const newArt = article;
-      newArt.authorId = author.uid,
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    // Updating New Article Object.
+    // Probably a better way to do this.
+    const newArt = article;
+    newArt.authorId = author.uid,
       newArt.articleId = articleId;
-      newArt.commentCount = 0;
-      newArt.version = 1;
-      newArt.viewCount = 0;
-      newArt.lastUpdated = this.timestampNow;
-      newArt.timestamp = this.timestampNow;
-      newArt.lastEditorId = author.uid;
-      newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png' ;
+    newArt.commentCount = 0;
+    newArt.version = 1;
+    newArt.viewCount = 0;
+    newArt.lastUpdated = this.timestampNow;
+    newArt.timestamp = this.timestampNow;
+    newArt.lastEditorId = author.uid;
+    newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png';
 
-      let outcome = 'success';
-      try { articleRef.update(newArt)
-        .then(() => {
-          this.navigateToArticleDetail(articleId);
-        });
-          } catch (error) {
-            console.error(error);
-            outcome = 'Error (logged to console)';
-            }
-      return outcome;
+    let outcome = 'success';
+    try {
+      articleRef.update(newArt)
+      .then(() => {
+        this.navigateToArticleDetail(articleId);
+      });
+    } catch (error) {
+      console.error(error);
+      outcome = 'Error (logged to console)';
     }
+    return outcome;
+  }
 
 
-   // created new article ref to be passed to upload service
-   createArticleId() {
+  // created new article ref to be passed to upload service
+  createArticleId() {
     // Creates new document reference point in fsdb
     const articleIDRef = this.fsdb.collection(`articleData/articles/articles/`).doc();
     // Saves the ID of new article reference point
