@@ -3,6 +3,7 @@ import { AuthInfo } from 'app/shared/class/auth-info';
 import { AuthService } from '../../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cos-register',
@@ -15,6 +16,7 @@ export class RegisterComponent implements OnInit {
   authInfo: AuthInfo;
 
   constructor(
+    private router: Router,
     private authSvc: AuthService,
     private userSvc: UserService,
     private fb: FormBuilder,
@@ -53,6 +55,7 @@ export class RegisterComponent implements OnInit {
           await this.userSvc.createUser(val, res.user.uid);
           if (val.alias) {
             this.authSvc.setDisplayName(val.alias);
+            this.router.navigate(['home']);
           }
         } catch (err) {
           alert('We might not have saved your user info quite right. Woops!' + err);
