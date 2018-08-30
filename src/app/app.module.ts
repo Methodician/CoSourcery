@@ -40,7 +40,7 @@ import { ArticleHistoryComponent } from 'app/components/articles/article-history
 import { ArticleHistoryDetailComponent } from 'app/components/articles/article-history-detail/article-history-detail.component';
 import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
-import { ArticlePostComponent } from 'app/components/articles/article-post/article-post.component';
+
 import { ArticleSearchResultsComponent } from 'app/components/articles/article-search-results/article-search-results.component';
 import { ArticlePreviewCardComponent } from 'app/components/articles/article-preview-card/article-preview-card.component';
 import { ArticlePreviewListComponent } from 'app/components/articles/article-preview-list/article-preview-list.component';
@@ -73,7 +73,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ArticleHistoryDetailComponent,
     ArticleRelatedComponent,
     ArticleEditComponent,
-    ArticlePostComponent,
+
     ArticleSearchResultsComponent,
     ArticlePreviewCardComponent,
     ArticlePreviewListComponent,

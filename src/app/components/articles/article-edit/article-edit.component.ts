@@ -1,36 +1,30 @@
-import { AuthService } from '../../../services/auth.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
-import { Component, Input, OnInit } from '@angular/core';
-import { ArticleDetailFirestore } from 'app/shared/class/article-info';
-import { _localeFactory } from '../../../../../node_modules/@angular/core/src/application_module';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cos-article-edit',
   templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.scss',
-  '../article-post/article-post.component.scss'
-]
+  styleUrls: ['./article-edit.component.scss']
 })
 
-export class ArticleEditComponent implements OnInit {
+export class ArticleEditComponent implements OnInit, OnDestroy {
   article: any;
   key: any;
   routeParams: any;
-  authInfo = null;
   userInfo = null;
+  articleValid: boolean;
+  articleNew: boolean;
+  currentArticleSubscription: Subscription;
+
 
   constructor(
     private articleSvc: ArticleService,
-    private router: Router,
     private route: ActivatedRoute,
-    private authSvc: AuthService,
     private userSvc: UserService,
   ) {
-    this.authSvc.authInfo$.subscribe(info => {
-      this.authInfo = info;
-    });
     this.userSvc.userInfo$.subscribe(user => {
       this.userInfo = user;
     });
@@ -38,46 +32,56 @@ export class ArticleEditComponent implements OnInit {
 
   ngOnInit() {
     window.scrollTo(0, 0);
+
     this.route.params.subscribe(params => {
-      this.key = params['key'];
-      this.articleSvc
-      .getArticleById(this.key).then((articleToEdit: ArticleDetailFirestore) => {
-        // TEMP remove after bodyId refactoerd out.
-        if (articleToEdit.bodyId !== '') {
-          this.articleSvc
-          .getArticleBody(articleToEdit.bodyId)
-          .then(articleBody => {
-            if (articleBody) {
-              articleToEdit.body = articleBody.body;
-                    this.article = articleToEdit;
+      if (params['key']) {
+        this.key = params['key'];
+        this.articleValid = true;
+        this.articleNew = false;
+          } else {
+            this.key = this.articleSvc.newArticleId$;
+            if (!this.key) {
+              this.key = this.articleSvc.createArticleId();
+              console.log(this.key);
             }
-          });
-        } else {
-          this.article = articleToEdit;
+            this.articleValid = false;
+            this.articleNew = true;
+          }
+        });
+      this.articleSvc.setCurrentArticle(this.key);
+      this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
+        if (articleData) {
+          this.article = articleData;
         }
       });
-    });
-}
 
-  async edit(article) {
-    // try {
-      const res = this.articleSvc.updateArticle(this.authInfo.uid, this.userInfo, article, this.key);
-    //   if (res) {
-    //     this.router.navigate([`articledetail/${article.articleId}`]);
-    //   } else {
-    //     // "res" should be null-or-undefined, maybe need different message?
-    //     alert('trouble editing the article' + res);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    console.log('res', res);
+      window.onbeforeunload = () => {
+        this.currentArticleSubscription.unsubscribe();
+        if (!this.articleValid) {
+          this.articleSvc.deleteArticleRef(this.key);
+        }
+      };
 
   }
 
-  async create(article) {
-    const newArticle = this.articleSvc.createArticle(this.authInfo.uid, this.userInfo, article);
-    console.log(newArticle);
 
+  async articleEvent(article) {
+    if (!article.articleId) {
+      const creationCheck = await this.articleSvc.createArticle(this.userInfo, article, this.key);
+      if (creationCheck === 'success') {
+        this.articleValid = true;
+      }
+    }
+    this.articleSvc.updateArticle(this.userInfo, article, this.key);
   }
+
+
+  // Deletes abortive article creation.
+  ngOnDestroy() {
+    this.currentArticleSubscription.unsubscribe();
+    if (!this.articleValid) {
+      this.articleSvc.deleteArticleRef(this.key);
+    }
+  }
+
 }

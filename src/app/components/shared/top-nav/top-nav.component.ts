@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AuthInfo } from 'app/shared/class/auth-info';
 import { AuthService } from 'app/services/auth.service';
-import { UserService } from 'app/services/user.service';
 import { Router } from '@angular/router';
-import { pipe } from '@angular/core/src/render3/pipe';
+import { ArticleService } from '../../../services/article.service';
 
 
 @Component({
@@ -12,7 +11,7 @@ import { pipe } from '@angular/core/src/render3/pipe';
   templateUrl: './top-nav.component.html',
   styleUrls: ['./top-nav.component.scss']
 })
-export class TopNavComponent implements OnInit {
+export class TopNavComponent {
 
   isCollapsed = true;
   userInfo: UserInfoOpen;
@@ -23,8 +22,8 @@ export class TopNavComponent implements OnInit {
 
   constructor(
     private authSvc: AuthService,
-    private userSvc: UserService,
-    private router: Router
+    private router: Router,
+    private articleSvc: ArticleService
   ) {
     window.onscroll = (event) => {
       this.scrollTop = (event.target as any).scrollingElement.scrollTop;
@@ -35,7 +34,10 @@ export class TopNavComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+
+create() {
+  this.articleSvc.createArticleId();
+  this.router.navigate(['createarticle']);
 }
 
 logOutClick() {
@@ -43,6 +45,7 @@ logOutClick() {
 }
 
 }
+
 
 export enum searchBarFocus {
   'focus' = 1,

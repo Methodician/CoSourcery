@@ -4,8 +4,8 @@
   <!-- Article image -->
   <img [class]="hoverClass"
        (click)="navigateToArticleDetail()"
-       [src]="articleCoverImageUrl"
-       alt="article's cover image">
+       [src]="articleData.imageUrl"
+      [alt]="articleData.imageAlt">
   <mat-card-header (click)="navigateToArticleDetail()">
     <mat-card-title>{{articleData.title | truncateString: 20}}</mat-card-title>
     <mat-card-subtitle>Last Updated: {{articleData?.lastUpdated?.toDate() | date }}</mat-card-subtitle>
@@ -22,7 +22,7 @@
       <mat-icon color="primary">border_color</mat-icon>
       <p>{{articleData.version}}</p>
     </div>
-    <div>
+    <div *ngIf="articleData.tags">
       <mat-icon color="primary">loyalty</mat-icon>
       <p>{{articleData.tags.length}}</p>
     </div>

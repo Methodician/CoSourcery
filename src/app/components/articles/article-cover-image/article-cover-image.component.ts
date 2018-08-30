@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ArticleService } from '../../../services/article.service';
+import { Subscription } from 'rxjs';
 import { UploadService } from '../../../services/upload.service';
 
 
@@ -7,21 +9,28 @@ import { UploadService } from '../../../services/upload.service';
   templateUrl: './article-cover-image.component.html',
   styleUrls: ['./article-cover-image.component.scss']
 })
-export class ArticleCoverImageComponent implements OnInit {
+export class ArticleCoverImageComponent implements OnInit, OnDestroy {
   @Input() articleKey;
+  @Input() createNew;
   articleCoverImageUrl;
-
-  constructor(private uploadSvc: UploadService) { }
+  artilceImageAlt;
+  articleSubscitption: Subscription;
+  constructor(private articleSvc: ArticleService, private uploadSvc: UploadService) { }
 
   ngOnInit() {
-    this.getArticleCoverImage(this.articleKey);
+    this.subscribeToArticle();
   }
 
-  getArticleCoverImage(articleKey) {
-    const basePath = 'uploads/articleCoverImages/';
-   this.uploadSvc
-         .getImageUrl(articleKey, basePath).then(url => {
-        this.articleCoverImageUrl = url;
-      });
+  subscribeToArticle() {
+    this.articleSubscitption =  this.articleSvc.currentArticle$.subscribe(articleData => {
+      if (articleData) {
+         this.articleCoverImageUrl = articleData.imageUrl;
+         this.artilceImageAlt = articleData.imageAlt;
+      }
+  });
+}
+  ngOnDestroy(): void {
+      this.articleSubscitption.unsubscribe();
   }
+
 }
