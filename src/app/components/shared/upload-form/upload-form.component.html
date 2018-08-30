@@ -4,8 +4,6 @@
       <div class="progress-bar progress-bar-animated" [ngStyle]="{ 'width': currentUpload?.progress + '%' }"></div>
     </div>
     Progress: {{currentUpload?.progress}}% Complete
-    <!-- test code for a possible loading animation -->
-    <!-- <mat-progress-spinner [color]="color"[mode]="mode"></mat-progress-spinner> -->
   </div>
   
 
@@ -13,6 +11,9 @@
     <!-- Input for profile image -->
     <input accept="image/*" id="control" type="file" (change)="detectFiles($event)">
     <!-- Upload Button -->
-    <button mat-raised-button color="accent" class="btnUpload" [disabled]="!selectedFiles" (click)="setBasePath()">Upload</button>
+    <button mat-raised-button color="accent"
+    class="btnUpload" [disabled]="!selectedFiles" 
+    [ngClass]="{'submit': selectedFiles, 'invalid': !selectedFiles}"
+    (click)="setBasePath()">Upload</button>
   </div>
 </div>

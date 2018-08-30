@@ -1,6 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UploadService } from '../../../services/upload.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
 import { ArticleDetailFirestore } from 'app/shared/class/article-info';
 
@@ -17,14 +15,12 @@ export class ArticlePreviewListComponent implements OnInit {
   hoverBg: string;
   constructor(
     private articleService: ArticleService,
-    private router: Router,
-    private uploadSvc: UploadService
+
   ) { }
 
   ngOnInit() {
     this.author = this.articleService
     .getAuthor(this.articleData.authorId);
-    this.getArticleCoverImage();
   }
 
   navigateToArticleDetail() {
@@ -35,11 +31,6 @@ export class ArticlePreviewListComponent implements OnInit {
     this.articleService.navigateToProfile(this.articleData.authorId);
   }
 
-  async getArticleCoverImage() {
-    const basePath = 'uploads/articleCoverImages/';
-    this.articleCoverImageUrl = await this.uploadSvc
-      .getImageUrl(this.articleData.articleId, basePath);
-  }
 
   hoverArticleCard() {
     this.hoverClass = this.hoverClass === '' ? 'hover-bg' : '';

@@ -1,12 +1,12 @@
 <div class="upload-wrapper">
   <h2>Main Image</h2>
   <div class="image-wrapper">
-    <img 
-    [src]="articleCoverImageUrl ? articleCoverImageUrl : '../../assets/images/kid-art.jpg'"
+    <img *ngIf="articleCoverImageUrl"
+    [src]="articleCoverImageUrl"
     class="imageDisplay"
-    alt="article's cover image">
+    [alt]="articleImageAlt">
   </div>
   
-  <cos-upload-form *ngIf="articleKey" [articleKey]="articleKey"></cos-upload-form>
+  <cos-upload-form [articleKey]="articleKey" [articleStatus]="createNew"></cos-upload-form>
   
 </div>

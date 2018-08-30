@@ -56,8 +56,8 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
         commentCount: articleObject.commentCount,
         viewCount: articleObject.viewCount,
         tags: articleObject.tags,
-        imgUrl: articleObject.imgUrl,
-        imgAlt: articleObject.imgAlt
+        imageUrl: articleObject.imageUrl,
+        imageAlt: articleObject.imageAlt
     };
     console.log(previewObject);
     return previewRef.set(previewObject).catch(error => {

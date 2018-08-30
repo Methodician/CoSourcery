@@ -27,16 +27,16 @@
       </div>
       <!-- Latest Article Preview -->
       <div class="grid" *ngIf="currentSelectedTab === 1">
-          <cos-article-preview-card [articleData]="article" *ngFor="let article of latestArticles"></cos-article-preview-card>
+          <cos-article-preview-card [userId]="uid" [articleData]="article" *ngFor="let article of latestArticles"></cos-article-preview-card>
         <!-- Latest Article List View -->
       </div>
       <!-- All Article Preview -->
       <div *ngIf="currentSelectedTab === 2" class="allArticleWrapper grid">
-        <cos-article-preview-card [articleData]="article" *ngFor="let article of allArticles | reverseArray "></cos-article-preview-card>
+        <cos-article-preview-card [userId]="uid" [articleData]="article" *ngFor="let article of allArticles | reverseArray "></cos-article-preview-card>
       </div>
       <!-- Bookmarked Article Preview -->
       <div *ngIf="currentSelectedTab === 3" class="allArticleWrapper grid">
-        <cos-article-preview-card [articleData]="article" *ngFor="let article of bookmarkedArticles | reverseArray "></cos-article-preview-card>
+        <cos-article-preview-card [userId]="uid" [articleData]="article" *ngFor="let article of bookmarkedArticles | reverseArray "></cos-article-preview-card>
       </div>
     </div>
   </div>

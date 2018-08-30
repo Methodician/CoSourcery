@@ -8,7 +8,7 @@ export class UserInfoOpen {
         public bio?: string,
         public city?: string,
         public state?: string,
-        public imgUrl?: string
+        public imageUrl?: string
     ) { }
 
     displayName() {
@@ -17,6 +17,6 @@ export class UserInfoOpen {
 
     // returns true if uid contains a truthy value (is neither null nor an empty string)
     exists() {
-        return !!(this.uid)
+        return !!(this.uid);
     }
 }
