@@ -15,8 +15,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleId: any;
   routeParams: any;
   userInfo = null;
-  articleValid: boolean;
-  articleNew: boolean;
+  isArticleValid: boolean;
+  isArticleNew: boolean;
   currentArticleSubscription: Subscription;
 
 
@@ -36,12 +36,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       if (params['key']) {
         this.articleId = params['key'];
-        this.articleValid = true;
-        this.articleNew = false;
+        this.isArticleValid = true;
+        this.isArticleNew = false;
       } else {
         this.articleId = this.articleSvc.createArticleId();
-        this.articleValid = false;
-        this.articleNew = true;
+        this.isArticleValid = false;
+        this.isArticleNew = true;
       }
     });
     this.articleSvc.setCurrentArticle(this.articleId);
@@ -53,7 +53,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
     window.onbeforeunload = () => {
       this.currentArticleSubscription.unsubscribe();
-      if (!this.articleValid) {
+      if (!this.isArticleValid) {
         this.articleSvc.deleteArticleRef(this.articleId);
       }
     };
@@ -65,7 +65,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (!article.articleId) {
       const creationCheck = await this.articleSvc.createArticle(this.userInfo, article, this.articleId);
       if (creationCheck === 'success') {
-        this.articleValid = true;
+        this.isArticleValid = true;
       }
     }
     this.articleSvc.updateArticle(this.userInfo, article, this.articleId);
@@ -75,7 +75,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   // Deletes abortive article creation.
   ngOnDestroy() {
     this.currentArticleSubscription.unsubscribe();
-    if (!this.articleValid) {
+    if (!this.isArticleValid) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
   }
