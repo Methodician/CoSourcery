@@ -3,6 +3,7 @@
 @import "./app/sass-variables-mixins/mixins.scss";
 
 *, html, body {
+  box-sizing: border-box;
   font-family: $font-family;
   font-size: 100%;
 }
