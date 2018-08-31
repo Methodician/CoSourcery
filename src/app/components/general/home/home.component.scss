@@ -57,7 +57,7 @@
 .article-grid {
   display: grid;
   grid-template-columns: 300px;
-  grid-template-rows: 350px;
+  grid-template-rows: auto;
   grid-gap: 24px;
   justify-content: center;
   margin: 0 auto;

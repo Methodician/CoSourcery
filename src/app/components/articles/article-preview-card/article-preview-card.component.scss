@@ -1,71 +1,63 @@
-// imports for the variable and mixin files found within the sass-variables-mixins folder
+// Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
-@import "../../../sass-variables-mixins/mixins.scss";
-.hover-bg {
-  filter: sepia(100) hue-rotate(140deg) saturate(80%) contrast(50%);
-  color: white;
+
+.preview-card {
+  background: #fff;
+  box-shadow: 0 2px 5px $light-gray-50;
+  transition: box-shadow 0.25s;
+
+  &:hover {
+    box-shadow: 0 4px 10px $dark-gray-50;
+
+    .card-icons {
+      background-color: $primary-color;
+    }
+  }
 }
-mat-card {
-  @include size(350px, 300px);
-  background: white;
-  padding: 0;
-  margin: 0 0 20px 0;
-  position: relative;
-  margin-right: 20px;
+
+.card-content {
+  height: 400px;
+  padding: 20px 20px 0;
   cursor: pointer;
-  transition: all 100ms ease-in;
-  img {
-    @include size(150px, 100%);
-    object-fit: cover;
+
+  .bg-image {
+    height: 175px;
+    width: 100%;
+    background-position: center;
+    background-size: cover;
   }
-  mat-card-header {
-    min-height: 75px;
-    max-height: 75px;
-  }
-  mat-card-title {
-    @include font-size(20px);
-    margin: 0;
+
+  .title {
+    margin-bottom: 0;
     color: $primary-color;
-    padding: 15px;
-    white-space: nowrap;
+    font-size: 1.375rem;
+  }
+
+  .date {
+    margin-top: 5px;
+    color: $medium-gray;
+    font-size: 0.875rem;
+  }
+}
+
+.card-icons {
+  justify-content: space-between;
+  padding: 0 20px;
+  background-color: $accent-color-1-dark;
+
+  mat-icon, p {
+    color: #fff;
+  }
+
+  p {
+    margin-left: 10px;
+  }
+
+  .counters > :not(:first-child) {
+    margin-left: 20px;
+  }
+
+  .bookmark {
     cursor: pointer;
-    &:hover {
-      color: $accent-color;
-      text-decoration: underline;
-    }
-  }
-  mat-card-subtitle {
-    padding: 0 15px;
-  }
-  mat-card-content {  
-    padding: 0 15px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  mat-card-actions {
-    @include size(40px, 300px);
-    margin: 0 auto !important;
-    position: absolute;
-    bottom: 0;
-    display: flex;
-    flex-direction: row;
-    background: rgb(204,241,247) ;
-  }
-  div {
-    display: flex;
-    padding: 0 5px;
-    align-items: center;
-    p {
-      padding: 0 5px;
-    }
-  }
-  div:first-of-type {
-    padding: 0 5px 0 15px;
-  }
-  div:last-of-type {
-    margin-left: auto;
-    padding: 0 15px 0 5px;
   }
 }
