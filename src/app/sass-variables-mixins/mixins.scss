@@ -1,6 +1,6 @@
 // This is a style sheet that contains all of the mixiins for the sight. It should contain mixins for highly reusable styles across the site.
 
-// Mixin and function for accurate and responsive fontsize 
+// Mixin and function for accurate and responsive fontsize
 
 // Define default font size
 @function calculateRem($size) {
@@ -22,7 +22,7 @@
 // Mixin for typography styles
 
 @mixin font-styles() {
-    font-family: $font-family;
+    font-family: $primary-typeface;
     letter-spacing: $letter-spacing;
 }
 
