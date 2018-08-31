@@ -1,55 +1,49 @@
-<div class="homeContainer">
-  <div class="heroBgColor">
-    <h1>Empowering Makers and Hackers of the World</h1>
-    <h2>network, collaborate, and share knowledge with the community you love</h2>
+<section class="banner flex-center">
+  <div class="text center">
+    <h2 class="title">Empowering Makers &amp; Hackers of the World</h2>
+    <p class="text italic">network, collaborate, and share knowledge with the community you love</p>
   </div>
-  <div class="bodyBgColor">
-    <!-- Latest and All Article Container -->
-    <div class="latestAndAllWrapper">
-      <div class="article-options">
-        <!-- Latest and All Article Preview Toggle buttons -->
-        <div class="header-style">
-          <h2 (click)="selectLatest()"
-              [class.activeArticleState]="currentSelectedTab === 1">
-            Latest
-          </h2>
-          <h2 (click)="selectAll()"
-              [class.activeArticleState]="currentSelectedTab === 2">
-            All
-          </h2>
-          <h2 *ngIf="UserId"
-              (click)="selectBookmark()"
-              [class.activeArticleState]="currentSelectedTab === 3">
-            Bookmarked
-          </h2>
+</section>
 
-        </div>
-      </div>
-      <!-- Latest Article Preview -->
-      <div class="grid"
-           *ngIf="currentSelectedTab === 1">
-        <cos-article-preview-card [userId]="UserId"
-                                  [articleData]="article"
-                                  *ngFor="let article of latestArticles">
-        </cos-article-preview-card>
-        <!-- Latest Article List View -->
-      </div>
-      <!-- All Article Preview -->
-      <div *ngIf="currentSelectedTab === 2"
-           class="allArticleWrapper grid">
-        <cos-article-preview-card [userId]="UserId"
-                                  [articleData]="article"
-                                  *ngFor="let article of allArticles | reverseArray ">
-        </cos-article-preview-card>
-      </div>
-      <!-- Bookmarked Article Preview -->
-      <div *ngIf="currentSelectedTab === 3"
-           class="allArticleWrapper grid">
-        <cos-article-preview-card [userId]="UserId"
-                                  [articleData]="article"
-                                  *ngFor="let article of bookmarkedArticles | reverseArray ">
-        </cos-article-preview-card>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- ARTICLE FILTERS -->
+<ul class="filter-options flex-center-justify">
+  <li (click)="selectLatest()"
+      [class.activeArticleState]="currentSelectedTab === 1">
+    Latest
+  </li>
+  <li (click)="selectAll()"
+      [class.activeArticleState]="currentSelectedTab === 2">
+    All
+  </li>
+  <li *ngIf="UserId"
+      (click)="selectBookmark()"
+      [class.activeArticleState]="currentSelectedTab === 3">
+    Bookmarked
+  </li>
+</ul>
+
+<!-- ARTICLE COLLECTIONS -->
+<section id="latest-articles"
+     class="article-grid"
+     *ngIf="currentSelectedTab === 1">
+  <cos-article-preview-card [userId]="UserId"
+                            [articleData]="article"
+                            *ngFor="let article of latestArticles">
+  </cos-article-preview-card>
+</section>
+<section id="all-articles"
+     class="article-grid"
+     *ngIf="currentSelectedTab === 2">
+  <cos-article-preview-card [userId]="UserId"
+                            [articleData]="article"
+                            *ngFor="let article of allArticles | reverseArray ">
+  </cos-article-preview-card>
+</section>
+<section id="bookmarked-articles"
+     class="article-grid"
+     *ngIf="currentSelectedTab === 3">
+  <cos-article-preview-card [userId]="UserId"
+                            [articleData]="article"
+                            *ngFor="let article of bookmarkedArticles | reverseArray ">
+  </cos-article-preview-card>
+</section>
