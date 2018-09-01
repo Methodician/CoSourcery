@@ -1,115 +1,114 @@
-// imports for the variable and mixin files found within the sass-variables-mixins folder
+// Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
-@import "../../../sass-variables-mixins/mixins.scss";
 
-.article-detail-wrapper {
-  height: 100%;
+article {
   width: 100%;
-  background: $light-gray;
-  display: flex;
-  justify-content: center;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 25px 25px 0;
 }
-.article-detail {
-  @include respond-to($tablet-sm) {
-    padding-right: 20%;
-    padding-left: 20%;
-  }
-}
-#header {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-.footer {
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  grid-template-rows: 100px 1fr;
-  @include respond-to($tablet-md){
-    display: flex;
-  }
-  .author-img {
-    max-height: 100px;
-    max-width: 100px;
-    border-radius: 100%;
-    overflow: hidden;
-    grid-area: 1/1/span 2/2;
-    cursor: pointer;
-    img {
-      height: 100%;
-      width: 100%;
 
-    }
+header {
+  padding: 20px;
+  box-shadow: 0 2px 5px $light-gray-50;
+
+  img {
+    width: 100%;
   }
-  .author-details {
-    padding-left: 20px;
-    @include respond-to($tablet-md){
-      padding: 0 10px;
-    }
-    p {
-      margin-bottom: 0;
-    }
-    .span-link {
-      color: $accent-color;
-      cursor: pointer;
-      &:hover{
-        text-decoration: underline;
-      }
-    }
+
+  .title {
+    color: $primary-color;
   }
-  .icons {
-    display: flex;
-    align-items: baseline;
-    cursor: pointer;
-    padding: 0 0 0 20px;
-    @include respond-to($tablet-md){
-      margin-left: auto;
-      align-items: center;
-    }
-    div {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 10px 0 0;
-      &:hover {
-        mat-icon {
-          color: $accent-color-70;
-        }
-      }
-    }
+
+  .date {
+    color: $medium-gray;
+    font-size: 0.875rem;
   }
 }
-mat-card {
-  margin: 20px 0 50px 0;
-  width: 90%;
-  mat-card-content {
-    mat-chip {
-      margin: 5px 5px 5px 0;
-    }
-    .mat-chip:not(.mat-basic-chip)+.mat-chip:not(.mat-basic-chip) {
-      margin: 5px 5px 5px 0 !important;
-    }
-    .tags {
-      padding: 20px 0 30px 0;
-    }
-    button {
-      margin: 20px 0;
+
+.article-content {
+  padding: 20px 0;
+}
+
+.tag-container {
+  flex-wrap: wrap;
+  margin: auto;
+
+  li {
+    list-style: none;
+    margin: 10px 0;
+    font-size: 0.875rem;
+  }
+
+  :first-child {
+    color: $dark-gray;
+  }
+
+  :not(:first-child) {
+    margin-left: 15px;
+    padding: 0 15px;
+    box-shadow: 0 0 5px $light-gray;
+    border-radius: 25px;
+    background-color: #fff;
+    color: $medium-gray;
+    cursor: pointer;
+  }
+}
+
+.article-footer {
+  padding: 20px 0;
+
+  .profile-image {
+    height: 75px;
+    width: 75px;
+    border: 2px solid $light-gray;
+    border-radius: 5px;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .author-info {
+    margin-left: 20px;
+
+    p {font-size: 0.875rem;}
+  }
+
+  .highlight {
+    color: $primary-color;
+    font-weight: bold;
+  }
+}
+
+.icons {
+  background-color: $accent-color-1-dark;
+
+  .wrapper {
+    width: 100%;
+    max-width: 1024px;
+    padding: 5px 20px;
+  }
+
+  button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: $accent-color-1;
+    color: #fff;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-color;
     }
   }
-  mat-card-footer {
-    #discussion {
-      display: flex;
-      justify-content: center;
-      padding: 50px 0 50px 20px;
-      background: $light-grey;
-      .comment-section-wrapper {
-        width: 95%;
-        @include respond-to($tablet-md){
-          width: 80%;
-        }
-        @include respond-to($desktop-sm){
-          width: 60%;
-        }
-      }
-    }
+
+  mat-icon {
+    margin-left: 20px;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  p {
+    margin-left: 10px;
+    color: #fff;
   }
 }
