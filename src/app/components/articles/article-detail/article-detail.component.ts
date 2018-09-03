@@ -39,8 +39,13 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.articleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-      this.article = articleData;
-      this.getAuthor(articleData.authorId);
+      if (articleData) {
+        this.article = articleData;
+        this.getAuthor(articleData.authorId);
+      } else if (!articleData) {
+        window.alert('There seems to be an issue with this article. Redirecting you to home page');
+        this.router.navigate(['home']);
+      }
     });
     this.userSvc.userInfo$.subscribe((user: UserInfoOpen) => {
       if (user.exists()) {
