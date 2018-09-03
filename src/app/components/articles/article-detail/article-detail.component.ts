@@ -43,7 +43,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
         this.article = articleData;
         this.getAuthor(articleData.authorId);
       } else if (!articleData) {
-        window.alert('There seems to be an issue witht his article. Redirecting you to home page');
+        window.alert('There seems to be an issue with this article. Redirecting you to home page');
         this.router.navigate(['home']);
       }
     });
