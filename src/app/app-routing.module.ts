@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 import { LoginComponent } from '../app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
@@ -12,7 +13,10 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'createarticle', component: ArticleEditComponent},  // {
+  { path: 'createarticle',
+    canActivate: [AuthGuard],
+    component: ArticleEditComponent},
+  // {
   //   path: 'account',
   //   canActivate: [AuthGuard],
   //   children: [
@@ -42,7 +46,7 @@ const routes: Routes = [
   // },
   {
     path: 'editarticle/:key',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     component: ArticleEditComponent
   },
   { path: 'articledetail/:key', component: ArticleDetailComponent },
