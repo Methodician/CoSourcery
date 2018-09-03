@@ -1,74 +1,58 @@
-<div class="article-detail-wrapper"
-     *ngIf="article">
+<article *ngIf="article">
 
-  <mat-card>
-    <div class="article-detail">
-      <img id="header"
-           [src]="article.imageUrl">
-      <mat-card-header>
-        <mat-card-title>
-          <h1>{{article.title}}</h1>
-        </mat-card-title>
-        <mat-card-subtitle>
-          Last Updated: {{article.lastUpdated?.toDate() | date }}
-        </mat-card-subtitle>
-      </mat-card-header>
+  <header>
+    <img [src]="article.imageUrl">
+    <h2 class="title">{{article.title}}</h2>
+    <p class="date">Last Updated: {{article.lastUpdated?.toDate() | date }}</p>
+    <p>{{article.introduction}}</p>
+  </header>
 
+  <section class="article-content" [innerHtml]="article.body | safeHtml"></section>
 
-      <mat-card-content>
-        <h3>{{article.introduction}}</h3>
-        <div [innerHtml]="article.body | safeHtml"></div>
-        <div class="tags">
-          <mat-chip-list>
-            <!-- maybe change tagsearch to something? -->
-            <mat-chip *ngFor="let tag of article.tags"
-                      (click)="tagSearch(tag)">{{tag}}</mat-chip>
-          </mat-chip-list>
-        </div>
-        <div class="footer">
-          <div class="author-img">
-            <img (click)="navigateToProfile()"
-                 [src]="article.authorImageUrl" />
-          </div>
-          <div class="author-details">
-            <h3>By <span class="span-link"
-                    (click)="navigateToProfile()">{{author?.alias || 'unknown' }}</span></h3>
-            <p>Created {{article.timestamp?.toDate() | date}}</p>
-          </div>
-          <div class="icons">
-            <div matTooltip="comments"
-                 (click)="scroll(discussion)">
-              <mat-icon color="accent">comment</mat-icon>
-              <p>{{article.commentCount ? article.commentCount : '0'}}</p>
-            </div>
-            <div matTooltip="Revised {{articleData?.version}} time(s)"
-                 *ngIf="!editingPreview && hasHistory"
-                 (click)="navigateToHistory()">
-              <mat-icon color="accent">border_color</mat-icon>
-              <p>{{article.version}}</p>
-            </div>
-            <div>
-              <mat-icon class="bookmark-icon"
-                        (click)="bookmarkToggle()"
-                        color="accent">
-                {{ isArticleBookmarked ? 'bookmark' : 'bookmark_border' }}
-              </mat-icon>
-            </div>
-          </div>
-        </div>
-        <button mat-raised-button
-                color="accent"
-                (click)="edit()">Edit Article</button>
-      </mat-card-content>
+  <ul class="tag-container flex">
+    <li>Tags:</li>
+    <li *ngFor="let tag of article.tags"
+        (click)="tagSearch(tag)">{{tag}}
+    </li>
+  </ul>
+
+  <section class="article-footer flex-center-align">
+    <div class="profile-image"
+         [ngStyle]="{'backgroundImage': 'url(' + article.authorImageUrl + ')'}"
+         (click)="navigateToProfile()">
     </div>
-    <!-- <mat-card-footer>
-      <cos-article-related [parentAllArticles]="allArticles | relatedArticle: relatedArticles" [parentTags]="article.tags"></cos-article-related>
-      <div id="discussion" #discussion>
-        <div  class="comment-section-wrapper">
-          <cos-comment-add [headerTitle]="'Discussion'" [parentKey]="articleId"></cos-comment-add>
-          <cos-comment-list [parentKey]="articleId"></cos-comment-list>
-        </div>
-      </div>
-    </mat-card-footer> -->
-  </mat-card>
-</div>
+    <div class="author-info">
+      <p class="date">Created {{article.timestamp?.toDate() | date}}</p>
+      <p>By
+        <span class="highlight"
+              (click)="navigateToProfile()">
+          {{author?.alias || 'unknown' }}
+        </span>
+      </p>
+    </div>
+  </section>
+
+</article>
+
+<section class="icons flex-center-justify">
+  <div class="wrapper flex-center-align">
+    <button (click)="edit()">Edit Article</button>
+    <div class="flex-center-align"
+         title="Comments"
+         (click)="scroll(discussion)">
+      <mat-icon>comment</mat-icon>
+      <p>{{article.commentCount ? article.commentCount : '0'}}</p>
+    </div>
+    <div class="flex-center-align"
+         title="Revised {{articleData?.version}} time(s)"
+         (click)="navigateToHistory()"
+         *ngIf="!editingPreview && hasHistory">
+      <mat-icon>border_color</mat-icon>
+      <p>{{article.version}}</p>
+    </div>
+    <div class="flex-center-align"
+         (click)="bookmarkToggle()">
+      <mat-icon >{{ isArticleBookmarked ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+    </div>
+  </div>
+</section>
