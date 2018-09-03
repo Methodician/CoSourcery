@@ -1,122 +1,77 @@
-// imports for the variable and mixin files found within the sass-variables-mixins folder
+// Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
-@import "../../../sass-variables-mixins/mixins.scss";
-.activePreviewState {
-  color: $primary-color;
+
+.banner {
+  height: 300px;
+  padding: 25px;
+  background-color: $light-gray-50;
+
+  .title {
+    color: $accent-color-1-dark;
+    line-height: 1.5;
+  }
 }
-.heroBgColor {
-  @include size(300px, 100%);
-  background: white;
-  display: flex;
+
+.filter-options {
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  padding: 15px;
+  background-color: $accent-color-1-dark;
+
+  li {
+    list-style: none;
+    padding: 0 15px;
+    border: 2px solid $accent-color-1;
+    border-radius: 25px;
+    background-color: $accent-color-1;
+    color: #fff;
+    font-size: 1.375rem;
+    cursor: pointer;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+
+    &.activeArticleState {
+      background-color: $accent-color-1-dark;
+      color: #fff;
+      cursor: default;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+
+    li {
+
+      &:not(:first-child) {
+        margin-left: 15px;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.article-grid {
+  display: grid;
+  grid-template-columns: 300px;
+  grid-template-rows: 350px;
+  grid-gap: 24px;
   justify-content: center;
-  color: $dark-gray;
-  h1 {
-    font-size: 28px;
-    @include respond-to($tablet-sm) {
-      font-size: 32px;
-    }
-    @include respond-to($desktop-sm) {
-      font-size: 36px;
-    }
+  margin: 0 auto;
+  padding: 24px 0;
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: repeat(2, 300px);
   }
-  h2 {
-    font-size: 24px;
-    @include respond-to($tablet-sm){
-      font-size: 28px;
-    }
-    @include respond-to($desktop-sm){
-      font-size: 32px;
-    }
+
+  @media screen and (min-width: 1024px) {
+    grid-template-columns: repeat(3, 300px);
   }
-}
-.bodyBgColor {
-  width: 100%;
-  background-color: $light-grey;
-}
-.featuredArticleWrapper {
-  width: 95%;
-  margin-left: 2.5%;
-  padding-top: 20px;
-  h2 {
-    font-size: 28px;
-    color: $dark-gray;
-    @include respond-to($tablet-sm){
-      font-size: 30px;
-    }
-  }
-  .list {
-    @include respond-to($desktop-sm){
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-auto-rows: auto;
-    }
-  }
-}
-.latestAndAllWrapper {
-  width: 95%;
-  margin-left: 2.5%;
-  .article-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    .header-style {
-      display: flex;
-      h2 {
-        font-size: 28px;
-        margin-right: 25px;
-        color: $primary-color;
-        cursor: pointer;
-        @include respond-to($tablet-sm){
-          font-size: 30px;
-        }
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-      .activeArticleState {
-        cursor: default !important;
-        color: $dark-gray !important;
-        &:hover {
-          text-decoration: none !important;
-        }
-      }
-    }
-    .latestViewToggle,
-    .allViewToggle {
-      color: white;
-      width: 75px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      mat-icon {
-        cursor: pointer;
-        font-size: 30px;
-      }
-    }
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    grid-auto-flow: row;
-    justify-items: center;
-    // figure out a mix-in or something to calculate this.
-    @include respond-to(660){
-      grid-template-columns: 1fr 1fr;
-    }
-    @include respond-to($tablet-lg){
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-    @include respond-to(1300){
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
-    @include respond-to($desktop-lg){
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    }
+
+  @media screen and (min-width: 1350px) {
+    grid-template-columns: repeat(4, 300px);
   }
 }
