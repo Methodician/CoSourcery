@@ -1,11 +1,8 @@
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthInfo } from '../../../shared/class/auth-info';
-import { UserInfoOpen } from '../../../shared/class/user-info';
 import { AuthService } from '../../../services/auth.service';
 import { ArticleService } from '../../../services/article.service';
-
 
 @Component({
   selector: 'cos-top-nav',
@@ -14,8 +11,6 @@ import { ArticleService } from '../../../services/article.service';
 })
 
 export class TopNavComponent implements OnInit {
-
-  userInfo: UserInfoOpen;
   authInfo: AuthInfo;
   displayName;
 
@@ -23,9 +18,7 @@ export class TopNavComponent implements OnInit {
     private authSvc: AuthService,
     private router: Router,
     private articleSvc: ArticleService
-  ) {
-
-  }
+  ) { }
 
   ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
@@ -34,19 +27,12 @@ export class TopNavComponent implements OnInit {
     });
   }
 
-
   onSearch(input) {
     // Need search function.
   }
 
-
-  onCreatePost() {
-    this.router.navigate(['createarticle']);
-  }
-
-  onSignOut() {
+  onLogOut() {
     this.authSvc.signOut();
   }
-
 
 }

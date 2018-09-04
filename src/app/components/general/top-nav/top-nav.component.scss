@@ -58,27 +58,13 @@
 }
 
 #menu-controls {
+
   :not(:first-child) {
     margin-left: 15px;
   }
 
-  button {
-    background-color: $accent-color-1;
-    color: #fff;
-
-    &:hover {
-      box-shadow: 0 2px 2px $medium-gray;
-    }
-
-    &:active {
-      box-shadow: none;
-    }
-
-    mat-icon {
-      position: absolute;
-      top: 8px;
-      left: 9px;
-    }
+  li {
+    list-style: none;
   }
 }
 
@@ -96,4 +82,41 @@
       border: 2px solid  $accent-color-1;
     }
   }
+}
+
+button {
+  background-color: $accent-color-1;
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 2px 2px $medium-gray;
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+
+  mat-icon {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+  }
+
+  &.rectangular {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+}
+
+button.logout {
+  background-color: $accent-color-1-dark;
+}
+
+button.register {
+  background-color: $accent-color-2;
+  color: $dark-gray;
 }
