@@ -3,26 +3,49 @@
 
 article {
   width: 100%;
-  max-width: 1024px;
+  max-width: 768px;
   margin: 0 auto;
   padding: 25px 25px 0;
 }
 
 header {
-  padding: 20px;
   box-shadow: 0 2px 5px $light-gray-50;
 
-  img {
-    width: 100%;
+  .content {
+    padding: 20px 20px 0;
+
+    img {
+      width: 100%;
+    }
+
+    p {
+      font-size: 0.875rem;
+    }
+
+    .title {
+      color: $primary-color;
+    }
+
+    .date {
+      color: $medium-gray;
+    }
   }
 
-  .title {
-    color: $primary-color;
-  }
+  .controls {
+    justify-content: space-between;
+    padding: 5px 20px;
+    background-color: $light-gray-50;
 
-  .date {
-    color: $medium-gray;
-    font-size: 0.875rem;
+    mat-icon {
+      margin-left: 12px;
+      cursor: pointer;
+      color: $medium-gray;
+    }
+
+    p {
+      margin-left: 10px;
+      color: $medium-gray;
+    }
   }
 }
 
@@ -79,36 +102,15 @@ header {
   }
 }
 
-.icons {
-  background-color: $accent-color-1-dark;
+button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: $primary-color;
+  color: #fff;
+  cursor: pointer;
 
-  .wrapper {
-    width: 100%;
-    max-width: 1024px;
-    padding: 5px 20px;
-  }
-
-  button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: $accent-color-1;
-    color: #fff;
-    cursor: pointer;
-
-    &:hover {
-      background-color: $primary-color;
-    }
-  }
-
-  mat-icon {
-    margin-left: 20px;
-    color: #fff;
-    cursor: pointer;
-  }
-
-  p {
-    margin-left: 10px;
-    color: #fff;
+  &:hover {
+    background-color: $primary-color-dark;
   }
 }

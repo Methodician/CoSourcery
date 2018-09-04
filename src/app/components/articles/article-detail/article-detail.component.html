@@ -1,10 +1,34 @@
 <article *ngIf="article">
 
   <header>
-    <img [src]="article.imageUrl">
-    <h2 class="title">{{article.title}}</h2>
-    <p class="date">Last Updated: {{article.lastUpdated?.toDate() | date }}</p>
-    <p>{{article.introduction}}</p>
+    <section class="content">
+      <img [src]="article.imageUrl">
+      <h2 class="title">{{article.title}}</h2>
+      <p class="date">Last Updated: {{article.lastUpdated?.toDate() | date }}</p>
+      <p>{{article.introduction}}</p>
+    </section>
+    <section class="controls flex-center-align">
+      <button (click)="edit()">Edit Article</button>
+      <div class="icons flex-center-align">
+        <div class="flex-center-align"
+             title="Comments"
+             (click)="scroll(discussion)">
+          <mat-icon>comment</mat-icon>
+          <p>{{article.commentCount ? article.commentCount : '0'}}</p>
+        </div>
+        <div class="flex-center-align"
+             title="Revised {{articleData?.version}} time(s)"
+             (click)="navigateToHistory()"
+             *ngIf="!editingPreview && hasHistory">
+          <mat-icon>border_color</mat-icon>
+          <p>{{article.version}}</p>
+        </div>
+        <div class="flex-center-align"
+             (click)="bookmarkToggle()">
+          <mat-icon >{{ isArticleBookmarked ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+        </div>
+      </div>
+    </section>
   </header>
 
   <section class="article-content" [innerHtml]="article.body | safeHtml"></section>
@@ -33,26 +57,3 @@
   </section>
 
 </article>
-
-<section class="icons flex-center-justify">
-  <div class="wrapper flex-center-align">
-    <button (click)="edit()">Edit Article</button>
-    <div class="flex-center-align"
-         title="Comments"
-         (click)="scroll(discussion)">
-      <mat-icon>comment</mat-icon>
-      <p>{{article.commentCount ? article.commentCount : '0'}}</p>
-    </div>
-    <div class="flex-center-align"
-         title="Revised {{articleData?.version}} time(s)"
-         (click)="navigateToHistory()"
-         *ngIf="!editingPreview && hasHistory">
-      <mat-icon>border_color</mat-icon>
-      <p>{{article.version}}</p>
-    </div>
-    <div class="flex-center-align"
-         (click)="bookmarkToggle()">
-      <mat-icon >{{ isArticleBookmarked ? 'bookmark' : 'bookmark_border' }}</mat-icon>
-    </div>
-  </div>
-</section>
