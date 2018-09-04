@@ -24,7 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
-import { TopNavComponent } from 'app/components/shared/top-nav/top-nav.component';
+import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
 import * as fb from 'firebase';
 import { LoginComponent } from 'app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
