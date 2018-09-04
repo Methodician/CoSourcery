@@ -27,7 +27,7 @@
         <p>{{articleData.tags.length}}</p>
       </div>
     </div>
-    <div class="flex-center-align">
+    <div *ngIf="userId"  class="flex-center-align">
       <mat-icon class="bookmark"
                 (click)="bookmarkToggle()">
         {{isArticleBookmarked? 'bookmark' : 'bookmark_border'}}
