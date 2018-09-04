@@ -20,9 +20,16 @@
       </button>
     </div>
 
-    <button mat-icon-button title="Post" (click)="onCreatePost()">
-      <mat-icon>edit</mat-icon>
-    </button>
+    <div *ngIf="authInfo.uid">
+      <button mat-icon-button title="Post" (click)="onCreatePost()">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="!authInfo.uid">
+        <button mat-icon-button title="login" (click)="navigateToLogin()">
+          Login
+        </button>
+      </div>
 
   </div>
 

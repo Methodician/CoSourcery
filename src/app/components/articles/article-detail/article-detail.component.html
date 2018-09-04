@@ -36,7 +36,7 @@
 
 <section class="icons flex-center-justify">
   <div class="wrapper flex-center-align">
-    <button (click)="edit()">Edit Article</button>
+    <button *ngIf="user" (click)="edit()">Edit Article</button>
     <div class="flex-center-align"
          title="Comments"
          (click)="scroll(discussion)">
@@ -50,7 +50,7 @@
       <mat-icon>border_color</mat-icon>
       <p>{{article.version}}</p>
     </div>
-    <div class="flex-center-align"
+    <div *ngIf="user" class="flex-center-align"
          (click)="bookmarkToggle()">
       <mat-icon >{{ isArticleBookmarked ? 'bookmark' : 'bookmark_border' }}</mat-icon>
     </div>

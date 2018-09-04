@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { AuthInfo } from '../../../shared/class/auth-info';
 import { UserInfoOpen } from '../../../shared/class/user-info';
 import { AuthService } from '../../../services/auth.service';
-import { ArticleService } from '../../../services/article.service';
 
 
 @Component({
@@ -22,7 +21,6 @@ export class TopNavComponent implements OnInit {
   constructor(
     private authSvc: AuthService,
     private router: Router,
-    private articleSvc: ArticleService
   ) {
 
   }
@@ -46,6 +44,10 @@ export class TopNavComponent implements OnInit {
 
   onSignOut() {
     this.authSvc.signOut();
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['register']);
   }
 
 
