@@ -8,14 +8,26 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  currentLogin: string;
 
   constructor(
-    private AuthSvc: AuthService,
+    private authSvc: AuthService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.AuthSvc.startUi('auth-container');
+    this.checkLogin();
+    this.authSvc.startUi('auth-container');
+  }
+
+  checkLogin() {
+    this.authSvc.authInfo$.subscribe(userData => {
+      this.currentLogin = userData.email;
+    });
+  }
+
+  onLogOut() {
+    this.authSvc.signOut();
   }
 
 }

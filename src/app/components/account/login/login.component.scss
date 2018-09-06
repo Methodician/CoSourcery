@@ -2,13 +2,24 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 ::ng-deep #auth-container {
+  display: flex;
+  justify-content: center;
   padding: 48px 24px 24px;
+
+  &.hide {
+    display: none;
+  }
 
   .firebaseui-container {
     width: 100%;
     max-width: 600px;
     padding: 12px 24px;
     box-shadow: 0 2px 5px $light-gray-50;
+  }
+
+  .firebaseui-form-actions {
+    display: flex;
+    justify-content: center;
   }
 
   h1 {
@@ -29,28 +40,36 @@
     border: 2px solid $medium-gray;
     font-size: 1rem;
   }
+}
 
-  button {
-    display: block;
-    margin: 24px auto;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
+.logout-message {
+  padding: 20px;
+  text-align: center;
+
+  h2 {
+    color: $primary-color;
+  }
+}
+
+::ng-deep button {
+  margin: 12px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: $accent-color-1-dark;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:last-child {
     background-color: $accent-color-1;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
+  }
 
-    &:last-child {
-      background-color: $primary-color;
-    }
+  &:hover {
+    box-shadow: 0 2px 2px $medium-gray;
+  }
 
-    &:hover {
-      box-shadow: 0 2px 2px $medium-gray;
-    }
-
-    &:active {
-      box-shadow: none;
-    }
+  &:active {
+    box-shadow: none;
   }
 }

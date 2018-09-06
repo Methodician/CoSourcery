@@ -1,1 +1,9 @@
-<div id="auth-container" class="flex-center"></div>
+<div id="auth-container" [class.hide]="(!!currentLogin)"></div>
+
+<section class="logout-message" *ngIf="currentLogin">
+  <h2>Signed In</h2>
+  <p>Current Login:<br/>
+    <span class="text strong">{{currentLogin}}</span></p>
+  <p>Please logout first, before signing into another account.</p>
+  <button (click)="onLogOut()">Logout</button>
+</section>
