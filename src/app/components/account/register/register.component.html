@@ -1,7 +1,14 @@
 <form autocomplete="off" novalidate [formGroup]="form">
   <h2 class="text center">Create New Account</h2>
 
-  <section class="inputs">
+  <section class="logout-message" *ngIf="currentLogin">
+    <p>Current Login:<br/>
+      <span class="text strong">{{currentLogin}}</span></p>
+    <p>Please logout first, before creating a new account.</p>
+    <button (click)="onLogOut()">Logout</button>
+  </section>
+
+  <section class="inputs" *ngIf="!currentLogin">
     <mat-form-field>
       <input matInput placeholder="*Email: " [class.input-error]="isErrorVisible('email','required') || isErrorVisible('email','validEmail')" name="email" formControlName="email" type="email"/>
       <mat-error *ngIf="isErrorVisible('email','required')">We'll need your e-mail address, please.</mat-error>
@@ -57,7 +64,7 @@
     </div>
   </section>
 
-  <div class="flex-center-justify">
+  <div class="flex-center-justify" *ngIf="!currentLogin">
     <button (click)="register()" [disabled]="!isPasswordMatch() || !formValid()">Create User</button>
   </div>
 </form>

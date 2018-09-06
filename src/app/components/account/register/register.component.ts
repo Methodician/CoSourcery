@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-
+  currentLogin: string;
   form: FormGroup;
   authInfo: AuthInfo;
 
@@ -20,9 +20,10 @@ export class RegisterComponent implements OnInit {
     private authSvc: AuthService,
     private userSvc: UserService,
     private fb: FormBuilder,
-  ) {}
+  ) { }
 
   ngOnInit() {
+    this.checkLogin();
     this.form = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
@@ -36,7 +37,16 @@ export class RegisterComponent implements OnInit {
       state: '',
       zipCode: ['', Validators.required]
     });
-    window.scrollTo(0, 0);
+  }
+
+  checkLogin() {
+    this.authSvc.authInfo$.subscribe(userData => {
+      this.currentLogin = userData.email;
+    });
+  }
+
+  onLogOut() {
+    this.authSvc.signOut();
   }
 
   register() {
@@ -55,12 +65,11 @@ export class RegisterComponent implements OnInit {
           await this.userSvc.createUser(val, res.user.uid);
           if (val.alias) {
             this.authSvc.setDisplayName(val.alias);
-            this.router.navigate(['home']);
           }
+          this.router.navigate(['home']);
         } catch (err) {
           alert('We might not have saved your user info quite right. Woops!' + err);
         }
-
       }, err => alert(err));
   }
 
