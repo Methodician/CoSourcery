@@ -60,6 +60,10 @@ p {
   line-height: 1.5;
 }
 
+a {
+  color: $primary-color;
+}
+
 @media screen and (min-width: 768px) {
 
   h1 {
