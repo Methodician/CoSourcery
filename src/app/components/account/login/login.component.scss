@@ -51,7 +51,7 @@
   }
 }
 
-::ng-deep button {
+::ng-deep #auth-container button, .logout-message button {
   margin: 12px;
   padding: 10px 15px;
   border: none;
