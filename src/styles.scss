@@ -1,4 +1,5 @@
 /* GLOBAL DEFAULT STYLES */
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "./app/sass-variables-mixins/vars.scss";
 @import "./app/sass-variables-mixins/mixins.scss";
 
@@ -14,8 +15,11 @@ html, body {
 }
 
 /* Typography */
-body {
+body, h1, h2, h3, h4, h5, h6, p, button {
   font-family: $primary-typeface;
+}
+
+body {
   font-size: 16px;
 }
 
