@@ -1,4 +1,4 @@
-<div class="wrcoser">
+<main>
 	<cos-article-cover-image [articleId]="articleId"
 	                         [createNew]="isArticleNew">
 	</cos-article-cover-image>
@@ -6,10 +6,8 @@
 	                  [initialValue]="article">
 	</cos-article-form>
 	<button (click)="saveArticle(form.value)"
-	        mat-raised-button
-	        color="warn"
 	        [ngClass]="{'submit': form.valid === true, 'invalid': form.valid === false }"
 	        [disabled]="!form.valid">
 		Save
 	</button>
-</div>
+</main>

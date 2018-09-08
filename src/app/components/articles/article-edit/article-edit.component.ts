@@ -1,8 +1,8 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cos-article-edit',
@@ -19,19 +19,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   isArticleNew: boolean;
   currentArticleSubscription: Subscription;
 
-
   constructor(
     private articleSvc: ArticleService,
     private route: ActivatedRoute,
     private userSvc: UserService,
-  ) {
+  ) { }
+
+  ngOnInit() {
     this.userSvc.userInfo$.subscribe(user => {
       this.userInfo = user;
     });
-  }
 
-  ngOnInit() {
-    window.scrollTo(0, 0)
     this.route.params.subscribe(params => {
       if (params['key']) {
         this.articleId = params['key'];
@@ -49,16 +47,18 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         }
       });
     });
-
-    window.onbeforeunload = () => {
-      this.currentArticleSubscription.unsubscribe();
-      if (!this.isArticleValid) {
-        this.articleSvc.deleteArticleRef(this.articleId);
-      }
-    };
-
   }
 
+  ngOnDestroy() {
+    this.abortChanges();
+  }
+
+  abortChanges() {
+    this.currentArticleSubscription.unsubscribe();
+    if (!this.isArticleValid) {
+      this.articleSvc.deleteArticleRef(this.articleId);
+    }
+  }
 
   async saveArticle(article) {
     if (!article.articleId) {
@@ -68,15 +68,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
     } else {
       this.articleSvc.updateArticle(this.userInfo, article, this.articleId);
-    }
-  }
-
-
-  // Deletes abortive article creation.
-  ngOnDestroy() {
-    this.currentArticleSubscription.unsubscribe();
-    if (!this.isArticleValid) {
-      this.articleSvc.deleteArticleRef(this.articleId);
     }
   }
 

@@ -1,38 +1,30 @@
-// imports for the variable and mixin files found within the sass-variables-mixins folder
+// Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
-@import "../../../sass-variables-mixins/mixins.scss";
-.wrapper {
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: space-around;
-}
 
-.editPreview {
-  @include size(30px, 100%);
-  text-align: center;
-  background-color: $accent-color;
-  opacity: .5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  @include font-size(22px);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+main {
+  padding: 24px;
 }
 
 button {
-  @include large-button();
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: $accent-color-1;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
 
-.submit{
-  background-color: #00BE9C;
-  box-shadow: 1px 3px 4px 1px #2e2f30;
-}
+  &:hover {
+    box-shadow: 0 2px 2px $medium-gray;
+  }
 
-.invalid{
-  background-color: #C4275F;
+  &:active {
+    box-shadow: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    box-shadow: none;
+    cursor: default;
+  }
 }
