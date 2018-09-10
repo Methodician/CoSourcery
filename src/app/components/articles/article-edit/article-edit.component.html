@@ -1,10 +1,30 @@
 <main>
-	<cos-article-cover-image [articleId]="articleId"
-	                         [createNew]="isArticleNew">
-	</cos-article-cover-image>
+	<h2 *ngIf="isArticleNew">Create New Article</h2>
+	<h2 *ngIf="!isArticleNew">Edit Article</h2>
+
+	<section id="cover-image-preview">
+	  <h3>Cover Image</h3>
+    <img *ngIf="article?.imageUrl"
+         [src]="article?.imageUrl"
+         [alt]="article?.imageAlt">
+		<p><strong>Alt Description:</strong> {{article?.imageAlt}}</p>
+	</section>
+
+	<section id="cover-image-upload">
+	  <p *ngIf="currentCoverImageUpload">Progress: {{currentCoverImageUpload?.progress}}% Complete</p>
+    <input accept="image/*"
+           type="file"
+           (change)="captureCoverImage($event.target.files[0])">
+    <button [disabled]="!selectedCoverImageFile"
+            (click)="uploadCoverImage()">
+			Upload
+		</button>
+	</section>
+
 	<cos-article-form #form
 	                  [initialValue]="article">
 	</cos-article-form>
+
 	<button (click)="saveArticle(form.value)"
 	        [disabled]="!form.valid">
 		Save

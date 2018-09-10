@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Upload } from 'app/shared/class/upload';
 import { ArticleService } from '../../../services/article.service';
+import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
 
 @Component({
@@ -18,10 +20,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   isArticleNew: boolean;
   currentArticleSubscription: Subscription;
 
+  currentCoverImageUpload: Upload;
+  selectedCoverImageFile: any;
+
   constructor(
-    private articleSvc: ArticleService,
     private route: ActivatedRoute,
-    private userSvc: UserService,
+    private articleSvc: ArticleService,
+    private uploadSvc: UploadService,
+    private userSvc: UserService
   ) { }
 
   ngOnInit() {
@@ -61,6 +67,18 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleSubscription.unsubscribe();
     if (!this.isArticleValid) {
       this.articleSvc.deleteArticleRef(this.articleId);
+    }
+  }
+
+  captureCoverImage(selectedFile) {
+    this.selectedCoverImageFile = selectedFile;
+    return this.selectedCoverImageFile;
+  }
+
+  uploadCoverImage() {
+    if (!!this.articleId) {
+      this.currentCoverImageUpload = new Upload(this.selectedCoverImageFile);
+      this.uploadSvc.uploadArticleCoverImage(this.currentCoverImageUpload, this.articleId, this.isArticleNew);
     }
   }
 
