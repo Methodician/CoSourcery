@@ -6,7 +6,6 @@
 	                  [initialValue]="article">
 	</cos-article-form>
 	<button (click)="saveArticle(form.value)"
-	        [ngClass]="{'submit': form.valid === true, 'invalid': form.valid === false }"
 	        [disabled]="!form.valid">
 		Save
 	</button>

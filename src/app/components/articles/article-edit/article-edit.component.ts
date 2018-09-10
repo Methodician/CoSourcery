@@ -11,11 +11,10 @@ import { UserService } from '../../../services/user.service';
 })
 
 export class ArticleEditComponent implements OnInit, OnDestroy {
-  article: any;
-  articleId: any;
-  routeParams: any;
   userInfo = null;
-  isArticleValid: boolean = true;
+  articleId: any;
+  article: any;
+  isArticleValid: boolean;
   isArticleNew: boolean;
   currentArticleSubscription: Subscription;
 
@@ -29,28 +28,33 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.userSvc.userInfo$.subscribe(user => {
       this.userInfo = user;
     });
-
-    this.route.params.subscribe(params => {
-      if (params['key']) {
-        this.articleId = params['key'];
-        this.isArticleValid = true;
-        this.isArticleNew = false;
-      } else {
-        this.articleId = this.articleSvc.createArticleId();
-        this.isArticleValid = false;
-        this.isArticleNew = true;
-      }
-      this.articleSvc.setCurrentArticle(this.articleId);
-      this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-        if (articleData) {
-          this.article = articleData;
-        }
-      });
-    });
+    this.setArticleId();
+    this.subscribeToArticleId();
   }
 
   ngOnDestroy() {
     this.abortChanges();
+  }
+
+  setArticleId() {
+    if (this.route.params['_value']['key']) {
+      this.articleId = this.route.params['_value']['key'];
+      this.isArticleValid = true;
+      this.isArticleNew = false;
+    } else {
+      this.articleId = this.articleSvc.createArticleId();
+      this.isArticleValid = false;
+      this.isArticleNew = true;
+    }
+  }
+
+  subscribeToArticleId() {
+    this.articleSvc.setCurrentArticle(this.articleId);
+    this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
+      if (articleData) {
+        this.article = articleData;
+      }
+    });
   }
 
   abortChanges() {
