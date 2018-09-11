@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material';
+import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Upload } from 'app/shared/class/upload';
 import { ArticleService } from '../../../services/article.service';
 import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
-
-import { MatChipInputEvent } from '@angular/material';
-import { ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'cos-article-edit',
@@ -19,14 +18,16 @@ import { ENTER } from '@angular/cdk/keycodes';
 export class ArticleEditComponent implements OnInit, OnDestroy {
   userInfo = null;
   articleId: any;
-  isArticleNew: boolean;
+  articleIsNew: boolean;
+  formIsReady: boolean = false;
   currentArticleSubscription: Subscription;
 
   selectedCoverImageFile: any;
   currentCoverImageUpload: Upload;
-  readonly matChipInputSeparatorKeysCodes: number[] = [ENTER];
 
-  articleEditForm: FormGroup = this.fb.group({
+  readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
+
+  articleEditForm = this.fb.group({
     articleId: '',
     authorId: '',
     title: ['', [
@@ -68,33 +69,41 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.abortChanges();
   }
 
-  // Form Initialization, Cancellation, & Completion Functions
+  // Form Setup & Breakdown Functions
   setArticleId() {
     if (this.route.params['_value']['key']) {
       this.articleId = this.route.params['_value']['key'];
-      this.isArticleNew = false;
+      this.articleIsNew = false;
     } else {
       this.articleId = this.articleSvc.createArticleId();
-      this.isArticleNew = true;
+      this.articleIsNew = true;
     }
   }
 
   subscribeToArticleId() {
     this.articleSvc.setCurrentArticle(this.articleId);
     this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-      if (articleData) {
+      if (!this.formIsReady) {
         this.setDefaultFormData(articleData);
+        this.formIsReady = true;
+      } else {
+        this.updateCoverImageUrl(articleData.imageUrl);
       }
     });
   }
 
   setDefaultFormData(data) {
-    this.articleEditForm.setValue(data);
+    if (!this.articleIsNew) {
+      this.articleEditForm.setValue(data);
+    }
   }
 
-  saveChanges() {
+  async saveChanges() {
     if (!this.articleEditForm.value.articleId) {
-      this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
+      const saveArticle = await this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
+      if (saveArticle === 'success') {
+        this.articleIsNew = false;
+      }
     } else {
       this.articleSvc.updateArticle(this.userInfo, this.articleEditForm.value, this.articleId);
     }
@@ -102,7 +111,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   abortChanges() {
     this.currentArticleSubscription.unsubscribe();
-    if (this.isArticleNew) {
+    if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
   }
@@ -116,15 +125,19 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   uploadCoverImage() {
     if (!!this.articleId) {
       this.currentCoverImageUpload = new Upload(this.selectedCoverImageFile);
-      this.uploadSvc.uploadArticleCoverImage(this.currentCoverImageUpload, this.articleId, this.isArticleNew);
+      this.uploadSvc.uploadArticleCoverImage(this.currentCoverImageUpload, this.articleId, this.articleIsNew);
     }
+  }
+
+  updateCoverImageUrl(url) {
+    this.articleEditForm.patchValue({imageUrl: url});
   }
 
   // Article Tagging Functions
   addTag(event: MatChipInputEvent): void {
     const inputElement = event.input;
     const tag = event.value.toUpperCase();
-    if ((tag || '').trim()) {
+    if (tag.trim()) {
       this.articleEditForm.value.tags.push(tag.trim());
     }
     if (inputElement) {

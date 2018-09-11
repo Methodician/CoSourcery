@@ -1,6 +1,6 @@
 <form [formGroup]="articleEditForm">
-	<h2 *ngIf="isArticleNew">Create New Article</h2>
-	<h2 *ngIf="!isArticleNew">Edit Article</h2>
+	<h2 *ngIf="articleIsNew">Create New Article</h2>
+	<h2 *ngIf="!articleIsNew">Edit Article</h2>
 
 	<section id="cover-image-preview">
 	  <h3>Cover Image</h3>
@@ -19,27 +19,29 @@
 		</button>
 		<mat-form-field>
 		  <label>Image Alt Description</label>
-		  <input matInput #imageAlt maxlength="300" formControlName="imageAlt" type="text" >
+		  <input matInput type="text" formControlName="imageAlt" maxlength="300">
 		</mat-form-field>
 	</section>
 
 	<section id="article-content">
 	  <mat-form-field>
 			<label>Title</label>
-			<input matInput #title maxlength="100" formControlName="title" type="text" [class.input-error]="isErrorVisible('title', 'required')">
+			<input matInput #title type="text" formControlName="title" [class.input-error]="isErrorVisible('title', 'required')" maxlength="100" required>
 	    <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
 	    <mat-error *ngIf="isErrorVisible('title','required')">Please give your article a title.</mat-error>
 	  </mat-form-field>
 
 	  <mat-form-field>
 	    <label>Introduction</label>
-	    <textarea matInput #introduction maxlength="300" formControlName="introduction" type="text" [class.input-error]="isErrorVisible('introduction', 'required')"></textarea>
+	    <textarea matInput #introduction type="text" formControlName="introduction" [class.input-error]="isErrorVisible('introduction', 'required')" maxlength="300" required></textarea>
 	    <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
 	    <mat-error *ngIf="isErrorVisible('introduction','required')">Please tell us a little something about what this article is about.</mat-error>
 	  </mat-form-field>
 
-	  <label>Body</label>
-	  <textarea formControlName="body" rows="15" formControlName="body" type="text"></textarea>
+		<mat-form-field>
+		  <label>Body</label>
+		  <textarea matInput rows="15" type="text" formControlName="body" required></textarea>
+		</mat-form-field>
 	</section>
 
 	<section id="article-tags">
@@ -54,7 +56,7 @@
 	      <input #tagInput
 							 placeholder="Enter a new tag..."
 	             [matChipInputFor]="chipList"
-	             [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeysCodes"
+	             [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
 	             [matChipInputAddOnBlur]="true"
 	             (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
 				<mat-error *ngIf="isInvalidTagInput(tagInput.value)">Alphanumeric characters and spaces only.</mat-error>
