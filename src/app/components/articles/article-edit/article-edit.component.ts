@@ -8,7 +8,7 @@ import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
 
 import { MatChipInputEvent } from '@angular/material';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'cos-article-edit',
@@ -19,12 +19,12 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
 export class ArticleEditComponent implements OnInit, OnDestroy {
   userInfo = null;
   articleId: any;
-  isArticleValid: boolean;
   isArticleNew: boolean;
   currentArticleSubscription: Subscription;
 
   selectedCoverImageFile: any;
   currentCoverImageUpload: Upload;
+  readonly matChipInputSeparatorKeysCodes: number[] = [ENTER];
 
   articleEditForm: FormGroup = this.fb.group({
     articleId: '',
@@ -72,11 +72,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   setArticleId() {
     if (this.route.params['_value']['key']) {
       this.articleId = this.route.params['_value']['key'];
-      this.isArticleValid = true;
       this.isArticleNew = false;
     } else {
       this.articleId = this.articleSvc.createArticleId();
-      this.isArticleValid = false;
       this.isArticleNew = true;
     }
   }
@@ -104,7 +102,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   abortChanges() {
     this.currentArticleSubscription.unsubscribe();
-    if (!this.isArticleValid) {
+    if (this.isArticleNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
   }
@@ -122,10 +120,34 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Article Tagging Functions
+  addTag(event: MatChipInputEvent): void {
+    const inputElement = event.input;
+    const tag = event.value.toUpperCase();
+    if ((tag || '').trim()) {
+      this.articleEditForm.value.tags.push(tag.trim());
+    }
+    if (inputElement) {
+      inputElement.value = '';
+    }
+  }
+
+  removeTag(selectedTag): void {
+    const tagIndex = this.articleEditForm.value.tags.indexOf(selectedTag);
+    if (tagIndex >= 0) {
+      this.articleEditForm.value.tags.splice(tagIndex, 1);
+    }
+  }
+
   // Validation
   isErrorVisible(field: string, error: string) {
     const control = this.articleEditForm.controls[field];
     return control.dirty && control.errors && control.errors[error];
+  }
+
+  isInvalidTagInput(value) {
+    const nonLetterNumberSpace = new RegExp('[^a-zA-Z0-9 ]');
+    return nonLetterNumberSpace.test(value) ? true : false;
   }
 
 }

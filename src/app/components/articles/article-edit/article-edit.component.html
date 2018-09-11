@@ -1,4 +1,4 @@
-<form [formGroup]="articleEditForm" (ngSubmit)="saveChanges()">
+<form [formGroup]="articleEditForm">
 	<h2 *ngIf="isArticleNew">Create New Article</h2>
 	<h2 *ngIf="!isArticleNew">Edit Article</h2>
 
@@ -44,27 +44,26 @@
 
 	<section id="article-tags">
 		<h3>Tags</h3>
-		<p><em>Alphanumeric characters and spaces only.</em></p>
-	  <!-- <mat-form-field>
+		<p class="text italic">Use alphanumeric characters and spaces only, then press ENTER to add tag.</p>
+	  <mat-form-field>
 	    <mat-chip-list #chipList>
-				<div *ngIf="articleTags">
-	      <mat-chip *ngFor="let articleTag of articleEditForm.get('tags'); let i = index" [selectable]="selectable"
-	                [removable]="removable" (remove)="remove(articleTag, i)">
+	      <mat-chip *ngFor="let articleTag of articleEditForm.value.tags" (removed)="removeTag(articleTag)">
 	        {{articleTag}}
-	        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+	        <mat-icon matChipRemove>cancel</mat-icon>
 	      </mat-chip>
-				</div>
-	      <input placeholder="Enter a new tag..."
-	            [matChipInputFor]="chipList"
-	            [matChipInputSeparatorKeyCodes]="ENTER"
-	            [matChipInputAddOnBlur]="addOnBlur"
-	            (matChipInputTokenEnd)="add($event)" />
+	      <input #tagInput
+							 placeholder="Enter a new tag..."
+	             [matChipInputFor]="chipList"
+	             [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeysCodes"
+	             [matChipInputAddOnBlur]="true"
+	             (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
+				<mat-error *ngIf="isInvalidTagInput(tagInput.value)">Alphanumeric characters and spaces only.</mat-error>
 	    </mat-chip-list>
-	  </mat-form-field> -->
+	  </mat-form-field>
 	</section>
 
 	<button [disabled]="!articleEditForm.valid"
-					type="submit">
+					(click)="saveChanges()">
 		Save
 	</button>
 </form>
