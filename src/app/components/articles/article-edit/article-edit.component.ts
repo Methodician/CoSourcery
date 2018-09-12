@@ -140,12 +140,18 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   addTag(event: MatChipInputEvent): void {
     const inputElement = event.input;
     const tag = event.value.toUpperCase();
-    if (tag.trim()) {
+    const isDuplicate = this.checkForDuplicateTag(tag);
+    if (tag.trim() && !isDuplicate) {
       this.articleEditForm.value.tags.push(tag.trim());
     }
     if (inputElement) {
       inputElement.value = '';
     }
+  }
+
+  checkForDuplicateTag(value) {
+    const tagIndex = this.articleEditForm.value.tags.indexOf(value);
+    return (tagIndex >= 0) ? true : false;
   }
 
   removeTag(selectedTag): void {
