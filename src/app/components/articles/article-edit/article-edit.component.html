@@ -1,27 +1,26 @@
 <form [formGroup]="articleEditForm">
-	<h2 *ngIf="articleIsNew">Create New Article</h2>
-	<h2 *ngIf="!articleIsNew">Edit Article</h2>
+	<h2 *ngIf="articleIsNew" class="text center">Create New Article</h2>
+	<h2 *ngIf="!articleIsNew" class="text center">Edit Article</h2>
 
-	<section id="cover-image-preview">
+	<section id="cover-image">
 	  <h3>Cover Image</h3>
 		<div *ngIf="!articleEditForm.value.imageUrl" class="img-placeholder flex-center text center">Please select a<br>cover image.</div>
     <img *ngIf="articleEditForm.value.imageUrl"
          [src]="articleEditForm.value.imageUrl">
-	</section>
-
-	<section id="cover-image-upload">
 	  <p *ngIf="currentCoverImageUpload">Progress: {{currentCoverImageUpload?.progress}}% Complete</p>
-		<input accept="image/*"
-           type="file"
-           (change)="captureCoverImage($event.target.files[0])">
-    <button [disabled]="!selectedCoverImageFile"
-            (click)="uploadCoverImage()">
-			Upload
-		</button>
 		<mat-form-field>
-		  <label>Image Alt Description</label>
-		  <input matInput type="text" formControlName="imageAlt" maxlength="300">
+			<label>Image Alt Description</label>
+			<input matInput type="text" formControlName="imageAlt" maxlength="300">
 		</mat-form-field>
+		<div class="file-input flex-center-align">
+			<input accept="image/*"
+	           type="file"
+	           (change)="captureCoverImage($event.target.files[0])">
+	    <button [disabled]="!selectedCoverImageFile"
+	            (click)="uploadCoverImage()">
+				Upload
+			</button>
+		</div>
 	</section>
 
 	<section id="article-content">
@@ -67,8 +66,10 @@
 	  </mat-form-field>
 	</section>
 
-	<button [disabled]="!articleEditForm.valid"
-					(click)="saveChanges()">
-		Save
-	</button>
+	<section class="flex-center-justify">
+		<button [disabled]="!articleEditForm.valid"
+						(click)="saveChanges()">
+			Save
+		</button>
+	</section>
 </form>

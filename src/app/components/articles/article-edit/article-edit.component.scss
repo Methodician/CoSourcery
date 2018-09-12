@@ -2,29 +2,103 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 form {
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
   padding: 24px;
 
   h2 {
     color: $primary-color;
   }
 
+  h3 {
+    margin-top: 0;
+    color: $accent-color-1;
+  }
+
   mat-form-field {
     display: block;
+
+    ::ng-deep .mat-form-field-infix {
+      padding: 0;
+    }
+
+    label {
+      font-weight: bold;
+      color: $accent-color-1-dark;
+    }
+
+    input, textarea {
+      margin-top: 5px;
+      padding: 5px;
+      background-color: #f8f8f8;
+    }
   }
 }
 
-#cover-image-preview {
+#cover-image, #article-content, #article-tags {
   margin-bottom: 24px;
+  padding: 20px;
+  box-shadow: 0 2px 5px $light-gray-50;
+}
+
+#cover-image {
 
   img, .img-placeholder {
-    width: 250px;
-    height: 250px;
+    width: 100%;
+    margin: 0 auto;
     border: 1px solid $light-gray;
+  }
+
+  img {
+    display: block;
     object-fit: cover;
   }
 
   .img-placeholder {
+    height: 250px;
     padding: 20px;
+  }
+
+  .file-input {
+    flex-direction: column;
+
+    input {
+      width: 100%;
+      min-width: 0;
+      max-width: 250px;
+      margin-bottom: 20px;
+      padding: 6px;
+      border: 1px solid $light-gray-50;
+      border-radius: 4px;
+      background-color: #f8f8f8;
+    }
+
+    @media screen and (min-width: 500px) {
+      flex-direction: row;
+      justify-content: space-between;
+
+      input {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+#article-tags {
+
+  ::ng-deep .mat-chip-list-wrapper {
+    padding: 4px 0 8px;
+  }
+
+  mat-chip {
+    margin: 6px;
+    box-shadow: 0 0 5px $light-gray;
+    background-color: #fff;
+  }
+
+  input {
+    background-color: transparent;
   }
 }
 
