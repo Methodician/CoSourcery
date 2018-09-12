@@ -34,9 +34,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.maxLength(100)
     ]],
-    introduction: ['', Validators.required],
+    introduction: ['', [
+      Validators.required,
+      Validators.maxLength(300)
+    ]],
     body: ['', Validators.required],
-    imageUrl: '',
+    imageUrl: ['', Validators.required],
     imageAlt: '',
     authorImageUrl: '',
     lastUpdated: null,
@@ -152,12 +155,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Validation
-  isErrorVisible(field: string, error: string) {
-    const control = this.articleEditForm.controls[field];
-    return control.dirty && control.errors && control.errors[error];
-  }
-
+  // Manual Input Validation
   isInvalidTagInput(value) {
     const nonLetterNumberSpace = new RegExp('[^a-zA-Z0-9 ]');
     return nonLetterNumberSpace.test(value) ? true : false;

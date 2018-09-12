@@ -4,13 +4,14 @@
 
 	<section id="cover-image-preview">
 	  <h3>Cover Image</h3>
+		<div *ngIf="!articleEditForm.value.imageUrl" class="img-placeholder flex-center text center">Please select a<br>cover image.</div>
     <img *ngIf="articleEditForm.value.imageUrl"
          [src]="articleEditForm.value.imageUrl">
 	</section>
 
 	<section id="cover-image-upload">
 	  <p *ngIf="currentCoverImageUpload">Progress: {{currentCoverImageUpload?.progress}}% Complete</p>
-    <input accept="image/*"
+		<input accept="image/*"
            type="file"
            (change)="captureCoverImage($event.target.files[0])">
     <button [disabled]="!selectedCoverImageFile"
@@ -24,23 +25,25 @@
 	</section>
 
 	<section id="article-content">
+		<h3>Article Content</h3>
 	  <mat-form-field>
 			<label>Title</label>
-			<input matInput #title type="text" formControlName="title" [class.input-error]="isErrorVisible('title', 'required')" maxlength="100" required>
+			<input matInput #title type="text" formControlName="title" maxlength="100" required>
 	    <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
-	    <mat-error *ngIf="isErrorVisible('title','required')">Please give your article a title.</mat-error>
+	    <mat-error>Please give your article a title.</mat-error>
 	  </mat-form-field>
 
 	  <mat-form-field>
 	    <label>Introduction</label>
-	    <textarea matInput #introduction type="text" formControlName="introduction" [class.input-error]="isErrorVisible('introduction', 'required')" maxlength="300" required></textarea>
+	    <textarea matInput #introduction type="text" formControlName="introduction" maxlength="300" required></textarea>
 	    <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
-	    <mat-error *ngIf="isErrorVisible('introduction','required')">Please tell us a little something about what this article is about.</mat-error>
+	    <mat-error>Please tell us a little something about what this article is about.</mat-error>
 	  </mat-form-field>
 
 		<mat-form-field>
 		  <label>Body</label>
-		  <textarea matInput rows="15" type="text" formControlName="body" required></textarea>
+		  <textarea matInput #body rows="15" type="text" formControlName="body" required></textarea>
+			<mat-error>Your article cannot be empty.</mat-error>
 		</mat-form-field>
 	</section>
 

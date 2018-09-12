@@ -16,11 +16,15 @@ form {
 #cover-image-preview {
   margin-bottom: 24px;
 
-  img {
+  img, .img-placeholder {
     width: 250px;
     height: 250px;
     border: 1px solid $light-gray;
     object-fit: cover;
+  }
+
+  .img-placeholder {
+    padding: 20px;
   }
 }
 
