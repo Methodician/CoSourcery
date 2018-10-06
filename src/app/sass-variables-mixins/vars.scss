@@ -12,9 +12,9 @@ $accent-color-2-dark: #23a277;
 $dark-gray: #212121;
 $medium-gray: #757575;
 $light-gray: #bdbdbd;
-$dark-gray-50: #21212177;
-$medium-gray-50: #75757577;
-$light-gray-50: #bdbdbd77;
+$dark-gray-50: rgba(33, 33, 33, 0.5);
+$medium-gray-50: rgba(117, 117, 117, 0.5);
+$light-gray-50: rgba(189, 189, 189, 0.5);
 
 // Old Theme Colors to Phase Out
 $warn-color: #c2185b;

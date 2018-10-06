@@ -24,7 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
-import { TopNavComponent } from 'app/components/shared/top-nav/top-nav.component';
+import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
 import * as fb from 'firebase';
 import { LoginComponent } from 'app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
@@ -36,11 +36,8 @@ import { RegisterComponent } from 'app/components/account/register/register.comp
 import { ArticleCoverImageComponent } from 'app/components/articles/article-cover-image/article-cover-image.component';
 import { ArticleDetailComponent } from 'app/components/articles/article-detail/article-detail.component';
 import { ArticleFormComponent } from 'app/components/articles/article-form/article-form.component';
-import { ArticleHistoryComponent } from 'app/components/articles/article-history/article-history.component';
-import { ArticleHistoryDetailComponent } from 'app/components/articles/article-history-detail/article-history-detail.component';
 import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
-
 import { ArticleSearchResultsComponent } from 'app/components/articles/article-search-results/article-search-results.component';
 import { ArticlePreviewCardComponent } from 'app/components/articles/article-preview-card/article-preview-card.component';
 import { ArticlePreviewListComponent } from 'app/components/articles/article-preview-list/article-preview-list.component';
@@ -69,11 +66,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ArticleCoverImageComponent,
     ArticleDetailComponent,
     ArticleFormComponent,
-    ArticleHistoryComponent,
-    ArticleHistoryDetailComponent,
     ArticleRelatedComponent,
     ArticleEditComponent,
-
     ArticleSearchResultsComponent,
     ArticlePreviewCardComponent,
     ArticlePreviewListComponent,

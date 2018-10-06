@@ -6,7 +6,6 @@ import { LoginComponent } from '../app/components/account/login/login.component'
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { ArticleDetailComponent } from './components/articles/article-detail/article-detail.component';
-import { ArticleHistoryComponent } from './components/articles/article-history/article-history.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
 
 const routes: Routes = [
@@ -50,7 +49,6 @@ const routes: Routes = [
     component: ArticleEditComponent
   },
   { path: 'articledetail/:key', component: ArticleDetailComponent },
-  { path: 'articlehistory/:key', component: ArticleHistoryComponent },
   // {
   //   path: 'articlesearch',
   //   children: [
