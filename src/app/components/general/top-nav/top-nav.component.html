@@ -1,7 +1,9 @@
 <div class="navbar-spacer"></div>
 <nav id="navbar" class="flex-center-align">
 
-  <a id="logo" class="flex-center-align" routerLink="home">
+  <a id="logo"
+     class="flex-center-align"
+     routerLink="home">
     <img src="../../assets/images/logo.png" alt="CoSourcery Logo">
     <h1>CoSourcery</h1>
   </a>
@@ -11,19 +13,41 @@
   </div>
 
   <!-- Menu Buttons & Control Groups -->
-  <div id="menu-controls" class="flex-center-align">
-
-    <div id="search" class="flex-center-align">
-      <input #searchInput type="text" placeholder="Search Articles" (keyup.enter)="onSearch(searchInput)">
-      <button mat-icon-button title="Search" (click)="onSearch(searchInput)">
+  <ul id="menu-controls" class="flex-center-align">
+    <li id="search" class="flex-center-align">
+      <input #searchInput type="text" placeholder="Search Articles"
+             (keyup.enter)="onSearch(searchInput)">
+      <button mat-icon-button
+              title="Search"
+              (click)="onSearch(searchInput)">
         <mat-icon>search</mat-icon>
       </button>
-    </div>
-
-    <button mat-icon-button title="Post" (click)="onCreatePost()">
-      <mat-icon>edit</mat-icon>
-    </button>
-
-  </div>
+    </li>
+    <li *ngIf="authInfo.uid !== null">
+      <button mat-icon-button
+              title="Post"
+              routerLink="createarticle">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </li>
+    <li *ngIf="authInfo.uid === null">
+      <button class="rectangular login"
+              routerLink="login">
+        Login
+      </button>
+    </li>
+    <li *ngIf="authInfo.uid !== null">
+      <button class="rectangular logout"
+              (click)="onLogOut()">
+        Logout
+      </button>
+    </li>
+    <li *ngIf="authInfo.uid === null">
+      <button class="rectangular register"
+              routerLink="register">
+        Register
+      </button>
+    </li>
+  </ul>
 
 </nav>
