@@ -1,38 +1,127 @@
-// imports for the variable and mixin files found within the sass-variables-mixins folder
+// Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
-@import "../../../sass-variables-mixins/mixins.scss";
-.wrapper {
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: space-around;
+
+form {
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 24px;
+
+  h2 {
+    color: $primary-color;
+  }
+
+  h3 {
+    margin-top: 0;
+    color: $accent-color-1;
+  }
+
+  mat-form-field {
+    display: block;
+
+    ::ng-deep .mat-form-field-infix {
+      padding: 0;
+    }
+
+    label {
+      font-weight: bold;
+      color: $accent-color-1-dark;
+    }
+
+    input, textarea {
+      margin-top: 5px;
+      padding: 5px;
+      background-color: #f8f8f8;
+    }
+  }
 }
 
-.editPreview {
-  @include size(30px, 100%);
-  text-align: center;
-  background-color: $accent-color;
-  opacity: .5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  @include font-size(22px);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#cover-image, #article-content, #article-tags {
+  margin-bottom: 24px;
+  padding: 20px;
+  box-shadow: 0 2px 5px $light-gray-50;
+}
+
+#cover-image {
+
+  img, .img-placeholder {
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid $light-gray;
+  }
+
+  img {
+    display: block;
+    object-fit: cover;
+  }
+
+  .img-placeholder {
+    height: 250px;
+    padding: 20px;
+  }
+
+  .file-input {
+    flex-direction: column;
+
+    input {
+      width: 100%;
+      min-width: 0;
+      max-width: 250px;
+      margin-bottom: 20px;
+      padding: 6px;
+      border: 1px solid $light-gray-50;
+      border-radius: 4px;
+      background-color: #f8f8f8;
+    }
+
+    @media screen and (min-width: 500px) {
+      flex-direction: row;
+      justify-content: space-between;
+
+      input {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+#article-tags {
+
+  ::ng-deep .mat-chip-list-wrapper {
+    padding: 4px 0 8px;
+  }
+
+  mat-chip {
+    margin: 6px;
+    box-shadow: 0 0 5px $light-gray;
+    background-color: #fff;
+  }
+
+  input {
+    background-color: transparent;
+  }
 }
 
 button {
-  @include large-button();
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: $accent-color-1;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
 
-.submit{
-  background-color: #00BE9C;
-  box-shadow: 1px 3px 4px 1px #2e2f30;
-}
+  &:hover {
+    box-shadow: 0 2px 2px $medium-gray;
+  }
 
-.invalid{
-  background-color: #C4275F;
+  &:active {
+    box-shadow: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    box-shadow: none;
+    cursor: default;
+  }
 }

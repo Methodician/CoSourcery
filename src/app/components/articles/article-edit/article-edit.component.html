@@ -1,15 +1,75 @@
-<div class="wrcoser">
-	<cos-article-cover-image [articleId]="articleId"
-	                         [createNew]="isArticleNew">
-	</cos-article-cover-image>
-	<cos-article-form #form
-	                  [initialValue]="article">
-	</cos-article-form>
-	<button (click)="saveArticle(form.value)"
-	        mat-raised-button
-	        color="warn"
-	        [ngClass]="{'submit': form.valid === true, 'invalid': form.valid === false }"
-	        [disabled]="!form.valid">
-		Save
-	</button>
-</div>
+<form [formGroup]="articleEditForm">
+	<h2 *ngIf="articleIsNew" class="text center">Create New Article</h2>
+	<h2 *ngIf="!articleIsNew" class="text center">Edit Article</h2>
+
+	<section id="cover-image">
+	  <h3>Cover Image</h3>
+		<div *ngIf="!articleEditForm.value.imageUrl" class="img-placeholder flex-center text center">Please select a<br>cover image.</div>
+    <img *ngIf="articleEditForm.value.imageUrl"
+         [src]="articleEditForm.value.imageUrl">
+	  <p *ngIf="currentCoverImageUpload">Progress: {{currentCoverImageUpload?.progress}}% Complete</p>
+		<mat-form-field>
+			<label>Image Alt Description</label>
+			<input matInput type="text" formControlName="imageAlt" maxlength="300">
+		</mat-form-field>
+		<div class="file-input flex-center-align">
+			<input accept="image/*"
+	           type="file"
+	           (change)="captureCoverImage($event.target.files[0])">
+	    <button [disabled]="!selectedCoverImageFile"
+	            (click)="uploadCoverImage()">
+				Upload
+			</button>
+		</div>
+	</section>
+
+	<section id="article-content">
+		<h3>Article Content</h3>
+	  <mat-form-field>
+			<label>Title</label>
+			<input matInput #title type="text" formControlName="title" maxlength="100" required>
+	    <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
+	    <mat-error>Please give your article a title.</mat-error>
+	  </mat-form-field>
+
+	  <mat-form-field>
+	    <label>Introduction</label>
+	    <textarea matInput #introduction type="text" formControlName="introduction" maxlength="300" required></textarea>
+	    <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
+	    <mat-error>Please tell us a little something about what this article is about.</mat-error>
+	  </mat-form-field>
+
+		<mat-form-field>
+		  <label>Body</label>
+		  <textarea matInput #body rows="15" type="text" formControlName="body" required></textarea>
+			<mat-error>Your article cannot be empty.</mat-error>
+		</mat-form-field>
+	</section>
+
+	<section id="article-tags">
+		<h3>Tags</h3>
+		<p class="text italic">Use alphanumeric characters and spaces only, then press ENTER to add tag.</p>
+	  <mat-form-field>
+	    <mat-chip-list #chipList>
+	      <mat-chip *ngFor="let articleTag of articleEditForm.value.tags" (removed)="removeTag(articleTag)">
+	        {{articleTag}}
+	        <mat-icon matChipRemove>cancel</mat-icon>
+	      </mat-chip>
+	      <input #tagInput
+							 placeholder="Enter a new tag..."
+	             [matChipInputFor]="chipList"
+	             [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
+	             [matChipInputAddOnBlur]="true"
+	             (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
+				<mat-error *ngIf="isInvalidTagInput(tagInput.value)">Alphanumeric characters and spaces only.</mat-error>
+	    </mat-chip-list>
+	  </mat-form-field>
+	</section>
+
+	<section class="flex-center-justify">
+		<button [disabled]="!articleEditForm.valid"
+						(click)="saveChanges()">
+			Save
+		</button>
+	</section>
+</form>
