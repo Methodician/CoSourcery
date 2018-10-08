@@ -49,6 +49,7 @@ import { TimeElapsedPipe } from './shared/pipes/time-elapsed.pipe';
 import { TruncateTagsPipe } from './shared/pipes/truncate-tags.pipe';
 import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatTabsModule,
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CKEditorModule
   ],
   providers: [AuthService, UploadService, NotificationService, ArticleService, UserService],
   bootstrap: [AppComponent]
