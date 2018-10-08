@@ -97,7 +97,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   setDefaultFormData(data) {
     if (!this.articleIsNew) {
-      this.articleEditForm.setValue(data);
+      this.articleEditForm.patchValue(data);
     }
   }
 
