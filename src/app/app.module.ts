@@ -1,3 +1,12 @@
+import { environment } from 'environments/environment';
+
+// Firebase and AngularFire imports
+import * as fb from 'firebase/app';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+
+// general
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AuthService } from './services/auth.service';
@@ -25,7 +34,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
 import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
-import * as fb from 'firebase';
 import { LoginComponent } from 'app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { AccountComponent } from 'app/components/account/account/account.component';
@@ -96,7 +104,10 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    CKEditorModule
+    CKEditorModule,
+    AngularFireModule.initializeApp(environment.fbConfig),
+    AngularFirestoreModule,
+    AngularFireStorageModule
   ],
   providers: [AuthService, UploadService, NotificationService, ArticleService, UserService],
   bootstrap: [AppComponent]
@@ -104,18 +115,10 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 export class AppModule {
 
-  // Test Firestore db
-  fbConfig = {
-    apiKey: 'AIzaSyAb3L-t-WB0rf6A9j8gVSRB9STJJvLUEfw',
-    authDomain: 'cosourcerytest.firebaseapp.com',
-    databaseURL: 'https://cosourcerytest.firebaseio.com',
-    projectId: 'cosourcerytest',
-    storageBucket: 'cosourcerytest.appspot.com',
-    messagingSenderId: '146479623747'
-  };
+ 
 
   constructor() {
-    fb.initializeApp(this.fbConfig);
+    fb.initializeApp(environment.fbConfig);
     const fs = fb.firestore();
     const settings = { timestampsInSnapshots: true };
     fs.settings(settings);
