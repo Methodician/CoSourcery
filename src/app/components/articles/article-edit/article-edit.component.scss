@@ -85,6 +85,8 @@
 
 .cover-image__editor {
   margin-bottom: 24px;
+  padding: 20px;
+  box-shadow: 0 2px 5px $light-gray-50;
 
   .file-input {
     flex-direction: column;
@@ -111,7 +113,32 @@
   }
 }
 
-#ckeditor-container {
+.header {
+  position: relative;
+
+  button {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: 10px;
+  }
+
+  &:hover button{
+    visibility: visible;
+  }
+}
+
+.header__editor {
+  padding: 20px;
+  box-shadow: 0 2px 5px $light-gray-50;
+
+  .editor-controls {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.ckeditor-container {
   margin-top: 13px;
 
   .border {
@@ -160,7 +187,7 @@ button {
     cursor: default;
   }
 
-  &:first-child {
+  &.accent-2 {
     background-color: $accent-color-2;
   }
 

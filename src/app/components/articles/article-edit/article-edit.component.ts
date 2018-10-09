@@ -30,15 +30,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ckeditorConfig = {toolbar: {viewportTopOffset: 70}};
 
   editCoverImage: boolean = false;
+  editHeader: boolean = false;
 
   articleEditForm = this.fb.group({
     articleId: '',
     authorId: '',
-    title: ['', [
+    title: ['Title', [
       Validators.required,
       Validators.maxLength(100)
     ]],
-    introduction: ['', [
+    introduction: ['Introduction', [
       Validators.required,
       Validators.maxLength(300)
     ]],
