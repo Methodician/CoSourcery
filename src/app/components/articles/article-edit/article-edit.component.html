@@ -27,30 +27,27 @@
 		</div>
 	</section>
 
-	<section *ngIf="!editHeader" class="header">
-    <h2>{{articleEditForm.value.title}}</h2>
-    <p *ngIf="articleEditForm.value.lastUpdated">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
-    <p>{{articleEditForm.value.introduction}}</p>
-		<button (click)="editHeader = !editHeader">Edit Header</button>
+	<section class="title">
+    <h2 *ngIf="!editTitle">{{articleEditForm.value.title}}</h2>
+		<mat-form-field *ngIf="editTitle" class="title__editor">
+			<h2><input matInput #title type="text" formControlName="title" maxlength="100" required></h2>
+			<mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
+			<mat-error>Please give your article a title.</mat-error>
+		</mat-form-field>
+		<button (click)="editTitle = !editTitle">{{editTitle ? 'Close' : 'Edit Title'}}</button>
 	</section>
 
-	<section *ngIf="editHeader" class="header__editor">
-	  <mat-form-field>
-			<label>Title</label>
-			<input matInput #title type="text" formControlName="title" maxlength="100" required>
-	    <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
-	    <mat-error>Please give your article a title.</mat-error>
-	  </mat-form-field>
-	  <mat-form-field>
-	    <label>Introduction</label>
+	<section class="intro">
+		<p *ngIf="!editIntro">{{articleEditForm.value.introduction}}</p>
+		<mat-form-field *ngIf="editIntro" class="intro__editor">
 	    <textarea matInput #introduction type="text" formControlName="introduction" maxlength="300" required></textarea>
 	    <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
 	    <mat-error>Please tell us a little something about what this article is about.</mat-error>
 	  </mat-form-field>
-		<div class="editor-controls">
-			<button (click)="editHeader = !editHeader">Close</button>
-		</div>
+		<button (click)="editIntro = !editIntro">{{editIntro ? 'Close' : 'Edit Intro'}}</button>
 	</section>
+
+	<p *ngIf="articleEditForm.value.lastUpdated">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
 	<section class="ckeditor" [ngClass]="{'border': editBody}">
 		<button (click)="editBody = !editBody">{{(editBody) ? 'Close Editor' : 'Edit Body'}}</button>

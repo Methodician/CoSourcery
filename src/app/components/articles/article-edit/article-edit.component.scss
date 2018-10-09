@@ -8,10 +8,6 @@
   padding: 20px;
   box-shadow: 0 2px 5px $light-gray-50;
 
-  h2 {
-    color: $primary-color;
-  }
-
   h3 {
     margin-top: 0;
     color: $accent-color-1;
@@ -26,19 +22,9 @@
     color: $accent-color-1-dark;
   }
 
-  mat-form-field {
-    display: block;
-    margin-bottom: 10px;
-
-    ::ng-deep .mat-form-field-infix {
-      padding: 0;
-    }
-  }
-
   input, textarea {
     margin-top: 5px;
     padding: 5px;
-    background-color: #f8f8f8;
   }
 
   mat-error {
@@ -113,14 +99,25 @@
   }
 }
 
-.header {
-  position: relative;
+.title, .intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  input {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 0;
+  }
+
+  ::ng-deep .mat-form-field-infix {
+    padding-top: 0;
+    border: none;
+  }
 
   button {
     visibility: hidden;
-    position: absolute;
-    top: 0;
-    right: 10px;
+    margin-left: 15px;
   }
 
   &:hover button{
@@ -128,14 +125,16 @@
   }
 }
 
-.header__editor {
-  padding: 20px;
-  box-shadow: 0 2px 5px $light-gray-50;
+.title {
 
-  .editor-controls {
-    display: flex;
-    justify-content: flex-end;
+  h2 {
+    margin: 0;
+    color: $primary-color;
   }
+}
+
+.title__editor, .intro__editor {
+  width: 100%;
 }
 
 .ckeditor {
@@ -227,9 +226,5 @@ button {
 
   &.accent-2 {
     background-color: darken($accent-color-2, 10%);
-  }
-
-  &:not(:first-child) {
-    margin-left: 5px;
   }
 }

@@ -30,7 +30,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ckeditorConfig = {toolbar: {viewportTopOffset: 70}};
 
   editCoverImage: boolean = false;
-  editHeader: boolean = false;
+  editTitle: boolean = false;
+  editIntro: boolean = false;
   editBody: boolean = false;
   editTags: boolean = false;
 
