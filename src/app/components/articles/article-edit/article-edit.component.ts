@@ -8,6 +8,7 @@ import { Upload } from 'app/shared/class/upload';
 import { ArticleService } from '../../../services/article.service';
 import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
+import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 
 @Component({
   selector: 'cos-article-edit',
@@ -24,6 +25,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   selectedCoverImageFile: any;
   currentCoverImageUpload: Upload;
+  ckeditor = InlineEditor;
+  ckeditorConfig = {toolbar: {viewportTopOffset: 70}};
 
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
@@ -38,7 +41,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.maxLength(300)
     ]],
-    body: ['', Validators.required],
+    body: [''],
     imageUrl: ['', Validators.required],
     imageAlt: '',
     authorImageUrl: '',

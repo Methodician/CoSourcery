@@ -39,11 +39,12 @@
 	    <mat-error>Please tell us a little something about what this article is about.</mat-error>
 	  </mat-form-field>
 
-		<mat-form-field>
-		  <label>Body</label>
-		  <textarea matInput #body rows="15" type="text" formControlName="body" required></textarea>
-			<mat-error>Your article cannot be empty.</mat-error>
-		</mat-form-field>
+		<div id="ckeditor-container">
+			<label>Body</label>
+			<div class="border">
+				<ckeditor formControlName="body" [editor]="ckeditor" [config]="ckeditorConfig"></ckeditor>
+			</div>
+		</div>
 	</section>
 
 	<section id="article-tags">
