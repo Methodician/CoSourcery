@@ -20,7 +20,7 @@
 		    <button class="accent-2"
 								[disabled]="!selectedCoverImageFile"
 		            (click)="uploadCoverImage()">
-					Upload
+					Save Image
 				</button>
 				<button (click)="editCoverImage = !editCoverImage">Close</button>
 			</div>
@@ -52,11 +52,9 @@
 		</div>
 	</section>
 
-	<section class="ckeditor-container">
-		<label>Body</label>
-		<div class="border">
-			<ckeditor formControlName="body" [editor]="ckeditor" [config]="ckeditorConfig"></ckeditor>
-		</div>
+	<section class="ckeditor" [ngClass]="{'border': editBody}">
+		<button (click)="editBody = !editBody">{{(editBody) ? 'Close Editor' : 'Edit Body'}}</button>
+		<ckeditor formControlName="body" [editor]="ckeditor" [config]="ckeditorConfig" [disabled]="!editBody"></ckeditor>
 	</section>
 
 	<section id="article-tags">
@@ -83,7 +81,7 @@
 		<button class="accent-2"
 					  [disabled]="!articleEditForm.valid"
 						(click)="saveChanges()">
-			Save
+			Save Article
 		</button>
 	</section>
 </form>
