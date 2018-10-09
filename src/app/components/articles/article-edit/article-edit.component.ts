@@ -32,6 +32,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   editCoverImage: boolean = false;
   editHeader: boolean = false;
   editBody: boolean = false;
+  editTags: boolean = false;
 
   articleEditForm = this.fb.group({
     articleId: '',
