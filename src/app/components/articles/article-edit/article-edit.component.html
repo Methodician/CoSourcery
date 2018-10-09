@@ -2,21 +2,25 @@
 	<section class="cover-image">
 		<div *ngIf="!articleEditForm.value.imageUrl" class="cover-image__placeholder">Upload a cover image.</div>
     <img *ngIf="articleEditForm.value.imageUrl" class="cover-image__image" [src]="articleEditForm.value.imageUrl">
-		<div class="cover-image__editor">
-		  <p *ngIf="currentCoverImageUpload">Progress: {{currentCoverImageUpload?.progress}}% Complete</p>
-			<mat-form-field>
-				<label>Image Alt Description</label>
-				<input matInput #imageAlt type="text" formControlName="imageAlt" maxlength="100">
-		    <mat-hint align="end">{{imageAlt.value.length}} / 100</mat-hint>
-			</mat-form-field>
-			<div class="file-input flex-center-align">
-				<input accept="image/*"
-		           type="file"
-		           (change)="captureCoverImage($event.target.files[0])">
+		<button *ngIf="!editCoverImage" (click)="editCoverImage = !editCoverImage">Edit</button>
+	</section>
+	<section *ngIf="editCoverImage" class="cover-image__editor">
+	  <p *ngIf="currentCoverImageUpload">Progress: {{currentCoverImageUpload?.progress}}% Complete</p>
+		<mat-form-field>
+			<label>Image Alt Description</label>
+			<input matInput #imageAlt type="text" formControlName="imageAlt" maxlength="100">
+	    <mat-hint align="end">{{imageAlt.value.length}} / 100</mat-hint>
+		</mat-form-field>
+		<div class="file-input flex-center-align">
+			<input accept="image/*"
+	           type="file"
+	           (change)="captureCoverImage($event.target.files[0])">
+			<div>
 		    <button [disabled]="!selectedCoverImageFile"
 		            (click)="uploadCoverImage()">
 					Upload
 				</button>
+				<button (click)="editCoverImage = !editCoverImage">Close</button>
 			</div>
 		</div>
 	</section>

@@ -4,8 +4,9 @@
 .article-form {
   width: 100%;
   max-width: 768px;
-  margin: 0 auto;
-  padding: 24px;
+  margin: 24px auto;
+  padding: 20px;
+  box-shadow: 0 2px 5px $light-gray-50;
 
   h2 {
     color: $primary-color;
@@ -46,10 +47,20 @@
   }
 }
 
-.cover-image, #article-content, #article-tags {
+.cover-image {
+  position: relative;
   margin-bottom: 24px;
-  padding: 20px;
-  box-shadow: 0 2px 5px $light-gray-50;
+
+  button {
+    visibility: hidden;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+  }
+
+  &:hover button{
+    visibility: visible;
+  }
 }
 
 .cover-image__image {
@@ -73,6 +84,7 @@
 }
 
 .cover-image__editor {
+  margin-bottom: 24px;
 
   .file-input {
     flex-direction: column;
@@ -146,5 +158,13 @@ button {
     opacity: 0.5;
     box-shadow: none;
     cursor: default;
+  }
+
+  &:first-child {
+    background-color: $accent-color-2;
+  }
+
+  &:not(:first-child) {
+    margin-left: 5px;
   }
 }

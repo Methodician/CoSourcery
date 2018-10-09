@@ -22,13 +22,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleIsNew: boolean;
   formIsReady: boolean = false;
   currentArticleSubscription: Subscription;
+  readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
   selectedCoverImageFile: any;
   currentCoverImageUpload: Upload;
   ckeditor = InlineEditor;
   ckeditorConfig = {toolbar: {viewportTopOffset: 70}};
 
-  readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
+  editCoverImage: boolean = false;
 
   articleEditForm = this.fb.group({
     articleId: '',
