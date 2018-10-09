@@ -43,7 +43,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     ]],
     body: [''],
     imageUrl: ['', Validators.required],
-    imageAlt: '',
+    imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',
     lastUpdated: null,
     timestamp: 0,

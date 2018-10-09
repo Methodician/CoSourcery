@@ -1,25 +1,23 @@
-<form [formGroup]="articleEditForm">
-	<h2 *ngIf="articleIsNew" class="text center">Create New Article</h2>
-	<h2 *ngIf="!articleIsNew" class="text center">Edit Article</h2>
-
-	<section id="cover-image">
-	  <h3>Cover Image</h3>
-		<div *ngIf="!articleEditForm.value.imageUrl" class="img-placeholder flex-center text center">Please select a<br>cover image.</div>
-    <img *ngIf="articleEditForm.value.imageUrl"
-         [src]="articleEditForm.value.imageUrl">
-	  <p *ngIf="currentCoverImageUpload">Progress: {{currentCoverImageUpload?.progress}}% Complete</p>
-		<mat-form-field>
-			<label>Image Alt Description</label>
-			<input matInput type="text" formControlName="imageAlt" maxlength="300">
-		</mat-form-field>
-		<div class="file-input flex-center-align">
-			<input accept="image/*"
-	           type="file"
-	           (change)="captureCoverImage($event.target.files[0])">
-	    <button [disabled]="!selectedCoverImageFile"
-	            (click)="uploadCoverImage()">
-				Upload
-			</button>
+<form [formGroup]="articleEditForm" class="article-form">
+	<section class="cover-image">
+		<div *ngIf="!articleEditForm.value.imageUrl" class="cover-image__placeholder">Upload a cover image.</div>
+    <img *ngIf="articleEditForm.value.imageUrl" class="cover-image__image" [src]="articleEditForm.value.imageUrl">
+		<div class="cover-image__editor">
+		  <p *ngIf="currentCoverImageUpload">Progress: {{currentCoverImageUpload?.progress}}% Complete</p>
+			<mat-form-field>
+				<label>Image Alt Description</label>
+				<input matInput #imageAlt type="text" formControlName="imageAlt" maxlength="100">
+		    <mat-hint align="end">{{imageAlt.value.length}} / 100</mat-hint>
+			</mat-form-field>
+			<div class="file-input flex-center-align">
+				<input accept="image/*"
+		           type="file"
+		           (change)="captureCoverImage($event.target.files[0])">
+		    <button [disabled]="!selectedCoverImageFile"
+		            (click)="uploadCoverImage()">
+					Upload
+				</button>
+			</div>
 		</div>
 	</section>
 

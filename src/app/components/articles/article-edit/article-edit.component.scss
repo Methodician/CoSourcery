@@ -1,7 +1,7 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
-form {
+.article-form {
   width: 100%;
   max-width: 768px;
   margin: 0 auto;
@@ -27,6 +27,7 @@ form {
 
   mat-form-field {
     display: block;
+    margin-bottom: 10px;
 
     ::ng-deep .mat-form-field-infix {
       padding: 0;
@@ -45,29 +46,33 @@ form {
   }
 }
 
-#cover-image, #article-content, #article-tags {
+.cover-image, #article-content, #article-tags {
   margin-bottom: 24px;
   padding: 20px;
   box-shadow: 0 2px 5px $light-gray-50;
 }
 
-#cover-image {
+.cover-image__image {
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  border: 1px solid $light-gray;
+  object-fit: cover;
+}
 
-  img, .img-placeholder {
-    width: 100%;
-    margin: 0 auto;
-    border: 1px solid $light-gray;
-  }
+.cover-image__placeholder {
+  height: 250px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid $light-gray;
+  text-align: center;
+}
 
-  img {
-    display: block;
-    object-fit: cover;
-  }
-
-  .img-placeholder {
-    height: 250px;
-    padding: 20px;
-  }
+.cover-image__editor {
 
   .file-input {
     flex-direction: column;
