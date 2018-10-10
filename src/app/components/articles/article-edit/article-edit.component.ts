@@ -21,8 +21,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   userInfo = null;
   articleId: any;
   articleIsNew: boolean;
-  formIsReady: boolean = false;
-  unsavedCoverImage = false;
+  formIsReady = false;
+  tagsEdited = false
   currentArticleSubscription: Subscription;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
@@ -135,7 +135,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     } else {
       this.articleSvc.updateArticle(this.userInfo, this.articleEditForm.value, this.articleId);
     }
+    this.resetEditStates();
+  }
+
+  resetEditStates() {
     this.articleEditForm.markAsPristine();
+    this.tagsEdited = false;
+    this.coverImageFile = null;
     this.editCoverImage = false;
     this.editTitle = false;
     this.editIntro = false;
@@ -162,7 +168,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const url = await tracker.ref.getDownloadURL().toPromise();
     this.coverImageUrl$.next(url);
     this.tempCoverImageUploadPath = snap.metadata.fullPath;
-    this.unsavedCoverImage = true;
   }
 
   async saveCoverImage() {
@@ -201,6 +206,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (inputElement) {
       inputElement.value = '';
     }
+    this.tagsEdited = true;
   }
 
   checkForDuplicateTag(value) {
@@ -213,6 +219,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (tagIndex >= 0) {
       this.articleEditForm.value.tags.splice(tagIndex, 1);
     }
+    this.tagsEdited = true;
   }
 
   // Manual Input Validation
@@ -222,7 +229,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return !!this.coverImageFile || this.articleEditForm.dirty;
+    return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
   }
 
 }
