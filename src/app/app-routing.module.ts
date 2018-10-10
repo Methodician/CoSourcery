@@ -12,9 +12,11 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'createarticle',
+  {
+    path: 'createarticle',
     canActivate: [AuthGuard],
-    component: ArticleEditComponent},
+    component: ArticleEditComponent
+  },
   // {
   //   path: 'account',
   //   canActivate: [AuthGuard],
@@ -45,7 +47,7 @@ const routes: Routes = [
   // },
   {
     path: 'editarticle/:key',
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     component: ArticleEditComponent
   },
   { path: 'articledetail/:key', component: ArticleDetailComponent },
