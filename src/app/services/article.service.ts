@@ -4,6 +4,7 @@ import { ArticleDetailFirestore } from 'app/shared/class/article-info';
 import { Router } from '@angular/router';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { UserInfoOpen } from 'app/shared/class/user-info';
+import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,39 @@ export class ArticleService {
   timestampNow = firebase.firestore.Timestamp.now();
   currentArticle$ = new Subject<any>();
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private storage: AngularFireStorage
+  ) { }
 
+
+  uploadTempImage(file: File): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
+    const id = this.createArticleId();
+    const storageRef = this.storage.ref(`tempImages/${id}`);
+    const task = storageRef.put(file);
+    return { task: task, ref: storageRef }
   }
 
+  deleteFile(path: string) {
+    const storageRef = this.storage.ref(path);
+    storageRef.delete().subscribe(res => {
+      console.log('DELETED TEMP IMAGE (maybe), result: ', res);
+    });
+  }
+
+  uploadCoverImage(articleId: string, file: File, isNew = false): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
+    const storageRef = this.storage.ref(`articleCoverImages/$articleId}`);
+    const task = storageRef.put(file);
+    return {
+      task: task,
+      ref: storageRef
+    };
+  }
+
+  trackUploadedCoverImages(articleId, fullPath, url) {
+    const docRef = this.fsdb.doc(`fileUploads/articleUploads/coverImages/${articleId}`);
+    docRef.set({ path: fullPath, downloadUrl: url });
+  }
 
   async getLatestArticles() {
     const articlesRef = this.fsdb.collection('articleData/articles/articles');

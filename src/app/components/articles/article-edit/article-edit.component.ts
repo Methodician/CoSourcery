@@ -3,12 +3,13 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { Upload } from 'app/shared/class/upload';
 import { ArticleService } from '../../../services/article.service';
 import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
+import { AngularFireUploadTask } from '@angular/fire/storage';
 
 @Component({
   selector: 'cos-article-edit',
@@ -24,10 +25,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   currentArticleSubscription: Subscription;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
-  selectedCoverImageFile: any;
-  currentCoverImageUpload: Upload;
+  coverImageFile: File;
+  tempCoverImageUploadPath: string;
+  coverImageUploadTask: AngularFireUploadTask;
+  coverImageUploadPercent$: Observable<number>;
+  coverImageUrl$ = new BehaviorSubject<string>(null);
+
+  // selectedCoverImageFile: any;
+  // currentCoverImageUpload: Upload;
   ckeditor = InlineEditor;
-  ckeditorConfig = {toolbar: {viewportTopOffset: 70}};
+  ckeditorConfig = { toolbar: { viewportTopOffset: 70 } };
 
   editCoverImage: boolean = false;
   editTitle: boolean = false;
@@ -82,13 +89,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Form Setup & Breakdown Functions
   setArticleId() {
-    if (this.route.params['_value']['key']) {
-      this.articleId = this.route.params['_value']['key'];
-      this.articleIsNew = false;
-    } else {
-      this.articleId = this.articleSvc.createArticleId();
-      this.articleIsNew = true;
-    }
+    this.route.params.subscribe(params => {
+      if (params['key']) {
+        this.articleId = params['key'];
+        this.articleIsNew = false;
+      } else {
+        this.articleId = this.articleSvc.createArticleId();
+        this.articleIsNew = true;
+      }
+    });
   }
 
   subscribeToArticleId() {
@@ -106,13 +115,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   setDefaultFormData(data) {
     if (!this.articleIsNew) {
       this.articleEditForm.patchValue(data);
+      this.coverImageUrl$.next(data.imageUrl);
     }
   }
 
   async saveChanges() {
+    this.saveCoverImage();
+    this.deleteTempCoverImage();
     if (!this.articleEditForm.value.articleId) {
-      const saveArticle = await this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
-      if (saveArticle === 'success') {
+      const articleSaved = await this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
+      if (articleSaved === 'success') {
         this.articleIsNew = false;
       }
     } else {
@@ -122,26 +134,60 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   abortChanges() {
     this.currentArticleSubscription.unsubscribe();
+    this.cancelUpload(this.coverImageUploadTask);
+    this.deleteTempCoverImage
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
   }
 
   // Cover Image Upload Functions
-  captureCoverImage(selectedFile) {
-    this.selectedCoverImageFile = selectedFile;
-    return this.selectedCoverImageFile;
+  async onSelectCoverImage(e: HtmlInputEvent) {
+    this.coverImageFile = e.target.files.item(0);
+    const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
+    this.coverImageUploadTask = tracker.task;
+    this.coverImageUploadPercent$ = tracker.task.percentageChanges();
+    const snap = await tracker.task.then();
+    const url = await tracker.ref.getDownloadURL().toPromise();
+    this.coverImageUrl$.next(url);
+    this.tempCoverImageUploadPath = snap.metadata.fullPath;
   }
 
-  uploadCoverImage() {
-    if (!!this.articleId) {
-      this.currentCoverImageUpload = new Upload(this.selectedCoverImageFile);
-      this.uploadSvc.uploadArticleCoverImage(this.currentCoverImageUpload, this.articleId, this.articleIsNew);
-    }
+  async saveCoverImage() {
+    const tracker = this.articleSvc.uploadCoverImage(this.articleId, this.coverImageFile);
+    this.coverImageUploadTask = tracker.task;
+    this.coverImageUploadPercent$ = tracker.task.percentageChanges();
+    const snap = await tracker.task.then();
+    const url = await tracker.ref.getDownloadURL().toPromise();
+    this.updateCoverImageUrl(url);
+    this.articleSvc.trackUploadedCoverImages(this.articleId, snap.metadata.fullPath, url);
+    // save cover image and delete temp image
+  }
+
+  deleteTempCoverImage() {
+    this.articleSvc.deleteFile(this.tempCoverImageUploadPath);
+  }
+
+  // captureCoverImage(selectedFile) {
+  //   this.selectedCoverImageFile = selectedFile;
+  //   return this.selectedCoverImageFile;
+  // }
+
+  // uploadCoverImage() {
+  //   if (!!this.articleId) {
+  //     this.currentCoverImageUpload = new Upload(this.selectedCoverImageFile);
+  //     this.uploadSvc.uploadArticleCoverImage(this.currentCoverImageUpload, this.articleId, this.articleIsNew);
+  //   }
+  // }
+
+  cancelUpload(task: AngularFireUploadTask) {
+    if (task)
+      task.cancel();
   }
 
   updateCoverImageUrl(url) {
-    this.articleEditForm.patchValue({imageUrl: url});
+    this.articleEditForm.patchValue({ imageUrl: url });
+    this.coverImageUrl$.next(url);
   }
 
   // Article Tagging Functions
@@ -175,4 +221,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return nonLetterNumberSpace.test(value) ? true : false;
   }
 
+}
+
+export interface HtmlInputEvent extends Event {
+  target: HTMLInputElement & EventTarget;
 }
