@@ -164,7 +164,7 @@ export class ArticleService {
     if (outcome !== 'success') {
       return outcome;
     }
-    this.navigateToArticleDetail(article.articleId);
+    // this.navigateToArticleDetail(article.articleId);
     return outcome;
   }
 
