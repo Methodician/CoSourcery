@@ -22,6 +22,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleId: any;
   articleIsNew: boolean;
   formIsReady: boolean = false;
+  unsavedCoverImage = false;
   currentArticleSubscription: Subscription;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
@@ -117,11 +118,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
     }
+    this.articleEditForm.markAsPristine();
   }
 
   async saveChanges() {
-    this.saveCoverImage();
-    this.deleteTempCoverImage();
+    if (this.coverImageFile) {
+      await this.saveCoverImage();
+      this.deleteTempCoverImage();
+      this.coverImageFile = null;
+    }
     if (!this.articleEditForm.value.articleId) {
       const articleSaved = await this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
       if (articleSaved === 'success') {
@@ -130,6 +135,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     } else {
       this.articleSvc.updateArticle(this.userInfo, this.articleEditForm.value, this.articleId);
     }
+    this.articleEditForm.markAsPristine();
+    this.editCoverImage = false;
+    this.editTitle = false;
+    this.editIntro = false;
+    this.editBody = false;
+    this.editTags = false;
   }
 
   abortChanges() {
@@ -151,6 +162,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const url = await tracker.ref.getDownloadURL().toPromise();
     this.coverImageUrl$.next(url);
     this.tempCoverImageUploadPath = snap.metadata.fullPath;
+    this.unsavedCoverImage = true;
   }
 
   async saveCoverImage() {
@@ -161,24 +173,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const url = await tracker.ref.getDownloadURL().toPromise();
     this.updateCoverImageUrl(url);
     this.articleSvc.trackUploadedCoverImages(this.articleId, snap.metadata.fullPath, url);
-    // save cover image and delete temp image
+    return;
   }
 
   deleteTempCoverImage() {
     this.articleSvc.deleteFile(this.tempCoverImageUploadPath);
   }
-
-  // captureCoverImage(selectedFile) {
-  //   this.selectedCoverImageFile = selectedFile;
-  //   return this.selectedCoverImageFile;
-  // }
-
-  // uploadCoverImage() {
-  //   if (!!this.articleId) {
-  //     this.currentCoverImageUpload = new Upload(this.selectedCoverImageFile);
-  //     this.uploadSvc.uploadArticleCoverImage(this.currentCoverImageUpload, this.articleId, this.articleIsNew);
-  //   }
-  // }
 
   cancelUpload(task: AngularFireUploadTask) {
     if (task)
@@ -219,6 +219,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   isInvalidTagInput(value) {
     const nonLetterNumberSpace = new RegExp('[^a-zA-Z0-9 ]');
     return nonLetterNumberSpace.test(value) ? true : false;
+  }
+
+  articleHasUnsavedChanges(): boolean {
+    return !!this.coverImageFile || this.articleEditForm.dirty;
   }
 
 }
