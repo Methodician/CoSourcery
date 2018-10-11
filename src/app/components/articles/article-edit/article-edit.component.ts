@@ -46,15 +46,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleEditForm = this.fb.group({
     articleId: '',
     authorId: '',
-    title: ['Title', [
+    title: ['Pick A Title', [
       Validators.required,
       Validators.maxLength(100)
     ]],
-    introduction: ['Introduction', [
+    introduction: ['Write an introduction...', [
       Validators.required,
       Validators.maxLength(300)
     ]],
-    body: [''],
+    body: ['Write your article...'],
     imageUrl: ['', Validators.required],
     imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',

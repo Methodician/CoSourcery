@@ -8,6 +8,12 @@
   padding: 20px;
   box-shadow: 0 2px 5px $light-gray-50;
 
+  h2.page-title {
+    margin-top: 0;
+    color: $primary-color;
+    text-align: center;
+  }
+
   label, input, textarea, mat-form-field, mat-error {
     font-family: $primary-typeface;
   }
