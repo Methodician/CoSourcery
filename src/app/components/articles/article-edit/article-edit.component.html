@@ -2,7 +2,7 @@
   <section class="cover-image">
     <div *ngIf="!articleEditForm.value.imageUrl" class="cover-image__placeholder">Upload a cover image.</div>
     <img *ngIf="coverImageUrl$.value" class="cover-image__image" [src]="coverImageUrl$ | async">
-    <button *ngIf="!editCoverImage" (click)="editCoverImage = !editCoverImage">Edit Image</button>
+    <button *ngIf="!editCoverImage" type="button" (click)="editCoverImage = !editCoverImage">Edit Image</button>
   </section>
 
   <section *ngIf="editCoverImage" class="cover-image__editor">
@@ -18,7 +18,7 @@
         <!-- <button class="accent-2" [disabled]="!selectedCoverImageFile" (click)="uploadCoverImage()">
           Save Image
         </button> -->
-        <button (click)="editCoverImage = !editCoverImage">Close</button>
+        <button type="button" (click)="editCoverImage = !editCoverImage">Close</button>
       </div>
     </div>
   </section>
@@ -30,7 +30,7 @@
       <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
       <mat-error>Please give your article a title.</mat-error>
     </mat-form-field>
-    <button (click)="editTitle = !editTitle">{{editTitle ? 'Close' : 'Edit Title'}}</button>
+    <button type="button" (click)="editTitle = !editTitle">{{editTitle ? 'Close' : 'Edit Title'}}</button>
   </section>
 
   <section class="intro">
@@ -40,13 +40,13 @@
       <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>
-    <button (click)="editIntro = !editIntro">{{editIntro ? 'Close' : 'Edit Intro'}}</button>
+    <button type="button" (click)="editIntro = !editIntro">{{editIntro ? 'Close' : 'Edit Intro'}}</button>
   </section>
 
   <p *ngIf="articleEditForm.value.lastUpdated">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
   <section class="ckeditor" [ngClass]="{'border': editBody}">
-    <button (click)="editBody = !editBody">{{(editBody) ? 'Close Editor' : 'Edit Body'}}</button>
+    <button type="button" (click)="editBody = !editBody">{{(editBody) ? 'Close Editor' : 'Edit Body'}}</button>
     <ckeditor formControlName="body" [editor]="ckeditor" [config]="ckeditorConfig" [disabled]="!editBody"></ckeditor>
   </section>
 
@@ -69,11 +69,11 @@
       </mat-chip-list>
       <mat-hint [ngClass]="{'error': isInvalidTagInput(tagInput.value)}">Add new tags using alphanumeric characters and spaces only, then press ENTER to add tag.</mat-hint>
     </mat-form-field>
-    <button (click)="editTags = !editTags">{{(editTags) ? 'Close' : 'Edit Tags'}}</button>
+    <button type="button" (click)="editTags = !editTags">{{(editTags) ? 'Close' : 'Edit Tags'}}</button>
   </section>
 
   <section class="flex-center-justify">
-    <button *ngIf="articleHasUnsavedChanges()" class="accent-2" [disabled]="!articleEditForm.valid" (click)="saveChanges()">
+    <button type="button" *ngIf="articleHasUnsavedChanges()" class="accent-2" [disabled]="!articleEditForm.valid" (click)="saveChanges()">
       Save Article
     </button>
   </section>
