@@ -24,8 +24,8 @@
   </section>
 
   <section class="title">
-    <h2 *ngIf="!editTitle">{{articleEditForm.value.title}}</h2>
-    <mat-form-field *ngIf="editTitle" class="title__editor">
+    <h2 *ngIf="!editTitle" class="static-display">{{articleEditForm.value.title}}</h2>
+    <mat-form-field *ngIf="editTitle">
       <h2><input matInput #title type="text" formControlName="title" maxlength="100" required></h2>
       <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
       <mat-error>Please give your article a title.</mat-error>
@@ -34,9 +34,9 @@
   </section>
 
   <section class="intro">
-    <p *ngIf="!editIntro">{{articleEditForm.value.introduction}}</p>
-    <mat-form-field *ngIf="editIntro" class="intro__editor">
-      <textarea matInput #introduction type="text" formControlName="introduction" maxlength="300" required></textarea>
+    <p *ngIf="!editIntro" class="static-display">{{articleEditForm.value.introduction}}</p>
+    <mat-form-field *ngIf="editIntro">
+      <p><textarea matInput #introduction type="text" formControlName="introduction" maxlength="300" required></textarea></p>
       <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>
@@ -63,12 +63,11 @@
           {{articleTag}}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
-        <input #tagInput placeholder="Enter a new tag..." [ngClass]="{'error': isInvalidTagInput(tagInput.value)}"
+        <input #tagInput [ngClass]="{'error': isInvalidTagInput(tagInput.value)}"
           [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
           [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
       </mat-chip-list>
-      <mat-hint [ngClass]="{'error': isInvalidTagInput(tagInput.value)}">Use alphanumeric characters and spaces only,
-        then press ENTER to add tag.</mat-hint>
+      <mat-hint [ngClass]="{'error': isInvalidTagInput(tagInput.value)}">Add new tags using alphanumeric characters and spaces only, then press ENTER to add tag.</mat-hint>
     </mat-form-field>
     <button (click)="editTags = !editTags">{{(editTags) ? 'Close' : 'Edit Tags'}}</button>
   </section>
