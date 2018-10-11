@@ -58,6 +58,7 @@ import { TruncateTagsPipe } from './shared/pipes/truncate-tags.pipe';
 import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ClickOutDirective } from './directives/click-out.directive';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     SafeUrlPipe,
     TimeElapsedPipe,
     TruncateTagsPipe,
-    TruncateStringPipe
+    TruncateStringPipe,
+    ClickOutDirective
   ],
   imports: [
     BrowserModule,
