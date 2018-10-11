@@ -32,7 +32,7 @@
   <section class="intro" (cosClickOut)="editIntro = false">
     <p *ngIf="!editIntro" class="static-display">{{articleEditForm.value.introduction}}</p>
     <mat-form-field *ngIf="editIntro">
-      <p><textarea matInput #introduction type="text" formControlName="introduction" maxlength="300" required></textarea></p>
+      <p><textarea matInput #introduction type="text" formControlName="introduction" rows="3" maxlength="300" required></textarea></p>
       <mat-hint align="end">{{introduction.value.length}} / 300 </mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>

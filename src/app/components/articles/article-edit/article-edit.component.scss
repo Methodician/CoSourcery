@@ -17,7 +17,7 @@
     margin-bottom: 5px;
 
     ::ng-deep .mat-form-field-infix {
-      padding-top: 0;
+      padding: 0 0 2px;
       border: none;
     }
   }
@@ -148,7 +148,7 @@
   }
 
   textarea {
-    margin: 0;
+    margin: 0 0 2px;
     padding: 0;
   }
 }
