@@ -4,7 +4,6 @@ import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
-import { Upload } from 'app/shared/class/upload';
 import { ArticleService } from '../../../services/article.service';
 import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
@@ -35,7 +34,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   // selectedCoverImageFile: any;
   // currentCoverImageUpload: Upload;
   ckeditor = InlineEditor;
-  ckeditorConfig = { toolbar: { viewportTopOffset: 70 } };
+  ckeditorConfig = {
+    toolbar: { viewportTopOffset: 70 },
+    fbImageStorage: {}
+    // fbImageStorage: { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) }
+  };
 
   editCoverImage: boolean = false;
   editTitle: boolean = false;
@@ -98,6 +101,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.articleId = this.articleSvc.createArticleId();
         this.articleIsNew = true;
       }
+      this.ckeditorConfig.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
     });
   }
 

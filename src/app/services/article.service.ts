@@ -21,6 +21,11 @@ export class ArticleService {
     private storage: AngularFireStorage
   ) { }
 
+  createVanillaStorageRef(path: string) {
+    console.log(path);
+
+    return firebase.storage().ref(path);
+  }
 
   uploadTempImage(file: File): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
     const id = this.createArticleId();
