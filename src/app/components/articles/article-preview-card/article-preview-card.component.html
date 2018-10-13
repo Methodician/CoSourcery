@@ -1,13 +1,14 @@
 <article class="preview-card">
 
-  <div class="card-content"
-       (click)="navigateToArticleDetail()">
-    <div class="bg-image"
-         [ngStyle]="{'backgroundImage': 'url(' + articleData.imageUrl + ')'}">
-    </div>
-    <h2 class="title">{{articleData.title | truncateString: 20}}</h2>
-    <p class="date">Last Updated: {{articleData?.lastUpdated?.toDate() | date}}</p>
-    <p>{{articleData.introduction | truncateString: 100}}</p>
+  <div class="card-content">
+    <a [routerLink]="'/article/' + articleData.articleId">
+      <div class="bg-image"
+           [ngStyle]="{'backgroundImage': 'url(' + articleData.imageUrl + ')'}">
+      </div>
+      <h2 class="title">{{articleData.title | truncateString: 20}}</h2>
+      <p class="date">Last Updated: {{articleData?.lastUpdated?.toDate() | date}}</p>
+      <p>{{articleData.introduction | truncateString: 100}}</p>
+    </a>
   </div>
 
   <div class="card-icons flex">

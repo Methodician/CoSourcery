@@ -45,12 +45,7 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  {
-    path: 'editarticle/:key',
-    // canActivate: [AuthGuard],
-    component: ArticleEditComponent
-  },
-  { path: 'articledetail/:key', component: ArticleDetailComponent },
+  { path: 'article/:key', component: ArticleEditComponent },
   // {
   //   path: 'articlesearch',
   //   children: [
