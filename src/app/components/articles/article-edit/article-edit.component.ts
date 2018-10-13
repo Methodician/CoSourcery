@@ -31,13 +31,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
 
-  // selectedCoverImageFile: any;
-  // currentCoverImageUpload: Upload;
   ckeditor = InlineEditor;
   ckeditorConfig = {
     toolbar: { viewportTopOffset: 70 },
+    // fbImageStorage is declared here but set after articleId is set.
     fbImageStorage: {}
-    // fbImageStorage: { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) }
   };
 
   editCoverImage: boolean = false;
