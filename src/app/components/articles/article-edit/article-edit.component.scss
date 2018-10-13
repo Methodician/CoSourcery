@@ -205,6 +205,7 @@
   }
 
   input {
+    min-width: 100px;
     padding: 7px 7px 7px 12px;
     border-radius: 25px;
     border: 1px solid rgba($accent-color-1, 0.25);
@@ -239,6 +240,7 @@ button {
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
+  z-index: 10;
 
   &:hover {
     box-shadow: 0 2px 2px $medium-gray;
