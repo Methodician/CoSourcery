@@ -61,7 +61,7 @@
             [ngClass]="{'active': editTitle}"
             type="button"
             (click)="editTitle = !editTitle">
-      {{editTitle ? 'Close' : 'Edit Title'}}
+      {{editTitle ? 'Close Title' : 'Edit Title'}}
     </button>
   </section>
 
@@ -86,7 +86,7 @@
             [ngClass]="{'active': editIntro}"
             type="button"
             (click)="editIntro = !editIntro">
-      {{editIntro ? 'Close' : 'Edit Intro'}}
+      {{editIntro ? 'Close Intro' : 'Edit Intro'}}
     </button>
   </section>
 
@@ -95,9 +95,10 @@
   <section class="ckeditor"
            [ngClass]="{'border': editBody || articleIsNew}">
     <button *ngIf="!articleIsNew"
+            [ngClass]="{'active': editBody}"
             type="button"
             (click)="editBody = !editBody">
-      {{editBody ? 'Close Editor' : 'Edit Body'}}
+      {{editBody ? 'Close Body' : 'Edit Body'}}
     </button>
     <ckeditor formControlName="body"
               [editor]="ckeditor"
@@ -132,9 +133,10 @@
       </mat-hint>
     </mat-form-field>
     <button *ngIf="!articleIsNew"
+            [ngClass]="{'active': editTags}"
             type="button"
             (click)="editTags = !editTags">
-      {{editTags ? 'Close' : 'Edit Tags'}}
+      {{editTags ? 'Close Tags' : 'Edit Tags'}}
     </button>
   </section>
 
