@@ -36,7 +36,7 @@
     </section>
     <button *ngIf="!articleIsNew"
             type="button"
-            (click)="editCoverImage = !editCoverImage">
+            (click)="editBody = false; editCoverImage = !editCoverImage">
       {{editCoverImage ? 'Close' : 'Edit Image'}}
     </button>
   </section>
@@ -60,7 +60,7 @@
     <button *ngIf="!articleIsNew"
             [ngClass]="{'active': editTitle}"
             type="button"
-            (click)="editTitle = !editTitle">
+            (click)="editBody = false; editTitle = !editTitle">
       {{editTitle ? 'Close Title' : 'Edit Title'}}
     </button>
   </section>
@@ -85,7 +85,7 @@
     <button *ngIf="!articleIsNew"
             [ngClass]="{'active': editIntro}"
             type="button"
-            (click)="editIntro = !editIntro">
+            (click)="editBody = false; editIntro = !editIntro">
       {{editIntro ? 'Close Intro' : 'Edit Intro'}}
     </button>
   </section>
@@ -93,18 +93,21 @@
   <p *ngIf="articleEditForm.value.lastUpdated">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
   <section class="ckeditor"
-           [ngClass]="{'border': editBody || articleIsNew}">
-    <button *ngIf="!articleIsNew"
-            [ngClass]="{'active': editBody}"
-            type="button"
-            (click)="editBody = !editBody">
-      {{editBody ? 'Close Body' : 'Edit Body'}}
-    </button>
-    <ckeditor formControlName="body"
-              [editor]="ckeditor"
-              [config]="ckeditorConfig"
-              [disabled]="!editBody && !articleIsNew">
-    </ckeditor>
+           [ngClass]="{'expand': editBody || articleIsNew}">
+    <div class="ckeditor-interior"
+         [ngClass]="{'border': editBody || articleIsNew}">
+      <button *ngIf="!articleIsNew"
+              [ngClass]="{'active': editBody}"
+              type="button"
+              (click)="editBody = !editBody">
+        {{editBody ? 'Close Body' : 'Edit Body'}}
+      </button>
+      <ckeditor formControlName="body"
+                [editor]="ckeditor"
+                [config]="ckeditorConfig"
+                [disabled]="!editBody && !articleIsNew">
+      </ckeditor>
+    </div>
   </section>
 
   <section class="tags"
@@ -135,7 +138,7 @@
     <button *ngIf="!articleIsNew"
             [ngClass]="{'active': editTags}"
             type="button"
-            (click)="editTags = !editTags">
+            (click)="editBody = false; editTags = !editTags">
       {{editTags ? 'Close Tags' : 'Edit Tags'}}
     </button>
   </section>

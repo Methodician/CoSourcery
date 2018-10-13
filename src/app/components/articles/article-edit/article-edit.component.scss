@@ -20,7 +20,7 @@
 
   mat-form-field {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 20px;
   }
 
   ::ng-deep .mat-form-field-infix {
@@ -171,6 +171,14 @@
 .ckeditor {
   position: relative;
   margin-bottom: 24px;
+
+  &.expand {
+    padding-top: 50px;
+  }
+}
+
+.ckeditor-interior {
+  position: relative;
   border-radius: 4px;
   border: 1px solid #fff;
   transition: border 0.5s;
