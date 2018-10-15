@@ -93,7 +93,7 @@
   <p *ngIf="articleEditForm.value.lastUpdated">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
   <section class="ckeditor"
-           [ngClass]="{'expand': editBody || articleIsNew}">
+           [ngClass]="{'expand': editBody || articleIsNew, 'not-editable': !editBody}">
     <div class="ckeditor-interior"
          [ngClass]="{'border': editBody || articleIsNew}">
       <button *ngIf="!articleIsNew"

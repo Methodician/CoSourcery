@@ -13,3 +13,14 @@
     background: transparent;
   }
 }
+
+.ckeditor.not-editable .ck{
+
+  .ck-widget,
+  .ck-widget:hover,
+  .ck-widget.ck-widget_selected,
+  .ck-widget.ck-widget_selected:hover {
+    outline-color: transparent;
+    transition: none;
+  }
+}
