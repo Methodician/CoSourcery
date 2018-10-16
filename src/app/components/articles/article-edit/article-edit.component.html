@@ -1,14 +1,10 @@
 <form [formGroup]="articleEditForm"
       class="article-form">
-  <h2 *ngIf="articleIsNew"
-      class="page-title">
-    Create New Article
-  </h2>
 
   <section class="cover-image"
            (cosClickOut)="editCoverImage = false">
     <section class="cover-image__display">
-      <div *ngIf="!articleEditForm.value.imageUrl"
+      <div *ngIf="!articleEditForm.value.imageUrl && !coverImageUrl$.value"
            class="cover-image__placeholder">
            Upload a cover image.
       </div>
@@ -16,7 +12,6 @@
            class="cover-image__image"
            [src]="coverImageUrl$ | async">
       <button mat-icon-button
-              *ngIf="!articleIsNew"
               [ngClass]="{'active': editCoverImage}"
               type="button"
               (click)="editBody = false; editCoverImage = !editCoverImage">
@@ -24,9 +19,9 @@
         <span class="tooltip">{{editCoverImage ? 'Close Image' : 'Edit Image'}}</span>
       </button>
     </section>
-    <section *ngIf="editCoverImage || articleIsNew"
+    <section *ngIf="editCoverImage"
              class="cover-image__editor">
-      <p *ngIf="coverImageUploadTask">Progress: {{coverImageUploadPercent$ | async}}% Complete</p>
+      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">Progress: {{coverImageUploadPercent$ | async}}% Complete</p>
       <mat-form-field>
         <label>Image Alt Description</label>
         <input #imageAlt matInput
@@ -45,11 +40,11 @@
 
   <section class="title"
            (cosClickOut)="editTitle = false">
-    <h2 *ngIf="!editTitle && !articleIsNew"
+    <h2 *ngIf="!editTitle"
         class="static-display">
       {{articleEditForm.value.title}}
     </h2>
-    <mat-form-field *ngIf="editTitle || articleIsNew">
+    <mat-form-field *ngIf="editTitle">
       <h2><input #title matInput
                  type="text"
                  formControlName="title"
@@ -60,7 +55,6 @@
       <mat-error>Please give your article a title.</mat-error>
     </mat-form-field>
     <button mat-icon-button
-            *ngIf="!articleIsNew"
             [ngClass]="{'active': editTitle}"
             type="button"
             (click)="editBody = false; editTitle = !editTitle">
@@ -71,11 +65,11 @@
 
   <section class="intro"
            (cosClickOut)="editIntro = false">
-    <p *ngIf="!editIntro && !articleIsNew"
+    <p *ngIf="!editIntro"
        class="static-display">
       {{articleEditForm.value.introduction}}
     </p>
-    <mat-form-field *ngIf="editIntro || articleIsNew">
+    <mat-form-field *ngIf="editIntro">
       <p><textarea #introduction matInput
                    type="text"
                    formControlName="introduction"
@@ -87,7 +81,6 @@
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>
     <button mat-icon-button
-            *ngIf="!articleIsNew"
             [ngClass]="{'active': editIntro}"
             type="button"
             (click)="editBody = false; editIntro = !editIntro">
@@ -99,11 +92,10 @@
   <p *ngIf="articleEditForm.value.lastUpdated" class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
   <section class="ckeditor"
-           [ngClass]="{'expand': editBody || articleIsNew, 'not-editable': !editBody}">
+           [ngClass]="{'expand': editBody, 'not-editable': !editBody}">
     <div class="ckeditor-interior"
-         [ngClass]="{'border': editBody || articleIsNew}">
-      <button *ngIf="!articleIsNew"
-              [ngClass]="{'active': editBody}"
+         [ngClass]="{'border': editBody}">
+      <button [ngClass]="{'active': editBody}"
               type="button"
               (click)="editBody = !editBody">
         {{editBody ? 'Close Body' : 'Edit Body'}}
@@ -111,7 +103,7 @@
       <ckeditor formControlName="body"
                 [editor]="ckeditor"
                 [config]="ckeditorConfig"
-                [disabled]="!editBody && !articleIsNew">
+                [disabled]="!editBody">
       </ckeditor>
     </div>
   </section>
@@ -120,11 +112,11 @@
            (cosClickOut)="editTags = false">
     <h3>Tags</h3>
     <p *ngIf="articleEditForm.value.tags.length === 0 && !editTags">This article has no tags.</p>
-    <mat-chip-list *ngIf="!editTags && !articleIsNew">
+    <mat-chip-list *ngIf="!editTags">
       <mat-chip *ngFor="let articleTag of articleEditForm.value.tags">{{articleTag}}</mat-chip>
     </mat-chip-list>
 
-    <mat-form-field *ngIf="editTags || articleIsNew">
+    <mat-form-field *ngIf="editTags">
       <mat-chip-list #chipList>
         <mat-chip *ngFor="let articleTag of articleEditForm.value.tags"
                   (removed)="removeTag(articleTag)">
@@ -143,7 +135,6 @@
       </mat-hint>
     </mat-form-field>
     <button mat-icon-button
-            *ngIf="!articleIsNew"
             [ngClass]="{'active': editTags}"
             type="button"
             (click)="editBody = false; editTags = !editTags">
