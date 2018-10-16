@@ -7,13 +7,22 @@
 
   <section class="cover-image"
            (cosClickOut)="editCoverImage = false">
-    <div *ngIf="!articleEditForm.value.imageUrl"
-         class="cover-image__placeholder">
-         Upload a cover image.
-    </div>
-    <img *ngIf="coverImageUrl$.value"
-         class="cover-image__image"
-         [src]="coverImageUrl$ | async">
+    <section class="cover-image__display">
+      <div *ngIf="!articleEditForm.value.imageUrl"
+           class="cover-image__placeholder">
+           Upload a cover image.
+      </div>
+      <img *ngIf="coverImageUrl$.value"
+           class="cover-image__image"
+           [src]="coverImageUrl$ | async">
+      <button *ngIf="!articleIsNew"
+              [ngClass]="{'active': editCoverImage}"
+              mat-icon-button
+              type="button"
+              (click)="editBody = false; editCoverImage = !editCoverImage">
+        <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
+      </button>
+    </section>
     <section *ngIf="editCoverImage || articleIsNew"
              class="cover-image__editor">
       <p *ngIf="coverImageUploadTask">Progress: {{coverImageUploadPercent$ | async}}% Complete</p>
@@ -31,11 +40,6 @@
                (change)="onSelectCoverImage($event)">
       </div>
     </section>
-    <button *ngIf="!articleIsNew"
-            type="button"
-            (click)="editBody = false; editCoverImage = !editCoverImage">
-      {{editCoverImage ? 'Close' : 'Edit Image'}}
-    </button>
   </section>
 
   <section class="title"
