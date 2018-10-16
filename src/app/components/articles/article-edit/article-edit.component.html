@@ -15,9 +15,9 @@
       <img *ngIf="coverImageUrl$.value"
            class="cover-image__image"
            [src]="coverImageUrl$ | async">
-      <button *ngIf="!articleIsNew"
+      <button mat-icon-button
+              *ngIf="!articleIsNew"
               [ngClass]="{'active': editCoverImage}"
-              mat-icon-button
               type="button"
               (click)="editBody = false; editCoverImage = !editCoverImage">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
@@ -58,11 +58,12 @@
       <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
       <mat-error>Please give your article a title.</mat-error>
     </mat-form-field>
-    <button *ngIf="!articleIsNew"
+    <button mat-icon-button
+            *ngIf="!articleIsNew"
             [ngClass]="{'active': editTitle}"
             type="button"
             (click)="editBody = false; editTitle = !editTitle">
-      {{editTitle ? 'Close Title' : 'Edit Title'}}
+      <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
     </button>
   </section>
 
@@ -76,18 +77,19 @@
       <p><textarea #introduction matInput
                    type="text"
                    formControlName="introduction"
-                   rows="3"
+                   rows="5"
                    maxlength="300"
                    required>
       </textarea></p>
       <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>
-    <button *ngIf="!articleIsNew"
+    <button mat-icon-button
+            *ngIf="!articleIsNew"
             [ngClass]="{'active': editIntro}"
             type="button"
             (click)="editBody = false; editIntro = !editIntro">
-      {{editIntro ? 'Close Intro' : 'Edit Intro'}}
+      <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
     </button>
   </section>
 
@@ -137,11 +139,12 @@
         Add new tags using alphanumeric characters and spaces only, then press ENTER to add tag.
       </mat-hint>
     </mat-form-field>
-    <button *ngIf="!articleIsNew"
+    <button mat-icon-button
+            *ngIf="!articleIsNew"
             [ngClass]="{'active': editTags}"
             type="button"
             (click)="editBody = false; editTags = !editTags">
-      {{editTags ? 'Close Tags' : 'Edit Tags'}}
+      <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
     </button>
   </section>
 
