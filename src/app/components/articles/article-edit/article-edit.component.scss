@@ -168,12 +168,16 @@
   }
 }
 
+.edit-date {
+  color: $medium-gray;
+}
+
 .ckeditor {
   position: relative;
   margin-bottom: 24px;
 
   &.expand {
-    padding-top: 50px;
+    padding-top: 40px;
   }
 }
 
@@ -211,10 +215,11 @@
 .tags {
   position: relative;
   margin-bottom: 24px;
+  padding: 0 10px;
 
   h3 {
     margin: 0 0 10px;
-    color: $accent-color-1;
+    color: $medium-gray;
   }
 
   ::ng-deep .mat-chip-list-wrapper {

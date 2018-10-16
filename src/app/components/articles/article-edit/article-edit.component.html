@@ -29,9 +29,6 @@
         <input accept="image/*"
                type="file"
                (change)="onSelectCoverImage($event)">
-        <!-- <button class="accent-2" [disabled]="!selectedCoverImageFile" (click)="uploadCoverImage()">
-          Save Image
-        </button> -->
       </div>
     </section>
     <button *ngIf="!articleIsNew"
@@ -90,7 +87,7 @@
     </button>
   </section>
 
-  <p *ngIf="articleEditForm.value.lastUpdated">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
+  <p *ngIf="articleEditForm.value.lastUpdated" class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
   <section class="ckeditor"
            [ngClass]="{'expand': editBody || articleIsNew, 'not-editable': !editBody}">
@@ -113,6 +110,7 @@
   <section class="tags"
            (cosClickOut)="editTags = false">
     <h3>Tags</h3>
+    <p *ngIf="articleEditForm.value.tags.length === 0 && !editTags">This article has no tags.</p>
     <mat-chip-list *ngIf="!editTags && !articleIsNew">
       <mat-chip *ngFor="let articleTag of articleEditForm.value.tags">{{articleTag}}</mat-chip>
     </mat-chip-list>
