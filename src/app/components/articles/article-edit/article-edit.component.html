@@ -21,6 +21,7 @@
               type="button"
               (click)="editBody = false; editCoverImage = !editCoverImage">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
+        <span class="tooltip">{{editCoverImage ? 'Close Image' : 'Edit Image'}}</span>
       </button>
     </section>
     <section *ngIf="editCoverImage || articleIsNew"
@@ -64,6 +65,7 @@
             type="button"
             (click)="editBody = false; editTitle = !editTitle">
       <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
+      <span class="tooltip">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
     </button>
   </section>
 
@@ -90,6 +92,7 @@
             type="button"
             (click)="editBody = false; editIntro = !editIntro">
       <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
+      <span class="tooltip">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
     </button>
   </section>
 
@@ -145,6 +148,7 @@
             type="button"
             (click)="editBody = false; editTags = !editTags">
       <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
+      <span class="tooltip">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>
   </section>
 
