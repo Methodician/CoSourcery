@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+// import * as path from 'path';
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
@@ -18,35 +19,17 @@ const admin = require("firebase-admin");
 // });
 admin.initializeApp();
 const fs = admin.firestore();
+fs.settings({ timestampsInSnapshots: true });
 // const storage = admin.storage();
-// Subroutines of trackFileUploads:
-const trackArticleBodyImages = (filePath, articeleId) => __awaiter(this, void 0, void 0, function* () {
-    const articleDoc = fs.doc(`articleData/articles/articles/${articeleId}`);
-    const snapshot = yield articleDoc.get();
-    const article = snapshot.data();
-    console.log('The image belongs to:');
-    console.log(article);
-    const tags = article.tags;
-    console.log('tags', tags);
-    tags.push('hasBodyImages');
-    console.log('tags', tags);
-});
 //  trackUploadFiles entry point:
 exports.trackFileUploads = functions.storage.object().onFinalize((object) => __awaiter(this, void 0, void 0, function* () {
     const contentType = object.contentType;
     const filePath = object.name;
-    console.log('cententType', contentType);
-    console.log('filePath', filePath);
     if (contentType.startsWith('image/')) {
         //  An image was uploaded.
         if (filePath.startsWith('articleBodyImages/')) {
             //  It was a body image.
-            console.log('It was a body image');
-            //  The string 'articleCoverImages/' contains 18 characters.
-            //  Firestore push IDs contain 20 characters.
-            const articleId = filePath.substr(18, 20);
-            console.log('The article ID is', articleId);
-            yield trackArticleBodyImages(filePath, articleId);
+            yield trackArticleBodyImages(filePath);
             //  Don't do anything else. Exit function just in case.
             return null;
         }
@@ -60,6 +43,28 @@ exports.trackFileUploads = functions.storage.object().onFinalize((object) => __a
     //  We're not doing anything, exit function.
     return null;
 }));
+// Subroutines of trackFileUploads:
+function trackArticleBodyImages(filePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        //  The string 'articleCoverImages/' contains 18 characters.
+        //  Firestore push IDs contain 20 characters.
+        const articleId = filePath.substr(18, 20);
+        const articleDocRef = fs.doc(`articleData/articles/articles/${articleId}`);
+        // const snapshot = await articleDocRef.get();
+        // const article = snapshot.data();
+        // const fileName = path.basename(filePath);
+        yield articleDocRef.update({
+            bodyImagePaths: admin.firestore.FieldValue.arrayUnion(filePath)
+        });
+    });
+}
+//  Worked in a sense but ends up nesting deeper due to dot notation in file names. Going for simple arrays.
+// function bodyImageUpdateObject(name, filePath) {
+//     const obj = {};
+//     const key = 'bodyImages.' + name;
+//     obj[key] = filePath;
+//     return obj
+// }
 exports.createHistoryObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
     if (context.eventType !== 'google.firestore.document.delete') {
         const articleId = context.params.articleId;
