@@ -1,3 +1,5 @@
+@import "../sass-variables-mixins/vars.scss";
+
 .ck.ck-balloon-panel {
   max-width: 70%;
 
@@ -14,7 +16,51 @@
   }
 }
 
-.ckeditor.not-editable .ck{
+.ckeditor .ck.ck-editor__editable_inline > :first-child {
+  margin-top: 0;
+}
+
+.ckeditor .ck.ck-editor__editable_inline {
+  padding-top: 10px;
+
+  .ck-widget {
+    margin: 0 10px 20px;
+  }
+
+  .media.ck-widget {
+    clear: both;
+  }
+
+  h2, h3, h4 {
+    margin: 20px 0;
+    color: $accent-color-1;
+  }
+
+  p {
+    line-height: 2;
+  }
+
+  ul, ol {
+    margin: 0 0 20px 25px;
+  }
+
+  li {
+    margin-bottom: 10px;
+    padding-left: 10px;
+    line-height: 1.6;
+  }
+
+  blockquote {
+    width: 95%;
+    margin: 0 auto 20px;
+
+    & * {
+      margin: 10px 0;
+    }
+  }
+}
+
+.ckeditor.not-editable .ck {
 
   .ck-widget,
   .ck-widget:hover,
@@ -22,5 +68,9 @@
   .ck-widget.ck-widget_selected:hover {
     outline-color: transparent;
     transition: none;
+  }
+
+  .ck-editor__editable.ck-editor__nested-editable.ck-placeholder {
+    display: none;
   }
 }
