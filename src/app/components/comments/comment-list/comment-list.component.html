@@ -1,0 +1,7 @@
+<p>Listing comments for parent: {{ parentKey }}.</p>
+<!-- <pre *ngFor="let comment of comments | reverseArray">
+  {{ comment | json }}
+</pre> -->
+<pre *ngFor="let comment of comments$ | async | reverseArray">
+  {{ comment | async | json }}
+</pre>

@@ -9,6 +9,7 @@ import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { AngularFireUploadTask } from '@angular/fire/storage';
+import { UserInfoOpen } from 'app/shared/class/user-info';
 
 @Component({
   selector: 'cos-article-edit',
@@ -17,7 +18,7 @@ import { AngularFireUploadTask } from '@angular/fire/storage';
 })
 
 export class ArticleEditComponent implements OnInit, OnDestroy {
-  userInfo = null;
+  userInfo: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
   formIsReady = false;
@@ -33,19 +34,21 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   ckeditor = InlineEditor;
   ckeditorConfig = {
-    toolbar: { items: [
-			'heading',
-			'bold',
-			'italic',
-			'link',
-			'bulletedList',
-			'numberedList',
-			'blockQuote',
-      'imageUpload',
-			'mediaEmbed',
-      'insertTable',
-    ],
-    viewportTopOffset: 70 },
+    toolbar: {
+      items: [
+        'heading',
+        'bold',
+        'italic',
+        'link',
+        'bulletedList',
+        'numberedList',
+        'blockQuote',
+        'imageUpload',
+        'mediaEmbed',
+        'insertTable',
+      ],
+      viewportTopOffset: 70
+    },
     // fbImageStorage is declared here but set after articleId is set.
     fbImageStorage: {}
   };
