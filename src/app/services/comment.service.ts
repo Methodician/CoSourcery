@@ -14,15 +14,18 @@ export class CommentService {
     private afdb: AngularFireDatabase
   ) { }
 
-  createComment(comment, parentKey, userId) {
-    comment.serverTimestamp = serverTimestamp;
-    comment.lastUpdated = serverTimestamp;
-    comment.authorId = userId;
-    comment.parentKey = parentKey;
+  createComment(text, parentKey, userId) {
+    const comment = {
+      timestamp: serverTimestamp,
+      lastUpdated: serverTimestamp,
+      text: text,
+      authorId: userId,
+      parentKey: parentKey
+    }
 
     const commentKey = this.afdb
-      .list(`commentData/comments/${parentKey}`)
-      .push(comment);
+      .list('commentData/comments')
+      .push(comment).key;
 
     this.afdb.object(`commentData/commentsByParent/${parentKey}/${commentKey}`).set(true);
   }

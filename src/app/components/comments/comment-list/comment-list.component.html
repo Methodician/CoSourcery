@@ -1,5 +1,23 @@
 <p>Listing comments for parent: {{ parentKey }}.</p>
 
+<!-- A way to add new comments (open to changes) -->
+<div style="margin: 30px;">
+  <cos-comment-edit *ngIf="addingNewComment"
+    [userInfo]="userInfo"
+    (textChanges)="onEditText($event)"></cos-comment-edit>
+  <!-- should display on hover and contain only icons -->
+  <div style="margin-left: 30px;">
+    <button (click)="enterNewCommentMode()"
+      *ngIf="!addingNewComment">Add Comment</button>
+    <button (click)="onCancelNewComment()"
+      *ngIf="addingNewComment">cancel</button>
+    <button (click)="onAddComment()"
+      *ngIf="addingNewComment"
+      style="margin-left: 30px;">save</button>
+  </div>
+</div>
+
+<!-- List of existing comments -->
 <div *ngFor="let comment of comments | reverseArray"
   style="margin: 30px;">
   <!-- {{ comment | async | json }} -->

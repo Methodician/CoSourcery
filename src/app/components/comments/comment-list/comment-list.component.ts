@@ -17,6 +17,7 @@ export class CommentListComponent implements OnInit {
   comments: AngularFireAction<DatabaseSnapshot<{}>>[];
   keyOfCommentBeingEdited: string;
   textOfCommentEdits: string;
+  addingNewComment = false;
 
   constructor(private commentSvc: CommentService) {
   }
@@ -24,7 +25,19 @@ export class CommentListComponent implements OnInit {
   ngOnInit() {
     this.comments$ = this.commentSvc.watchComments(this.parentKey);
     this.fillCommentArray();
+  }
 
+  enterNewCommentMode() {
+    this.addingNewComment = true;
+  }
+
+  onCancelNewComment() {
+    this.addingNewComment = false;
+  }
+
+  onAddComment() {
+    this.commentSvc.createComment(this.textOfCommentEdits, this.parentKey, this.userInfo.uid);
+    this.addingNewComment = false;
   }
 
   enterEditMode(comment: AngularFireAction<DatabaseSnapshot<{}>>) {
@@ -40,6 +53,8 @@ export class CommentListComponent implements OnInit {
   }
 
   onEditText(newText) {
+    console.log(newText);
+
     this.textOfCommentEdits = newText;
   }
 
@@ -50,17 +65,19 @@ export class CommentListComponent implements OnInit {
 
   fillCommentArray() {
     this.comments$.subscribe(comments => {
-      const commentArray = [];
+      const commentsObject = {};
       for (let comment$ of comments) {
         comment$.subscribe(snapshot => {
+          // was getting duplicates on edit, so going with objects to prevent it.
           // const existingComment = this.comments.filter((com) => {
           //   return com.key === comment.key;
           // });
           // console.log('the comment will duplicate', existingComment);
-          commentArray.push(snapshot);
+          commentsObject[snapshot.key] = snapshot;
+          this.comments = Object.values(commentsObject);
         });
       }
-      this.comments = commentArray;
+
     });
   }
 
