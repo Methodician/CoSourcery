@@ -20,6 +20,10 @@
 .ckeditor .ck.ck-editor__editable_inline {
   padding-top: 10px;
 
+  &.ck-editor__editable.ck-focused {
+    border: 1px solid $accent-color-1;
+  }
+
   .ck-widget {
     margin: 0 10px 20px;
   }
