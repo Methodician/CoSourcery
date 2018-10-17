@@ -1,7 +1,8 @@
 @import "../sass-variables-mixins/vars.scss";
 
-.ck.ck-balloon-panel {
+.ck .ck.ck-balloon-panel {
   max-width: 70%;
+  z-index: 5;
 
   .ck.ck-toolbar.ck-toolbar_floating {
     flex-wrap: wrap;
@@ -9,10 +10,6 @@
     & > div.ck-dropdown button:first-child {
       border: 1px solid #c4c4c4;
     }
-  }
-
-  .ck.ck-toolbar__separator {
-    background: transparent;
   }
 }
 

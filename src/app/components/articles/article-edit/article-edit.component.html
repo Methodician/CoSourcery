@@ -92,13 +92,15 @@
   <p *ngIf="articleEditForm.value.lastUpdated" class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
   <section class="ckeditor"
-           [ngClass]="{'expand': editBody, 'not-editable': !editBody}">
+           [ngClass]="{'not-editable': !editBody}">
     <div class="ckeditor-interior"
          [ngClass]="{'border': editBody}">
-      <button [ngClass]="{'active': editBody}"
+      <button mat-icon-button
+              [ngClass]="{'active': editBody}"
               type="button"
               (click)="editBody = !editBody">
-        {{editBody ? 'Close Body' : 'Edit Body'}}
+        <mat-icon>{{editBody ? 'clear' : 'edit'}}</mat-icon>
+        <span class="tooltip">{{editBody ? 'Close Body' : 'Edit Body'}}</span>
       </button>
       <ckeditor formControlName="body"
                 [editor]="ckeditor"
