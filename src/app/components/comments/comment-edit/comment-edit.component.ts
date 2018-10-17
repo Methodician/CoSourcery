@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 
 @Component({
@@ -9,10 +9,15 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 export class CommentEditComponent implements OnInit {
   @Input() comment: any;
   @Input() userInfo: UserInfoOpen;
-
+  @Output() textChanges = new EventEmitter();
   constructor() { }
 
   ngOnInit() {
+  }
+
+  emitText($event) {
+    // console.log($event.target.value);
+    this.textChanges.emit($event.target.value);
   }
 
 }

@@ -7,11 +7,19 @@
     *ngIf="!commentIsBeingEdited(comment)"></cos-comment-view>
   <cos-comment-edit [comment]="comment"
     [userInfo]="userInfo"
+    (textChanges)="onEditText($event)"
     *ngIf="commentIsBeingEdited(comment)"></cos-comment-edit>
   <!-- should display on hover and contain only icons -->
   <div style="margin-left: 30px;">
-    <button (click)="onEditComment(comment)">edit</button>
+    <button (click)="enterEditMode(comment)"
+      *ngIf="!commentIsBeingEdited(comment)">edit</button>
+    <button (click)="onCancelEdit()"
+      *ngIf="commentIsBeingEdited(comment)">cancel</button>
     <button (click)="onRemoveComment(comment)"
+      *ngIf="!commentIsBeingEdited(comment)"
       style="margin-left: 30px;">remove</button>
+    <button (click)="onSaveEdits(comment)"
+      *ngIf="commentIsBeingEdited(comment)"
+      style="margin-left: 30px;">save</button>
   </div>
 </div>

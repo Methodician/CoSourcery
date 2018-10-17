@@ -14,8 +14,10 @@ export class CommentListComponent implements OnInit {
   @Input() userInfo: UserInfoOpen
 
   comments$: Observable<Observable<AngularFireAction<DatabaseSnapshot<{}>>>[]>;
-  comments;
+  comments: AngularFireAction<DatabaseSnapshot<{}>>[];
   keyOfCommentBeingEdited: string;
+  textOfCommentEdits: string;
+
   constructor(private commentSvc: CommentService) {
   }
 
@@ -25,18 +27,37 @@ export class CommentListComponent implements OnInit {
 
   }
 
-  onEditComment(comment) {
-    console.log(comment.key);
-
+  enterEditMode(comment: AngularFireAction<DatabaseSnapshot<{}>>) {
     this.keyOfCommentBeingEdited = comment.key;
+  }
+
+  onRemoveComment(comment: AngularFireAction<DatabaseSnapshot<{}>>) {
+    this.commentSvc.removeComment(comment);
+  }
+
+  onCancelEdit() {
+    this.keyOfCommentBeingEdited = null;
+  }
+
+  onEditText(newText) {
+    this.textOfCommentEdits = newText;
+  }
+
+  onSaveEdits(comment: AngularFireAction<DatabaseSnapshot<{}>>) {
+    this.commentSvc.updateComment(comment, this.textOfCommentEdits);
+    this.keyOfCommentBeingEdited = null;
   }
 
   fillCommentArray() {
     this.comments$.subscribe(comments => {
       const commentArray = [];
       for (let comment$ of comments) {
-        comment$.subscribe(comment => {
-          commentArray.push(comment);
+        comment$.subscribe(snapshot => {
+          // const existingComment = this.comments.filter((com) => {
+          //   return com.key === comment.key;
+          // });
+          // console.log('the comment will duplicate', existingComment);
+          commentArray.push(snapshot);
         });
       }
       this.comments = commentArray;

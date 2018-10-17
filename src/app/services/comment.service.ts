@@ -3,7 +3,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 import { combineLatest } from 'rxjs/operators';
 
-const timestamp = firebase.database.ServerValue.TIMESTAMP;
+const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,8 @@ export class CommentService {
   ) { }
 
   createComment(comment, parentKey, userId) {
-    comment.timestamp = timestamp;
-    comment.lastUpdated = timestamp;
+    comment.serverTimestamp = serverTimestamp;
+    comment.lastUpdated = serverTimestamp;
     comment.authorId = userId;
     comment.parentKey = parentKey;
 
@@ -27,15 +27,29 @@ export class CommentService {
     this.afdb.object(`commentData/commentsByParent/${parentKey}/${commentKey}`).set(true);
   }
 
-  updateComment(commentSnapshot) {
-    commentSnapshot.payload.lastUpdated = timestamp;
-    this.afdb
-      .object(`commentData/commentsByParent/${commentSnapshot.payload.parentKey}/${commentSnapshot.key}`)
-      .update(commentSnapshot.payload);
+  updateComment(commentSnapshot, newCommentText: string) {
+    const comment = commentSnapshot.payload.val();
+    comment.lastUpdated = serverTimestamp;
+    comment.text = newCommentText;
+    return this.afdb
+      .object(`commentData/comments/${commentSnapshot.key}`)
+      .update(comment);
+  }
+
+  removeComment(commentSnapshot) {
+    const comment = commentSnapshot.payload.val();
+    comment.removedAt = serverTimestamp;
+
+    this.afdb.object(`commentData/archivedComments/${commentSnapshot.key}`).set(comment);
+
+    comment.text = 'This comment was removed';
+
+    return this.afdb
+      .object(`commentData/comments/${commentSnapshot.key}`)
+      .update(comment);
   }
 
   watchComments(parentKey: string) {
-
     return this.afdb
       .list(`commentData/commentsByParent/${parentKey}`)
       .snapshotChanges()
@@ -43,8 +57,6 @@ export class CommentService {
       // .pipe(map(snapshots => {
       .pipe(combineLatest(snapshots => {
         return snapshots.map(snapshot => {
-          // logs actual comments
-          // this.watchCommentByKey(snapshot.key).snapshotChanges().subscribe(snapshot => console.log(snapshot.payload.val()));
           return this.watchCommentByKey(snapshot.key).snapshotChanges();
         });
       }));
