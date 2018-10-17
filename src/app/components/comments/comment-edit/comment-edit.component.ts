@@ -16,7 +16,6 @@ export class CommentEditComponent implements OnInit {
   }
 
   emitText($event) {
-    // console.log($event.target.value);
     this.textChanges.emit($event.target.value);
   }
 

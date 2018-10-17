@@ -53,8 +53,6 @@ export class CommentListComponent implements OnInit {
   }
 
   onEditText(newText) {
-    console.log(newText);
-
     this.textOfCommentEdits = newText;
   }
 
