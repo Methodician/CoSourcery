@@ -1,5 +1,3 @@
-<p>Listing comments for parent: {{ parentKey }}.</p>
-
 <!-- A way to add new comments (open to changes) -->
 <div style="margin: 30px;">
   <cos-comment-edit *ngIf="addingNewComment"
@@ -40,4 +38,7 @@
       *ngIf="commentIsBeingEdited(comment)"
       style="margin-left: 30px;">save</button>
   </div>
+
+  <cos-comment-list [parentKey]="comment.key"
+    [userInfo]="userInfo"></cos-comment-list>
 </div>
