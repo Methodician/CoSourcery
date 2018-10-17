@@ -7,7 +7,7 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
   styleUrls: ['./comment-edit.component.scss']
 })
 export class CommentEditComponent implements OnInit {
-  @Input() parentKey: string;
+  @Input() comment: any;
   @Input() userInfo: UserInfoOpen;
 
   constructor() { }

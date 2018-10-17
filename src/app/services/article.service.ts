@@ -22,8 +22,6 @@ export class ArticleService {
   ) { }
 
   createVanillaStorageRef(path: string) {
-    console.log(path);
-
     return firebase.storage().ref(path);
   }
 

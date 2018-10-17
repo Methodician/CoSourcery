@@ -1,7 +1,17 @@
 <p>Listing comments for parent: {{ parentKey }}.</p>
-<!-- <pre *ngFor="let comment of comments | reverseArray">
-  {{ comment | json }}
-</pre> -->
-<pre *ngFor="let comment of comments$ | async | reverseArray">
-  {{ comment | async | json }}
-</pre>
+
+<div *ngFor="let comment of comments | reverseArray"
+  style="margin: 30px;">
+  <!-- {{ comment | async | json }} -->
+  <cos-comment-view [comment]="comment"
+    *ngIf="!commentIsBeingEdited(comment)"></cos-comment-view>
+  <cos-comment-edit [comment]="comment"
+    [userInfo]="userInfo"
+    *ngIf="commentIsBeingEdited(comment)"></cos-comment-edit>
+  <!-- should display on hover and contain only icons -->
+  <div style="margin-left: 30px;">
+    <button (click)="onEditComment(comment)">edit</button>
+    <button (click)="onRemoveComment(comment)"
+      style="margin-left: 30px;">remove</button>
+  </div>
+</div>

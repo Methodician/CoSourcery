@@ -1,6 +1,6 @@
-<cos-comment-edit [parentKey]="articleId"
-  [userInfo]="userInfo"></cos-comment-edit>
-<cos-comment-list [parentKey]="articleId"></cos-comment-list>
+<cos-comment-edit [userInfo]="userInfo"></cos-comment-edit>
+<cos-comment-list [userInfo]="userInfo"
+  [parentKey]="articleId"></cos-comment-list>
 <form [formGroup]="articleEditForm"
   class="article-form">
   <h2 *ngIf="articleIsNew"

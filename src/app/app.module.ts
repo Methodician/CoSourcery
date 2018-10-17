@@ -63,6 +63,7 @@ import { ClickOutDirective } from './directives/click-out.directive';
 import { CommentEditComponent } from './components/comments/comment-edit/comment-edit.component';
 import { CommentListComponent } from './components/comments/comment-list/comment-list.component';
 import { CommentService } from './services/comment.service';
+import { CommentViewComponent } from './components/comments/comment-view/comment-view.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { CommentService } from './services/comment.service';
     TruncateStringPipe,
     ClickOutDirective,
     CommentEditComponent,
-    CommentListComponent
+    CommentListComponent,
+    CommentViewComponent
   ],
   imports: [
     BrowserModule,
