@@ -36,7 +36,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ckeditorButtonOffset: number = 0;
   ckeditor = InlineEditor;
   ckeditorConfig = {
-<<<<<<< HEAD
     toolbar: {
       items: [
         'heading',
@@ -47,25 +46,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         'numberedList',
         'blockQuote',
         'imageUpload',
-        'mediaEmbed',
-        'insertTable',
+        'insertTable'
       ],
       viewportTopOffset: 70
     },
-=======
-    toolbar: { items: [
-			'heading',
-			'bold',
-			'italic',
-			'link',
-			'bulletedList',
-			'numberedList',
-			'blockQuote',
-      'imageUpload',
-      'insertTable'
-    ],
-    viewportTopOffset: 70 },
->>>>>>> article-edit-ckeditor
     // fbImageStorage is declared here but set after articleId is set.
     fbImageStorage: {}
   };
