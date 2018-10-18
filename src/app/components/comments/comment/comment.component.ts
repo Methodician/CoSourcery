@@ -2,13 +2,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 
 @Component({
-  selector: 'cos-comment-edit',
-  templateUrl: './comment-edit.component.html',
-  styleUrls: ['./comment-edit.component.scss']
+  selector: 'cos-comment',
+  templateUrl: './comment.component.html',
+  styleUrls: ['./comment.component.scss']
 })
-export class CommentEditComponent implements OnInit {
+export class CommentComponent implements OnInit {
   @Input() comment: any;
   @Input() userInfo: UserInfoOpen;
+  @Input() isBeingEdited = false;
   @Output() textChanges = new EventEmitter();
   constructor() { }
 

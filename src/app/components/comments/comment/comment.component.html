@@ -5,8 +5,12 @@
   <!-- should also eventually be able to navigate to author profile and/or follow author, should go in github issues as feature request -->
   <!-- and I'm not sure why we're needing to call .val() on payload here. If you uncomment the above json display, it looks like it's just an object. -->
   <p>AuthorId: {{ comment?.payload.val().authorId || userInfo.uid }}</p>
+  <p *ngIf="!isBeingEdited">Text: {{ comment?.payload.val().text }}</p>
+  <p *ngIf="isBeingEdited">
+    text: <input type="text"
+      [value]="comment?.payload.val().text"
+      (input)="emitText($event)">
+  </p>
+
   <p>Last Updated: {{ comment?.payload.val().lastUpdated | date }}</p>
-  text: <input type="text"
-    [value]="comment?.payload.val().text"
-    (input)="emitText($event)">
 </div>

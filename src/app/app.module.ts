@@ -60,12 +60,11 @@ import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ClickOutDirective } from './directives/click-out.directive';
-import { CommentEditComponent } from './components/comments/comment-edit/comment-edit.component';
 import { CommentListComponent } from './components/comments/comment-list/comment-list.component';
 import { CommentService } from './services/comment.service';
-import { CommentViewComponent } from './components/comments/comment-view/comment-view.component';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
 import { DataCleanupService } from './admin/services/data-cleanup.service';
+import { CommentComponent } from './components/comments/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -94,10 +93,9 @@ import { DataCleanupService } from './admin/services/data-cleanup.service';
     TruncateTagsPipe,
     TruncateStringPipe,
     ClickOutDirective,
-    CommentEditComponent,
     CommentListComponent,
-    CommentViewComponent,
-    DataCleanupComponent
+    DataCleanupComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,

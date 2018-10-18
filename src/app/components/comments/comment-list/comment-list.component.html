@@ -1,8 +1,9 @@
 <!-- A way to add new comments (open to changes) -->
 <div style="margin: 30px;">
-  <cos-comment-edit *ngIf="addingNewComment"
+  <cos-comment *ngIf="addingNewComment"
+    [isBeingEdited]="true"
     [userInfo]="userInfo"
-    (textChanges)="onEditText($event)"></cos-comment-edit>
+    (textChanges)="onEditText($event)"></cos-comment>
   <!-- should display on hover and contain only icons -->
   <div style="margin-left: 30px;">
     <button (click)="enterNewCommentMode()"
@@ -19,13 +20,10 @@
 <div *ngFor="let comment of comments | reverseArray"
   style="margin: 30px;">
   <!-- {{ comment | async | json }} -->
-  <cos-comment-view [comment]="comment"
-    *ngIf="!commentIsBeingEdited(comment)"></cos-comment-view>
-  <cos-comment-edit [comment]="comment"
+  <cos-comment [comment]="comment"
     [userInfo]="userInfo"
-    (textChanges)="onEditText($event)"
-    *ngIf="commentIsBeingEdited(comment)"></cos-comment-edit>
-  <!-- should display on hover and contain only icons -->
+    [isBeingEdited]="commentIsBeingEdited(comment)"
+    (textChanges)="onEditText($event)"></cos-comment>
   <div style="margin-left: 30px;">
     <button (click)="enterEditMode(comment)"
       *ngIf="!commentIsBeingEdited(comment)">edit</button>

@@ -12,7 +12,5 @@ export class DataCleanupService {
     private afs: AngularFirestore
   ) { }
 
-  getAllFsUsers() {
-    return this.afs.
-  }
+
 }
