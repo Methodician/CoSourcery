@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/co
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '../../../services/article.service';
@@ -63,16 +64,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleEditForm = this.fb.group({
     articleId: '',
     authorId: '',
-    title: ['Add an Article Title', [
+    title: ['', [
       Validators.required,
       Validators.maxLength(100)
     ]],
-    introduction: ['Add an introduction to tell people what your article is about. ', [
+    introduction: ['', [
       Validators.required,
       Validators.maxLength(300)
     ]],
-    body: ['<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li></ol>'],
-    imageUrl: ['', Validators.required],
+    body: '',
+    imageUrl: '',
     imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',
     lastUpdated: null,
@@ -81,12 +82,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     version: 1,
     commentCount: 0,
     viewCount: 0,
-    tags: [[]],
+    tags: [[], Validators.maxLength(25)],
     isFeatured: false,
   });
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private route: ActivatedRoute,
     private articleSvc: ArticleService,
     private uploadSvc: UploadService,
@@ -149,6 +151,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       const articleSaved = await this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
       if (articleSaved === 'success') {
         this.articleIsNew = false;
+        this.router.navigate([`article/${this.articleId}`]);
       }
     } else {
       this.articleSvc.updateArticle(this.userInfo, this.articleEditForm.value, this.articleId);

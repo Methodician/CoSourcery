@@ -4,13 +4,14 @@
   <section class="cover-image"
     (cosClickOut)="editCoverImage = false">
     <section class="cover-image__display">
-      <div *ngIf="!articleEditForm.value.imageUrl && !coverImageUrl$.value"
-        class="cover-image__placeholder">
-        Upload a cover image.
-      </div>
+      <img *ngIf="!coverImageUrl$.value"
+           class="cover-image__image"
+           src="../../assets/images/logo.png"
+           alt="Cover Image">
       <img *ngIf="coverImageUrl$.value"
-        class="cover-image__image"
-        [src]="coverImageUrl$ | async">
+           class="cover-image__image"
+           [src]="coverImageUrl$ | async"
+           [alt]="articleEditForm.value.imageAlt">
       <button mat-icon-button
         [ngClass]="{'active': editCoverImage}"
         type="button"
@@ -45,6 +46,7 @@
     <h2 *ngIf="!editTitle"
       class="static-display">
       {{articleEditForm.value.title}}
+      <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
     </h2>
     <mat-form-field *ngIf="editTitle">
       <h2><input #title
@@ -71,6 +73,7 @@
     <p *ngIf="!editIntro"
       class="static-display">
       {{articleEditForm.value.introduction}}
+      <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is about.</span>
     </p>
     <mat-form-field *ngIf="editIntro">
       <p><textarea #introduction
@@ -93,8 +96,7 @@
     </button>
   </section>
 
-  <p *ngIf="articleEditForm.value.lastUpdated"
-    class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
+  <p class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
 
   <section #ckeditorBoundingBox
     class="ckeditor"
@@ -115,6 +117,23 @@
         [config]="ckeditorConfig"
         [disabled]="!editBody">
       </ckeditor>
+      <div *ngIf="articleEditForm.value.body === '' && !editBody"
+           class="ck ck-editor__editable_inline ck-editor__placeholder">
+        <div *ngIf="!articleIsNew">
+          <p>The article body is empty.</p>
+        </div>
+        <div *ngIf="articleIsNew">
+          <h2>Creating a New Article</h2>
+          <ol>
+            <li>Add an eye-catching <strong>Cover Image</strong> above.</li>
+            <li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li>
+            <li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it's so cool!</li>
+            <li>Add the <strong>Body</strong> of your article by editing this block of content.</li>
+            <li>Add some <strong>Tags</strong> below to help people find your article.</li>
+            <li>Click <strong>Save Article</strong> when you're done.</li>
+          </ol>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -134,15 +153,17 @@
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
         <input #tagInput
-          [ngClass]="{'error': isInvalidTagInput(tagInput.value)}"
-          [matChipInputFor]="chipList"
-          [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
-          [matChipInputAddOnBlur]="true"
-          (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
+               [ngClass]="{'error': isInvalidTagInput(tagInput.value)}"
+               maxlength="25"
+               [matChipInputFor]="chipList"
+               [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
+               [matChipInputAddOnBlur]="true"
+               (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
       </mat-chip-list>
       <mat-hint [ngClass]="{'error': isInvalidTagInput(tagInput.value)}">
-        Add new tags using alphanumeric characters and spaces only, then press ENTER to add tag.
+        Add new tags using alphanumeric characters and spaces only.<br>Press ENTER to add tag.
       </mat-hint>
+      <mat-hint align="end">{{tagInput.value.length}} / 25</mat-hint>
     </mat-form-field>
     <button mat-icon-button
       [ngClass]="{'active': editTags}"
@@ -153,12 +174,12 @@
     </button>
   </section>
 
-  <section *ngIf="articleHasUnsavedChanges()"
-    class="flex-center-justify">
-    <button class="accent-2"
-      type="button"
-      [disabled]="!articleEditForm.valid"
-      (click)="saveChanges()">
+  <section *ngIf="articleHasUnsavedChanges() || articleIsNew"
+           class="flex-center-justify">
+    <button class="save"
+            type="button"
+            [disabled]="!articleEditForm.valid"
+            (click)="saveChanges()">
       Save Article
     </button>
   </section>

@@ -2,9 +2,9 @@
 
   <div class="card-content">
     <a [routerLink]="'/article/' + articleData.articleId">
-      <div class="bg-image"
-           [ngStyle]="{'backgroundImage': 'url(' + articleData.imageUrl + ')'}">
-      </div>
+      <img class="cover-image"
+           [src]="(articleData.imageUrl) ? articleData.imageUrl : '../../assets/images/logo.png'"
+           [alt]="(articleData.imageAlt) ? articleData.imageAlt : 'Cover Image'">
       <h2 class="title">{{articleData.title | truncateString: 20}}</h2>
       <p class="date">Last Updated: {{articleData?.lastUpdated?.toDate() | date}}</p>
       <p>{{articleData.introduction | truncateString: 100}}</p>
