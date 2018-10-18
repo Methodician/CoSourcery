@@ -28,6 +28,7 @@ export class CommentService {
       .push(comment).key;
 
     this.afdb.object(`commentData/commentsByParent/${parentKey}/${commentKey}`).set(true);
+    this.afdb.object(`commentData/commentsByUser/${userId}/${commentKey}`).set(true);
   }
 
   updateComment(commentSnapshot, newCommentText: string) {
