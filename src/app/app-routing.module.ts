@@ -5,7 +5,6 @@ import { AuthGuard } from './shared/guards/auth.guard';
 import { LoginComponent } from '../app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
-import { ArticleDetailComponent } from './components/articles/article-detail/article-detail.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
 
 const routes: Routes = [
