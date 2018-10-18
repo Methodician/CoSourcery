@@ -170,9 +170,9 @@
     </button>
   </section>
 
-  <section *ngIf="articleHasUnsavedChanges()"
+  <section *ngIf="articleHasUnsavedChanges() || articleIsNew"
            class="flex-center-justify">
-    <button class="accent-2"
+    <button class="save"
             type="button"
             [disabled]="!articleEditForm.valid"
             (click)="saveChanges()">

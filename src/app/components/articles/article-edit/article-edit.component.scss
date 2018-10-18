@@ -265,12 +265,8 @@ button {
   cursor: pointer;
   z-index: 10;
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
-
-  &.accent-2 {
+  &.save {
+    margin: 24px 0;
     background-color: darken($accent-color-2, 10%);
 
     &:hover {
@@ -280,6 +276,12 @@ button {
 
   &:hover {
     background-color: darken($accent-color-2, 10%);
+  }
+
+  &:disabled, &:disabled:hover {
+    background-color: $medium-gray;
+    opacity: 0.5;
+    cursor: default;
   }
 }
 
