@@ -1,0 +1,44 @@
+<!-- A way to add new comments (open to changes) -->
+<div style="margin: 30px;">
+  <cos-comment-edit *ngIf="addingNewComment"
+    [userInfo]="userInfo"
+    (textChanges)="onEditText($event)"></cos-comment-edit>
+  <!-- should display on hover and contain only icons -->
+  <div style="margin-left: 30px;">
+    <button (click)="enterNewCommentMode()"
+      *ngIf="!addingNewComment">Add Comment</button>
+    <button (click)="onCancelNewComment()"
+      *ngIf="addingNewComment">cancel</button>
+    <button (click)="onAddComment()"
+      *ngIf="addingNewComment"
+      style="margin-left: 30px;">save</button>
+  </div>
+</div>
+
+<!-- List of existing comments -->
+<div *ngFor="let comment of comments | reverseArray"
+  style="margin: 30px;">
+  <!-- {{ comment | async | json }} -->
+  <cos-comment-view [comment]="comment"
+    *ngIf="!commentIsBeingEdited(comment)"></cos-comment-view>
+  <cos-comment-edit [comment]="comment"
+    [userInfo]="userInfo"
+    (textChanges)="onEditText($event)"
+    *ngIf="commentIsBeingEdited(comment)"></cos-comment-edit>
+  <!-- should display on hover and contain only icons -->
+  <div style="margin-left: 30px;">
+    <button (click)="enterEditMode(comment)"
+      *ngIf="!commentIsBeingEdited(comment)">edit</button>
+    <button (click)="onCancelEdit()"
+      *ngIf="commentIsBeingEdited(comment)">cancel</button>
+    <button (click)="onRemoveComment(comment)"
+      *ngIf="!commentIsBeingEdited(comment)"
+      style="margin-left: 30px;">remove</button>
+    <button (click)="onSaveEdits(comment)"
+      *ngIf="commentIsBeingEdited(comment)"
+      style="margin-left: 30px;">save</button>
+  </div>
+
+  <cos-comment-list [parentKey]="comment.key"
+    [userInfo]="userInfo"></cos-comment-list>
+</div>

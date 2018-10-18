@@ -5,6 +5,7 @@ import * as fb from 'firebase/app';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 // general
 import { BrowserModule } from '@angular/platform-browser';
@@ -58,6 +59,10 @@ import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ClickOutDirective } from './directives/click-out.directive';
+import { CommentEditComponent } from './components/comments/comment-edit/comment-edit.component';
+import { CommentListComponent } from './components/comments/comment-list/comment-list.component';
+import { CommentService } from './services/comment.service';
+import { CommentViewComponent } from './components/comments/comment-view/comment-view.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +89,10 @@ import { ClickOutDirective } from './directives/click-out.directive';
     TimeElapsedPipe,
     TruncateTagsPipe,
     TruncateStringPipe,
-    ClickOutDirective
+    ClickOutDirective,
+    CommentEditComponent,
+    CommentListComponent,
+    CommentViewComponent
   ],
   imports: [
     BrowserModule,
@@ -107,9 +115,17 @@ import { ClickOutDirective } from './directives/click-out.directive';
     CKEditorModule,
     AngularFireModule.initializeApp(environment.fbConfig),
     AngularFirestoreModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    AngularFireDatabaseModule
   ],
-  providers: [AuthService, UploadService, NotificationService, ArticleService, UserService],
+  providers: [
+    AuthService,
+    UploadService,
+    NotificationService,
+    ArticleService,
+    UserService,
+    CommentService
+  ],
   bootstrap: [AppComponent]
 })
 

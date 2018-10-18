@@ -1,8 +1,8 @@
 <form [formGroup]="articleEditForm"
-      class="article-form">
+  class="article-form">
 
   <section class="cover-image"
-           (cosClickOut)="editCoverImage = false">
+    (cosClickOut)="editCoverImage = false">
     <section class="cover-image__display">
       <img *ngIf="!coverImageUrl$.value"
            class="cover-image__image"
@@ -13,80 +13,84 @@
            [src]="coverImageUrl$ | async"
            [alt]="articleEditForm.value.imageAlt">
       <button mat-icon-button
-              [ngClass]="{'active': editCoverImage}"
-              type="button"
-              (click)="editBody = false; editCoverImage = !editCoverImage">
+        [ngClass]="{'active': editCoverImage}"
+        type="button"
+        (click)="editBody = false; editCoverImage = !editCoverImage">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
         <span class="tooltip">{{editCoverImage ? 'Close Image' : 'Edit Image'}}</span>
       </button>
     </section>
     <section *ngIf="editCoverImage"
-             class="cover-image__editor">
-      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">Progress: {{coverImageUploadPercent$ | async}}% Complete</p>
+      class="cover-image__editor">
+      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">Progress: {{coverImageUploadPercent$ | async}}%
+        Complete</p>
       <mat-form-field>
         <label>Image Alt Description</label>
-        <input #imageAlt matInput
-               type="text"
-               formControlName="imageAlt"
-               maxlength="100">
+        <input #imageAlt
+          matInput
+          type="text"
+          formControlName="imageAlt"
+          maxlength="100">
         <mat-hint align="end">{{imageAlt.value.length}} / 100</mat-hint>
       </mat-form-field>
       <div class="file-input flex-center-align">
         <input accept="image/*"
-               type="file"
-               (change)="onSelectCoverImage($event)">
+          type="file"
+          (change)="onSelectCoverImage($event)">
       </div>
     </section>
   </section>
 
   <section class="title"
-           (cosClickOut)="editTitle = false">
+    (cosClickOut)="editTitle = false">
     <h2 *ngIf="!editTitle"
-        class="static-display">
+      class="static-display">
       {{articleEditForm.value.title}}
       <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
     </h2>
     <mat-form-field *ngIf="editTitle">
-      <h2><input #title matInput
-                 type="text"
-                 formControlName="title"
-                 maxlength="100"
-                 required>
+      <h2><input #title
+          matInput
+          type="text"
+          formControlName="title"
+          maxlength="100"
+          required>
       </h2>
       <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
       <mat-error>Please give your article a title.</mat-error>
     </mat-form-field>
     <button mat-icon-button
-            [ngClass]="{'active': editTitle}"
-            type="button"
-            (click)="editBody = false; editTitle = !editTitle">
+      [ngClass]="{'active': editTitle}"
+      type="button"
+      (click)="editBody = false; editTitle = !editTitle">
       <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
     </button>
   </section>
 
   <section class="intro"
-           (cosClickOut)="editIntro = false">
+    (cosClickOut)="editIntro = false">
     <p *ngIf="!editIntro"
-       class="static-display">
+      class="static-display">
       {{articleEditForm.value.introduction}}
       <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is about.</span>
     </p>
     <mat-form-field *ngIf="editIntro">
-      <p><textarea #introduction matInput
-                   type="text"
-                   formControlName="introduction"
-                   rows="5"
-                   maxlength="300"
-                   required>
+      <p><textarea #introduction
+          matInput
+          type="text"
+          formControlName="introduction"
+          rows="5"
+          maxlength="300"
+          required>
       </textarea></p>
       <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>
     <button mat-icon-button
-            [ngClass]="{'active': editIntro}"
-            type="button"
-            (click)="editBody = false; editIntro = !editIntro">
+      [ngClass]="{'active': editIntro}"
+      type="button"
+      (click)="editBody = false; editIntro = !editIntro">
       <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
     </button>
@@ -95,23 +99,23 @@
   <p class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
 
   <section #ckeditorBoundingBox
-           class="ckeditor"
-           [ngClass]="{'not-editable': !editBody}"
-           (window:scroll)="setCkeditorButtonOffset()">
+    class="ckeditor"
+    [ngClass]="{'not-editable': !editBody}"
+    (window:scroll)="setCkeditorButtonOffset()">
     <div class="ckeditor-interior"
-         [ngClass]="{'border': editBody}">
+      [ngClass]="{'border': editBody}">
       <button mat-icon-button
-              [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
-              [ngClass]="{'active': editBody}"
-              type="button"
-              (click)="editBody = !editBody">
+        [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
+        [ngClass]="{'active': editBody}"
+        type="button"
+        (click)="editBody = !editBody">
         <mat-icon>{{editBody ? 'clear' : 'edit'}}</mat-icon>
         <span class="tooltip">{{editBody ? 'Close Body' : 'Edit Body'}}</span>
       </button>
       <ckeditor formControlName="body"
-                [editor]="ckeditor"
-                [config]="ckeditorConfig"
-                [disabled]="!editBody">
+        [editor]="ckeditor"
+        [config]="ckeditorConfig"
+        [disabled]="!editBody">
       </ckeditor>
       <div *ngIf="articleEditForm.value.body === '' && !editBody"
            class="ck ck-editor__editable_inline ck-editor__placeholder">
@@ -134,7 +138,7 @@
   </section>
 
   <section class="tags"
-           (cosClickOut)="editTags = false">
+    (cosClickOut)="editTags = false">
     <h3>Tags</h3>
     <p *ngIf="articleEditForm.value.tags.length === 0 && !editTags">This article has no tags.</p>
     <mat-chip-list *ngIf="!editTags">
@@ -144,7 +148,7 @@
     <mat-form-field *ngIf="editTags">
       <mat-chip-list #chipList>
         <mat-chip *ngFor="let articleTag of articleEditForm.value.tags"
-                  (removed)="removeTag(articleTag)">
+          (removed)="removeTag(articleTag)">
           {{articleTag}}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
@@ -162,9 +166,9 @@
       <mat-hint align="end">{{tagInput.value.length}} / 25</mat-hint>
     </mat-form-field>
     <button mat-icon-button
-            [ngClass]="{'active': editTags}"
-            type="button"
-            (click)="editBody = false; editTags = !editTags">
+      [ngClass]="{'active': editTags}"
+      type="button"
+      (click)="editBody = false; editTags = !editTags">
       <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>
@@ -180,3 +184,6 @@
     </button>
   </section>
 </form>
+
+<cos-comment-list [userInfo]="userInfo"
+  [parentKey]="articleId"></cos-comment-list>
