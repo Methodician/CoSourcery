@@ -7,7 +7,7 @@
   <!-- should display on hover and contain only icons -->
   <div style="margin-left: 30px;">
     <button (click)="enterNewCommentMode()"
-      *ngIf="!addingNewComment">Add Comment</button>
+      *ngIf="!addingNewComment">{{ isUnderComment ? 'Reply' : 'Comment' }}</button>
     <button (click)="onCancelNewComment()"
       *ngIf="addingNewComment">cancel</button>
     <button (click)="onAddComment()"

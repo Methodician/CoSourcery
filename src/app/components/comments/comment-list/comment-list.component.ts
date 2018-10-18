@@ -10,6 +10,7 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
   styleUrls: ['./comment-list.component.scss']
 })
 export class CommentListComponent implements OnInit {
+  @Input() isUnderComment = true;
   @Input() parentKey: string;
   @Input() userInfo: UserInfoOpen
 
