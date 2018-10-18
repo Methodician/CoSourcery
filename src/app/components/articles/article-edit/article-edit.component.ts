@@ -44,8 +44,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 			'numberedList',
 			'blockQuote',
       'imageUpload',
-			'mediaEmbed',
-      'insertTable',
+      'insertTable'
     ],
     viewportTopOffset: 70 },
     // fbImageStorage is declared here but set after articleId is set.
