@@ -33,7 +33,7 @@
     color: $accent-color-1-dark;
   }
 
-  mat-error {
+  mat-error, mat-hint {
     font-size: 0.75rem;
     line-height: 1rem;
   }
@@ -60,22 +60,9 @@
 }
 
 .cover-image__image {
-  width: 100%;
+  max-width: 100%;
   display: block;
   margin: 0 auto;
-  object-fit: cover;
-}
-
-.cover-image__placeholder {
-  height: 250px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid $light-gray;
-  text-align: center;
 }
 
 .cover-image__editor {
@@ -202,6 +189,16 @@
   }
 }
 
+.ck-editor__placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
 .tags {
   position: relative;
   margin-bottom: 24px;
@@ -268,12 +265,8 @@ button {
   cursor: pointer;
   z-index: 10;
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
-
-  &.accent-2 {
+  &.save {
+    margin: 24px 0;
     background-color: darken($accent-color-2, 10%);
 
     &:hover {
@@ -283,6 +276,12 @@ button {
 
   &:hover {
     background-color: darken($accent-color-2, 10%);
+  }
+
+  &:disabled, &:disabled:hover {
+    background-color: $medium-gray;
+    opacity: 0.5;
+    cursor: default;
   }
 }
 

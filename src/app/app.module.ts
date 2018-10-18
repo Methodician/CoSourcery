@@ -42,7 +42,6 @@ import { FollowedUserComponent } from 'app/components/account/followed-user/foll
 import { FollowerUserComponent } from 'app/components/account/follower-user/follower-user.component';
 import { ProfileComponent } from 'app/components/account/profile/profile.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
-import { ArticleDetailComponent } from 'app/components/articles/article-detail/article-detail.component';
 import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
 import { ArticleSearchResultsComponent } from 'app/components/articles/article-search-results/article-search-results.component';
@@ -77,7 +76,6 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     FollowerUserComponent,
     ProfileComponent,
     RegisterComponent,
-    ArticleDetailComponent,
     ArticleRelatedComponent,
     ArticleEditComponent,
     ArticleSearchResultsComponent,

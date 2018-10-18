@@ -18,7 +18,7 @@
 }
 
 .ckeditor .ck.ck-editor__editable_inline {
-  min-height: 200px;
+  min-height: 300px;
   padding: 10px;
 
   &.ck-editor__editable.ck-focused {
@@ -63,7 +63,6 @@
 }
 
 .ckeditor.not-editable .ck {
-  min-height: inherit;
 
   .ck-widget,
   .ck-widget:hover,
