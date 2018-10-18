@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/co
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '../../../services/article.service';
@@ -84,6 +85,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private route: ActivatedRoute,
     private articleSvc: ArticleService,
     private uploadSvc: UploadService,
@@ -146,6 +148,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       const articleSaved = await this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
       if (articleSaved === 'success') {
         this.articleIsNew = false;
+        this.router.navigate([`article/${this.articleId}`]);
       }
     } else {
       this.articleSvc.updateArticle(this.userInfo, this.articleEditForm.value, this.articleId);
