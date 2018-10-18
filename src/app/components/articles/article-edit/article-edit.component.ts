@@ -61,15 +61,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleEditForm = this.fb.group({
     articleId: '',
     authorId: '',
-    title: ['Pick A Title', [
+    title: ['Add an Article Title', [
       Validators.required,
       Validators.maxLength(100)
     ]],
-    introduction: ['Write an introduction...', [
+    introduction: ['Add an introduction to tell people what your article is about. ', [
       Validators.required,
       Validators.maxLength(300)
     ]],
-    body: ['Write your article...'],
+    body: ['<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li></ol>'],
     imageUrl: ['', Validators.required],
     imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',
