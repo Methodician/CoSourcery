@@ -1,54 +1,28 @@
 <form [formGroup]="articleEditForm"
-<<<<<<< HEAD
   class="article-form">
-  <h2 *ngIf="articleIsNew"
-    class="page-title">
-    Create New Article
-  </h2>
-=======
-      class="article-form">
->>>>>>> article-edit-ckeditor
 
   <section class="cover-image"
     (cosClickOut)="editCoverImage = false">
     <section class="cover-image__display">
-<<<<<<< HEAD
-      <div *ngIf="!articleEditForm.value.imageUrl"
+      <div *ngIf="!articleEditForm.value.imageUrl && !coverImageUrl$.value"
         class="cover-image__placeholder">
         Upload a cover image.
-=======
-      <div *ngIf="!articleEditForm.value.imageUrl && !coverImageUrl$.value"
-           class="cover-image__placeholder">
-           Upload a cover image.
->>>>>>> article-edit-ckeditor
       </div>
       <img *ngIf="coverImageUrl$.value"
         class="cover-image__image"
         [src]="coverImageUrl$ | async">
       <button mat-icon-button
-<<<<<<< HEAD
-        *ngIf="!articleIsNew"
         [ngClass]="{'active': editCoverImage}"
         type="button"
         (click)="editBody = false; editCoverImage = !editCoverImage">
-=======
-              [ngClass]="{'active': editCoverImage}"
-              type="button"
-              (click)="editBody = false; editCoverImage = !editCoverImage">
->>>>>>> article-edit-ckeditor
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
         <span class="tooltip">{{editCoverImage ? 'Close Image' : 'Edit Image'}}</span>
       </button>
     </section>
-<<<<<<< HEAD
-    <section *ngIf="editCoverImage || articleIsNew"
-      class="cover-image__editor">
-      <p *ngIf="coverImageUploadTask">Progress: {{coverImageUploadPercent$ | async}}% Complete</p>
-=======
     <section *ngIf="editCoverImage"
-             class="cover-image__editor">
-      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">Progress: {{coverImageUploadPercent$ | async}}% Complete</p>
->>>>>>> article-edit-ckeditor
+      class="cover-image__editor">
+      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">Progress: {{coverImageUploadPercent$ | async}}%
+        Complete</p>
       <mat-form-field>
         <label>Image Alt Description</label>
         <input #imageAlt
@@ -67,60 +41,38 @@
   </section>
 
   <section class="title"
-<<<<<<< HEAD
     (cosClickOut)="editTitle = false">
-    <h2 *ngIf="!editTitle && !articleIsNew"
+    <h2 *ngIf="!editTitle"
       class="static-display">
       {{articleEditForm.value.title}}
     </h2>
-    <mat-form-field *ngIf="editTitle || articleIsNew">
+    <mat-form-field *ngIf="editTitle">
       <h2><input #title
           matInput
           type="text"
           formControlName="title"
           maxlength="100"
           required>
-=======
-           (cosClickOut)="editTitle = false">
-    <h2 *ngIf="!editTitle"
-        class="static-display">
-      {{articleEditForm.value.title}}
-    </h2>
-    <mat-form-field *ngIf="editTitle">
-      <h2><input #title matInput
-                 type="text"
-                 formControlName="title"
-                 maxlength="100"
-                 required>
->>>>>>> article-edit-ckeditor
       </h2>
       <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
       <mat-error>Please give your article a title.</mat-error>
     </mat-form-field>
     <button mat-icon-button
-<<<<<<< HEAD
-      *ngIf="!articleIsNew"
       [ngClass]="{'active': editTitle}"
       type="button"
       (click)="editBody = false; editTitle = !editTitle">
-=======
-            [ngClass]="{'active': editTitle}"
-            type="button"
-            (click)="editBody = false; editTitle = !editTitle">
->>>>>>> article-edit-ckeditor
       <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
     </button>
   </section>
 
   <section class="intro"
-<<<<<<< HEAD
     (cosClickOut)="editIntro = false">
-    <p *ngIf="!editIntro && !articleIsNew"
+    <p *ngIf="!editIntro"
       class="static-display">
       {{articleEditForm.value.introduction}}
     </p>
-    <mat-form-field *ngIf="editIntro || articleIsNew">
+    <mat-form-field *ngIf="editIntro">
       <p><textarea #introduction
           matInput
           type="text"
@@ -128,35 +80,14 @@
           rows="5"
           maxlength="300"
           required>
-=======
-           (cosClickOut)="editIntro = false">
-    <p *ngIf="!editIntro"
-       class="static-display">
-      {{articleEditForm.value.introduction}}
-    </p>
-    <mat-form-field *ngIf="editIntro">
-      <p><textarea #introduction matInput
-                   type="text"
-                   formControlName="introduction"
-                   rows="5"
-                   maxlength="300"
-                   required>
->>>>>>> article-edit-ckeditor
       </textarea></p>
       <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>
     <button mat-icon-button
-<<<<<<< HEAD
-      *ngIf="!articleIsNew"
       [ngClass]="{'active': editIntro}"
       type="button"
       (click)="editBody = false; editIntro = !editIntro">
-=======
-            [ngClass]="{'active': editIntro}"
-            type="button"
-            (click)="editBody = false; editIntro = !editIntro">
->>>>>>> article-edit-ckeditor
       <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
     </button>
@@ -165,41 +96,24 @@
   <p *ngIf="articleEditForm.value.lastUpdated"
     class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
-<<<<<<< HEAD
-  <section class="ckeditor"
-    [ngClass]="{'expand': editBody || articleIsNew, 'not-editable': !editBody}">
+  <section #ckeditorBoundingBox
+    class="ckeditor"
+    [ngClass]="{'not-editable': !editBody}"
+    (window:scroll)="setCkeditorButtonOffset()">
     <div class="ckeditor-interior"
-      [ngClass]="{'border': editBody || articleIsNew}">
-      <button *ngIf="!articleIsNew"
+      [ngClass]="{'border': editBody}">
+      <button mat-icon-button
+        [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
         [ngClass]="{'active': editBody}"
         type="button"
         (click)="editBody = !editBody">
-        {{editBody ? 'Close Body' : 'Edit Body'}}
-      </button>
-      <ckeditor formControlName="body"
-        [editor]="ckeditor"
-        [config]="ckeditorConfig"
-        [disabled]="!editBody && !articleIsNew">
-=======
-  <section #ckeditorBoundingBox
-           class="ckeditor"
-           [ngClass]="{'not-editable': !editBody}"
-           (window:scroll)="setCkeditorButtonOffset()">
-    <div class="ckeditor-interior"
-         [ngClass]="{'border': editBody}">
-      <button mat-icon-button
-              [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
-              [ngClass]="{'active': editBody}"
-              type="button"
-              (click)="editBody = !editBody">
         <mat-icon>{{editBody ? 'clear' : 'edit'}}</mat-icon>
         <span class="tooltip">{{editBody ? 'Close Body' : 'Edit Body'}}</span>
       </button>
       <ckeditor formControlName="body"
-                [editor]="ckeditor"
-                [config]="ckeditorConfig"
-                [disabled]="!editBody">
->>>>>>> article-edit-ckeditor
+        [editor]="ckeditor"
+        [config]="ckeditorConfig"
+        [disabled]="!editBody">
       </ckeditor>
     </div>
   </section>
@@ -231,16 +145,9 @@
       </mat-hint>
     </mat-form-field>
     <button mat-icon-button
-<<<<<<< HEAD
-      *ngIf="!articleIsNew"
       [ngClass]="{'active': editTags}"
       type="button"
       (click)="editBody = false; editTags = !editTags">
-=======
-            [ngClass]="{'active': editTags}"
-            type="button"
-            (click)="editBody = false; editTags = !editTags">
->>>>>>> article-edit-ckeditor
       <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>
