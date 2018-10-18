@@ -4,13 +4,14 @@
   <section class="cover-image"
            (cosClickOut)="editCoverImage = false">
     <section class="cover-image__display">
-      <div *ngIf="!articleEditForm.value.imageUrl && !coverImageUrl$.value"
-           class="cover-image__placeholder">
-           Upload a cover image.
-      </div>
+      <img *ngIf="!coverImageUrl$.value"
+           class="cover-image__image"
+           src="../../assets/images/logo.png"
+           alt="Cover Image">
       <img *ngIf="coverImageUrl$.value"
            class="cover-image__image"
-           [src]="coverImageUrl$ | async">
+           [src]="coverImageUrl$ | async"
+           [alt]="articleEditForm.value.imageAlt">
       <button mat-icon-button
               [ngClass]="{'active': editCoverImage}"
               type="button"

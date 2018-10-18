@@ -60,22 +60,9 @@
 }
 
 .cover-image__image {
-  width: 100%;
+  max-width: 100%;
   display: block;
   margin: 0 auto;
-  object-fit: cover;
-}
-
-.cover-image__placeholder {
-  height: 250px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid $light-gray;
-  text-align: center;
 }
 
 .cover-image__editor {

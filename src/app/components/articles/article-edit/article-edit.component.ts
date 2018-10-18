@@ -68,8 +68,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.maxLength(300)
     ]],
-    body: [''],
-    imageUrl: ['', Validators.required],
+    body: '',
+    imageUrl: '',
     imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',
     lastUpdated: null,
