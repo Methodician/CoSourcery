@@ -43,6 +43,7 @@
     <h2 *ngIf="!editTitle"
         class="static-display">
       {{articleEditForm.value.title}}
+      <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
     </h2>
     <mat-form-field *ngIf="editTitle">
       <h2><input #title matInput
@@ -68,6 +69,7 @@
     <p *ngIf="!editIntro"
        class="static-display">
       {{articleEditForm.value.introduction}}
+      <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is about.</span>
     </p>
     <mat-form-field *ngIf="editIntro">
       <p><textarea #introduction matInput
@@ -89,7 +91,7 @@
     </button>
   </section>
 
-  <p *ngIf="articleEditForm.value.lastUpdated" class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
+  <p class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
 
   <section #ckeditorBoundingBox
            class="ckeditor"
@@ -110,6 +112,23 @@
                 [config]="ckeditorConfig"
                 [disabled]="!editBody">
       </ckeditor>
+      <div *ngIf="articleEditForm.value.body === '' && !editBody"
+           class="ck ck-editor__editable_inline ck-editor__placeholder">
+        <div *ngIf="!articleIsNew">
+          <p>The article body is empty.</p>
+        </div>
+        <div *ngIf="articleIsNew">
+          <h2>Creating a New Article</h2>
+          <ol>
+            <li>Add an eye-catching <strong>Cover Image</strong> above.</li>
+            <li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li>
+            <li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it's so cool!</li>
+            <li>Add the <strong>Body</strong> of your article by editing this block of content.</li>
+            <li>Add some <strong>Tags</strong> below to help people find your article.</li>
+            <li>Click <strong>Save Article</strong> when you're done.</li>
+          </ol>
+        </div>
+      </div>
     </div>
   </section>
 
