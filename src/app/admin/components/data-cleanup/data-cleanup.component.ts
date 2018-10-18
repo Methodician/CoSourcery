@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataCleanupService } from 'app/admin/services/data-cleanup.service';
 
 @Component({
   selector: 'cos-data-cleanup',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DataCleanupComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private cleanupSvc: DataCleanupService
+  ) { }
 
   ngOnInit() {
+  }
+
+  addUsersToRtdb() {
+
   }
 
 }
