@@ -78,7 +78,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     version: 1,
     commentCount: 0,
     viewCount: 0,
-    tags: [[]],
+    tags: [[], Validators.maxLength(25)],
     isFeatured: false,
   });
 

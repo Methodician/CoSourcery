@@ -33,7 +33,7 @@
     color: $accent-color-1-dark;
   }
 
-  mat-error {
+  mat-error, mat-hint {
     font-size: 0.75rem;
     line-height: 1rem;
   }

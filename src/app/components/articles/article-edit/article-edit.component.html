@@ -150,14 +150,16 @@
         </mat-chip>
         <input #tagInput
                [ngClass]="{'error': isInvalidTagInput(tagInput.value)}"
+               maxlength="25"
                [matChipInputFor]="chipList"
                [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
                [matChipInputAddOnBlur]="true"
                (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
       </mat-chip-list>
       <mat-hint [ngClass]="{'error': isInvalidTagInput(tagInput.value)}">
-        Add new tags using alphanumeric characters and spaces only, then press ENTER to add tag.
+        Add new tags using alphanumeric characters and spaces only.<br>Press ENTER to add tag.
       </mat-hint>
+      <mat-hint align="end">{{tagInput.value.length}} / 25</mat-hint>
     </mat-form-field>
     <button mat-icon-button
             [ngClass]="{'active': editTags}"
