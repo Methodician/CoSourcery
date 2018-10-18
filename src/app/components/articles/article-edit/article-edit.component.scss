@@ -54,7 +54,7 @@
     }
   }
 
-  &:hover button, button:focus {
+  &:hover button {
     opacity: 1;
   }
 }
@@ -128,7 +128,7 @@
     }
   }
 
-  &:hover button, button:focus {
+  &:hover button {
     opacity: 1;
   }
 }
@@ -195,22 +195,9 @@
     position: absolute;
     top: 10px;
     right: 10px;
-
-    &.active {
-      opacity: 1;
-      top: -41px;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      padding-top: 8px;
-      box-shadow: none;
-
-      .tooltip {
-        margin-bottom: 10px;
-      }
-    }
   }
 
-  &:hover button, button:focus {
+  &:hover button, button.active {
     opacity: 1;
   }
 }
@@ -265,7 +252,7 @@
     }
   }
 
-  &:hover button, button:focus {
+  &:hover button {
     opacity: 1;
   }
 }

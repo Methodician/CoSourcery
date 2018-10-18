@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
@@ -31,6 +31,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
 
+  @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
+  ckeditorButtonOffset: number = 0;
   ckeditor = InlineEditor;
   ckeditorConfig = {
     toolbar: { items: [
@@ -244,6 +246,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   articleHasUnsavedChanges(): boolean {
     return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
+  }
+
+  // CKEditor Button Scroll to Float
+  setCkeditorButtonOffset() {
+    const viewportTopOffset = this.ckeditorConfig.toolbar.viewportTopOffset;
+    const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
+    const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
+    this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
 }

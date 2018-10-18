@@ -91,11 +91,14 @@
 
   <p *ngIf="articleEditForm.value.lastUpdated" class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated.toDate() | date }}</p>
 
-  <section class="ckeditor"
-           [ngClass]="{'not-editable': !editBody}">
+  <section #ckeditorBoundingBox
+           class="ckeditor"
+           [ngClass]="{'not-editable': !editBody}"
+           (window:scroll)="setCkeditorButtonOffset()">
     <div class="ckeditor-interior"
          [ngClass]="{'border': editBody}">
       <button mat-icon-button
+              [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
               [ngClass]="{'active': editBody}"
               type="button"
               (click)="editBody = !editBody">
