@@ -15,6 +15,13 @@ export class UserInfoOpen {
         return this.alias ? this.alias : this.fName;
     }
 
+    displayImageUrl() {
+        if (!this.imageUrl || this.imageUrl === '') {
+            return 'assets/images/logo.png';
+        }
+        return this.imageUrl;
+    }
+
     // returns true if uid contains a truthy value (is neither null nor an empty string)
     exists() {
         return !!(this.uid);

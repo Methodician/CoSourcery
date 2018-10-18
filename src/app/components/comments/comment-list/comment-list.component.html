@@ -3,6 +3,7 @@
   <cos-comment *ngIf="addingNewComment"
     [isBeingEdited]="true"
     [loggedInUser]="loggedInUser"
+    [authorInfo]="loggedInUser"
     (textChanges)="onEditText($event)"></cos-comment>
   <!-- should display on hover and contain only icons -->
   <div style="margin-left: 30px;">
@@ -20,7 +21,7 @@
 <div *ngFor="let comment of comments | reverseArray"
   style="margin: 30px;">
   <!-- {{ comment | async | json }} -->
-  <cos-comment [comment]="comment"
+  <cos-comment [commentSnapshot]="comment"
     [loggedInUser]="loggedInUser"
     [isBeingEdited]="commentIsBeingEdited(comment)"
     (textChanges)="onEditText($event)"></cos-comment>

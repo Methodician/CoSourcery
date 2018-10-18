@@ -80,6 +80,10 @@ export class CommentListComponent implements OnInit {
     });
   }
 
+  async getAuthorInfo(authorId) {
+    const authorInfo = await this.commentSvc.getUserInfo(authorId);
+    return authorInfo.val();
+  }
 
   commentIsBeingEdited(comment) {
     return this.keyOfCommentBeingEdited === comment.key;
