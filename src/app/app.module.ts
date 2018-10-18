@@ -64,6 +64,8 @@ import { CommentEditComponent } from './components/comments/comment-edit/comment
 import { CommentListComponent } from './components/comments/comment-list/comment-list.component';
 import { CommentService } from './services/comment.service';
 import { CommentViewComponent } from './components/comments/comment-view/comment-view.component';
+import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
+import { DataCleanupService } from './admin/services/data-cleanup.service';
 
 @NgModule({
   declarations: [
@@ -94,7 +96,8 @@ import { CommentViewComponent } from './components/comments/comment-view/comment
     ClickOutDirective,
     CommentEditComponent,
     CommentListComponent,
-    CommentViewComponent
+    CommentViewComponent,
+    DataCleanupComponent
   ],
   imports: [
     BrowserModule,
@@ -122,6 +125,7 @@ import { CommentViewComponent } from './components/comments/comment-view/comment
   ],
   providers: [
     AuthService,
+    DataCleanupService,
     UploadService,
     NotificationService,
     ArticleService,

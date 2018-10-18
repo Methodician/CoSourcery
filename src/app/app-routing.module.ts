@@ -7,6 +7,7 @@ import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { ArticleDetailComponent } from './components/articles/article-detail/article-detail.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
+import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -59,7 +60,8 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  { path: '', component: HomeComponent }
+  { path: 'admin/data-cleanup', component: DataCleanupComponent },
+  { path: '', component: HomeComponent },
 ];
 
 @NgModule({
