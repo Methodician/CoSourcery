@@ -179,8 +179,8 @@ export class ArticleService {
     // Updating New Article Object.
     // Probably a better way to do this.
     const newArt = article;
-    newArt.authorId = author.uid,
-      newArt.articleId = articleId;
+    newArt.authorId = author.uid;
+    newArt.articleId = articleId;
     newArt.commentCount = 0;
     newArt.version = 1;
     newArt.viewCount = 0;
@@ -191,10 +191,7 @@ export class ArticleService {
 
     let outcome = 'success';
     try {
-      articleRef.update(newArt)
-        .then(() => {
-          this.navigateToArticleDetail(articleId);
-        });
+      articleRef.set(newArt, {merge: true});
     } catch (error) {
       console.error(error);
       outcome = 'Error (logged to console)';
