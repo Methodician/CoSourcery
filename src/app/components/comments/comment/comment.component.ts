@@ -8,9 +8,10 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 })
 export class CommentComponent implements OnInit {
   @Input() comment: any;
-  @Input() userInfo: UserInfoOpen;
+  @Input() loggedInUser: UserInfoOpen;
   @Input() isBeingEdited = false;
   @Output() textChanges = new EventEmitter();
+
   constructor() { }
 
   ngOnInit() {

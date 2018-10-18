@@ -12,7 +12,7 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 export class CommentListComponent implements OnInit {
   @Input() isUnderComment = true;
   @Input() parentKey: string;
-  @Input() userInfo: UserInfoOpen
+  @Input() loggedInUser: UserInfoOpen
 
   comments$: Observable<Observable<AngularFireAction<DatabaseSnapshot<{}>>>[]>;
   comments: AngularFireAction<DatabaseSnapshot<{}>>[];
@@ -37,7 +37,7 @@ export class CommentListComponent implements OnInit {
   }
 
   onAddComment() {
-    this.commentSvc.createComment(this.textOfCommentEdits, this.parentKey, this.userInfo.uid);
+    this.commentSvc.createComment(this.textOfCommentEdits, this.parentKey, this.loggedInUser.uid);
     this.addingNewComment = false;
   }
 

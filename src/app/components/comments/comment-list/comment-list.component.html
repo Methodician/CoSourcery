@@ -2,7 +2,7 @@
 <div style="margin: 30px;">
   <cos-comment *ngIf="addingNewComment"
     [isBeingEdited]="true"
-    [userInfo]="userInfo"
+    [loggedInUser]="loggedInUser"
     (textChanges)="onEditText($event)"></cos-comment>
   <!-- should display on hover and contain only icons -->
   <div style="margin-left: 30px;">
@@ -21,7 +21,7 @@
   style="margin: 30px;">
   <!-- {{ comment | async | json }} -->
   <cos-comment [comment]="comment"
-    [userInfo]="userInfo"
+    [loggedInUser]="loggedInUser"
     [isBeingEdited]="commentIsBeingEdited(comment)"
     (textChanges)="onEditText($event)"></cos-comment>
   <div style="margin-left: 30px;">
@@ -38,5 +38,5 @@
   </div>
 
   <cos-comment-list [parentKey]="comment.key"
-    [userInfo]="userInfo"></cos-comment-list>
+    [loggedInUser]="loggedInUser"></cos-comment-list>
 </div>

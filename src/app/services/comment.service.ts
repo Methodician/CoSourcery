@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 import { combineLatest } from 'rxjs/operators';
 
@@ -11,7 +11,7 @@ const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
 export class CommentService {
 
   constructor(
-    private afdb: AngularFireDatabase
+    private rtdb: AngularFireDatabase
   ) { }
 
   createComment(text, parentKey, userId) {
@@ -23,19 +23,19 @@ export class CommentService {
       parentKey: parentKey
     }
 
-    const commentKey = this.afdb
+    const commentKey = this.rtdb
       .list('commentData/comments')
       .push(comment).key;
 
-    this.afdb.object(`commentData/commentsByParent/${parentKey}/${commentKey}`).set(true);
-    this.afdb.object(`commentData/commentsByUser/${userId}/${commentKey}`).set(true);
+    this.rtdb.object(`commentData/commentsByParent/${parentKey}/${commentKey}`).set(true);
+    this.rtdb.object(`commentData/commentsByUser/${userId}/${commentKey}`).set(true);
   }
 
   updateComment(commentSnapshot, newCommentText: string) {
     const comment = commentSnapshot.payload.val();
     comment.lastUpdated = serverTimestamp;
     comment.text = newCommentText;
-    return this.afdb
+    return this.rtdb
       .object(`commentData/comments/${commentSnapshot.key}`)
       .update(comment);
   }
@@ -44,17 +44,17 @@ export class CommentService {
     const comment = commentSnapshot.payload.val();
     comment.removedAt = serverTimestamp;
 
-    this.afdb.object(`commentData/archivedComments/${commentSnapshot.key}`).set(comment);
+    this.rtdb.object(`commentData/archivedComments/${commentSnapshot.key}`).set(comment);
 
     comment.text = 'This comment was removed';
 
-    return this.afdb
+    return this.rtdb
       .object(`commentData/comments/${commentSnapshot.key}`)
       .update(comment);
   }
 
   watchComments(parentKey: string) {
-    return this.afdb
+    return this.rtdb
       .list(`commentData/commentsByParent/${parentKey}`)
       .snapshotChanges()
       //  Also works with ".pipe(map(..." strangely enough. Test with changing data
@@ -67,11 +67,16 @@ export class CommentService {
 
   }
 
-  watchCommentByKey(key: string) {
-    return this.afdb.object(`commentData/comments/${key}`);
+  watchCommentByKey(key: string): AngularFireObject<{}> {
+    return this.rtdb.object(`commentData/comments/${key}`);
   }
 
-
+  async getUserInfo(uid): Promise<firebase.database.DataSnapshot> {
+    if (uid) {
+      return this.rtdb.object(`userInfo/open/${uid}`).query.once('value');
+    }
+    return null;
+  }
 
 
 }
