@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
@@ -32,8 +32,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
 
+  @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
+  ckeditorButtonOffset: number = 0;
   ckeditor = InlineEditor;
   ckeditorConfig = {
+<<<<<<< HEAD
     toolbar: {
       items: [
         'heading',
@@ -49,6 +52,20 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       ],
       viewportTopOffset: 70
     },
+=======
+    toolbar: { items: [
+			'heading',
+			'bold',
+			'italic',
+			'link',
+			'bulletedList',
+			'numberedList',
+			'blockQuote',
+      'imageUpload',
+      'insertTable'
+    ],
+    viewportTopOffset: 70 },
+>>>>>>> article-edit-ckeditor
     // fbImageStorage is declared here but set after articleId is set.
     fbImageStorage: {}
   };
@@ -62,15 +79,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleEditForm = this.fb.group({
     articleId: '',
     authorId: '',
-    title: ['Pick A Title', [
+    title: ['Add an Article Title', [
       Validators.required,
       Validators.maxLength(100)
     ]],
-    introduction: ['Write an introduction...', [
+    introduction: ['Add an introduction to tell people what your article is about. ', [
       Validators.required,
       Validators.maxLength(300)
     ]],
-    body: ['Write your article...'],
+    body: ['<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li></ol>'],
     imageUrl: ['', Validators.required],
     imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',
@@ -247,6 +264,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   articleHasUnsavedChanges(): boolean {
     return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
+  }
+
+  // CKEditor Button Scroll to Float
+  setCkeditorButtonOffset() {
+    const viewportTopOffset = this.ckeditorConfig.toolbar.viewportTopOffset;
+    const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
+    const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
+    this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
 }

@@ -1,7 +1,8 @@
 @import "../sass-variables-mixins/vars.scss";
 
-.ck.ck-balloon-panel {
+.ck .ck.ck-balloon-panel {
   max-width: 70%;
+  z-index: 5;
 
   .ck.ck-toolbar.ck-toolbar_floating {
     flex-wrap: wrap;
@@ -10,10 +11,6 @@
       border: 1px solid #c4c4c4;
     }
   }
-
-  .ck.ck-toolbar__separator {
-    background: transparent;
-  }
 }
 
 .ckeditor .ck.ck-editor__editable_inline > :first-child {
@@ -21,7 +18,12 @@
 }
 
 .ckeditor .ck.ck-editor__editable_inline {
-  padding-top: 10px;
+  min-height: 200px;
+  padding: 10px;
+
+  &.ck-editor__editable.ck-focused {
+    border: 1px solid $accent-color-1;
+  }
 
   .ck-widget {
     margin: 0 10px 20px;
@@ -61,6 +63,7 @@
 }
 
 .ckeditor.not-editable .ck {
+  min-height: inherit;
 
   .ck-widget,
   .ck-widget:hover,
