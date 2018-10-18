@@ -40,7 +40,7 @@ export class ArticleService {
   }
 
   uploadCoverImage(articleId: string, file: File, isNew = false): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
-    const storageRef = this.storage.ref(`articleCoverImages/$articleId}`);
+    const storageRef = this.storage.ref(`articleCoverImages/${articleId}`);
     const task = storageRef.put(file);
     return {
       task: task,
