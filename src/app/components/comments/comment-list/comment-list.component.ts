@@ -1,34 +1,47 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommentService } from 'app/services/comment.service';
-import { Observable } from 'rxjs';
-import { AngularFireAction, DatabaseSnapshot } from '@angular/fire/database';
+import { Subscription } from 'rxjs';
 import { UserInfoOpen } from 'app/shared/class/user-info';
+import { Comment } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-comment-list',
   templateUrl: './comment-list.component.html',
   styleUrls: ['./comment-list.component.scss']
 })
-export class CommentListComponent implements OnInit {
+export class CommentListComponent implements OnInit, OnDestroy {
   @Input() isUnderComment = true;
   @Input() parentKey: string;
   @Input() loggedInUser: UserInfoOpen
 
-  comments$: Observable<Observable<AngularFireAction<DatabaseSnapshot<{}>>>[]>;
-  comments: AngularFireAction<DatabaseSnapshot<{}>>[];
+  commentsSubscription: Subscription;
+  //  FILL THIS WITH OTHER SUBSCRIPTIONS TO BREAK DOWN ON DESTROY
+  // commentSubscriptions: Subscription[];
+
   keyOfCommentBeingEdited: string;
-  textOfCommentEdits: string;
   addingNewComment = false;
+  newCommentStub = new Comment();
+
+  commentMap: CommentMap = {};
+  commentKeys: string[];
 
   constructor(private commentSvc: CommentService) {
   }
 
   ngOnInit() {
-    this.comments$ = this.commentSvc.watchComments(this.parentKey);
-    this.fillCommentArray();
+    this.fillCommentMap();
+  }
+
+  ngOnDestroy() {
+    this.commentsSubscription.unsubscribe();
+  }
+
+  enterEditMode(commentKey: string) {
+    this.keyOfCommentBeingEdited = commentKey;
   }
 
   enterNewCommentMode() {
+    this.createCommentStub();
     this.addingNewComment = true;
   }
 
@@ -37,55 +50,57 @@ export class CommentListComponent implements OnInit {
   }
 
   onAddComment() {
-    this.commentSvc.createComment(this.textOfCommentEdits, this.parentKey, this.loggedInUser.uid);
+    this.commentSvc.createComment(this.newCommentStub);
     this.addingNewComment = false;
-  }
-
-  enterEditMode(comment: AngularFireAction<DatabaseSnapshot<{}>>) {
-    this.keyOfCommentBeingEdited = comment.key;
-  }
-
-  onRemoveComment(comment: AngularFireAction<DatabaseSnapshot<{}>>) {
-    this.commentSvc.removeComment(comment);
   }
 
   onCancelEdit() {
     this.keyOfCommentBeingEdited = null;
   }
 
-  onEditText(newText) {
-    this.textOfCommentEdits = newText;
+  onRemoveComment(commentKey: string) {
+    this.commentSvc.removeComment(commentKey);
   }
 
-  onSaveEdits(comment: AngularFireAction<DatabaseSnapshot<{}>>) {
-    this.commentSvc.updateComment(comment, this.textOfCommentEdits);
+  onSaveEdits() {
+    const commentEdited = this.commentMap[this.keyOfCommentBeingEdited];
+    this.commentSvc.updateComment(commentEdited, this.keyOfCommentBeingEdited);
     this.keyOfCommentBeingEdited = null;
   }
 
-  fillCommentArray() {
-    this.comments$.subscribe(comments => {
-      const commentsObject = {};
-      for (let comment$ of comments) {
-        comment$.subscribe(snapshot => {
-          // was getting duplicates on edit, so going with objects to prevent it.
-          // const existingComment = this.comments.filter((com) => {
-          //   return com.key === comment.key;
-          // });
-          // console.log('the comment will duplicate', existingComment);
-          commentsObject[snapshot.key] = snapshot;
-          this.comments = Object.values(commentsObject);
-        });
-      }
+  fillCommentMap() {
+    this.commentsSubscription = this.commentSvc.watchCommentsByParent(this.parentKey)
+      .subscribe(comments => {
+        for (let comment$ of comments) {
+          comment$.subscribe(async commentSnap => {
+            console.log('new comment text', (commentSnap.payload.val() as any).text);
 
-    });
+            const val = commentSnap.payload.val() as any;
+            const authorSnap = await this.getAuthorSnapshot(val.authorId);
+            const authorVal = authorSnap.val();
+            const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key)
+            const comment = new Comment(val.authorId, val.parentKey, val.text, author, val.lastUpdated, val.timestamp);
+            this.commentMap[commentSnap.key] = comment;
+            this.commentKeys = Object.keys(this.commentMap);
+          });
+        }
+      });
   }
 
-  async getAuthorInfo(authorId) {
+  createCommentStub() {
+    this.newCommentStub = new Comment(this.loggedInUser.uid, this.parentKey, '', this.loggedInUser);
+  }
+
+  async getAuthorSnapshot(authorId) {
     const authorInfo = await this.commentSvc.getUserInfo(authorId);
-    return authorInfo.val();
+    return authorInfo;
   }
 
-  commentIsBeingEdited(comment) {
-    return this.keyOfCommentBeingEdited === comment.key;
+  commentIsBeingEdited(commentKey) {
+    return this.keyOfCommentBeingEdited === commentKey;
   }
 }
+
+//  Very cool: https://stackoverflow.com/questions/13315131/enforcing-the-type-of-the-indexed-members-of-a-typescript-object
+export interface KeyMap<T> { [key: string]: T; };
+export interface CommentMap extends KeyMap<Comment> { };
