@@ -5,7 +5,6 @@ export class Comment {
         public authorId?: string,
         public parentKey?: string,
         public text?: string,
-        public author?: UserInfoOpen,
         public lastUpdated?: number,
         public timestamp?: number,
     ) {

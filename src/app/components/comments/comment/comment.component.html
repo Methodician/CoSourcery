@@ -1,15 +1,12 @@
-<!-- <pre>{{ comment | json }}</pre> -->
-
 <div style="border: 1px solid black; margin-left: 30px;">
   <!-- should also eventually be able to navigate to author profile and/or follow author, should go in github issues as feature request -->
-  <p>Author: {{ comment.author.displayName() }}</p>
-  <!-- <img [src]="comment.author.displayImageUrl()"
-    alt="image of the author"> -->
+  <p>Author: {{ authorInfo?.displayName() }}</p>
+  <img [src]="authorInfo?.displayImageUrl()"
+    alt="image of the author">
   <p *ngIf="!isBeingEdited">Text: {{ comment.text }}</p>
   <p *ngIf="isBeingEdited">
     text: <input type="text"
       [(ngModel)]="comment.text">
   </p>
-
   <p>Last Updated: {{ comment.lastUpdated | date }}</p>
 </div>

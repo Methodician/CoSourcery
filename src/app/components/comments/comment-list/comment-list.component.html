@@ -16,15 +16,18 @@
       style="margin-left: 30px;">save</button>
   </div>
 </div>
-<pre>
+<!-- <pre>
     {{ commentMap | json }}
-  </pre>
+  </pre> -->
+<!-- <pre>
+    {{ userMap | json }}
+  </pre> -->
 <!-- List of existing comments -->
 <div *ngFor="let key of commentKeys | reverseArray"
   style="margin: 30px;">
-  <!-- {{ comment | async | json }} -->
   <cos-comment [comment]="commentMap[key]"
     [loggedInUser]="loggedInUser"
+    [authorInfo]="userMap[commentMap[key].authorId]"
     [isBeingEdited]="commentIsBeingEdited(key)"></cos-comment>
   <div style="margin-left: 30px;">
     <button (click)="enterEditMode(key)"

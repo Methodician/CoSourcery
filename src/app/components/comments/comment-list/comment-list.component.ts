@@ -15,7 +15,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   @Input() loggedInUser: UserInfoOpen
 
   commentsSubscription: Subscription;
-  //  FILL THIS WITH OTHER SUBSCRIPTIONS TO BREAK DOWN ON DESTROY
+  //  ToDo: FILL THIS WITH OTHER SUBSCRIPTIONS TO BREAK DOWN ON DESTROY
   // commentSubscriptions: Subscription[];
 
   keyOfCommentBeingEdited: string;
@@ -25,11 +25,15 @@ export class CommentListComponent implements OnInit, OnDestroy {
   commentMap: CommentMap = {};
   commentKeys: string[];
 
+  //  Might start trackig this in UserService, or move all the user tracking to AuthService or AppComponent and keep UserService more like a stateless data connector...
+  userMap: UserMap = {};
+  userKeys: string[];
+
   constructor(private commentSvc: CommentService) {
   }
 
   ngOnInit() {
-    this.fillCommentMap();
+    this.fillDataMaps();
   }
 
   ngOnDestroy() {
@@ -68,27 +72,27 @@ export class CommentListComponent implements OnInit, OnDestroy {
     this.keyOfCommentBeingEdited = null;
   }
 
-  fillCommentMap() {
+  fillDataMaps() {
     this.commentsSubscription = this.commentSvc.watchCommentsByParent(this.parentKey)
       .subscribe(comments => {
         for (let comment$ of comments) {
           comment$.subscribe(async commentSnap => {
-            console.log('new comment text', (commentSnap.payload.val() as any).text);
-
             const val = commentSnap.payload.val() as any;
-            const authorSnap = await this.getAuthorSnapshot(val.authorId);
-            const authorVal = authorSnap.val();
-            const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key)
-            const comment = new Comment(val.authorId, val.parentKey, val.text, author, val.lastUpdated, val.timestamp);
+            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp);
             this.commentMap[commentSnap.key] = comment;
             this.commentKeys = Object.keys(this.commentMap);
+            const authorSnap = await this.getAuthorSnapshot(val.authorId);
+            const authorVal = authorSnap.val();
+            const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
+            this.userMap[authorSnap.key] = author;
+            this.userKeys = Object.keys(this.userMap);
           });
         }
       });
   }
 
   createCommentStub() {
-    this.newCommentStub = new Comment(this.loggedInUser.uid, this.parentKey, '', this.loggedInUser);
+    this.newCommentStub = new Comment(this.loggedInUser.uid, this.parentKey, '');
   }
 
   async getAuthorSnapshot(authorId) {
@@ -104,3 +108,4 @@ export class CommentListComponent implements OnInit, OnDestroy {
 //  Very cool: https://stackoverflow.com/questions/13315131/enforcing-the-type-of-the-indexed-members-of-a-typescript-object
 export interface KeyMap<T> { [key: string]: T; };
 export interface CommentMap extends KeyMap<Comment> { };
+export interface UserMap extends KeyMap<UserInfoOpen> { };

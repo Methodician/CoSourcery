@@ -14,7 +14,6 @@ export class CommentService {
     private rtdb: AngularFireDatabase
   ) { }
 
-  // createComment(text, parentKey, userId) {
   async createComment(comment: Comment) {
     const commentToSave = {
       authorId: comment.authorId,
@@ -29,29 +28,17 @@ export class CommentService {
       .push(commentToSave).key;
   }
 
-  // updateComment(commentSnapshot, newCommentText: string) {
   updateComment(comment: Comment, commentKey: string) {
-    console.log(comment);
     const commentToSave = {
       lastUpdated: serverTimestamp,
       text: comment.text,
     }
-    console.log(commentToSave);
-
     return this.rtdb
       .object(`commentData/comments/${commentKey}`)
       .update(commentToSave);
   }
 
   removeComment(commentKey) {
-    //  REFACTOR TO CLOUD FUNCTION
-    // const comment = commentSnapshot.payload.val();
-    // comment.removedAt = serverTimestamp;
-
-    // this.rtdb.object(`commentData/archivedComments/${commentSnapshot.key}`).set(comment);
-
-    // comment.text = 'This comment was removed';
-
     return this.rtdb
       .object(`commentData/comments/${commentKey}`)
       .update({ removedAt: serverTimestamp });
