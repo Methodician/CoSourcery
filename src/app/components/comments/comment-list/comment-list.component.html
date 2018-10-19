@@ -1,43 +1,55 @@
-<!-- A way to add new comments (open to changes) -->
-<div style="margin: 30px;">
-  <cos-comment *ngIf="addingNewComment"
-    [isBeingEdited]="true"
-    [loggedInUser]="loggedInUser"
-    [authorInfo]="loggedInUser"
-    (textChanges)="onEditText($event)"></cos-comment>
-  <!-- should display on hover and contain only icons -->
-  <div style="margin-left: 30px;">
-    <button (click)="enterNewCommentMode()"
-      *ngIf="!addingNewComment">{{ isUnderComment ? 'Reply' : 'Comment' }}</button>
-    <button (click)="onCancelNewComment()"
-      *ngIf="addingNewComment">cancel</button>
-    <button (click)="onAddComment()"
-      *ngIf="addingNewComment"
-      style="margin-left: 30px;">save</button>
-  </div>
-</div>
+<!-- New Comment Entry -->
+<section *ngIf="loggedInUser.uid"
+  class="comment-controls">
+  <button *ngIf="!addingNewComment"
+          (click)="enterNewCommentMode()">
+    {{ isUnderComment ? 'Reply' : 'Comment' }}
+  </button>
+  <button *ngIf="addingNewComment"
+          (click)="onCancelNewComment()">
+    Cancel
+  </button>
+  <button *ngIf="addingNewComment"
+          (click)="onAddComment()">
+    Save
+  </button>
+</section>
 
-<!-- List of existing comments -->
-<div *ngFor="let comment of comments | reverseArray"
-  style="margin: 30px;">
-  <!-- {{ comment | async | json }} -->
+<cos-comment *ngIf="addingNewComment"
+             [isBeingEdited]="true"
+             [loggedInUser]="loggedInUser"
+             [authorInfo]="loggedInUser"
+             (textChanges)="onEditText($event)">
+</cos-comment>
+
+<!-- Comment List -->
+<section *ngFor="let comment of comments | reverseArray"
+         class="comment-list">
+  <section *ngIf="loggedInUser.uid === comment.payload.val().authorId"
+            class="comment-controls">
+    <button *ngIf="!commentIsBeingEdited(comment)"
+            (click)="enterEditMode(comment)">
+      Edit
+    </button>
+    <button *ngIf="commentIsBeingEdited(comment)"
+            (click)="onCancelEdit()">
+      Cancel
+    </button>
+    <button *ngIf="!commentIsBeingEdited(comment)"
+            (click)="onRemoveComment(comment)">
+      Remove
+    </button>
+    <button *ngIf="commentIsBeingEdited(comment)"
+            (click)="onSaveEdits(comment)">
+      Save
+    </button>
+  </section>
   <cos-comment [commentSnapshot]="comment"
-    [loggedInUser]="loggedInUser"
-    [isBeingEdited]="commentIsBeingEdited(comment)"
-    (textChanges)="onEditText($event)"></cos-comment>
-  <div style="margin-left: 30px;">
-    <button (click)="enterEditMode(comment)"
-      *ngIf="!commentIsBeingEdited(comment)">edit</button>
-    <button (click)="onCancelEdit()"
-      *ngIf="commentIsBeingEdited(comment)">cancel</button>
-    <button (click)="onRemoveComment(comment)"
-      *ngIf="!commentIsBeingEdited(comment)"
-      style="margin-left: 30px;">remove</button>
-    <button (click)="onSaveEdits(comment)"
-      *ngIf="commentIsBeingEdited(comment)"
-      style="margin-left: 30px;">save</button>
-  </div>
-
+               [loggedInUser]="loggedInUser"
+               [isBeingEdited]="commentIsBeingEdited(comment)"
+               (textChanges)="onEditText($event)">
+  </cos-comment>
   <cos-comment-list [parentKey]="comment.key"
-    [loggedInUser]="loggedInUser"></cos-comment-list>
-</div>
+                    [loggedInUser]="loggedInUser">
+  </cos-comment-list>
+</section>
