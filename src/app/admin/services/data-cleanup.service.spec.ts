@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { DataCleanupService } from './data-cleanup.service';
 
-describe('DataCleanupService', () => {
+xdescribe('DataCleanupService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
