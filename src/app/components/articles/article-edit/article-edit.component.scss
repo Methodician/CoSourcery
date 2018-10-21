@@ -1,63 +1,77 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
-form {
+.article-form {
   width: 100%;
   max-width: 768px;
-  margin: 0 auto;
-  padding: 24px;
+  margin: 24px auto;
+  padding: 20px;
+  box-shadow: 0 2px 5px $light-gray-50;
 
-  h2 {
+  h2.page-title {
+    margin-top: 0;
     color: $primary-color;
+    text-align: center;
   }
 
-  h3 {
-    margin-top: 0;
-    color: $accent-color-1;
+  label, input, textarea, mat-form-field, mat-error {
+    font-family: $primary-typeface;
   }
 
   mat-form-field {
     display: block;
+    margin-bottom: 20px;
+  }
 
-    ::ng-deep .mat-form-field-infix {
-      padding: 0;
-    }
+  ::ng-deep .mat-form-field-infix {
+    padding: 0 0 2px;
+    border: none;
+  }
 
-    label {
-      font-weight: bold;
-      color: $accent-color-1-dark;
-    }
+  label {
+    font-weight: bold;
+    color: $accent-color-1-dark;
+  }
 
-    input, textarea {
-      margin-top: 5px;
-      padding: 5px;
-      background-color: #f8f8f8;
-    }
+  mat-error, mat-hint {
+    font-size: 0.75rem;
+    line-height: 1rem;
   }
 }
 
-#cover-image, #article-content, #article-tags {
+.cover-image__display {
+  position: relative;
+  margin-bottom: 15px;
+
+  button {
+    opacity: 0;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  &:hover button {
+    opacity: 1;
+  }
+}
+
+.cover-image__image {
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+.cover-image__editor {
   margin-bottom: 24px;
   padding: 20px;
-  box-shadow: 0 2px 5px $light-gray-50;
-}
+  box-shadow: 0 2px 2px $light-gray-50;
 
-#cover-image {
-
-  img, .img-placeholder {
-    width: 100%;
-    margin: 0 auto;
-    border: 1px solid $light-gray;
-  }
-
-  img {
-    display: block;
-    object-fit: cover;
-  }
-
-  .img-placeholder {
-    height: 250px;
-    padding: 20px;
+  input {
+    padding-top: 10px;
   }
 
   .file-input {
@@ -67,28 +81,136 @@ form {
       width: 100%;
       min-width: 0;
       max-width: 250px;
-      margin-bottom: 20px;
       padding: 6px;
       border: 1px solid $light-gray-50;
       border-radius: 4px;
       background-color: #f8f8f8;
-    }
-
-    @media screen and (min-width: 500px) {
-      flex-direction: row;
-      justify-content: space-between;
-
-      input {
-        margin-bottom: 0;
-      }
+      cursor: pointer;
     }
   }
 }
 
-#article-tags {
+.title, .intro {
+  position: relative;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  input {
+    margin-top: 0;
+    padding: 5px 0;
+  }
+
+  button {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-left: 10px;
+
+    &.active {
+      opacity: 1;
+      position: relative;
+    }
+  }
+
+  &:hover button {
+    opacity: 1;
+  }
+}
+
+.title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  h2 {
+    margin: 0;
+    padding-right: 5px;
+    color: $primary-color;
+    line-height: 1.5;
+  }
+
+  h2.static-display {
+    margin-bottom: 5px;
+    padding: 5px 0;
+  }
+}
+
+.intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  p {
+    margin: 0;
+    padding-top: 5px;
+    padding-right: 3px;
+  }
+
+  p.static-display {
+    margin-bottom: 15px;
+  }
+
+  textarea {
+    margin: 0 0 2px;
+    padding: 0;
+  }
+}
+
+.edit-date {
+  color: $medium-gray;
+}
+
+.ckeditor {
+  margin-bottom: 24px;
+}
+
+.ckeditor-interior {
+  position: relative;
+  border-radius: 4px;
+  border: 1px solid #fff;
+  transition: border 0.5s;
+
+  &.border {
+    border: 1px solid $accent-color-1;
+  }
+
+  button {
+    opacity: 0;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  &:hover button, button.active {
+    opacity: 1;
+  }
+}
+
+.ck-editor__placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.tags {
+  position: relative;
+  margin-bottom: 24px;
+  padding: 0 10px;
+
+  h3 {
+    margin: 0 0 10px;
+    color: $medium-gray;
+  }
 
   ::ng-deep .mat-chip-list-wrapper {
-    padding: 4px 0 8px;
+    padding: 5px 0;
   }
 
   mat-chip {
@@ -97,31 +219,97 @@ form {
     background-color: #fff;
   }
 
+  mat-form-field {
+  }
+
   input {
+    min-width: 100px;
+    padding: 7px 7px 7px 12px;
+    border-radius: 25px;
+    border: 1px solid rgba($accent-color-1, 0.25);
     background-color: transparent;
+
+    &.error {
+      border: 1px solid #f44336;
+    }
+  }
+
+  mat-hint.error {
+    color: #f44336;
+  }
+
+  button {
+    opacity: 0;
+    position: absolute;
+    top: -10px;
+    right: 0;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  &:hover button {
+    opacity: 1;
   }
 }
 
 button {
-  padding: 10px 15px;
+  padding: 5px 10px;
   border: none;
   border-radius: 4px;
+  box-shadow: 0 2px 2px $medium-gray;
   background-color: $accent-color-1;
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
+  z-index: 10;
+
+  &.save {
+    margin: 24px 0;
+    background-color: darken($accent-color-2, 10%);
+
+    &:hover {
+      background-color: $primary-color;
+    }
+  }
 
   &:hover {
-    box-shadow: 0 2px 2px $medium-gray;
+    background-color: darken($accent-color-2, 10%);
   }
 
-  &:active {
-    box-shadow: none;
-  }
-
-  &:disabled {
+  &:disabled, &:disabled:hover {
+    background-color: $medium-gray;
     opacity: 0.5;
-    box-shadow: none;
     cursor: default;
+  }
+}
+
+button.mat-icon-button {
+  border-radius: 100%;
+
+  ::ng-deep .mat-button-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 1px;
+  }
+
+  .tooltip {
+    opacity: 0;
+    position: absolute;
+    right: 100%;
+    margin-right: 10px;
+    padding: 5px 15px;
+    border-radius: 4px;
+    background: $dark-gray;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  &:hover .tooltip {
+    opacity: 1;
   }
 }

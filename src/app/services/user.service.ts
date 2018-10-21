@@ -11,8 +11,6 @@ import * as firebase from 'firebase';
 export class UserService {
   private NULL_USER = new UserInfoOpen(null, null, null, null);
   userInfo$: BehaviorSubject<UserInfoOpen> = new BehaviorSubject<UserInfoOpen>(this.NULL_USER);
-  loggedInUserKey: string;
-  uid;
   rtdb = firebase.database();
 
   constructor(
@@ -25,21 +23,22 @@ export class UserService {
             info.alias,
             info.fName,
             info.lName,
+            authInfo.uid,
+            info.imageUrl,
+            info.email,
             info.zipCode,
-            info.uid = authInfo.uid,
             info.bio,
             info.city,
             info.state,
-            info.imageUrl
           );
           this.userInfo$.next(userInfo);
-          this.loggedInUserKey = authInfo.uid;
         });
+      } else {
+        this.userInfo$.next(this.NULL_USER);
       }
     });
 
   }
-
 
   setUserAccess(accessLevel: number, uid: string) {
     return this.rtdb.ref
@@ -47,13 +46,12 @@ export class UserService {
       .set(accessLevel);
   }
 
- createUser(userInfo, uid) {
+  createUser(userInfo, uid) {
     this.setUserAccess(10, uid);
     return this.rtdb
       .ref(`userInfo/open/${uid}`)
       .set(userInfo);
   }
-
 
   async getUserInfo(uid) {
     if (uid) {

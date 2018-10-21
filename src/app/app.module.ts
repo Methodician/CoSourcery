@@ -1,3 +1,13 @@
+import { environment } from 'environments/environment';
+
+// Firebase and AngularFire imports
+import * as fb from 'firebase/app';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+
+// general
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AuthService } from './services/auth.service';
@@ -25,7 +35,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
 import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
-import * as fb from 'firebase';
 import { LoginComponent } from 'app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { AccountComponent } from 'app/components/account/account/account.component';
@@ -33,7 +42,6 @@ import { FollowedUserComponent } from 'app/components/account/followed-user/foll
 import { FollowerUserComponent } from 'app/components/account/follower-user/follower-user.component';
 import { ProfileComponent } from 'app/components/account/profile/profile.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
-import { ArticleDetailComponent } from 'app/components/articles/article-detail/article-detail.component';
 import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
 import { ArticleSearchResultsComponent } from 'app/components/articles/article-search-results/article-search-results.component';
@@ -49,6 +57,13 @@ import { TimeElapsedPipe } from './shared/pipes/time-elapsed.pipe';
 import { TruncateTagsPipe } from './shared/pipes/truncate-tags.pipe';
 import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ClickOutDirective } from './directives/click-out.directive';
+import { CommentListComponent } from './components/comments/comment-list/comment-list.component';
+import { CommentService } from './services/comment.service';
+import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
+import { DataCleanupService } from './admin/services/data-cleanup.service';
+import { CommentComponent } from './components/comments/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +76,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FollowerUserComponent,
     ProfileComponent,
     RegisterComponent,
-    ArticleDetailComponent,
     ArticleRelatedComponent,
     ArticleEditComponent,
     ArticleSearchResultsComponent,
@@ -75,7 +89,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SafeUrlPipe,
     TimeElapsedPipe,
     TruncateTagsPipe,
-    TruncateStringPipe
+    TruncateStringPipe,
+    ClickOutDirective,
+    CommentListComponent,
+    DataCleanupComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,
@@ -94,26 +112,31 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatTabsModule,
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CKEditorModule,
+    AngularFireModule.initializeApp(environment.fbConfig),
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    AngularFireDatabaseModule
   ],
-  providers: [AuthService, UploadService, NotificationService, ArticleService, UserService],
+  providers: [
+    AuthService,
+    DataCleanupService,
+    UploadService,
+    NotificationService,
+    ArticleService,
+    UserService,
+    CommentService
+  ],
   bootstrap: [AppComponent]
 })
 
 export class AppModule {
 
-  // Test Firestore db
-  fbConfig = {
-    apiKey: 'AIzaSyAb3L-t-WB0rf6A9j8gVSRB9STJJvLUEfw',
-    authDomain: 'cosourcerytest.firebaseapp.com',
-    databaseURL: 'https://cosourcerytest.firebaseio.com',
-    projectId: 'cosourcerytest',
-    storageBucket: 'cosourcerytest.appspot.com',
-    messagingSenderId: '146479623747'
-  };
+
 
   constructor() {
-    fb.initializeApp(this.fbConfig);
+    fb.initializeApp(environment.fbConfig);
     const fs = fb.firestore();
     const settings = { timestampsInSnapshots: true };
     fs.settings(settings);

@@ -2,6 +2,7 @@
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "./app/sass-variables-mixins/vars.scss";
 @import "./app/sass-variables-mixins/mixins.scss";
+@import "./app/sass-variables-mixins/ckeditor.scss";
 
 *, html, body {
   box-sizing: border-box;
@@ -25,7 +26,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 15px 0;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 h1 {
@@ -62,6 +63,7 @@ p {
 
 a {
   color: $primary-color;
+  text-decoration: none;
 }
 
 @media screen and (min-width: 768px) {

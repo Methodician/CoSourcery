@@ -5,16 +5,18 @@ import { AuthGuard } from './shared/guards/auth.guard';
 import { LoginComponent } from '../app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
-import { ArticleDetailComponent } from './components/articles/article-detail/article-detail.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
+import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'createarticle',
+  {
+    path: 'createarticle',
     canActivate: [AuthGuard],
-    component: ArticleEditComponent},
+    component: ArticleEditComponent
+  },
   // {
   //   path: 'account',
   //   canActivate: [AuthGuard],
@@ -43,12 +45,7 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  {
-    path: 'editarticle/:key',
-    canActivate: [AuthGuard],
-    component: ArticleEditComponent
-  },
-  { path: 'articledetail/:key', component: ArticleDetailComponent },
+  { path: 'article/:key', component: ArticleEditComponent },
   // {
   //   path: 'articlesearch',
   //   children: [
@@ -62,7 +59,8 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  { path: '', component: HomeComponent }
+  { path: 'admin/data-cleanup', component: DataCleanupComponent },
+  { path: '', component: HomeComponent },
 ];
 
 @NgModule({

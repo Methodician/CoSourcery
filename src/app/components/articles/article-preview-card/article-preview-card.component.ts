@@ -24,10 +24,6 @@ export class ArticlePreviewCardComponent implements OnInit {
     }
   }
 
-  navigateToArticleDetail() {
-    this.articleSvc.navigateToArticleDetail(this.articleData.articleId);
-  }
-
   async checkIfBookmarked() {
     this.isArticleBookmarked = await this.articleSvc.isBookmarked(this.userId, this.articleData.articleId);
   }

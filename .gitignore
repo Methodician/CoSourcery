@@ -4,10 +4,11 @@
 /dist
 /tmp
 /out-tsc
-/functions/lib
+functions/lib
 
 # dependencies
 node_modules
+.firebaserc
 
 # IDEs and editors
 /.idea
