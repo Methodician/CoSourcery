@@ -1,0 +1,32 @@
+// Uses Global Default Styles in src/styles.scss
+@import "../../../sass-variables-mixins/vars.scss";
+
+.comment {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px;
+
+  &__author-image {
+    min-width: 100px;
+    width: 100px;
+    display: block;
+    margin-right: 20px;
+    object-fit: contain;
+  }
+
+  &__text {
+    margin-top: 15px;
+
+    &-detail {
+      margin: 0;
+    }
+
+    &--light {
+      color: $medium-gray;
+    }
+
+    &--small {
+      font-size: 0.8rem;
+    }
+  }
+}

@@ -1,11 +1,17 @@
 <section class="comment">
-  <img [src]="authorInfo?.displayImageUrl()"
+  <img class="comment__author-image" [src]="authorInfo?.displayImageUrl()"
        alt="Author Image">
-  <p>Author: {{ authorInfo?.displayName() }}</p>
-  <p>Last Updated: {{ comment.lastUpdated | date }}</p>
-  <p *ngIf="!isBeingEdited">{{ comment.text }}</p>
-  <p *ngIf="isBeingEdited">
-    <input type="text"
-           [(ngModel)]="comment.text">
-  </p>
+  <div>
+    <p class="comment__text-detail comment__text--light">Posted by <strong>{{ authorInfo?.displayName() }}</strong></p>
+    <p class="comment__text-detail comment__text--light comment__text--small"><em>Last Updated</em> {{ comment.lastUpdated | date }}</p>
+    <p *ngIf="!isBeingEdited"
+       class="comment__text">
+      {{ comment.text }}
+    </p>
+    <p *ngIf="isBeingEdited"
+       class="comment__text">
+      <input type="text"
+             [(ngModel)]="comment.text">
+    </p>
+  </div>
 </section>
