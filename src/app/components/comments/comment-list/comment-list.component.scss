@@ -1,0 +1,93 @@
+// Uses Global Default Styles in src/styles.scss
+@import "../../../sass-variables-mixins/vars.scss";
+
+.section-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h2 {
+    margin: 0 0 10px;
+    color: $primary-color;
+  }
+
+  p {
+    margin: 0 0 15px;
+  }
+}
+
+.comment {
+  margin: 24px;
+  box-shadow: 0 2px 5px $light-gray-50;
+
+  &--new {
+    box-shadow: 0 2px 5px rgba($accent-color-1, 0.25);
+  }
+}
+
+.comment__controls {
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  margin: 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  background-color: $accent-color-1;
+  box-shadow: 0 2px 2px $medium-gray;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($accent-color-2, 10%);
+  }
+}
+
+.button-mat-icon {
+  margin: 5px;
+  border-radius: 100%;
+  color: #fff;
+  background-color: $accent-color-1;
+  box-shadow: 0 2px 2px $medium-gray;
+
+  ::ng-deep .mat-button-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 1px;
+  }
+
+  &__tooltip {
+    opacity: 0;
+    position: absolute;
+    padding: 5px 15px;
+    border-radius: 4px;
+    background: $dark-gray;
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1.5;
+
+    &.tooltip--left {
+      right: 100%;
+      margin-right: 10px;
+    }
+
+    &.tooltip--top {
+      bottom: 100%;
+      margin-bottom: 10px;
+    }
+  }
+
+  &:hover &__tooltip {
+    opacity: 1;
+  }
+
+  &:hover {
+    background-color: darken($accent-color-2, 10%);
+  }
+}
