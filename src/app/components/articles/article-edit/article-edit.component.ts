@@ -10,7 +10,7 @@ import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { AngularFireUploadTask } from '@angular/fire/storage';
-import { UserInfoOpen } from 'app/shared/class/user-info';
+import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 
 @Component({
   selector: 'cos-article-edit',
@@ -19,7 +19,7 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 })
 
 export class ArticleEditComponent implements OnInit, OnDestroy {
-  userInfo: UserInfoOpen = null;
+  loggedInUser: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
   formIsReady = false;
@@ -94,16 +94,18 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private articleSvc: ArticleService,
-    private uploadSvc: UploadService,
     private userSvc: UserService
   ) { }
 
   ngOnInit() {
+    //  May abstract this out to an ID now that we have user map...
     this.userSvc.userInfo$.subscribe(user => {
-      this.userInfo = user;
+      this.loggedInUser = user;
     });
     this.setArticleId();
     this.subscribeToArticleId();
+    this.userMap = this.userSvc.userMap;
+    this.userKeys = Object.keys(this.userMap);
   }
 
   ngOnDestroy() {
@@ -151,13 +153,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.coverImageFile = null;
     }
     if (!this.articleEditForm.value.articleId) {
-      const articleSaved = await this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
+      const articleSaved = await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
       if (articleSaved === 'success') {
         this.articleIsNew = false;
         this.router.navigate([`article/${this.articleId}`]);
       }
     } else {
-      this.articleSvc.updateArticle(this.userInfo, this.articleEditForm.value, this.articleId);
+      this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
     }
     this.resetEditStates();
   }
@@ -269,6 +271,3 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 export interface HtmlInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
 }
-
-export interface KeyMap<T> { [key: string]: T; };
-export interface UserMap extends KeyMap<UserInfoOpen> { };

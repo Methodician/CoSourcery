@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
-import { UserInfoOpen } from 'app/shared/class/user-info';
-import { Comment } from 'app/shared/class/comment';
+import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
+import { Comment, CommentMap } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-comment-list',
@@ -13,7 +13,6 @@ export class CommentListComponent implements OnInit, OnDestroy {
   @Input() isUnderComment = true;
   @Input() parentKey: string;
   @Input() loggedInUser: UserInfoOpen
-    //  Might start trackig this in UserService, or move all the user tracking to AuthService or AppComponent and keep UserService more like a stateless data connector...
   @Input() userMap: UserMap = {};
   @Input() userKeys: string[];
 
@@ -107,8 +106,3 @@ export class CommentListComponent implements OnInit, OnDestroy {
     return this.keyOfCommentBeingEdited === commentKey;
   }
 }
-
-//  Very cool: https://stackoverflow.com/questions/13315131/enforcing-the-type-of-the-indexed-members-of-a-typescript-object
-export interface KeyMap<T> { [key: string]: T; };
-export interface CommentMap extends KeyMap<Comment> { };
-export interface UserMap extends KeyMap<UserInfoOpen> { };

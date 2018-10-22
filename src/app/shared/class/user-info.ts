@@ -28,3 +28,8 @@ export class UserInfoOpen {
         return !!(this.uid);
     }
 }
+
+
+
+export interface KeyMap<T> { [key: string]: T; };
+export interface UserMap extends KeyMap<UserInfoOpen> { };
