@@ -3,12 +3,13 @@ export class UserInfoOpen {
         public alias: string,
         public fName: string,
         public lName: string,
-        public zipCode: string,
         public uid?: string,
+        public imageUrl?: string,
+        public email?: string,
+        public zipCode?: string,
         public bio?: string,
         public city?: string,
         public state?: string,
-        public imageUrl?: string
     ) { }
 
     displayName() {

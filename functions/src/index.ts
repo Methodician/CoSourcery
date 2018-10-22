@@ -1,17 +1,35 @@
+'use strict';
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-// import * as path from 'path';
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+
+
 admin.initializeApp();
 const fs = admin.firestore();
 fs.settings({ timestampsInSnapshots: true });
-// const storage = admin.storage();
+
+//  Can work from this example to write funciton to count comments and bubble up?
+//  https://github.com/firebase/functions-samples/blob/master/limit-children/functions/index.js
+
+exports.trackCommentDeletions = functions.database.ref('commentData/comments/{commentId}/removedAt').onCreate(async (snap, context) => {
+    const commentRef = snap.ref.parent;
+    const archiveRef = snap.ref.parent.parent.parent.child('commentArchive');
+    const commentSnap = await commentRef.once('value').then();
+    return Promise.all([
+        archiveRef.set(commentSnap.val()),
+        commentRef.update({ text: 'This comment was removed.' })
+    ]);
+})
+
+exports.trackCommentAuthorsAndParents = functions.database.ref('commentData/comments/{commentKey}').onCreate((snap, context) => {
+    const comment = snap.val();
+    const key = context.params.commentKey;
+    const commentRef = snap.ref;
+    return Promise.all([
+        commentRef.parent.parent.child(`commentsByParent/${comment.parentKey}/${key}`).set(true),
+        commentRef.parent.parent.child(`commentsByAuthor/${comment.authorId}/${key}`).set(true)
+    ]);
+});
 
 //  trackUploadFiles entry point:
 exports.trackFileUploads = functions.storage.object().onFinalize(async object => {

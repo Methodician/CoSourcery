@@ -23,12 +23,13 @@ export class UserService {
             info.alias,
             info.fName,
             info.lName,
+            authInfo.uid,
+            info.imageUrl,
+            info.email,
             info.zipCode,
-            info.uid = authInfo.uid,
             info.bio,
             info.city,
             info.state,
-            info.imageUrl
           );
           this.userInfo$.next(userInfo);
         });
@@ -45,7 +46,7 @@ export class UserService {
       .set(accessLevel);
   }
 
- createUser(userInfo, uid) {
+  createUser(userInfo, uid) {
     this.setUserAccess(10, uid);
     return this.rtdb
       .ref(`userInfo/open/${uid}`)

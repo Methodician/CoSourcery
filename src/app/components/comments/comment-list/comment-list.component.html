@@ -1,6 +1,5 @@
 <!-- New Comment Entry -->
-<section *ngIf="loggedInUser.uid"
-  class="comment-controls">
+<section class="comment-controls">
   <button *ngIf="!addingNewComment"
           (click)="enterNewCommentMode()">
     {{ isUnderComment ? 'Reply' : 'Comment' }}
@@ -19,37 +18,37 @@
              [isBeingEdited]="true"
              [loggedInUser]="loggedInUser"
              [authorInfo]="loggedInUser"
-             (textChanges)="onEditText($event)">
+             [comment]="newCommentStub">
 </cos-comment>
 
 <!-- Comment List -->
-<section *ngFor="let comment of comments | reverseArray"
+<section *ngFor="let key of commentKeys | reverseArray"
          class="comment-list">
-  <section *ngIf="loggedInUser.uid === comment.payload.val().authorId"
+  <section *ngIf="loggedInUser.uid === commentMap[key].authorId"
             class="comment-controls">
-    <button *ngIf="!commentIsBeingEdited(comment)"
-            (click)="enterEditMode(comment)">
+    <button *ngIf="!commentIsBeingEdited(key)"
+            (click)="enterEditMode(key)">
       Edit
     </button>
-    <button *ngIf="commentIsBeingEdited(comment)"
+    <button *ngIf="commentIsBeingEdited(key)"
             (click)="onCancelEdit()">
       Cancel
     </button>
-    <button *ngIf="!commentIsBeingEdited(comment)"
-            (click)="onRemoveComment(comment)">
+    <button *ngIf="!commentIsBeingEdited(key)"
+            (click)="onRemoveComment(key)">
       Remove
     </button>
-    <button *ngIf="commentIsBeingEdited(comment)"
-            (click)="onSaveEdits(comment)">
+    <button *ngIf="commentIsBeingEdited(key)"
+            (click)="onSaveEdits(key)">
       Save
     </button>
   </section>
-  <cos-comment [commentSnapshot]="comment"
+  <cos-comment [comment]="commentMap[key]"
                [loggedInUser]="loggedInUser"
-               [isBeingEdited]="commentIsBeingEdited(comment)"
-               (textChanges)="onEditText($event)">
+               [authorInfo]="userMap[commentMap[key].authorId]"
+               [isBeingEdited]="commentIsBeingEdited(key)">
   </cos-comment>
-  <cos-comment-list [parentKey]="comment.key"
+  <cos-comment-list [parentKey]="key"
                     [loggedInUser]="loggedInUser">
   </cos-comment-list>
 </section>

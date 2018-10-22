@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 import { combineLatest } from 'rxjs/operators';
-
+import { Comment } from 'app/shared/class/comment';
 const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
 
 @Injectable({
@@ -14,46 +14,37 @@ export class CommentService {
     private rtdb: AngularFireDatabase
   ) { }
 
-  createComment(text, parentKey, userId) {
-    const comment = {
-      timestamp: serverTimestamp,
+  async createComment(comment: Comment) {
+    const commentToSave = {
+      authorId: comment.authorId,
+      text: comment.text,
+      parentKey: comment.parentKey,
       lastUpdated: serverTimestamp,
-      text: text,
-      authorId: userId,
-      parentKey: parentKey
+      timestamp: serverTimestamp,
     }
 
-    const commentKey = this.rtdb
+    return this.rtdb
       .list('commentData/comments')
-      .push(comment).key;
-
-    this.rtdb.object(`commentData/commentsByParent/${parentKey}/${commentKey}`).set(true);
-    this.rtdb.object(`commentData/commentsByUser/${userId}/${commentKey}`).set(true);
+      .push(commentToSave).key;
   }
 
-  updateComment(commentSnapshot, newCommentText: string) {
-    const comment = commentSnapshot.payload.val();
-    comment.lastUpdated = serverTimestamp;
-    comment.text = newCommentText;
+  updateComment(comment: Comment, commentKey: string) {
+    const commentToSave = {
+      lastUpdated: serverTimestamp,
+      text: comment.text,
+    }
     return this.rtdb
-      .object(`commentData/comments/${commentSnapshot.key}`)
-      .update(comment);
+      .object(`commentData/comments/${commentKey}`)
+      .update(commentToSave);
   }
 
-  removeComment(commentSnapshot) {
-    const comment = commentSnapshot.payload.val();
-    comment.removedAt = serverTimestamp;
-
-    this.rtdb.object(`commentData/archivedComments/${commentSnapshot.key}`).set(comment);
-
-    comment.text = 'This comment was removed';
-
+  removeComment(commentKey) {
     return this.rtdb
-      .object(`commentData/comments/${commentSnapshot.key}`)
-      .update(comment);
+      .object(`commentData/comments/${commentKey}`)
+      .update({ removedAt: serverTimestamp });
   }
 
-  watchComments(parentKey: string) {
+  watchCommentsByParent(parentKey: string) {
     return this.rtdb
       .list(`commentData/commentsByParent/${parentKey}`)
       .snapshotChanges()
