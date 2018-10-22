@@ -33,6 +33,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
 
+  userMap: UserMap = {};
+  userKeys: string[];
+
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   ckeditorButtonOffset: number = 0;
   ckeditor = InlineEditor;
@@ -266,3 +269,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 export interface HtmlInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
 }
+
+export interface KeyMap<T> { [key: string]: T; };
+export interface UserMap extends KeyMap<UserInfoOpen> { };
