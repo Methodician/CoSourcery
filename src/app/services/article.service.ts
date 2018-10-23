@@ -61,6 +61,10 @@ export class ArticleService {
     return this.fsdb.collection('articleData/articles/articles', ref => ref.orderBy('timestamp', 'desc').limit(12)).valueChanges();
   }
 
+  async allArticlesRef() {
+    return this.fsdb.collection('articleData/articles/articles').valueChanges();
+  }
+
 
   async getAllArticles() {
     const articlesRef = this.vanillaFsdb.collection('articleData/articles/articles');

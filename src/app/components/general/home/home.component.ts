@@ -14,8 +14,8 @@ export class HomeComponent implements OnInit {
   routeParams;
   UserId;
   featuredArticles: ArticleDetailFirestore[];
-  latestArticles: ArticleDetailFirestore[];
-  allArticles: ArticleDetailFirestore[];
+  latestArticles;
+  allArticles;
   bookmarkedArticles;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
 
@@ -39,7 +39,10 @@ export class HomeComponent implements OnInit {
     latestArticlesRef.subscribe(articles =>{
       this.latestArticles = articles;
     });
-    this.allArticles = await this.articleSvc.getAllArticles();
+    const allArticlesRef = await this.articleSvc.allArticlesRef();
+    allArticlesRef.subscribe(articles =>{
+      this.allArticles = articles;
+    })
     this.articleSvc.watchBookmarkedArticles(this.UserId);
     this.articleSvc.bookmarkedArticles$.subscribe(list => {
       this.bookmarkedArticles = list;
