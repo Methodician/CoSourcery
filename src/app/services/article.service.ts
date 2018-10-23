@@ -73,12 +73,13 @@ export class ArticleService {
   }
 
 
-  watchBookmarkedArticles(userKey) {
-    const bookmarksRef = this.vanillaRtdb.ref(`userInfo/articleBookmarksPerUser/${userKey}`);
-    bookmarksRef.on('value', articleIds => {
+  async watchBookmarkedArticles(userKey) {
+    const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`).snapshotChanges();
+    bookmarksRef.subscribe(articleIds => {
       const articlesList = new Array<any>();
-      articleIds.forEach(key => {
-        this.getArticleById(key.key).then(article => {
+      articleIds.forEach(async key => {
+        const articleRef = await this.getArticleById(key.key);
+        articleRef.subscribe(article => {
           articlesList.push(article);
           this.bookmarkedArticles$.next(articlesList);
         });
@@ -88,12 +89,11 @@ export class ArticleService {
 
 
   async getArticleById(articleId: string) {
-    const articleRef = this.vanillaFsdb.doc(`articleData/articles/articles/${articleId}`);
-    const docSnapshot = await articleRef.get();
-    return docSnapshot.data();
+    const articleRef= this.fsdb.doc(`articleData/articles/articles/E03x8epOjxqfJAcA5BPq`).valueChanges();
+    return articleRef;
   }
 
-
+// This is only used in the article-ppreview-list component that is not currently being used so I did not refactor this yet
   async getAuthor(uid: string) {
     const userRef = this.vanillaRtdb.ref(`userInfo/open/${uid}`);
     const userInfoSnapshot = await userRef.once('value');
