@@ -17,7 +17,7 @@
           class="button-mat-icon"
           (click)="enterNewCommentMode()">
     <mat-icon>reply</mat-icon>
-    <span class="button-mat-icon__tooltip">Reply</span>
+    <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Reply</span>
   </button>
 </section>
 
@@ -48,18 +48,18 @@
            [ngClass]="{'comment_root': !isUnderComment}">
     <section class="comment-rating">
       <button mat-icon-button
-              class="button-mat-icon button-mat-icon_small">
+              class="button-mat-icon button-mat-icon_rating">
         <mat-icon>expand_less</mat-icon>
-        <span class="button-mat-icon__tooltip">Upvote</span>
+        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Upvote</span>
       </button>
       <button mat-icon-button
-              class="button-mat-icon button-mat-icon_small">
+              class="button-mat-icon button-mat-icon_rating">
         <span>0</span>
       </button>
       <button mat-icon-button
-              class="button-mat-icon button-mat-icon_small">
+              class="button-mat-icon button-mat-icon_rating">
         <mat-icon>expand_more</mat-icon>
-        <span class="button-mat-icon__tooltip">Downvote</span>
+        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_below">Downvote</span>
       </button>
     </section>
     <cos-comment [comment]="commentMap[key]"
@@ -74,14 +74,14 @@
               class="button-mat-icon"
               (click)="enterEditMode(key)">
         <mat-icon>edit</mat-icon>
-        <span class="button-mat-icon__tooltip">Edit</span>
+        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Edit</span>
       </button>
       <button *ngIf="!commentIsBeingEdited(key)"
               mat-icon-button
               class="button-mat-icon"
               (click)="onRemoveComment(key)">
         <mat-icon>clear</mat-icon>
-        <span class="button-mat-icon__tooltip">Remove</span>
+        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Remove</span>
       </button>
       <button *ngIf="commentIsBeingEdited(key)"
               class="button"
