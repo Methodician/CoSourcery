@@ -39,10 +39,8 @@ export class ArticlePreviewCardComponent implements OnInit {
     if (this.authSvc.isSignedIn()) {
       if (this.isArticleBookmarked) {
         this.articleSvc.unBookmarkArticle(this.userId, this.articleData.articleId);
-        this.isArticleBookmarked = false;
       } else {
         this.articleSvc.bookmarkArticle(this.userId, this.articleData.articleId);
-        this.isArticleBookmarked = true;
       }
     }
   }

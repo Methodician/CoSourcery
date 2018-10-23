@@ -73,12 +73,12 @@ export class ArticleService {
   }
 
 
-  async watchBookmarkedArticles(userKey) {
+  watchBookmarkedArticles(userKey) {
     const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`).snapshotChanges();
     bookmarksRef.subscribe(articleIds => {
       const articlesList = new Array<any>();
       articleIds.forEach(async key => {
-        const articleRef = await this.getArticleById(key.key);
+        const articleRef= await this.getArticleById(key.key);
         articleRef.subscribe(article => {
           articlesList.push(article);
           this.bookmarkedArticles$.next(articlesList);
@@ -89,8 +89,7 @@ export class ArticleService {
 
 
   async getArticleById(articleId: string) {
-    const articleRef= this.fsdb.doc(`articleData/articles/articles/E03x8epOjxqfJAcA5BPq`).valueChanges();
-    return articleRef;
+    return this.fsdb.doc(`articleData/articles/articles/${articleId}`).valueChanges();
   }
 
 // This is only used in the article-ppreview-list component that is not currently being used so I did not refactor this yet
@@ -126,12 +125,8 @@ export class ArticleService {
 
 
   unBookmarkArticle(userKey, articleId) {
-    const bpu = this.rtdb
-      .object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`);
-    bpu.remove();
-    const upb = this.rtdb
-      .object(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`);
-    upb.remove();
+    this.rtdb.object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`).remove();
+    this.rtdb.object(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`).remove();
 
   }
 
