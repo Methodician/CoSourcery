@@ -14,6 +14,9 @@ export class CommentService {
     private rtdb: AngularFireDatabase
   ) { }
 
+  createCommentStub(authorId: string, parentKey: string){
+    return new Comment(authorId, parentKey, '');
+  }
   async createComment(comment: Comment) {
     const commentToSave = {
       authorId: comment.authorId,

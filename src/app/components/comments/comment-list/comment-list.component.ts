@@ -22,7 +22,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   keyOfCommentBeingEdited: string;
   addingNewComment = false;
-  newCommentStub = new Comment();
+  newCommentStub: Comment;
 
   commentMap: CommentMap = {};
   commentKeys: string[];
@@ -45,7 +45,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   enterNewCommentMode() {
-    this.createCommentStub();
+    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.parentKey);
     this.addingNewComment = true;
   }
 
@@ -91,10 +91,6 @@ export class CommentListComponent implements OnInit, OnDestroy {
           });
         }
       });
-  }
-
-  createCommentStub() {
-    this.newCommentStub = new Comment(this.loggedInUser.uid, this.parentKey, '');
   }
 
   async getAuthorSnapshot(authorId) {
