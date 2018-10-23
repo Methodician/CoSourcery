@@ -15,13 +15,13 @@ export class CommentListComponent implements OnInit, OnDestroy {
   @Input() loggedInUser: UserInfoOpen
   @Input() userMap: UserMap = {};
   @Input() userKeys: string[];
+  @Input() commentReplyInfo;
 
   commentsSubscription: Subscription;
   //  ToDo: FILL THIS WITH OTHER SUBSCRIPTIONS TO BREAK DOWN ON DESTROY
   // commentSubscriptions: Subscription[];
 
   keyOfCommentBeingEdited: string;
-  addingNewComment = false;
   newCommentStub: Comment;
 
   commentMap: CommentMap = {};
@@ -44,18 +44,18 @@ export class CommentListComponent implements OnInit, OnDestroy {
     this.keyOfCommentBeingEdited = commentKey;
   }
 
-  enterNewCommentMode() {
+  enterNewCommentMode(replyParentKey) {
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.parentKey);
-    this.addingNewComment = true;
+    this.commentReplyInfo.replyParentKey = replyParentKey;
   }
 
   onCancelNewComment() {
-    this.addingNewComment = false;
+    this.commentReplyInfo.replyParentKey = null;
   }
 
   onAddComment() {
     this.commentSvc.createComment(this.newCommentStub);
-    this.addingNewComment = false;
+    this.commentReplyInfo.replyParentKey = null;
   }
 
   onCancelEdit() {

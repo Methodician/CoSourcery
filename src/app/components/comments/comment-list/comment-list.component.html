@@ -1,22 +1,5 @@
-<!-- New Reply Stub -->
-<section *ngIf="addingNewComment"
-         class="comment comment_new">
-  <cos-comment [isBeingEdited]="true"
-               [loggedInUser]="loggedInUser"
-               [authorInfo]="loggedInUser"
-               [comment]="newCommentStub">
-  </cos-comment>
-  <section class="comment-controls">
-    <button class="button"
-            (click)="onCancelNewComment()">
-      Cancel
-    </button>
-    <button class="button"
-            (click)="onAddComment()">
-      Save
-    </button>
-  </section>
-</section>
+{{ commentReplyInfo | json }}
+
 
 <!-- Nested Comments -->
 <section *ngFor="let key of commentKeys | reverseArray"
@@ -45,11 +28,30 @@
                  [authorInfo]="userMap[commentMap[key].authorId]"
                  [isBeingEdited]="commentIsBeingEdited(key)">
     </cos-comment>
+    <!-- New Reply Stub -->
+    <section *ngIf="commentReplyInfo.replyParentKey === key"
+            class="comment comment_new">
+      <cos-comment [isBeingEdited]="true"
+                  [loggedInUser]="loggedInUser"
+                  [authorInfo]="loggedInUser"
+                  [comment]="newCommentStub">
+      </cos-comment>
+      <section class="comment-controls">
+        <button class="button"
+                (click)="onCancelNewComment()">
+          Cancel
+        </button>
+        <button class="button"
+                (click)="onAddComment()">
+          Save
+        </button>
+      </section>
+    </section>
     <section class="comment-controls">
-        <button *ngIf="!addingNewComment"
+        <button *ngIf="!(commentReplyInfo.replyParentKey === key)"
                 mat-icon-button
                 class="button-mat-icon"
-                (click)="enterNewCommentMode()">
+                (click)="enterNewCommentMode(key)">
         <mat-icon>reply</mat-icon>
         <span class="button-mat-icon__tooltip">Reply</span>
       </button>
@@ -84,7 +86,8 @@
     <cos-comment-list [parentKey]="key"
                       [loggedInUser]="loggedInUser"
                       [userMap]="userMap"
-                      [userKeys]="userKeys">
+                      [userKeys]="userKeys"
+                      [commentReplyInfo]="commentReplyInfo">
     </cos-comment-list>
   </section>
 </section>

@@ -30,7 +30,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   newCommentStub: Comment;
   addingNewComment = false;
-
+  commentReplyInfo = { replyParentKey: null };
   coverImageFile: File;
   tempCoverImageUploadPath: string;
   coverImageUploadTask: AngularFireUploadTask;
