@@ -1,35 +1,17 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
-.section-title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  h2 {
-    margin: 0 0 10px;
-    color: $primary-color;
-  }
-
-  p {
-    margin: 0 0 10px;
-  }
-}
-
-.comment {
+.comment-group {
   max-width: 768px;
   position: relative;
   margin: 0 auto;
   padding-left: 40px;
   border-left: 3px solid lighten($accent-color-1, 30%);
 
-  &_root {
-    padding-right: 20px;
-  }
-
   &_new {
     padding-top: 20px;
     padding-right: 20px;
+    padding-bottom: 20px;
     border: 3px solid lighten($accent-color-2, 35%);
   }
 }
@@ -44,15 +26,22 @@
 }
 
 .comment-controls {
-  height: 65px;
+  visibility: hidden;
+  position: absolute;
+  top: 5px;
+  right: 5px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 10px 0 5px;
+}
 
-  &_offset-right {
-    position: absolute;
-    left: 90px;
+.comment-unit:hover {
+
+  .comment-controls {
+    visibility: visible;
+  }
+
+  .button-mat-icon_rating {
+    border: 3px solid lighten($accent-color-2, 30%);
   }
 }
 
@@ -61,6 +50,7 @@
 
   &_root {
     margin-left: 20px;
+    margin-right: 10px;
   }
 }
 
@@ -109,6 +99,7 @@
     color: #fff;
     font-size: 0.9rem;
     line-height: 1.5;
+    z-index: 10;
 
     &_above {
       bottom: 100%;
@@ -134,7 +125,7 @@
     box-shadow: none;
 
     &:hover {
-      background-color: lighten($accent-color-1, 30%);
+      background-color: lighten($accent-color-2, 30%);
     }
   }
 }

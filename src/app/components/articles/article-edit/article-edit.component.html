@@ -186,10 +186,8 @@
 </form>
 
 <!-- New Top-Level Comment -->
-<section *ngIf="!isUnderComment"
-         class="section-title">
-  <h2>Discussion</h2>
-  <p *ngIf="!commentKeys">Be the first to comment!</p>
+<section class="section-header">
+  <h2 class="section-header__title">Discussion</h2>
   <button *ngIf="!addingNewComment"
           class="button"
           (click)="enterNewCommentMode()">

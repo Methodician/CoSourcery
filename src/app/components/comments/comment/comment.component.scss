@@ -2,6 +2,7 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 .comment {
+  min-height: 150px;
   display: flex;
   align-items: flex-start;
 
