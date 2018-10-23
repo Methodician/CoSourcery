@@ -25,7 +25,14 @@ export class ArticlePreviewCardComponent implements OnInit {
   }
 
   async checkIfBookmarked() {
-    this.isArticleBookmarked = await this.articleSvc.isBookmarked(this.userId, this.articleData.articleId);
+    const ref = await this.articleSvc.bookmarkedRef(this.userId, this.articleData.articleId);
+    ref.subscribe(snapshot => {
+      if (snapshot && snapshot.toString().length === 13) {
+        this.isArticleBookmarked = true;
+      } else {
+        this.isArticleBookmarked = false;
+      }
+    });
   }
 
   bookmarkToggle() {
