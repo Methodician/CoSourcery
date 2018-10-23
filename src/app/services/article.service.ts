@@ -126,21 +126,21 @@ export class ArticleService {
 
 
   unBookmarkArticle(userKey, articleId) {
-    const bpu = this.vanillaRtdb
-      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`);
+    const bpu = this.rtdb
+      .object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`);
     bpu.remove();
-    const upb = this.vanillaRtdb
-      .ref(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`);
+    const upb = this.rtdb
+      .object(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`);
     upb.remove();
 
   }
 
   bookmarkArticle(userKey, articleId) {
-    this.vanillaRtdb
-      .ref(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`)
+    this.rtdb
+      .object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`)
       .set(firebase.database.ServerValue.TIMESTAMP);
-    this.vanillaRtdb
-      .ref(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`)
+    this.rtdb
+      .object(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`)
       .set(firebase.database.ServerValue.TIMESTAMP);
   }
 
