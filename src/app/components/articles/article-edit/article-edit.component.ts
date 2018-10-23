@@ -134,6 +134,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.formIsReady = true;
       } else {
         this.updateCoverImageUrl(articleData.imageUrl);
+        this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
       }
     });
   }
