@@ -45,7 +45,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   enterNewCommentMode(replyParentKey) {
-    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.parentKey);
+    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey);
     this.commentReplyInfo.replyParentKey = replyParentKey;
   }
 
