@@ -13,6 +13,10 @@
     object-fit: contain;
   }
 
+  &-text-container {
+    width: 100%;
+  }
+
   &-text {
     margin-top: 15px;
 
@@ -27,6 +31,11 @@
     &_small {
       font-size: 0.8rem;
     }
+
+    &_input {
+      margin: 0;
+      padding: 0;
+    }
   }
 
   @media screen and (min-width: 500px) {
@@ -34,5 +43,19 @@
     &__author-image {
       display: block;
     }
+  }
+}
+
+mat-form-field::ng-deep {
+  display: block;
+  margin-bottom: -14px;
+
+  .mat-form-field-wrapper {
+    padding: 0;
+  }
+
+  .mat-form-field-infix {
+    padding: 0 3px 14px 0;
+    border: none;
   }
 }
