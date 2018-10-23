@@ -10,8 +10,8 @@ export class ArticleDetailPreview {
         public imageUrl: string,
         public imageAlt: string,
         public version: number,
-        public commentCount: number,
-        public viewCount: number,
+        public commentCount?: number,
+        public viewCount?: number,
         public tags?: string[],
     ) { }
 }
@@ -31,8 +31,8 @@ export class ArticleDetailFirestore {
         public timestamp: firebase.firestore.Timestamp,
         public lastEditorId: string,
         public version: number,
-        public commentCount: number,
-        public viewCount: number,
+        public commentCount?: number,
+        public viewCount?: number,
         public tags?: string[],
         public isFeatured?: boolean,
     ) { }

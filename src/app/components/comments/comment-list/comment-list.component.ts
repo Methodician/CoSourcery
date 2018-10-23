@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
-import { Comment, CommentMap } from 'app/shared/class/comment';
+import { Comment, CommentMap, ParentTypes } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-comment-list',
@@ -45,7 +45,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   enterNewCommentMode(replyParentKey) {
-    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey);
+    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey, ParentTypes.comment);
     this.commentReplyInfo.replyParentKey = replyParentKey;
   }
 
