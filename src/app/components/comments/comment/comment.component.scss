@@ -4,29 +4,35 @@
 .comment {
   display: flex;
   align-items: flex-start;
-  padding: 20px;
 
   &__author-image {
     min-width: 100px;
     width: 100px;
-    display: block;
+    display: none;
     margin-right: 20px;
     object-fit: contain;
   }
 
-  &__text {
+  &-text {
     margin-top: 15px;
 
-    &-detail {
+    &_no-margin {
       margin: 0;
     }
 
-    &--light {
+    &_light {
       color: $medium-gray;
     }
 
-    &--small {
+    &_small {
       font-size: 0.8rem;
+    }
+  }
+
+  @media screen and (min-width: 500px) {
+
+    &__author-image {
+      display: block;
     }
   }
 }
