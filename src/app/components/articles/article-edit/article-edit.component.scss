@@ -261,6 +261,15 @@
   }
 }
 
+.comment-section {
+  margin-bottom: 48px;
+}
+
+.comment-list_root {
+  margin-left: 20px;
+  margin-right: 10px;
+}
+
 .comment-group {
   max-width: 768px;
   position: relative;
@@ -290,10 +299,6 @@
   .comment-controls {
     visibility: visible;
   }
-}
-
-.comment-list {
-  margin-bottom: 48px;
 }
 
 button {

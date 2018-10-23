@@ -186,7 +186,7 @@
 </form>
 
 <section *ngIf="!articleIsNew"
-         class="comment-list">
+         class="comment-section">
 <!-- New Top-Level Comment -->
   <section class="section-header">
     <h2 class="section-header__title">Discussion</h2>
@@ -197,28 +197,30 @@
     </button>
   </section>
 
-  <section *ngIf="commentReplyInfo.replyParentKey === articleId"
-           class="comment-group comment-group_new comment-unit">
-    <cos-comment [isBeingEdited]="true"
-                 [loggedInUser]="loggedInUser"
-                 [authorInfo]="loggedInUser"
-                 [comment]="newCommentStub">
-    </cos-comment>
-    <section class="comment-controls">
-      <button mat-icon-button
-              class="button-mat-icon"
-              (click)="onCancelNewComment()">
-        <mat-icon>clear</mat-icon>
-        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Cancel</span>
-      </button>
-      <button mat-icon-button
-              class="button-mat-icon"
-              (click)="onAddComment()">
-        <mat-icon>check</mat-icon>
-        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Save</span>
-      </button>
+  <section class="comment-list_root">
+    <section *ngIf="commentReplyInfo.replyParentKey === articleId"
+             class="comment-group comment-group_new comment-unit">
+      <cos-comment [isBeingEdited]="true"
+                   [loggedInUser]="loggedInUser"
+                   [authorInfo]="loggedInUser"
+                   [comment]="newCommentStub">
+      </cos-comment>
+      <section class="comment-controls">
+        <button mat-icon-button
+                class="button-mat-icon"
+                (click)="onCancelNewComment()">
+          <mat-icon>clear</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Cancel</span>
+        </button>
+        <button mat-icon-button
+                class="button-mat-icon"
+                (click)="onAddComment()">
+          <mat-icon>check</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Save</span>
+        </button>
+      </section>
     </section>
-  </section>
+</section>
 
 <!-- Existing Comments -->
   <cos-comment-list [isUnderComment]="false"
