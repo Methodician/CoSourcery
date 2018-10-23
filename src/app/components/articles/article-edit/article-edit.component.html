@@ -185,39 +185,47 @@
   </section>
 </form>
 
+<section *ngIf="!articleIsNew"
+         class="comment-list">
 <!-- New Top-Level Comment -->
-<section class="section-header">
-  <h2 class="section-header__title">Discussion</h2>
-  <button *ngIf="!addingNewComment"
-          class="button"
-          (click)="enterNewCommentMode()">
-    Comment
-  </button>
-</section>
-
-<section *ngIf="addingNewComment"
-         class="comment comment_new">
-  <cos-comment [isBeingEdited]="true"
-               [loggedInUser]="loggedInUser"
-               [authorInfo]="loggedInUser"
-               [comment]="newCommentStub">
-  </cos-comment>
-  <section class="comment-controls">
-    <button class="button"
-            (click)="onCancelNewComment()">
-      Cancel
-    </button>
-    <button class="button"
-            (click)="onAddComment()">
-      Save
+  <section class="section-header">
+    <h2 class="section-header__title">Discussion</h2>
+    <button *ngIf="commentReplyInfo.replyParentKey !== articleId"
+            class="button"
+            (click)="enterNewCommentMode()">
+      Comment
     </button>
   </section>
-</section>
+
+  <section *ngIf="commentReplyInfo.replyParentKey === articleId"
+           class="comment-group comment-group_new comment-unit">
+    <cos-comment [isBeingEdited]="true"
+                 [loggedInUser]="loggedInUser"
+                 [authorInfo]="loggedInUser"
+                 [comment]="newCommentStub">
+    </cos-comment>
+    <section class="comment-controls">
+      <button mat-icon-button
+              class="button-mat-icon"
+              (click)="onCancelNewComment()">
+        <mat-icon>clear</mat-icon>
+        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Cancel</span>
+      </button>
+      <button mat-icon-button
+              class="button-mat-icon"
+              (click)="onAddComment()">
+        <mat-icon>check</mat-icon>
+        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Save</span>
+      </button>
+    </section>
+  </section>
 
 <!-- Existing Comments -->
-<cos-comment-list [isUnderComment]="false"
-  [commentReplyInfo]="commentReplyInfo"
-  [loggedInUser]="loggedInUser"
-  [parentKey]="articleId"
-  [userMap]="userMap"
-  [userKeys]="userKeys"></cos-comment-list>
+  <cos-comment-list [isUnderComment]="false"
+                    [commentReplyInfo]="commentReplyInfo"
+                    [loggedInUser]="loggedInUser"
+                    [parentKey]="articleId"
+                    [userMap]="userMap"
+                    [userKeys]="userKeys">
+  </cos-comment-list>
+</section>

@@ -29,8 +29,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
   newCommentStub: Comment;
-  addingNewComment = false;
   commentReplyInfo = { replyParentKey: null };
+  
   coverImageFile: File;
   tempCoverImageUploadPath: string;
   coverImageUploadTask: AngularFireUploadTask;
@@ -92,7 +92,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     tags: [[], Validators.maxLength(25)],
     isFeatured: false,
   });
-  
+
 
   constructor(
     private fb: FormBuilder,
@@ -273,18 +273,18 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
-  enterNewCommentMode(){
+  enterNewCommentMode() {
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId);
-    this.addingNewComment = true;
+    this.commentReplyInfo.replyParentKey = this.articleId;
   }
 
-  onCancelNewComment(){
-    this.addingNewComment = false;
+  onCancelNewComment() {
+    this.commentReplyInfo.replyParentKey = null;
   }
 
   onAddComment() {
     this.commentSvc.createComment(this.newCommentStub);
-    this.addingNewComment = false;
+    this.commentReplyInfo.replyParentKey = null;
   }
 
 }

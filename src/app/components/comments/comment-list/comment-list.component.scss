@@ -12,7 +12,7 @@
     padding-top: 20px;
     padding-right: 20px;
     padding-bottom: 20px;
-    border: 3px solid lighten($accent-color-2, 35%);
+    border-left: 3px solid lighten($accent-color-2, 30%);
   }
 }
 
@@ -28,8 +28,8 @@
 .comment-controls {
   visibility: hidden;
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0;
+  right: 0;
   display: flex;
   align-items: center;
 }

@@ -5,49 +5,49 @@
   <section class="comment-group"
            [ngClass]="{'comment_root': !isUnderComment}">
 
-    <section class="comment-rating">
-      <button mat-icon-button
-              class="button-mat-icon button-mat-icon_rating">
-        <mat-icon>expand_less</mat-icon>
-        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Upvote</span>
-      </button>
-      <button mat-icon-button
-              class="button-mat-icon button-mat-icon_rating">
-        <span>0</span>
-      </button>
-      <button mat-icon-button
-              class="button-mat-icon button-mat-icon_rating">
-        <mat-icon>expand_more</mat-icon>
-        <span class="button-mat-icon__tooltip button-mat-icon__tooltip_below">Downvote</span>
-      </button>
-    </section>
-
     <section class="comment-unit">
+      <section class="comment-rating">
+        <button mat-icon-button
+                class="button-mat-icon button-mat-icon_rating">
+          <mat-icon>expand_less</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Upvote</span>
+        </button>
+        <button mat-icon-button
+                class="button-mat-icon button-mat-icon_rating">
+          <span>0</span>
+        </button>
+        <button mat-icon-button
+                class="button-mat-icon button-mat-icon_rating">
+          <mat-icon>expand_more</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_below">Downvote</span>
+        </button>
+      </section>
+
       <section class="comment-controls">
-        <button *ngIf="!(commentReplyInfo.replyParentKey === key)"
+        <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
                 mat-icon-button
                 class="button-mat-icon"
                 (click)="enterNewCommentMode(key)">
           <mat-icon>reply</mat-icon>
-          <span class="button-mat-icon__tooltip">Reply</span>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Reply</span>
         </button>
         <div *ngIf="loggedInUser.uid === commentMap[key].authorId"
              class="flex-center-align">
-          <button *ngIf="!commentIsBeingEdited(key)"
+          <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
                   mat-icon-button
                   class="button-mat-icon"
                   (click)="enterEditMode(key)">
             <mat-icon>edit</mat-icon>
             <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Edit</span>
           </button>
-          <button *ngIf="!commentIsBeingEdited(key)"
+          <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
                   mat-icon-button
                   class="button-mat-icon"
                   (click)="onRemoveComment(key)">
             <mat-icon>clear</mat-icon>
             <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Remove</span>
           </button>
-          <button *ngIf="commentIsBeingEdited(key)"
+          <button *ngIf="commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
                   mat-icon-button
                   class="button-mat-icon"
                   (click)="onCancelEdit()">
