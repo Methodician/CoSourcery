@@ -144,23 +144,13 @@ export class ArticleService {
 
   async updateArticle(editor: UserInfoOpen, article, articleId: string) {
     // vanillaFsdb reference for article to be updated
-    const articleRef = this.vanillaFsdb.doc(`articleData/articles/articles/${articleId}`);
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
     // Updating article version, lastUpdated, and lastEditor
     article.lastUpdated = this.timestampNow;
     article.version++;
     article.lastEditorId = editor.uid;
-    let outcome = 'success';
-    articleRef.update(article).catch(error => {
-      if (error) {
-        outcome = 'Error';
-      }
-    });
-    if (outcome !== 'success') {
-      return outcome;
-    }
-    // this.navigateToArticleDetail(article.articleId);
-    return outcome;
+    return articleRef.update(article);
   }
 
 
