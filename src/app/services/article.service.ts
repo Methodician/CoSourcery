@@ -57,10 +57,8 @@ export class ArticleService {
     docRef.set({ path: fullPath, downloadUrl: url });
   }
 
-  async getLatestArticles() {
-    const articlesRef = this.vanillaFsdb.collection('articleData/articles/articles');
-    const querySnap = await articlesRef.orderBy('timestamp', 'desc').limit(12).get();
-    return this.arrayFromCollectionSnapshot(querySnap);
+  async latestArticlesRef() {
+    return this.fsdb.collection('articleData/articles/articles', ref => ref.orderBy('timestamp', 'desc').limit(12)).valueChanges();
   }
 
 

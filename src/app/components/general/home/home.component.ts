@@ -35,7 +35,10 @@ export class HomeComponent implements OnInit {
   }
 
   async initializeArticles() {
-    this.latestArticles = await this.articleSvc.getLatestArticles();
+    const latestArticlesRef = await this.articleSvc.latestArticlesRef();
+    latestArticlesRef.subscribe(articles =>{
+      this.latestArticles = articles;
+    });
     this.allArticles = await this.articleSvc.getAllArticles();
     this.articleSvc.watchBookmarkedArticles(this.UserId);
     this.articleSvc.bookmarkedArticles$.subscribe(list => {
@@ -63,5 +66,3 @@ export enum SelectedTab {
   'all',
   'bookmark'
 }
-
-
