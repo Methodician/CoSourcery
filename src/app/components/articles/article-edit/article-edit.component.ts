@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '../../../services/article.service';
-import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
+import { CommentService } from 'app/services/comment.service';
+import { Comment } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-article-edit',
@@ -26,6 +27,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   tagsEdited = false
   currentArticleSubscription: Subscription;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
+
+  newCommentStub: Comment;
+  addingNewComment = false;
 
   coverImageFile: File;
   tempCoverImageUploadPath: string;
@@ -88,13 +92,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     tags: [[], Validators.maxLength(25)],
     isFeatured: false,
   });
+  
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private articleSvc: ArticleService,
-    private userSvc: UserService
+    private userSvc: UserService,
+    private commentSvc: CommentService,
   ) { }
 
   ngOnInit() {
@@ -265,6 +271,20 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
     const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
     this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+  }
+
+  enterNewCommentMode(){
+    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId);
+    this.addingNewComment = true;
+  }
+
+  onCancelNewComment(){
+    this.addingNewComment = false;
+  }
+
+  onAddComment() {
+    this.commentSvc.createComment(this.newCommentStub);
+    this.addingNewComment = false;
   }
 
 }

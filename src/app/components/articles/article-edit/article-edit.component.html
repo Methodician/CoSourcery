@@ -185,6 +185,38 @@
   </section>
 </form>
 
+<!-- New Top-Level Comment -->
+<section *ngIf="!isUnderComment"
+         class="section-title">
+  <h2>Discussion</h2>
+  <p *ngIf="!commentKeys">Be the first to comment!</p>
+  <button *ngIf="!addingNewComment"
+          class="button"
+          (click)="enterNewCommentMode()">
+    Comment
+  </button>
+</section>
+
+<section *ngIf="addingNewComment"
+         class="comment comment_new">
+  <cos-comment [isBeingEdited]="true"
+               [loggedInUser]="loggedInUser"
+               [authorInfo]="loggedInUser"
+               [comment]="newCommentStub">
+  </cos-comment>
+  <section class="comment-controls">
+    <button class="button"
+            (click)="onCancelNewComment()">
+      Cancel
+    </button>
+    <button class="button"
+            (click)="onAddComment()">
+      Save
+    </button>
+  </section>
+</section>
+
+<!-- Existing Comments -->
 <cos-comment-list [isUnderComment]="false"
   [loggedInUser]="loggedInUser"
   [parentKey]="articleId"
