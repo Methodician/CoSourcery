@@ -20,7 +20,7 @@
   max-width: 768px;
   position: relative;
   margin: 0 auto;
-  padding-left: 20px;
+  padding-left: 40px;
   border-left: 3px solid rgba($accent-color-1, 0.2);
 
   &_root {
@@ -34,6 +34,15 @@
   }
 }
 
+.comment-rating {
+  position: absolute;
+  top: -5px;
+  left: -22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .comment-controls {
   height: 65px;
   display: flex;
@@ -43,7 +52,7 @@
 
   &_offset-right {
     position: absolute;
-    left: 70px;
+    left: 90px;
   }
 }
 
@@ -85,6 +94,11 @@
     align-items: center;
     justify-content: center;
     padding-left: 1px;
+  }
+
+  &_small {
+    height: 30px;
+    width: 30px
   }
 
   &__tooltip {
