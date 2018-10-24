@@ -2,6 +2,7 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 .comment-group {
+  min-width: 300px;
   max-width: 768px;
   position: relative;
   margin: 0 auto;
@@ -27,20 +28,25 @@
 .comment-controls {
   visibility: hidden;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -15px;
+  right: 5px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.comment-unit:hover {
+.comment-unit {
+  padding-right: 50px;
 
-  .comment-controls {
-    visibility: visible;
-  }
+  &:hover {
 
-  .button-mat-icon_rating {
-    border: 3px solid lighten($accent-color-2, 30%);
+    .comment-controls {
+      visibility: visible;
+    }
+
+    .button-mat-icon_rating {
+      border: 3px solid lighten($accent-color-2, 30%);
+    }
   }
 }
 
@@ -49,7 +55,6 @@
 
   &_root {
     margin-left: 20px;
-    margin-right: 10px;
   }
 }
 
@@ -85,6 +90,11 @@
     padding-left: 1px;
   }
 
+  &_small {
+    height: 32px;
+    width: 32px;
+  }
+
   &:hover {
     background-color: darken($accent-color-2, 10%);
   }
@@ -108,6 +118,16 @@
     &_below {
       top: 100%;
       margin-top: 10px;
+    }
+
+    &_left {
+      right: 100%;
+      margin-right: 10px;
+    }
+
+    &_right {
+      left: 100%;
+      margin-left: 10px;
     }
   }
 

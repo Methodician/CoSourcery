@@ -289,7 +289,8 @@
   top: 0;
   right: 0;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .comment-unit:hover {
@@ -375,6 +376,11 @@ button.mat-icon-button {
     padding-left: 1px;
   }
 
+  &_small {
+    height: 32px;
+    width: 32px;
+  }
+
   &:hover {
     background-color: darken($accent-color-2, 10%);
   }
@@ -398,6 +404,16 @@ button.mat-icon-button {
     &_below {
       top: 100%;
       margin-top: 10px;
+    }
+
+    &_left {
+      right: 100%;
+      margin-right: 10px;
+    }
+
+    &_right {
+      left: 100%;
+      margin-left: 10px;
     }
   }
 

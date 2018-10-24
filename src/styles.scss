@@ -118,8 +118,12 @@ a {
 }
 
 /* Flex Presets */
-.flex, .flex-center, .flex-center-align, .flex-center-justify {
+.flex, .flex-column, .flex-center, .flex-center-align, .flex-center-justify {
   display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
 }
 
 .flex-center {

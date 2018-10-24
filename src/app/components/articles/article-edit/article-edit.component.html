@@ -207,16 +207,16 @@
       </cos-comment>
       <section class="comment-controls">
         <button mat-icon-button
-                class="button-mat-icon"
-                (click)="onCancelNewComment()">
-          <mat-icon>clear</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Cancel</span>
-        </button>
-        <button mat-icon-button
-                class="button-mat-icon"
+                class="button-mat-icon button-mat-icon_small"
                 (click)="onAddComment()">
           <mat-icon>check</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_above">Save</span>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Save</span>
+        </button>
+        <button mat-icon-button
+                class="button-mat-icon button-mat-icon_small"
+                (click)="onCancelNewComment()">
+          <mat-icon>clear</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Cancel</span>
         </button>
       </section>
     </section>
