@@ -2,49 +2,50 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 .comment {
-  min-height: 150px;
-  display: flex;
-  align-items: flex-start;
+  min-height: 100px;
+}
 
-  &__author-image {
-    min-width: 100px;
-    width: 100px;
-    display: none;
-    margin-right: 20px;
-    object-fit: contain;
-  }
-
-  &-text-container {
-    width: 100%;
-  }
-
-  &-text {
-    margin-top: 15px;
-
-    &_no-margin {
-      margin: 0;
-    }
-
-    &_light {
-      color: $medium-gray;
-    }
-
-    &_small {
-      font-size: 0.8rem;
-    }
-
-    &_input {
-      margin: 0;
-      padding: 0;
-    }
-  }
+.comment__header {
+  display: block;
 
   @media screen and (min-width: 500px) {
-
-    &__author-image {
-      display: block;
-    }
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    grid-gap: 20px;
   }
+}
+
+.comment__author-image {
+  height: 50px;
+  width: 50px;
+  display: none;
+  border-radius: 100%;
+  object-fit: cover;
+
+  @media screen and (min-width: 500px) {
+    display: block;
+  }
+}
+
+.comment__author-detail {
+  margin: 0;
+  color: lighten($accent-color-1-dark, 30%);
+
+  &_light {
+    color: $medium-gray;
+    font-size: 0.8rem;
+  }
+}
+
+.comment__text {
+  margin-top: 20px;
+}
+
+.comment__input {
+  min-height: 100px;
+  height:100%;
+  margin: 0;
+  padding: 0;
 }
 
 mat-form-field::ng-deep {

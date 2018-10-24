@@ -9,8 +9,7 @@
   border-left: 3px solid lighten($accent-color-1, 30%);
 
   &_new {
-    padding-top: 20px;
-    padding-right: 20px;
+    margin-top: 40px;
     padding-bottom: 20px;
     border-left: 3px solid lighten($accent-color-2, 30%);
   }
@@ -18,7 +17,7 @@
 
 .comment-rating {
   position: absolute;
-  top: -16px;
+  top: -10px;
   left: -22px;
   display: flex;
   flex-direction: column;
@@ -46,7 +45,7 @@
 }
 
 .comment-list {
-  padding-top: 24px;
+  padding-top: 40px;
 
   &_root {
     margin-left: 20px;
