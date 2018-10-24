@@ -12,7 +12,7 @@ import { Comment } from 'app/shared/class/comment';
 export class CommentListComponent implements OnInit, OnDestroy {
   @Input() isUnderComment = true;
   @Input() parentKey: string;
-  @Input() loggedInUser: UserInfoOpen
+  @Input() loggedInUser: UserInfoOpen;
 
   commentsSubscription: Subscription;
   //  ToDo: FILL THIS WITH OTHER SUBSCRIPTIONS TO BREAK DOWN ON DESTROY
@@ -75,7 +75,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   fillDataMaps() {
     this.commentsSubscription = this.commentSvc.watchCommentsByParent(this.parentKey)
       .subscribe(comments => {
-        for (let comment$ of comments) {
+        for (const comment$ of comments) {
           comment$.subscribe(async commentSnap => {
             const val = commentSnap.payload.val() as any;
             const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp);
@@ -106,6 +106,6 @@ export class CommentListComponent implements OnInit, OnDestroy {
 }
 
 //  Very cool: https://stackoverflow.com/questions/13315131/enforcing-the-type-of-the-indexed-members-of-a-typescript-object
-export interface KeyMap<T> { [key: string]: T; };
-export interface CommentMap extends KeyMap<Comment> { };
-export interface UserMap extends KeyMap<UserInfoOpen> { };
+export interface KeyMap<T> { [key: string]: T; }
+export interface CommentMap extends KeyMap<Comment> { }
+export interface UserMap extends KeyMap<UserInfoOpen> { }
