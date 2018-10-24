@@ -100,7 +100,7 @@
   }
 
   &__tooltip {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     padding: 5px 15px;
     border-radius: 4px;
@@ -132,7 +132,7 @@
   }
 
   &:hover &__tooltip {
-    opacity: 1;
+    visibility: visible;
   }
 
   &_rating {

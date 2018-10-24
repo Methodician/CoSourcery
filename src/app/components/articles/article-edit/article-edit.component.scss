@@ -344,7 +344,7 @@ button.mat-icon-button {
   }
 
   .tooltip {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     right: 100%;
     margin-right: 10px;
@@ -356,7 +356,7 @@ button.mat-icon-button {
   }
 
   &:hover .tooltip {
-    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -386,7 +386,7 @@ button.mat-icon-button {
   }
 
   &__tooltip {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     padding: 5px 15px;
     border-radius: 4px;
@@ -418,6 +418,6 @@ button.mat-icon-button {
   }
 
   &:hover &__tooltip {
-    opacity: 1;
+    visibility: visible;
   }
 }
