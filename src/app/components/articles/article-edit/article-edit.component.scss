@@ -266,11 +266,11 @@
 }
 
 .comment-list_root {
-  margin-left: 20px;
+  margin-left: 30px;
 }
 
 .comment-group {
-  min-width: 300px;
+  min-width: 250px;
   max-width: 768px;
   position: relative;
   margin: 0 auto;
@@ -284,17 +284,24 @@
 }
 
 .comment-controls {
-  visibility: hidden;
-  position: absolute;
-  top: -15px;
-  right: 5px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+
+  @media screen and (min-width: 500px) {
+    visibility: hidden;
+    position: absolute;
+    top: -12px;
+    right: 15px;
+    flex-direction: column;
+    align-items: flex-end;
+  }
 }
 
 .comment-unit {
-  padding-right: 50px;
+  padding-right: 30px;
+
+  @media screen and (min-width: 500px) {
+    padding-right: 60px;
+  }
 
   &:hover {
 
@@ -366,9 +373,13 @@ button.mat-icon-button {
 .button-mat-icon {
   margin: 5px;
   border-radius: 100%;
-  color: #fff;
-  background-color: $accent-color-1;
-  box-shadow: 0 2px 2px $medium-gray;
+  box-shadow: none;
+  background-color: transparent;
+  color: lighten($accent-color-1-dark, 30%);
+
+  &:hover {
+    background-color: transparent;
+  }
 
   ::ng-deep .mat-button-wrapper {
     height: 100%;
@@ -381,10 +392,6 @@ button.mat-icon-button {
   &_small {
     height: 32px;
     width: 32px;
-  }
-
-  &:hover {
-    background-color: darken($accent-color-2, 10%);
   }
 
   &__tooltip {
@@ -419,7 +426,17 @@ button.mat-icon-button {
     }
   }
 
-  &:hover &__tooltip {
-    visibility: visible;
+  @media screen and (min-width: 500px) {
+    color: #fff;
+    background-color: $accent-color-1;
+    box-shadow: 0 2px 2px $medium-gray;
+
+    &:hover {
+      background-color: darken($accent-color-2, 10%);
+    }
+
+    &:hover &__tooltip {
+      visibility: visible;
+    }
   }
 }

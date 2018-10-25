@@ -2,7 +2,7 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 .comment-group {
-  min-width: 300px;
+  min-width: 250px;
   max-width: 768px;
   position: relative;
   margin: 0 auto;
@@ -26,17 +26,32 @@
 }
 
 .comment-controls {
-  visibility: hidden;
-  position: absolute;
-  top: -15px;
-  right: 5px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+
+  &__sub-unit {
+    display: flex;
+  }
+
+  @media screen and (min-width: 500px) {
+    visibility: hidden;
+    position: absolute;
+    top: -12px;
+    right: 15px;
+    flex-direction: column;
+    align-items: flex-end;
+
+    &__sub-unit {
+      flex-direction: column;
+    }
+  }
 }
 
 .comment-unit {
-  padding-right: 50px;
+  padding-right: 30px;
+
+  @media screen and (min-width: 500px) {
+    padding-right: 60px;
+  }
 
   &:hover {
 
@@ -58,32 +73,14 @@
   padding-top: 40px;
 
   &_root {
-    margin-left: 20px;
-  }
-}
-
-.button {
-  margin: 5px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  background-color: $accent-color-1;
-  box-shadow: 0 2px 2px $medium-gray;
-  font-size: 1rem;
-  cursor: pointer;
-
-  &:hover {
-    background-color: darken($accent-color-2, 10%);
+    margin-left: 30px;
   }
 }
 
 .button-mat-icon {
   margin: 5px;
   border-radius: 100%;
-  color: #fff;
-  background-color: $accent-color-1;
-  box-shadow: 0 2px 2px $medium-gray;
+  color: lighten($accent-color-1-dark, 30%);
 
   ::ng-deep .mat-button-wrapper {
     height: 100%;
@@ -96,10 +93,6 @@
   &_small {
     height: 32px;
     width: 32px;
-  }
-
-  &:hover {
-    background-color: darken($accent-color-2, 10%);
   }
 
   &__tooltip {
@@ -134,8 +127,18 @@
     }
   }
 
-  &:hover &__tooltip {
-    visibility: visible;
+  @media screen and (min-width: 500px) {
+    color: #fff;
+    background-color: $accent-color-1;
+    box-shadow: 0 2px 2px $medium-gray;
+
+    &:hover {
+      background-color: darken($accent-color-2, 10%);
+    }
+
+    &:hover &__tooltip {
+      visibility: visible;
+    }
   }
 
   &_rating {
@@ -146,12 +149,15 @@
     color: $accent-color-1-dark;
     box-shadow: none;
 
-    &_hidden {
-      visibility: hidden;
-    }
-
     &:hover {
       background-color: lighten($accent-color-2, 30%);
+    }
+
+    @media screen and (min-width: 500px) {
+
+      &_hidden {
+        visibility: hidden;
+      }
     }
   }
 }
