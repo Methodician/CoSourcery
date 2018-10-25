@@ -11,8 +11,6 @@ import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference 
   providedIn: 'root'
 })
 export class ArticleService {
-  vanillaFsdb = firebase.firestore();
-  vanillaRtdb = firebase.database();
   bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
   timestampNow = firebase.firestore.Timestamp.now();
   currentArticle$ = new Subject<any>();
@@ -51,7 +49,7 @@ export class ArticleService {
   }
 
   trackUploadedCoverImages(articleId, fullPath, url) {
-    const docRef = this.vanillaFsdb.doc(`fileUploads/articleUploads/coverImages/${articleId}`);
+    const docRef = this.fsdb.doc(`fileUploads/articleUploads/coverImages/${articleId}`);
     docRef.set({ path: fullPath, downloadUrl: url });
   }
 
@@ -118,7 +116,7 @@ export class ArticleService {
 
 
   async updateArticle(editor: UserInfoOpen, article, articleId: string) {
-    // vanillaFsdb reference for article to be updated
+    // fsdb reference for article to be updated
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
     // Updating article version, lastUpdated, and lastEditor
@@ -130,16 +128,12 @@ export class ArticleService {
 
 
   createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
-    const articleRef = this.vanillaFsdb.doc(`articleData/articles/articles/${articleId}`);
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     // Updating New Article Object.
     // Probably a better way to do this.
-    console.log(article);
     const newArt = article;
     newArt.authorId = author.uid;
     newArt.articleId = articleId;
-    newArt.commentCount = 0;
-    newArt.version = 1;
-    newArt.viewCount = 0;
     newArt.lastUpdated = this.timestampNow;
     newArt.timestamp = this.timestampNow;
     newArt.lastEditorId = author.uid;
@@ -166,7 +160,7 @@ export class ArticleService {
     articleRef.delete();
   }
 
-
+//with refactor this is no longer used
   arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
     const array = [];
     querySnapshot.forEach(doc => {
