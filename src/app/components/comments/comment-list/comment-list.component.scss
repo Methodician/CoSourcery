@@ -61,6 +61,7 @@
 
 .comment-unit {
   padding-right: 30px;
+  transition: height 1s;
 
   @media screen and (min-width: 500px) {
     padding-right: 60px;

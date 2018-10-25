@@ -4,6 +4,7 @@
 
   <section class="comment-group"
            [ngClass]="{'comment_root': !isUnderComment}">
+
     <section class="comment-unit">
       <section class="comment-rating">
         <button mat-icon-button
@@ -41,7 +42,7 @@
         <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
                 mat-icon-button
                 class="button-mat-icon button-mat-icon_small"
-                (click)="enterNewCommentMode(key)">
+                (click)="commentListUnfurlMap[key] = true; enterNewCommentMode(key)">
           <mat-icon>reply</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Reply</span>
         </button>
@@ -68,7 +69,7 @@
             <mat-icon>check</mat-icon>
             <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Save</span>
           </button>
-          <button *ngIf="commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
+          <button *ngIf="commentIsBeingEdited(key)"
                   mat-icon-button
                   class="button-mat-icon button-mat-icon_small"
                   (click)="onCancelEdit()">
@@ -108,7 +109,8 @@
                       [loggedInUser]="loggedInUser"
                       [userMap]="userMap"
                       [userKeys]="userKeys"
-                      [commentReplyInfo]="commentReplyInfo">
+                      [commentReplyInfo]="commentReplyInfo"
+                      [commentEditInfo]="commentEditInfo">
     </cos-comment-list>
   </section>
 </section>

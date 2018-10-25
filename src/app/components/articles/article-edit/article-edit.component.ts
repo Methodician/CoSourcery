@@ -30,6 +30,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   newCommentStub: Comment;
   commentReplyInfo = { replyParentKey: null };
+  commentEditInfo = { commentKey: null };
 
   coverImageFile: File;
   tempCoverImageUploadPath: string;
@@ -274,6 +275,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   enterNewCommentMode() {
+    this.commentEditInfo.commentKey = null;
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId, ParentTypes.article);
     this.commentReplyInfo.replyParentKey = this.articleId;
   }
