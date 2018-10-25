@@ -46,6 +46,10 @@
 
     .button-mat-icon_rating {
       border: 3px solid lighten($accent-color-2, 30%);
+
+      &_hidden {
+        visibility: visible;
+      }
     }
   }
 }
@@ -141,6 +145,10 @@
     background-color: #fff;
     color: $accent-color-1-dark;
     box-shadow: none;
+
+    &_hidden {
+      visibility: hidden;
+    }
 
     &:hover {
       background-color: lighten($accent-color-2, 30%);
