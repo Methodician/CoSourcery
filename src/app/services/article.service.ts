@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { ArticleDetailFirestore } from 'app/shared/class/article-info';
-import { Router } from '@angular/router';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireObject} from '@angular/fire/database';
@@ -19,7 +18,6 @@ export class ArticleService {
   currentArticle$ = new Subject<any>();
 
   constructor(
-    private router: Router,
     private storage: AngularFireStorage,
     private rtdb: AngularFireDatabase,
     private fsdb: AngularFirestore
@@ -97,22 +95,11 @@ export class ArticleService {
 
 
   async setCurrentArticle(articleId: string) {
-    const articleRef = this.vanillaFsdb.doc(`articleData/articles/articles/${articleId}`);
-    await articleRef.onSnapshot(snapshotData => {
-      const selectedArticle = snapshotData.data();
-      this.currentArticle$.next(selectedArticle);
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`).valueChanges();
+    await articleRef.subscribe(snapshotData => {
+      this.currentArticle$.next(snapshotData);
     });
   }
-
-
-  navigateToArticleDetail(articleId: any) {
-    this.router.navigate([`articledetail/${articleId}`]);
-  }
-
-  navigateToProfile(uid: any) {
-    this.router.navigate([`profile/${uid}`]);
-  }
-
 
   unBookmarkArticle(userKey, articleId) {
     this.rtdb.object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`).remove();
