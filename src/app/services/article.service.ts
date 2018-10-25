@@ -156,19 +156,20 @@ export class ArticleService {
 
 
   createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    const articleRef = this.vanillaFsdb.doc(`articleData/articles/articles/${articleId}`);
     // Updating New Article Object.
     // Probably a better way to do this.
     console.log(article);
     const newArt = article;
     newArt.authorId = author.uid;
     newArt.articleId = articleId;
+    newArt.commentCount = 0;
+    newArt.version = 1;
+    newArt.viewCount = 0;
     newArt.lastUpdated = this.timestampNow;
     newArt.timestamp = this.timestampNow;
     newArt.lastEditorId = author.uid;
     newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png';
-
-    // articleRef.set(newArt, {merge: true});
 
     let outcome = 'success';
     try {
