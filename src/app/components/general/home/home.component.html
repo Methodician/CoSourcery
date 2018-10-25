@@ -37,7 +37,7 @@
      *ngIf="currentSelectedTab === 2 && allArticles">
   <cos-article-preview-card [userId]="UserId"
                             [articleData]="article"
-                            *ngFor="let article of allArticles | async | reverseArray ">
+                            *ngFor="let article of allArticles | async">
   </cos-article-preview-card>
 </section>
 <section id="bookmarked-articles"
