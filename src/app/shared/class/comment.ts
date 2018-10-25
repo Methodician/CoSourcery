@@ -14,10 +14,10 @@ export class Comment {
 }
 
 //  Very cool: https://stackoverflow.com/questions/13315131/enforcing-the-type-of-the-indexed-members-of-a-typescript-object
-export interface KeyMap<T> { [key: string]: T };
-export interface CommentMap extends KeyMap<Comment> { };
+export interface KeyMap<T> { [key: string]: T; }
+export interface CommentMap extends KeyMap<Comment> { }
 
 export enum ParentTypes {
     article = 'article',
     comment = 'comment'
-  };
+  }

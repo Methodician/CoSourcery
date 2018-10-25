@@ -3,15 +3,13 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
+import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
 
 
 admin.initializeApp();
 const fs = admin.firestore();
 const db = admin.database();
 fs.settings({ timestampsInSnapshots: true });
-
-//  Can work from this example to write funciton to count comments and bubble up?
-//  https://github.com/firebase/functions-samples/blob/master/limit-children/functions/index.js
 
 exports.trackCommentDeletions = functions.database.ref('commentData/comments/{commentKey}/removedAt').onCreate(async (snap, context) => {
     const commentRef = snap.ref.parent;
@@ -23,18 +21,16 @@ exports.trackCommentDeletions = functions.database.ref('commentData/comments/{co
     ]);
 })
 
-// Should be renamed now that I've added in other responses to comment creation.
-exports.trackCommentAuthorsAndParents = functions.database.ref('commentData/comments/{commentKey}').onCreate((snap, context) => {
+exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{commentKey}/replyCount').onUpdate(async(change, context) => {
     
     const incrementReplyCount = (commentRef: admin.database.Reference) => {
-        commentRef.transaction((comment: Comment) => {
-            if(comment) {
-                let count = comment.replyCount || 0;
-                count = count + 1;
-                comment.replyCount = count;
+        return commentRef.transaction((commentToUpdate: Comment) => {
+            if(commentToUpdate) {
+                let replyCount = commentToUpdate.replyCount || 0;
+                replyCount = replyCount + 1;
+                commentToUpdate.replyCount = replyCount;
             }
-            this.bubbleUpCommentCounts(comment);
-            return comment;
+            return commentToUpdate;
         })
         .then(_ => {
             console.log('db transaction success!');
@@ -47,7 +43,7 @@ exports.trackCommentAuthorsAndParents = functions.database.ref('commentData/comm
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
         return fs.runTransaction(async t => {
             const snapshot = await t.get(articleDocRef);
-            const article = snapshot.data();
+            const article: ArticleDetailFirestore = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
             commentCount = commentCount + 1;
             t.update(articleDocRef, {commentCount: commentCount});
@@ -58,24 +54,70 @@ exports.trackCommentAuthorsAndParents = functions.database.ref('commentData/comm
         });
     };
 
-    const bubbleUpCommentCounts = (comment: Comment) => {
-        if(comment.parentType === ParentTypes.article){
-            // We're counting a top-level comment, so return
-            const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
-            return incrementCommentCount(articleRef);
-        } else if(comment.parentType == ParentTypes.comment){
-            // We're counting a reply to a comment, so bubble up.
-            const commentRef = db.ref(`commentData/comments/${comment.parentKey}`);
-            return incrementReplyCount(commentRef);
-        }
-        return null;
+    const parentCommentRef = db.ref(`commentData/comments/${context.params.commentKey}`);
+    const snap = await parentCommentRef.once('value').then();
+    const comment = snap.val()
+    if(comment.parentType === ParentTypes.article){
+        const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
+        return incrementCommentCount(articleRef);
+    } else if(comment.parentType === ParentTypes.comment){
+        const ref = db.ref(`commentData/comments/${comment.parentKey}`);
+        return incrementReplyCount(ref);
+    }
+
+    console.log('About to return null. Comments may not be counted...');
+    return null;
+});
+
+exports.countNewComment = functions.database.ref('commentData/comments/{commentKey}').onCreate(async (snap, context) => {
+    
+    const incrementReplyCount = (commentRef: admin.database.Reference) => {
+        return commentRef.transaction((commentToUpdate: Comment) => {
+            if(commentToUpdate) {
+                let replyCount = commentToUpdate.replyCount || 0;
+                replyCount = replyCount + 1;
+                commentToUpdate.replyCount = replyCount;
+            }
+            return commentToUpdate;
+        })
+        .then(_ => {
+            console.log('db transaction success!');
+        })
+        .catch(err => {
+            console.log('db transaction failure...', err);
+        });
     };
 
+    const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
+        return fs.runTransaction(async t => {
+            const snapshot = await t.get(articleDocRef);
+            const article: ArticleDetailFirestore = snapshot.data() as any;
+            let commentCount = article.commentCount || 0;
+            commentCount = commentCount + 1;
+            t.update(articleDocRef, {commentCount: commentCount});
+        }).then(res => {
+            console.log('Transaction success!');
+        }).catch(err => {
+            console.log('Transaction failure:', err);
+        });
+    };
 
+    const comment: Comment = snap.val();
+    if(comment.parentType === ParentTypes.article){
+        const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
+        return incrementCommentCount(articleRef);
+    } else if(comment.parentType === ParentTypes.comment){
+        const commentRef = db.ref(`commentData/comments/${comment.parentKey}`);
+        return incrementReplyCount(commentRef);
+    }
+    console.log('About to return null. Comments may not be counted...');
+    return null;
+});
+
+exports.trackCommentAuthorsAndParents = functions.database.ref('commentData/comments/{commentKey}').onCreate((snap, context) => {
     const comment: Comment = snap.val();
     const key = context.params.commentKey;
     const commentRef = snap.ref;
-    bubbleUpCommentCounts(comment);
     return Promise.all([
         commentRef.parent.parent.child(`commentsByParent/${comment.parentKey}/${key}`).set(true),
         commentRef.parent.parent.child(`commentsByAuthor/${comment.authorId}/${key}`).set(true)

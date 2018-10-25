@@ -19,6 +19,7 @@ export class CommentService {
       authorId: authorId,
       parentKey: parentKey,
       text: '',
+      replyCount: 0,
       parentType: parentType
     }
     return newComment;
@@ -32,6 +33,7 @@ export class CommentService {
       lastUpdated: serverTimestamp,
       timestamp: serverTimestamp,
       parentType: comment.parentType,
+      replyCount: comment.replyCount,
     }
 
     return this.rtdb
