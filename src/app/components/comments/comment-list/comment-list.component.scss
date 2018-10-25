@@ -7,19 +7,19 @@
   position: relative;
   margin: 0 auto;
   padding-left: 30px;
-  border-left: 3px solid lighten($accent-color-1, 30%);
+  border-left: 2px solid lighten($accent-color-1, 30%);
 
   &_new {
     margin-top: 40px;
     padding-bottom: 20px;
-    border-left: 3px solid lighten($accent-color-2, 30%);
+    border-left: 2px solid lighten($accent-color-2, 30%);
   }
 }
 
 .comment-rating {
   position: absolute;
   top: -10px;
-  left: -22px;
+  left: -21px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,7 +60,7 @@
     }
 
     .button-mat-icon_rating {
-      border: 3px solid lighten($accent-color-2, 30%);
+      border: 2px solid lighten($accent-color-2, 30%);
 
       &_hidden {
         visibility: visible;
@@ -144,7 +144,7 @@
   &_rating {
     height: 30px;
     width: 30px;
-    border: 3px solid lighten($accent-color-1, 30%);
+    border: 2px solid lighten($accent-color-1, 30%);
     background-color: #fff;
     color: $accent-color-1-dark;
     box-shadow: none;
