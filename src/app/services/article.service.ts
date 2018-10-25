@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireObject} from '@angular/fire/database';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
 
 @Injectable({
@@ -81,6 +81,7 @@ export class ArticleService {
       const articlesList = new Array<any>();
       articleIds.forEach(async key => {
         const articleRef= await this.getArticleById(key.key);
+        console.log(articleRef);
         articleRef.subscribe(article => {
           articlesList.push(article);
           this.bookmarkedArticles$.next(articlesList);
@@ -158,6 +159,7 @@ export class ArticleService {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     // Updating New Article Object.
     // Probably a better way to do this.
+    console.log(article);
     const newArt = article;
     newArt.authorId = author.uid;
     newArt.articleId = articleId;
@@ -180,15 +182,12 @@ export class ArticleService {
 
 
   createArticleId() {
-    // Creates new document reference point in vanillaFsdb
-    const articleIDRef = this.vanillaFsdb.collection(`articleData/articles/articles/`).doc();
-    // Saves the ID of new article reference point
-    return articleIDRef.id;
+    return this.fsdb.createId();
   }
 
 
   deleteArticleRef(articleId) {
-    const articleRef = this.vanillaFsdb.doc(`articleData/articles/articles/${articleId}`);
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     articleRef.delete();
   }
 

@@ -3,6 +3,7 @@ import { ArticleService } from '../../../services/article.service';
 import { ActivatedRoute } from '@angular/router';
 import { ArticleDetailFirestore } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'cos-home',
@@ -13,7 +14,7 @@ import { AuthService } from '../../../services/auth.service';
 export class HomeComponent implements OnInit {
   routeParams;
   UserId;
-  featuredArticles: ArticleDetailFirestore[];
+  featuredArticles;
   latestArticles;
   allArticles;
   bookmarkedArticles;
@@ -30,19 +31,17 @@ export class HomeComponent implements OnInit {
     this.authSvc.authInfo$.subscribe(authInfo => {
       if (authInfo) {
         this.UserId = authInfo.uid;
+        this.watchBookmarkedArticles();
       }
     });
   }
 
   async initializeArticles() {
-    const latestArticlesRef = await this.articleSvc.latestArticlesRef();
-    latestArticlesRef.subscribe(articles =>{
-      this.latestArticles = articles;
-    });
-    const allArticlesRef = await this.articleSvc.allArticlesRef();
-    allArticlesRef.subscribe(articles =>{
-      this.allArticles = articles;
-    })
+    this.latestArticles = await this.articleSvc.latestArticlesRef();
+    this.allArticles = await this.articleSvc.allArticlesRef();
+  }
+
+  watchBookmarkedArticles(){
     this.articleSvc.watchBookmarkedArticles(this.UserId);
     this.articleSvc.bookmarkedArticles$.subscribe(list => {
       this.bookmarkedArticles = list;
