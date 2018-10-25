@@ -8,7 +8,7 @@
       <section class="comment-rating">
         <button mat-icon-button
                 class="button-mat-icon button-mat-icon_rating">
-          <span>{{commentMap[key].replyCount}}</span>
+          <span>0</span>
         </button>
         <button mat-icon-button
                 class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden">
@@ -27,6 +27,13 @@
                    [authorInfo]="userMap[commentMap[key].authorId]"
                    [isBeingEdited]="commentIsBeingEdited(key)">
       </cos-comment>
+
+      <p *ngIf="commentMap[key].replyCount > 0"
+         class="reply-count">
+        <a (click)="toggleCommentListUnfurl(key)">
+          {{commentListUnfurlMap[key] ? 'Hide' : 'Show'}} {{commentMap[key].replyCount}} {{commentMap[key].replyCount === 1 ? 'Reply' : 'Replies'}}
+        </a>
+      </p>
 
       <section class="comment-controls">
         <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
@@ -94,7 +101,8 @@
       </section>
     </section>
 
-    <cos-comment-list [parentKey]="key"
+    <cos-comment-list *ngIf="commentListUnfurlMap[key]"
+                      [parentKey]="key"
                       [loggedInUser]="loggedInUser"
                       [userMap]="userMap"
                       [userKeys]="userKeys"

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
-import { Comment, CommentMap, ParentTypes } from 'app/shared/class/comment';
+import { Comment, CommentMap, ParentTypes, KeyMap } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-comment-list',
@@ -26,8 +26,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   commentMap: CommentMap = {};
   commentKeys: string[];
-
-
+  commentListUnfurlMap: KeyMap<boolean> = {};
 
   constructor(private commentSvc: CommentService) {
   }
@@ -101,4 +100,9 @@ export class CommentListComponent implements OnInit, OnDestroy {
   commentIsBeingEdited(commentKey) {
     return this.keyOfCommentBeingEdited === commentKey;
   }
+
+  toggleCommentListUnfurl(key) {
+    this.commentListUnfurlMap[key] = this.commentListUnfurlMap[key] ? !this.commentListUnfurlMap[key] : true;
+  }
+
 }
