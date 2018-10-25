@@ -64,6 +64,7 @@ p {
 a {
   color: $primary-color;
   text-decoration: none;
+  cursor: pointer;
 }
 
 @media screen and (min-width: 768px) {
