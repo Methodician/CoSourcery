@@ -4,12 +4,11 @@
 
   <section class="comment-group"
            [ngClass]="{'comment_root': !isUnderComment}">
-
     <section class="comment-unit">
       <section class="comment-rating">
         <button mat-icon-button
                 class="button-mat-icon button-mat-icon_rating">
-          <span>0</span>
+          <span>{{commentMap[key].replyCount}}</span>
         </button>
         <button mat-icon-button
                 class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden">

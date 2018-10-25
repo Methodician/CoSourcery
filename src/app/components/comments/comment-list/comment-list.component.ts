@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
-import { Comment, CommentMap } from 'app/shared/class/comment';
+import { Comment, CommentMap, ParentTypes } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-comment-list',
@@ -45,7 +45,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   enterNewCommentMode(replyParentKey) {
-    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey);
+    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey, ParentTypes.comment);
     this.commentReplyInfo.replyParentKey = replyParentKey;
   }
 
@@ -78,7 +78,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
         for (let comment$ of comments) {
           comment$.subscribe(async commentSnap => {
             const val = commentSnap.payload.val() as any;
-            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp);
+            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType);
             this.commentMap[commentSnap.key] = comment;
             this.commentKeys = Object.keys(this.commentMap);
             if(!!!this.userMap[val.authorId]){

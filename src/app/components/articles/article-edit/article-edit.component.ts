@@ -11,7 +11,7 @@ import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
-import { Comment } from 'app/shared/class/comment';
+import { Comment, ParentTypes } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-article-edit',
@@ -30,7 +30,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   newCommentStub: Comment;
   commentReplyInfo = { replyParentKey: null };
-  
+
   coverImageFile: File;
   tempCoverImageUploadPath: string;
   coverImageUploadTask: AngularFireUploadTask;
@@ -274,7 +274,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   enterNewCommentMode() {
-    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId);
+    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId, ParentTypes.article);
     this.commentReplyInfo.replyParentKey = this.articleId;
   }
 
