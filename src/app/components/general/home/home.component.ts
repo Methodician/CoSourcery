@@ -15,8 +15,8 @@ export class HomeComponent implements OnInit {
   routeParams;
   UserId;
   featuredArticles;
-  latestArticles;
-  allArticles;
+  latestArticles: Observable<any>;
+  allArticles: Observable<any>;
   bookmarkedArticles;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
 
@@ -31,7 +31,9 @@ export class HomeComponent implements OnInit {
     this.authSvc.authInfo$.subscribe(authInfo => {
       if (authInfo) {
         this.UserId = authInfo.uid;
-        this.watchBookmarkedArticles();
+        if(this.UserId){
+          this.watchBookmarkedArticles();
+        }
       }
     });
   }
