@@ -95,7 +95,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
         for (let comment$ of comments) {
           comment$.subscribe(async commentSnap => {
             const val = commentSnap.payload.val() as any;
-            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType);
+            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType, val.voteCount);
             this.commentMap[commentSnap.key] = comment;
             this.commentKeys = Object.keys(this.commentMap);
             if(!!!this.userMap[val.authorId]){
@@ -105,7 +105,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
                 const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
                 this.userMap[authorSnap.key] = author;
                 this.userKeys = Object.keys(this.userMap);
-              }              
+              }
             }
           });
         }

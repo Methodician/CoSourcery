@@ -1,31 +1,30 @@
 <section *ngFor="let key of commentKeys | reverseArray"
          class="comment-list"
          [ngClass]="{'comment-list_root': !isUnderComment}">
-
   <section class="comment-group"
            [ngClass]="{'comment_root': !isUnderComment}">
 
     <section class="comment-unit">
       <section class="comment-rating">
         <button (click)="onUpvoteComment(key)"
-                [style.background-color]="hasUserVoted(key, 'up') ? 'fuchsia' : ''"
                 mat-icon-button
-                class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden">
+                class="button-mat-icon button-mat-icon_rating"
+                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'up')}">
           <mat-icon>expand_less</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">Upvote</span>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'up') ? 'Remove Vote' : 'Upvote'}}</span>
         </button>
         <div class="comment-rating__score">
           <button mat-icon-button
                   class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_score">
-            <span>0</span>
+            <span>{{commentMap[key].voteCount}}</span>
           </button>
         </div>
         <button mat-icon-button
                 (click)="onDownvoteComment(key)"
-                [style.background-color]="hasUserVoted(key, 'down') ? 'fuchsia' : ''"
-                class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden">
+                class="button-mat-icon button-mat-icon_rating"
+                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'down')}">
           <mat-icon>expand_more</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">Downvote</span>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'down') ? 'Remove Vote' : 'Downvote'}}</span>
         </button>
       </section>
       <cos-comment [comment]="commentMap[key]"
