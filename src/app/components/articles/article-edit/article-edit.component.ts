@@ -106,7 +106,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    //  May abstract this out to an ID now that we have user map...
+    //  May abstract userInfo out to an ID now that we have user map...
     this.userSvc.userInfo$.subscribe(user => {
       this.loggedInUser = user;
       this.mapUserVotes();
@@ -124,6 +124,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   mapUserVotes(){
     this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
     .snapshotChanges().subscribe(snaps => {
+      this.userVotesMap = {};
       for(let snap of snaps){
         this.userVotesMap[snap.key] = snap.payload.val() as any;
       }

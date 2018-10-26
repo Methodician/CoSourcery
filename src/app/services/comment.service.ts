@@ -30,9 +30,11 @@ export class CommentService {
   getUserVotesRef(userId: string){
     return this.rtdb.list(`commentData/votesByUser/${userId}`);
   }
+
   getVoteRef(voterId: string, commentKey: string): AngularFireObject<VoteDirections>{
     return this.rtdb.object(`commentData/votesByUser/${voterId}/${commentKey}`);
   }
+  
   async getExistingVote(voteRef: AngularFireObject<VoteDirections>){
     const existingVoteSnap = await voteRef.query.once('value');
     return existingVoteSnap.val();

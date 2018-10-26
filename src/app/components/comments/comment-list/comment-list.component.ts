@@ -48,6 +48,13 @@ export class CommentListComponent implements OnInit, OnDestroy {
     this.commentSvc.downvoteComment(this.loggedInUser.uid, commentKey, VoteDirections.down);
   }
 
+  hasUserVoted(commentKey: string, voteDirection: VoteDirections){
+    if(!this.userVotesMap[commentKey]){
+      return false
+    }
+    return this.userVotesMap[commentKey] as number === VoteDirections[voteDirection] as any as number;
+  }
+
   enterEditMode(commentKey: string) {
     this.keyOfCommentBeingEdited = commentKey;
   }

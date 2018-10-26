@@ -1,3 +1,6 @@
+<pre>
+  {{ userVotesMap | json }}
+</pre>
 <section *ngFor="let key of commentKeys | reverseArray"
          class="comment-list"
          [ngClass]="{'comment-list_root': !isUnderComment}">
@@ -10,26 +13,27 @@
                 class="button-mat-icon button-mat-icon_rating">
           <span>0</span>
         </button>
+        <!-- I think button should also be visible when they have voted that way (and certainly not fuchsia) -->
         <button (click)="onUpvoteComment(key)"
+                [style.background-color]="hasUserVoted(key, 'up') ? 'fuchsia' : ''"
                 mat-icon-button
                 class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden">
           <mat-icon>expand_less</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">Upvote</span>
         </button>
         <button (click)="onDownvoteComment(key)"
+                [style.background-color]="hasUserVoted(key, 'down') ? 'fuchsia' : ''"
                 mat-icon-button
                 class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden">
           <mat-icon>expand_more</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">Downvote</span>
         </button>
       </section>
-
       <cos-comment [comment]="commentMap[key]"
                    [loggedInUser]="loggedInUser"
                    [authorInfo]="userMap[commentMap[key].authorId]"
                    [isBeingEdited]="commentIsBeingEdited(key)">
       </cos-comment>
-
       <p *ngIf="commentMap[key].replyCount > 0"
          class="reply-count">
         <a (click)="toggleCommentListUnfurl(key)">
@@ -102,8 +106,6 @@
         </section>
       </section>
     </section>
-    <pre>{{ userVotesMap | json }}</pre>
-
     <cos-comment-list *ngIf="commentListUnfurlMap[key]"
                       [parentKey]="key"
                       [loggedInUser]="loggedInUser"
