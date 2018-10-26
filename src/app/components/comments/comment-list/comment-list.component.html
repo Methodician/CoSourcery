@@ -31,19 +31,19 @@
   style="margin: 30px;">
   <section *ngIf="loggedInUser.uid === commentMap[key].authorId"
     class="comment-controls">
-    <button *ngIf="!commentIsBeingEdited(key)"
+    <button id="comment-edit-btn" *ngIf="!commentIsBeingEdited(key)"
       (click)="enterEditMode(key)">
       Edit
     </button>
-    <button *ngIf="commentIsBeingEdited(key)"
+    <button id="comment-edit-btn" *ngIf="commentIsBeingEdited(key)"
       (click)="onCancelEdit()">
       Cancel
     </button>
-    <button *ngIf="!commentIsBeingEdited(key) && loggedInUser.uid === commentMap[key].authorId"
+    <button id="comment-remove-btn" *ngIf="!commentIsBeingEdited(key) && loggedInUser.uid === commentMap[key].authorId"
       (click)="onRemoveComment(key)">
       Remove
     </button>
-    <button *ngIf="commentIsBeingEdited(key)"
+    <button id="comment-save-btn" *ngIf="commentIsBeingEdited(key)"
       (click)="onSaveEdits(key)">
       Save
     </button>

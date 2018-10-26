@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { CommentComponent } from './comment.component';
 
 import { UserInfoOpen } from '../../../shared/class/user-info';
-import { DatePipe } from '@angular/common';
 
 class UserInfoOpenStub {
   constructor(
@@ -14,11 +13,6 @@ class UserInfoOpenStub {
       public lName: string,
       public uid?: string,
       public imageUrl?: string,
-      public email?: string,
-      public zipCode?: string,
-      public bio?: string,
-      public city?: string,
-      public state?: string,
   ) { }
 
   displayName() {
@@ -40,11 +34,8 @@ class UserInfoOpenStub {
 
 class CommentStub {
   constructor(
-      public authorId?: string,
-      public parentKey?: string,
       public text?: string,
       public lastUpdated?: number,
-      public timestamp?: number,
   ) {
       this.text = text || '';
       this.lastUpdated = lastUpdated || new Date().getTime();
