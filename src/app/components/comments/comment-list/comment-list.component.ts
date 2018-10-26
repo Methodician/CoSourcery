@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
-import { Comment, CommentMap, ParentTypes, KeyMap } from 'app/shared/class/comment';
+import { Comment, CommentMap, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-comment-list',
@@ -15,6 +15,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   @Input() loggedInUser: UserInfoOpen
   @Input() userMap: UserMap = {};
   @Input() userKeys: string[];
+  @Input() userVotesMap: KeyMap<VoteDirections>;
   @Input() commentReplyInfo;
   @Input() commentEditInfo;
 
@@ -37,6 +38,21 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.commentsSubscription.unsubscribe();
+  }
+
+  onUpvoteComment(commentKey: string){
+    this.commentSvc.upvoteComment(this.loggedInUser.uid, commentKey, VoteDirections.up);
+  }
+
+  onDownvoteComment(commentKey: string){
+    this.commentSvc.downvoteComment(this.loggedInUser.uid, commentKey, VoteDirections.down);
+  }
+
+  hasUserVoted(commentKey: string, voteDirection: VoteDirections){
+    if(!this.userVotesMap[commentKey]){
+      return false
+    }
+    return this.userVotesMap[commentKey] as number === VoteDirections[voteDirection] as any as number;
   }
 
   enterEditMode(commentKey: string) {
@@ -84,10 +100,12 @@ export class CommentListComponent implements OnInit, OnDestroy {
             this.commentKeys = Object.keys(this.commentMap);
             if(!!!this.userMap[val.authorId]){
               const authorSnap = await this.getAuthorSnapshot(val.authorId);
-              const authorVal = authorSnap.val();
-              const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
-              this.userMap[authorSnap.key] = author;
-              this.userKeys = Object.keys(this.userMap);
+              if(authorSnap){
+                const authorVal = authorSnap.val();
+                const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
+                this.userMap[authorSnap.key] = author;
+                this.userKeys = Object.keys(this.userMap);
+              }              
             }
           });
         }

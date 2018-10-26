@@ -49,10 +49,10 @@ export class ArticleRelatedComponent implements OnInit, OnChanges {
   //   }
   // }
 
-  // hasRelatedArticles(){
-  //   if (this.){
-  //     return this..length === 0 ?  true : false;
-  //   }
-  // }
+  hasRelatedArticles(){
+    if (this.relatedArticles){
+      return this.relatedArticles.length === 0 ?  false : true;
+    }
+  }
 
 }
