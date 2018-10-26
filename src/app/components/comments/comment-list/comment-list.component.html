@@ -9,20 +9,20 @@
         <button (click)="onUpvoteComment(key)"
                 mat-icon-button
                 class="button-mat-icon button-mat-icon_rating"
-                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'up')}">
+                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'up'), 'button-mat-icon_rating_voted': hasUserVoted(key, 'up')}">
           <mat-icon>expand_less</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'up') ? 'Remove Vote' : 'Upvote'}}</span>
         </button>
-        <div class="comment-rating__score">
-          <button mat-icon-button
-                  class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_score">
-            <span>{{commentMap[key].voteCount}}</span>
-          </button>
+        <div class="comment-rating__score-container">
+          <span class="comment-rating__score"
+                [ngClass]="{'comment-rating__score_negative': commentMap[key].voteCount < 0}">
+            {{commentMap[key].voteCount}}
+          </span>
         </div>
         <button mat-icon-button
                 (click)="onDownvoteComment(key)"
                 class="button-mat-icon button-mat-icon_rating"
-                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'down')}">
+                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'down'), 'button-mat-icon_rating_voted': hasUserVoted(key, 'down')}">
           <mat-icon>expand_more</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'down') ? 'Remove Vote' : 'Downvote'}}</span>
         </button>
