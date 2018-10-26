@@ -7,6 +7,7 @@ export class Comment {
         public timestamp?: number,
         public replyCount?: number,
         public parentType?: ParentTypes,
+        public voteCount?: number,
     ) {
         this.text = text || '';
         this.lastUpdated = lastUpdated || new Date().getTime();
@@ -21,3 +22,8 @@ export enum ParentTypes {
     article = 'article',
     comment = 'comment'
   }
+
+export enum VoteDirections {
+    up = 1,
+    down = -1
+}
