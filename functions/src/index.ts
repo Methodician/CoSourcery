@@ -2,16 +2,16 @@
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
+import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
 
 
 admin.initializeApp();
 const fs = admin.firestore();
+const db = admin.database();
 fs.settings({ timestampsInSnapshots: true });
 
-//  Can work from this example to write funciton to count comments and bubble up?
-//  https://github.com/firebase/functions-samples/blob/master/limit-children/functions/index.js
-
-exports.trackCommentDeletions = functions.database.ref('commentData/comments/{commentId}/removedAt').onCreate(async (snap, context) => {
+exports.trackCommentDeletions = functions.database.ref('commentData/comments/{commentKey}/removedAt').onCreate(async (snap, context) => {
     const commentRef = snap.ref.parent;
     const archiveRef = snap.ref.parent.parent.parent.child('commentArchive');
     const commentSnap = await commentRef.once('value').then();
@@ -21,8 +21,101 @@ exports.trackCommentDeletions = functions.database.ref('commentData/comments/{co
     ]);
 })
 
+exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{commentKey}/replyCount').onUpdate(async(change, context) => {
+    
+    const incrementReplyCount = (commentRef: admin.database.Reference) => {
+        return commentRef.transaction((commentToUpdate: Comment) => {
+            if(commentToUpdate) {
+                let replyCount = commentToUpdate.replyCount || 0;
+                replyCount = replyCount + 1;
+                commentToUpdate.replyCount = replyCount;
+            }
+            return commentToUpdate;
+        })
+        .then(_ => {
+            console.log('db transaction success!');
+        })
+        .catch(err => {
+            console.log('db transaction failure...', err);
+        });
+    };
+
+    const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
+        return fs.runTransaction(async t => {
+            const snapshot = await t.get(articleDocRef);
+            const article: ArticleDetailFirestore = snapshot.data() as any;
+            let commentCount = article.commentCount || 0;
+            commentCount = commentCount + 1;
+            t.update(articleDocRef, {commentCount: commentCount});
+        }).then(res => {
+            console.log('Transaction success!');
+        }).catch(err => {
+            console.log('Transaction failure:', err);
+        });
+    };
+
+    const parentCommentRef = db.ref(`commentData/comments/${context.params.commentKey}`);
+    const snap = await parentCommentRef.once('value').then();
+    const comment = snap.val()
+    if(comment.parentType === ParentTypes.article){
+        const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
+        return incrementCommentCount(articleRef);
+    } else if(comment.parentType === ParentTypes.comment){
+        const ref = db.ref(`commentData/comments/${comment.parentKey}`);
+        return incrementReplyCount(ref);
+    }
+
+    console.log('About to return null. Comments may not be counted...');
+    return null;
+});
+
+exports.countNewComment = functions.database.ref('commentData/comments/{commentKey}').onCreate(async (snap, context) => {
+    
+    const incrementReplyCount = (commentRef: admin.database.Reference) => {
+        return commentRef.transaction((commentToUpdate: Comment) => {
+            if(commentToUpdate) {
+                let replyCount = commentToUpdate.replyCount || 0;
+                replyCount = replyCount + 1;
+                commentToUpdate.replyCount = replyCount;
+            }
+            return commentToUpdate;
+        })
+        .then(_ => {
+            console.log('db transaction success!');
+        })
+        .catch(err => {
+            console.log('db transaction failure...', err);
+        });
+    };
+
+    const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
+        return fs.runTransaction(async t => {
+            const snapshot = await t.get(articleDocRef);
+            const article: ArticleDetailFirestore = snapshot.data() as any;
+            let commentCount = article.commentCount || 0;
+            commentCount = commentCount + 1;
+            t.update(articleDocRef, {commentCount: commentCount});
+        }).then(res => {
+            console.log('Transaction success!');
+        }).catch(err => {
+            console.log('Transaction failure:', err);
+        });
+    };
+
+    const comment: Comment = snap.val();
+    if(comment.parentType === ParentTypes.article){
+        const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
+        return incrementCommentCount(articleRef);
+    } else if(comment.parentType === ParentTypes.comment){
+        const commentRef = db.ref(`commentData/comments/${comment.parentKey}`);
+        return incrementReplyCount(commentRef);
+    }
+    console.log('About to return null. Comments may not be counted...');
+    return null;
+});
+
 exports.trackCommentAuthorsAndParents = functions.database.ref('commentData/comments/{commentKey}').onCreate((snap, context) => {
-    const comment = snap.val();
+    const comment: Comment = snap.val();
     const key = context.params.commentKey;
     const commentRef = snap.ref;
     return Promise.all([
@@ -30,6 +123,7 @@ exports.trackCommentAuthorsAndParents = functions.database.ref('commentData/comm
         commentRef.parent.parent.child(`commentsByAuthor/${comment.authorId}/${key}`).set(true)
     ]);
 });
+
 
 //  trackUploadFiles entry point:
 exports.trackFileUploads = functions.storage.object().onFinalize(async object => {
@@ -61,22 +155,12 @@ async function trackArticleBodyImages(filePath: string) {
     //  Firestore push IDs contain 20 characters.
     const articleId = filePath.substr(18, 20);
     const articleDocRef = fs.doc(`articleData/articles/articles/${articleId}`);
-    // const snapshot = await articleDocRef.get();
-    // const article = snapshot.data();
-    // const fileName = path.basename(filePath);
     await articleDocRef.update({
         bodyImagePaths: admin.firestore.FieldValue.arrayUnion(filePath)
     });
 }
 
-//  Worked in a sense but ends up nesting deeper due to dot notation in file names. Going for simple arrays.
-// function bodyImageUpdateObject(name, filePath) {
-//     const obj = {};
-//     const key = 'bodyImages.' + name;
-//     obj[key] = filePath;
-//     return obj
-// }
-
+// The following which respond to onWrite of an article could be combined.
 exports.createHistoryObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
     if (context.eventType !== 'google.firestore.document.delete') {
         const articleId = context.params.articleId;

@@ -1,12 +1,26 @@
-<section style="border: 1px solid black; margin-left: 30px;"
-  class="comment">
-  <img class="comment-author-img" [src]="authorInfo?.displayImageUrl()"
-    alt="image of the author">
-  <p class="comment-author-name">Author: {{ authorInfo?.displayName() }}</p>
-  <p class="comment-last-updated">Last Updated: {{ comment.lastUpdated | date }}</p>
-  <p class="comment-body" *ngIf="!isBeingEdited">{{ comment.text }}</p>
-  <p class="comment-body" *ngIf="isBeingEdited">
-    <input type="text"
-      [(ngModel)]="comment.text">
+<section class="comment">
+  <section class="comment__header">
+    <img class="comment__author-image" [src]="authorInfo?.displayImageUrl()"
+         alt="Author Image">
+    <div>
+      <p class="comment__author-detail">Posted by <strong>{{ authorInfo?.displayName() }}</strong></p>
+      <p class="comment__author-detail comment__author-detail_light"><em>Last Updated</em> {{ comment.lastUpdated | date }}</p>
+    </div>
+  </section>
+  <p *ngIf="!isBeingEdited"
+     class="comment__text">
+    {{ comment.text }}
   </p>
+  <mat-form-field *ngIf="isBeingEdited">
+    <p class="comment__text">
+      <textarea #commentBody
+                matInput
+                class="comment__input"
+                type="text"
+                maxlength="500"
+                [(ngModel)]="comment.text">
+      </textarea>
+    </p>
+    <mat-hint align="end">{{commentBody.value.length}} / 500</mat-hint>
+  </mat-form-field>
 </section>

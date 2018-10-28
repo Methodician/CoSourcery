@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 import { combineLatest } from 'rxjs/operators';
-import { Comment } from 'app/shared/class/comment';
+import { Comment, ParentTypes } from 'app/shared/class/comment';
 const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
 
 @Injectable({
@@ -14,6 +14,17 @@ export class CommentService {
     private rtdb: AngularFireDatabase
   ) { }
 
+  createCommentStub(authorId: string, parentKey: string, parentType: ParentTypes){
+    const newComment: Comment = {
+      authorId: authorId,
+      parentKey: parentKey,
+      text: '',
+      replyCount: 0,
+      parentType: parentType
+    }
+    return newComment;
+  }
+
   async createComment(comment: Comment) {
     const commentToSave = {
       authorId: comment.authorId,
@@ -21,6 +32,8 @@ export class CommentService {
       parentKey: comment.parentKey,
       lastUpdated: serverTimestamp,
       timestamp: serverTimestamp,
+      parentType: comment.parentType,
+      replyCount: comment.replyCount,
     }
 
     return this.rtdb

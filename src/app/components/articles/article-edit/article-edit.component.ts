@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '../../../services/article.service';
-import { UploadService } from '../../../services/upload.service';
 import { UserService } from '../../../services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { AngularFireUploadTask } from '@angular/fire/storage';
-import { UserInfoOpen } from 'app/shared/class/user-info';
+import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
+import { CommentService } from 'app/services/comment.service';
+import { Comment, ParentTypes } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-article-edit',
@@ -19,7 +20,7 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 })
 
 export class ArticleEditComponent implements OnInit, OnDestroy {
-  userInfo: UserInfoOpen = null;
+  loggedInUser: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
   formIsReady = false;
@@ -27,11 +28,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   currentArticleSubscription: Subscription;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
+  newCommentStub: Comment;
+  commentReplyInfo = { replyParentKey: null };
+
   coverImageFile: File;
   tempCoverImageUploadPath: string;
   coverImageUploadTask: AngularFireUploadTask;
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
+
+  userMap: UserMap = {};
+  userKeys: string[];
 
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   ckeditorButtonOffset: number = 0;
@@ -86,21 +93,25 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     isFeatured: false,
   });
 
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private articleSvc: ArticleService,
-    private uploadSvc: UploadService,
-    private userSvc: UserService
+    private userSvc: UserService,
+    private commentSvc: CommentService,
   ) { }
 
   ngOnInit() {
+    //  May abstract this out to an ID now that we have user map...
     this.userSvc.userInfo$.subscribe(user => {
-      this.userInfo = user;
+      this.loggedInUser = user;
     });
     this.setArticleId();
     this.subscribeToArticleId();
+    this.userMap = this.userSvc.userMap;
+    this.userKeys = Object.keys(this.userMap);
   }
 
   ngOnDestroy() {
@@ -129,6 +140,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.formIsReady = true;
       } else {
         this.updateCoverImageUrl(articleData.imageUrl);
+        this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
       }
     });
   }
@@ -148,13 +160,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.coverImageFile = null;
     }
     if (!this.articleEditForm.value.articleId) {
-      const articleSaved = await this.articleSvc.createArticle(this.userInfo, this.articleEditForm.value, this.articleId);
+      const articleSaved = await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
       if (articleSaved === 'success') {
         this.articleIsNew = false;
         this.router.navigate([`article/${this.articleId}`]);
       }
     } else {
-      this.articleSvc.updateArticle(this.userInfo, this.articleEditForm.value, this.articleId);
+      this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
     }
     this.resetEditStates();
   }
@@ -259,6 +271,20 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
     const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
     this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+  }
+
+  enterNewCommentMode() {
+    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId, ParentTypes.article);
+    this.commentReplyInfo.replyParentKey = this.articleId;
+  }
+
+  onCancelNewComment() {
+    this.commentReplyInfo.replyParentKey = null;
+  }
+
+  onAddComment() {
+    this.commentSvc.createComment(this.newCommentStub);
+    this.commentReplyInfo.replyParentKey = null;
   }
 
 }

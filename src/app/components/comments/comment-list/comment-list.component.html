@@ -1,83 +1,112 @@
-<!-- New Comment Entry -->
-<!-- Let's still show this and offer to redirect to login/register if they are not -->
-<section style="margin: 30px;"
-  *ngIf="loggedInUser.uid"
-  class="comment-controls">
-  <button *ngIf="!addingNewComment"
-    (click)="enterNewCommentMode()">
-    {{ isUnderComment ? 'Reply' : 'Comment' }}
-  </button>
-  <button *ngIf="addingNewComment"
-    (click)="onCancelNewComment()">
-    Cancel
-  </button>
-  <button *ngIf="addingNewComment"
-    (click)="onAddComment()">
-    Save
-  </button>
-</section>
-
-<cos-comment style="margin: 30px;"
-  *ngIf="addingNewComment"
-  [isBeingEdited]="true"
-  [loggedInUser]="loggedInUser"
-  [authorInfo]="loggedInUser"
-  [comment]="newCommentStub">
-</cos-comment>
-
-<!-- Comment List -->
 <section *ngFor="let key of commentKeys | reverseArray"
-  class="comment-list"
-  style="margin: 30px;"
-  id="{{key}}">
-  <section *ngIf="loggedInUser.uid === commentMap[key].authorId"
-    class="comment-controls">
-    <button class="comment-edit-btn" *ngIf="!commentIsBeingEdited(key)"
-      (click)="enterEditMode(key)">
-      Edit
-    </button>
-    <button class="comment-edit-btn" *ngIf="commentIsBeingEdited(key)"
-      (click)="onCancelEdit()">
-      Cancel
-    </button>
-    <button class="comment-remove-btn" *ngIf="!commentIsBeingEdited(key) && loggedInUser.uid === commentMap[key].authorId"
-      (click)="onRemoveComment(key)">
-      Remove
-    </button>
-    <button class="comment-save-btn" *ngIf="commentIsBeingEdited(key)"
-      (click)="onSaveEdits(key)">
-      Save
-    </button>
+         class="comment-list"
+         [ngClass]="{'comment-list_root': !isUnderComment}">
+
+  <section class="comment-group"
+           [ngClass]="{'comment_root': !isUnderComment}">
+    <section class="comment-unit">
+      <section class="comment-rating">
+        <button mat-icon-button
+                class="button-mat-icon button-mat-icon_rating">
+          <span>0</span>
+        </button>
+        <button mat-icon-button
+                class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden">
+          <mat-icon>expand_less</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">Upvote</span>
+        </button>
+        <button mat-icon-button
+                class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden">
+          <mat-icon>expand_more</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">Downvote</span>
+        </button>
+      </section>
+
+      <cos-comment [comment]="commentMap[key]"
+                   [loggedInUser]="loggedInUser"
+                   [authorInfo]="userMap[commentMap[key].authorId]"
+                   [isBeingEdited]="commentIsBeingEdited(key)">
+      </cos-comment>
+
+      <p *ngIf="commentMap[key].replyCount > 0"
+         class="reply-count">
+        <a (click)="toggleCommentListUnfurl(key)">
+          {{commentListUnfurlMap[key] ? 'Hide' : 'Show'}} {{commentMap[key].replyCount}} {{commentMap[key].replyCount === 1 ? 'Reply' : 'Replies'}}
+        </a>
+      </p>
+
+      <section class="comment-controls">
+        <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
+                mat-icon-button
+                class="button-mat-icon button-mat-icon_small"
+                (click)="enterNewCommentMode(key)">
+          <mat-icon>reply</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Reply</span>
+        </button>
+        <div *ngIf="loggedInUser.uid === commentMap[key].authorId"
+             class="comment-controls__sub-unit">
+          <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
+                  mat-icon-button
+                  class="button-mat-icon button-mat-icon_small"
+                  (click)="enterEditMode(key)">
+            <mat-icon>edit</mat-icon>
+            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Edit</span>
+          </button>
+          <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
+                  mat-icon-button
+                  class="button-mat-icon button-mat-icon_small"
+                  (click)="onRemoveComment(key)">
+            <mat-icon>clear</mat-icon>
+            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Remove</span>
+          </button>
+          <button *ngIf="commentIsBeingEdited(key)"
+                  mat-icon-button
+                  class="button-mat-icon button-mat-icon_small"
+                  (click)="onSaveEdits(key)">
+            <mat-icon>check</mat-icon>
+            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Save</span>
+          </button>
+          <button *ngIf="commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
+                  mat-icon-button
+                  class="button-mat-icon button-mat-icon_small"
+                  (click)="onCancelEdit()">
+            <mat-icon>clear</mat-icon>
+            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Cancel</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- New Reply Stub -->
+      <section *ngIf="commentReplyInfo.replyParentKey === key"
+               class="comment-group comment-group_new comment-unit">
+        <cos-comment [isBeingEdited]="true"
+                     [loggedInUser]="loggedInUser"
+                     [authorInfo]="loggedInUser"
+                     [comment]="newCommentStub">
+        </cos-comment>
+        <section class="comment-controls">
+          <button mat-icon-button
+                  class="button-mat-icon button-mat-icon_small"
+                  (click)="onAddComment()">
+            <mat-icon>check</mat-icon>
+            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Save</span>
+          </button>
+          <button mat-icon-button
+                  class="button-mat-icon button-mat-icon_small"
+                  (click)="onCancelNewComment()">
+            <mat-icon>clear</mat-icon>
+            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Cancel</span>
+          </button>
+        </section>
+      </section>
+    </section>
+
+    <cos-comment-list *ngIf="commentListUnfurlMap[key]"
+                      [parentKey]="key"
+                      [loggedInUser]="loggedInUser"
+                      [userMap]="userMap"
+                      [userKeys]="userKeys"
+                      [commentReplyInfo]="commentReplyInfo">
+    </cos-comment-list>
   </section>
-  <cos-comment [comment]="commentMap[key]"
-    [loggedInUser]="loggedInUser"
-    [authorInfo]="userMap[commentMap[key].authorId]"
-    [isBeingEdited]="commentIsBeingEdited(key)">
-  </cos-comment>
-  <cos-comment-list [parentKey]="key"
-    [loggedInUser]="loggedInUser">
-  </cos-comment-list>
 </section>
-
-<!-- <div *ngFor="let key of commentKeys | reverseArray"
-  style="margin: 30px;">
-  <cos-comment [comment]="commentMap[key]"
-    [loggedInUser]="loggedInUser"
-    [authorInfo]="userMap[commentMap[key].authorId]"
-    [isBeingEdited]="commentIsBeingEdited(key)"></cos-comment>
-  <div style="margin-left: 30px;">
-    <button (click)="enterEditMode(key)"
-      *ngIf="!commentIsBeingEdited(key)">edit</button>
-    <button (click)="onCancelEdit()"
-      *ngIf="commentIsBeingEdited(key)">cancel</button>
-    <button (click)="onRemoveComment(key)"
-      *ngIf="!commentIsBeingEdited(key)"
-      style="margin-left: 30px;">remove</button>
-    <button (click)="onSaveEdits()"
-      *ngIf="commentIsBeingEdited(key)"
-      style="margin-left: 30px;">save</button>
-  </div>
-
-  <cos-comment-list [parentKey]="key"
-    [loggedInUser]="loggedInUser"></cos-comment-list>
-</div> -->

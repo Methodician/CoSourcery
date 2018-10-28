@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
-import { UserInfoOpen } from 'app/shared/class/user-info';
-import { Comment } from 'app/shared/class/comment';
+import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
+import { Comment, CommentMap, ParentTypes, KeyMap } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-comment-list',
@@ -12,22 +12,21 @@ import { Comment } from 'app/shared/class/comment';
 export class CommentListComponent implements OnInit, OnDestroy {
   @Input() isUnderComment = true;
   @Input() parentKey: string;
-  @Input() loggedInUser: UserInfoOpen;
+  @Input() loggedInUser: UserInfoOpen
+  @Input() userMap: UserMap = {};
+  @Input() userKeys: string[];
+  @Input() commentReplyInfo;
 
   commentsSubscription: Subscription;
   //  ToDo: FILL THIS WITH OTHER SUBSCRIPTIONS TO BREAK DOWN ON DESTROY
   // commentSubscriptions: Subscription[];
 
   keyOfCommentBeingEdited: string;
-  addingNewComment = false;
-  newCommentStub = new Comment();
+  newCommentStub: Comment;
 
   commentMap: CommentMap = {};
   commentKeys: string[];
-
-  //  Might start trackig this in UserService, or move all the user tracking to AuthService or AppComponent and keep UserService more like a stateless data connector...
-  userMap: UserMap = {};
-  userKeys: string[];
+  commentListUnfurlMap: KeyMap<boolean> = {};
 
   constructor(private commentSvc: CommentService) {
   }
@@ -44,18 +43,18 @@ export class CommentListComponent implements OnInit, OnDestroy {
     this.keyOfCommentBeingEdited = commentKey;
   }
 
-  enterNewCommentMode() {
-    this.createCommentStub();
-    this.addingNewComment = true;
+  enterNewCommentMode(replyParentKey) {
+    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey, ParentTypes.comment);
+    this.commentReplyInfo.replyParentKey = replyParentKey;
   }
 
   onCancelNewComment() {
-    this.addingNewComment = false;
+    this.commentReplyInfo.replyParentKey = null;
   }
 
   onAddComment() {
     this.commentSvc.createComment(this.newCommentStub);
-    this.addingNewComment = false;
+    this.commentReplyInfo.replyParentKey = null;
   }
 
   onCancelEdit() {
@@ -82,22 +81,20 @@ export class CommentListComponent implements OnInit, OnDestroy {
           comment$.subscribe(async commentSnap => {
             // console.log('in subscribe L2');
             const val = commentSnap.payload.val() as any;
-            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp);
+            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType);
             this.commentMap[commentSnap.key] = comment;
             // debugger;
             this.commentKeys = Object.keys(this.commentMap);
-            const authorSnap = await this.getAuthorSnapshot(val.authorId);
-            const authorVal = authorSnap.val();
-            const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
-            this.userMap[authorSnap.key] = author;
-            this.userKeys = Object.keys(this.userMap);
+            if(!!!this.userMap[val.authorId]){
+              const authorSnap = await this.getAuthorSnapshot(val.authorId);
+              const authorVal = authorSnap.val();
+              const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
+              this.userMap[authorSnap.key] = author;
+              this.userKeys = Object.keys(this.userMap);
+            }
           });
         }
       });
-  }
-
-  createCommentStub() {
-    this.newCommentStub = new Comment(this.loggedInUser.uid, this.parentKey, '');
   }
 
   async getAuthorSnapshot(authorId) {
@@ -108,9 +105,9 @@ export class CommentListComponent implements OnInit, OnDestroy {
   commentIsBeingEdited(commentKey) {
     return this.keyOfCommentBeingEdited === commentKey;
   }
-}
 
-//  Very cool: https://stackoverflow.com/questions/13315131/enforcing-the-type-of-the-indexed-members-of-a-typescript-object
-export interface KeyMap<T> { [key: string]: T; }
-export interface CommentMap extends KeyMap<Comment> { }
-export interface UserMap extends KeyMap<UserInfoOpen> { }
+  toggleCommentListUnfurl(key) {
+    this.commentListUnfurlMap[key] = this.commentListUnfurlMap[key] ? !this.commentListUnfurlMap[key] : true;
+  }
+
+}

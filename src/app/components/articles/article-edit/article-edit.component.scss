@@ -8,12 +8,6 @@
   padding: 20px;
   box-shadow: 0 2px 5px $light-gray-50;
 
-  h2.page-title {
-    margin-top: 0;
-    color: $primary-color;
-    text-align: center;
-  }
-
   label, input, textarea, mat-form-field, mat-error {
     font-family: $primary-typeface;
   }
@@ -36,6 +30,19 @@
   mat-error, mat-hint {
     font-size: 0.75rem;
     line-height: 1rem;
+  }
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+
+  &__title {
+    margin-top: 0;
+    color: $primary-color;
+    text-align: center;
   }
 }
 
@@ -254,6 +261,56 @@
   }
 }
 
+.comment-section {
+  margin-bottom: 48px;
+}
+
+.comment-list_root {
+  margin-left: 30px;
+}
+
+.comment-group {
+  min-width: 250px;
+  max-width: 768px;
+  position: relative;
+  margin: 0 auto;
+  padding-left: 30px;
+  border-left: 2px solid lighten($accent-color-1, 30%);
+
+  &_new {
+    padding-bottom: 20px;
+    border-left: 2px solid lighten($accent-color-2, 30%);
+  }
+}
+
+.comment-controls {
+  display: flex;
+
+  @media screen and (min-width: 500px) {
+    visibility: hidden;
+    position: absolute;
+    top: -12px;
+    right: 15px;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+.comment-unit {
+  padding-right: 30px;
+
+  @media screen and (min-width: 500px) {
+    padding-right: 60px;
+  }
+
+  &:hover {
+
+    .comment-controls {
+      visibility: visible;
+    }
+  }
+}
+
 button {
   padding: 5px 10px;
   border: none;
@@ -294,11 +351,10 @@ button.mat-icon-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 1px;
   }
 
   .tooltip {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     right: 100%;
     margin-right: 10px;
@@ -310,6 +366,77 @@ button.mat-icon-button {
   }
 
   &:hover .tooltip {
-    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.button-mat-icon {
+  margin: 5px;
+  border-radius: 100%;
+  box-shadow: none;
+  background-color: transparent;
+  color: lighten($accent-color-1-dark, 30%);
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  ::ng-deep .mat-button-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &_small {
+    height: 32px;
+    width: 32px;
+  }
+
+  &__tooltip {
+    visibility: hidden;
+    position: absolute;
+    padding: 5px 15px;
+    border-radius: 4px;
+    background: $dark-gray;
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    z-index: 10;
+
+    &_above {
+      bottom: 100%;
+      margin-bottom: 10px;
+    }
+
+    &_below {
+      top: 100%;
+      margin-top: 10px;
+    }
+
+    &_left {
+      right: 100%;
+      margin-right: 10px;
+    }
+
+    &_right {
+      left: 100%;
+      margin-left: 10px;
+    }
+  }
+
+  @media screen and (min-width: 500px) {
+    color: #fff;
+    background-color: $accent-color-1;
+    box-shadow: 0 2px 2px $medium-gray;
+
+    &:hover {
+      background-color: darken($accent-color-2, 10%);
+    }
+
+    &:hover &__tooltip {
+      visibility: visible;
+    }
   }
 }

@@ -64,6 +64,7 @@ p {
 a {
   color: $primary-color;
   text-decoration: none;
+  cursor: pointer;
 }
 
 @media screen and (min-width: 768px) {
@@ -118,8 +119,12 @@ a {
 }
 
 /* Flex Presets */
-.flex, .flex-center, .flex-center-align, .flex-center-justify {
+.flex, .flex-column, .flex-center, .flex-center-align, .flex-center-justify {
   display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
 }
 
 .flex-center {
