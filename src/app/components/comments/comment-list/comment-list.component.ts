@@ -73,14 +73,14 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   fillDataMaps() {
-    console.log('in fill maps');
+    // console.log('in fill maps');
     this.commentsSubscription = this.commentSvc.watchCommentsByParent(this.parentKey)
       .subscribe(comments => {
-        console.log('in subscribe');
+        // console.log('in subscribe');
         // debugger;
         for (const comment$ of comments) {
           comment$.subscribe(async commentSnap => {
-            console.log('in subscribe l2');
+            // console.log('in subscribe L2');
             const val = commentSnap.payload.val() as any;
             const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp);
             this.commentMap[commentSnap.key] = comment;

@@ -28,22 +28,23 @@
 <!-- Comment List -->
 <section *ngFor="let key of commentKeys | reverseArray"
   class="comment-list"
-  style="margin: 30px;">
+  style="margin: 30px;"
+  id="{{key}}">
   <section *ngIf="loggedInUser.uid === commentMap[key].authorId"
     class="comment-controls">
-    <button id="comment-edit-btn" *ngIf="!commentIsBeingEdited(key)"
+    <button class="comment-edit-btn" *ngIf="!commentIsBeingEdited(key)"
       (click)="enterEditMode(key)">
       Edit
     </button>
-    <button id="comment-edit-btn" *ngIf="commentIsBeingEdited(key)"
+    <button class="comment-edit-btn" *ngIf="commentIsBeingEdited(key)"
       (click)="onCancelEdit()">
       Cancel
     </button>
-    <button id="comment-remove-btn" *ngIf="!commentIsBeingEdited(key) && loggedInUser.uid === commentMap[key].authorId"
+    <button class="comment-remove-btn" *ngIf="!commentIsBeingEdited(key) && loggedInUser.uid === commentMap[key].authorId"
       (click)="onRemoveComment(key)">
       Remove
     </button>
-    <button id="comment-save-btn" *ngIf="commentIsBeingEdited(key)"
+    <button class="comment-save-btn" *ngIf="commentIsBeingEdited(key)"
       (click)="onSaveEdits(key)">
       Save
     </button>
