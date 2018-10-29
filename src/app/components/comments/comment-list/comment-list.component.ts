@@ -17,12 +17,12 @@ export class CommentListComponent implements OnInit, OnDestroy {
   @Input() userKeys: string[];
   @Input() userVotesMap: KeyMap<VoteDirections>;
   @Input() commentReplyInfo;
+  @Input() commentEditInfo;
 
   commentsSubscription: Subscription;
   //  ToDo: FILL THIS WITH OTHER SUBSCRIPTIONS TO BREAK DOWN ON DESTROY
   // commentSubscriptions: Subscription[];
 
-  keyOfCommentBeingEdited: string;
   newCommentStub: Comment;
 
   commentMap: CommentMap = {};
@@ -56,10 +56,12 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   enterEditMode(commentKey: string) {
-    this.keyOfCommentBeingEdited = commentKey;
+    this.commentReplyInfo.replyParentKey = null;
+    this.commentEditInfo.commentKey = commentKey;
   }
 
   enterNewCommentMode(replyParentKey) {
+    this.commentEditInfo.commentKey = null;
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey, ParentTypes.comment);
     this.commentReplyInfo.replyParentKey = replyParentKey;
   }
@@ -74,7 +76,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   onCancelEdit() {
-    this.keyOfCommentBeingEdited = null;
+    this.commentEditInfo.commentKey = null;
   }
 
   onRemoveComment(commentKey: string) {
@@ -82,9 +84,9 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   onSaveEdits() {
-    const commentEdited = this.commentMap[this.keyOfCommentBeingEdited];
-    this.commentSvc.updateComment(commentEdited, this.keyOfCommentBeingEdited);
-    this.keyOfCommentBeingEdited = null;
+    const commentEdited = this.commentMap[this.commentEditInfo.commentKey];
+    this.commentSvc.updateComment(commentEdited, this.commentEditInfo.commentKey);
+    this.commentEditInfo.commentKey = null;
   }
 
   fillDataMaps() {
@@ -93,7 +95,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
         for (let comment$ of comments) {
           comment$.subscribe(async commentSnap => {
             const val = commentSnap.payload.val() as any;
-            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType);
+            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType, val.voteCount);
             this.commentMap[commentSnap.key] = comment;
             this.commentKeys = Object.keys(this.commentMap);
             if(!!!this.userMap[val.authorId]){
@@ -103,7 +105,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
                 const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
                 this.userMap[authorSnap.key] = author;
                 this.userKeys = Object.keys(this.userMap);
-              }              
+              }
             }
           });
         }
@@ -116,7 +118,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   commentIsBeingEdited(commentKey) {
-    return this.keyOfCommentBeingEdited === commentKey;
+    return this.commentEditInfo.commentKey === commentKey;
   }
 
   toggleCommentListUnfurl(key) {

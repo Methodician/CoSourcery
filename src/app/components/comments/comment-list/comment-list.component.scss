@@ -17,12 +17,36 @@
 }
 
 .comment-rating {
+  height: 100%;
   position: absolute;
   top: -10px;
   left: -21px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  &__score-container {
+    min-height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__score {
+    min-width: 30px;
+    position: absolute;
+    padding: 4px 5px;
+    border-radius: 5px;
+    border: 2px solid lighten($accent-color-1, 30%);
+    background-color: #fff;
+    color: $accent-color-1-dark;
+    text-align: center;
+
+    &_negative {
+      color: red;
+    }
+  }
 }
 
 .reply-count {
@@ -52,6 +76,7 @@
 
 .comment-unit {
   padding-right: 30px;
+  transition: height 1s;
 
   @media screen and (min-width: 500px) {
     padding-right: 60px;
@@ -64,10 +89,13 @@
     }
 
     .button-mat-icon_rating {
-      border: 2px solid lighten($accent-color-2, 30%);
+
+      &_voted {
+        border: 2px solid lighten($accent-color-2, 30%);
+      }
 
       &_hidden {
-        visibility: visible;
+        display: block;
       }
     }
   }
@@ -153,14 +181,23 @@
     color: $accent-color-1-dark;
     box-shadow: none;
 
+    &_voted {
+      border: 2px solid lighten($accent-color-2, 30%);
+    }
+
     &:hover {
+      border: 2px solid lighten($accent-color-2, 30%);
       background-color: lighten($accent-color-2, 30%);
     }
 
     @media screen and (min-width: 500px) {
 
+      &_voted {
+        border: 2px solid lighten($accent-color-1, 30%);
+      }
+
       &_hidden {
-        visibility: hidden;
+        display: none;
       }
     }
   }
