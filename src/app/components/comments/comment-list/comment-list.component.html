@@ -35,7 +35,7 @@
         </a>
       </p>
 
-      <section class="comment-controls">
+      <section id="{{key}}" class="comment-controls">
         <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
                 mat-icon-button
                 class="button-mat-icon button-mat-icon_small"

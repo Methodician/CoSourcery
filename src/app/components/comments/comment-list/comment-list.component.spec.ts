@@ -9,6 +9,8 @@ import { CommentComponent } from '../comment/comment.component';
 import { CommentService } from '../../../services/comment.service';
 import { Comment } from 'app/shared/class/comment';
 import { By } from '@angular/platform-browser';
+import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 class UserInfoOpenStub {
   constructor(
@@ -86,7 +88,14 @@ describe('CommentListComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule],
+      imports: [
+        FormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule
+      ],
       declarations: [
         CommentListComponent,
         CommentComponent,
@@ -106,6 +115,13 @@ describe('CommentListComponent', () => {
     component.loggedInUser = new UserInfoOpenStub('test', 'tester', 'testson', 'testUID', 'testImgUrl', 'test@mail.com', 'zipcode', 'testBIo', 'testCity', 'testState');
     component.parentKey = 'testParentKey';
     component.isUnderComment = false;
+    component.userMap = {
+      userKey1: component.loggedInUser,
+      userKey2: new UserInfoOpenStub('', 'george', 'costanza', '123', 'georgeURL', 'email.com', 'zipcode', 'bio', 'city', 'state'),
+      userKey3: new UserInfoOpenStub('', 'elaine', 'benes', '123', 'elaineURL', 'email.com', 'zipcode', 'bio', 'city', 'state'),
+    };
+    component.userKeys = ['userKey1', 'userKey2', 'userKey3'];
+    component.commentReplyInfo = {replyParentKey: null};
     fixture.detectChanges();
   });
 
@@ -164,30 +180,31 @@ describe('CommentListComponent', () => {
       fixture.detectChanges();
     }));
 
-    it('should not display control buttons for comment that user did not submit', async(() => {
+    it('SHOULD NOT display control buttons for comment that user did not submit', async(() => {
       const de = fixture.debugElement.query(By.css('#testKey2'));
 
+      expect(de.nativeElement.children.length).toBe(1);
+    }));
+
+    it('SHOULD display control buttons for comment that user did not submit', async(() => {
+      const de = fixture.debugElement.query(By.css('#testKey1'));
+
       expect(de.nativeElement.children.length).toBe(2);
-      expect(de.nativeElement.nextElementSibling.children.length).toBe(3);
     }));
 
     describe('edit button', () => {
       it('component should default to not editing a comment', async () => {
         fixture.whenStable().then(() => {
-          const de = fixture.debugElement.query(By.css('.comment-edit-btn'));
-          const el: HTMLElement = de.nativeElement;
-
           expect(component.keyOfCommentBeingEdited).toBeFalsy();
-          expect(el.innerText).toBe('Edit');
         });
       });
 
-      it('edit button should call enterEditMode() with testKey on click', async(() => {
+      it('should call enterEditMode() with testKey on click', async(() => {
         spyOn(component, 'enterEditMode');
 
         const de = fixture.debugElement.query(By.css('#testKey1'));
 
-        const button: HTMLElement = de.nativeElement.children[0].children[0];
+        const button: HTMLElement = de.nativeElement.children[1].children[0];
         button.click();
         fixture.detectChanges();
 
@@ -208,26 +225,30 @@ describe('CommentListComponent', () => {
         expect(component.commentIsBeingEdited('testerKey')).toBe(true);
       });
 
-      it('edit button should be updated appropriately when clicked', () => {
-        const de = fixture.debugElement.query(By.css('#testKey1'));
-        const editButton: HTMLElement = de.nativeElement.children[0].children[0];
+      it('should update buttons appropriately when clicked', () => {
+        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__sub-unit'));
+        const editButton: HTMLElement = de.nativeElement.children[0];
+
+        expect(de.nativeElement.children[0].textContent).toContain('Edit');
+        expect(de.nativeElement.children[1].textContent).toContain('Remove');
+
         editButton.click();
         fixture.detectChanges();
 
-        expect(de.nativeElement.children[0].children[0].innerText).toContain('Cancel');
+        expect(de.nativeElement.children[0].textContent).toContain('Save');
+        expect(de.nativeElement.children[1].textContent).toContain('Cancel');
 
       });
 
     });
 
     describe('remove button', () => {
-      it('remove button should call onRemoveComment() with testKey on click', async(() => {
+      it('should call onRemoveComment() with testKey on click', async(() => {
         spyOn(component, 'onRemoveComment');
+        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__sub-unit'));
+        const removeButton: HTMLElement = de.nativeElement.children[1];
 
-        const de = fixture.debugElement.query(By.css('#testKey1'));
-        const button: HTMLElement = de.nativeElement.children[0].children[1];
-        button.click();
-
+        removeButton.click();
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
@@ -238,12 +259,11 @@ describe('CommentListComponent', () => {
       it('onRemoveComment(key) should call removeComment(key) in service', async () => {
         const commentSvc = TestBed.get(CommentService);
         const removeCommentSpy = spyOn(commentSvc, 'removeComment');
-        fixture.detectChanges();
 
-        const de = fixture.debugElement.query(By.css('#testKey1'));
-        const button: HTMLElement = de.nativeElement.children[0].children[1];
-        button.click();
+        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__sub-unit'));
+        const removeButton: HTMLElement = de.nativeElement.children[1];
 
+        removeButton.click();
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
