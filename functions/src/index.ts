@@ -12,23 +12,11 @@ const db = admin.database();
 fs.settings({ timestampsInSnapshots: true });
 
 exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{userId}/{commentKey}`).onWrite(async (change, context) => {
-    // 1 -> -1
-    //  Subtract 2 from comment total
-    // -1 -> 1
-    //  Add 2 to comment total
-    // null -> -1 
-    //  Subtract 1
-    // null -> 1
-    //   Add 1
-    // 1 -> null
-    //  Subtract 1
-    // -1 -> null
-    //  Add 1
+ 
     const before = change.before.val();
     const after = change.after.val();
-    // null = 0, true = 1
+    // null = 0
     const diff = after - before;
-
     const commentKey = context.params['commentKey'];
     const commentRef = db.ref(`commentData/comments/${commentKey}`);
     return commentRef.transaction((commmentToUpdate: Comment) => {
@@ -40,9 +28,6 @@ exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{use
         commmentToUpdate.voteCount = newCount;
         return commmentToUpdate;
     });
-    // console.log('change before', change.before.val());
-    // console.log('change after', change.after.val());
-    // console.log('context', context);
 });
 
 
