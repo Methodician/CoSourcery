@@ -67,11 +67,11 @@ export class ArticleService {
     const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`);
     bookmarksRef.snapshotChanges().pipe(map(keySnaps => {
       return keySnaps.map(snap => {
-        return this.getArticleRefById(snap.key).valueChanges();
+        return this.getPreviewRefById(snap.key).valueChanges();
       })
-    })).subscribe(articleObservables => {
+    })).subscribe(previewObservables => {
       let articleMap = {};
-      for (let article$ of articleObservables) {
+      for (let article$ of previewObservables) {
         article$.subscribe(article => {
           if (!!article) {
             articleMap[article.articleId] = article;
@@ -88,7 +88,7 @@ export class ArticleService {
     return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
   }
 
-  getPreviewRefById(articleId: string) {
+  getPreviewRefById(articleId: string): AngularFirestoreDocument<ArticleDetailPreview> {
     return this.fsdb.doc(`articleData/articles/previews/${articleId}`);
   }
 
