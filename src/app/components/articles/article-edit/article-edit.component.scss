@@ -1,5 +1,7 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
+// Uses CommentList Styles for Top Level Comments Section
+@import "../../comments/comment-list/comment-list.component.scss";
 
 .article-form {
   width: 100%;
@@ -265,52 +267,6 @@
   margin-bottom: 48px;
 }
 
-.comment-list_root {
-  margin-left: 30px;
-}
-
-.comment-group {
-  min-width: 250px;
-  max-width: 768px;
-  position: relative;
-  margin: 0 auto;
-  padding-left: 30px;
-  border-left: 2px solid lighten($accent-color-1, 30%);
-
-  &_new {
-    padding-bottom: 20px;
-    border-left: 2px solid lighten($accent-color-2, 30%);
-  }
-}
-
-.comment-controls {
-  display: flex;
-
-  @media screen and (min-width: 500px) {
-    visibility: hidden;
-    position: absolute;
-    top: -12px;
-    right: 15px;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-}
-
-.comment-unit {
-  padding-right: 30px;
-
-  @media screen and (min-width: 500px) {
-    padding-right: 60px;
-  }
-
-  &:hover {
-
-    .comment-controls {
-      visibility: visible;
-    }
-  }
-}
-
 button {
   padding: 5px 10px;
   border: none;
@@ -367,76 +323,5 @@ button.mat-icon-button {
 
   &:hover .tooltip {
     visibility: visible;
-  }
-}
-
-.button-mat-icon {
-  margin: 5px;
-  border-radius: 100%;
-  box-shadow: none;
-  background-color: transparent;
-  color: lighten($accent-color-1-dark, 30%);
-
-  &:hover {
-    background-color: transparent;
-  }
-
-  ::ng-deep .mat-button-wrapper {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &_small {
-    height: 32px;
-    width: 32px;
-  }
-
-  &__tooltip {
-    visibility: hidden;
-    position: absolute;
-    padding: 5px 15px;
-    border-radius: 4px;
-    background: $dark-gray;
-    color: #fff;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    z-index: 10;
-
-    &_above {
-      bottom: 100%;
-      margin-bottom: 10px;
-    }
-
-    &_below {
-      top: 100%;
-      margin-top: 10px;
-    }
-
-    &_left {
-      right: 100%;
-      margin-right: 10px;
-    }
-
-    &_right {
-      left: 100%;
-      margin-left: 10px;
-    }
-  }
-
-  @media screen and (min-width: 500px) {
-    color: #fff;
-    background-color: $accent-color-1;
-    box-shadow: 0 2px 2px $medium-gray;
-
-    &:hover {
-      background-color: darken($accent-color-2, 10%);
-    }
-
-    &:hover &__tooltip {
-      visibility: visible;
-    }
   }
 }
