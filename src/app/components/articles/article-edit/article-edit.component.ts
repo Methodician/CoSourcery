@@ -112,13 +112,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.mapUserVotes();
     });
     this.setArticleId();
-    this.subscribeToArticleId();
+    this.subscribeToArticle();
     this.userMap = this.userSvc.userMap;
     this.userKeys = Object.keys(this.userMap);
   }
 
   ngOnDestroy() {
     this.abortChanges();
+    this.currentArticleSubscription.unsubscribe();
   }
 
   mapUserVotes(){
@@ -145,17 +146,22 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToArticleId() {
-    this.articleSvc.setCurrentArticle(this.articleId);
-    this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-      if (!this.formIsReady) {
-        this.setDefaultFormData(articleData);
-        this.formIsReady = true;
-      } else {
-        this.updateCoverImageUrl(articleData.imageUrl);
-        this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
-      }
-    });
+  subscribeToArticle() {
+    if (this.currentArticleSubscription) {
+      this.currentArticleSubscription.unsubscribe();
+    }
+    this.currentArticleSubscription = this.articleSvc
+      .getArticleRefById(this.articleId)
+      .valueChanges()
+      .subscribe(articleData => {
+        if (!this.formIsReady) {
+          this.setDefaultFormData(articleData);
+          this.formIsReady = true;
+        } else {
+          this.updateCoverImageUrl(articleData.imageUrl);
+          this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
+        }
+      });
   }
 
   setDefaultFormData(data) {
@@ -173,10 +179,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.coverImageFile = null;
     }
     if (!this.articleEditForm.value.articleId) {
-      const articleSaved = await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
-      if (articleSaved === 'success') {
+      try {
+        await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
         this.articleIsNew = false;
         this.router.navigate([`article/${this.articleId}`]);
+      } catch (error) {
+        alert('There was a problem saving the article' + error);
       }
     } else {
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);

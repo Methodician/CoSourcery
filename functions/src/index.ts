@@ -215,7 +215,7 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
     const previewRef = fs.doc(`articleData/articles/previews/${id}`);
     if (context.eventType !== 'google.firestore.document.delete') {
         const previewObject = {
-            id: articleObject.articleId,
+            articleId: articleObject.articleId,
             authorId: articleObject.authorId,
             title: articleObject.title,
             introduction: articleObject.introduction,
