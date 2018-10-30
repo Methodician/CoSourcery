@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
-import { ArticleDetailFirestore } from '../../../shared/class/article-info';
+import { ArticleDetailPreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
 
@@ -13,8 +13,8 @@ import { Observable } from 'rxjs';
 export class HomeComponent implements OnInit {
   UserId;
   featuredArticles;
-  latestArticles: Observable<ArticleDetailFirestore[]>;
-  allArticles: Observable<ArticleDetailFirestore[]>;
+  latestArticles: Observable<ArticleDetailPreview[]>;
+  allArticles: Observable<ArticleDetailPreview[]>;
   bookmarkedArticles;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
 

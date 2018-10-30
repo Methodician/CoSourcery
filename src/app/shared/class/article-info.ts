@@ -1,7 +1,7 @@
 
 export class ArticleDetailPreview {
     constructor(
-        public previewId: string,
+        public articleId: string,
         public authorId: string,
         public title: string,
         public introduction: string,
