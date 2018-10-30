@@ -1,15 +1,15 @@
 <form [formGroup]="articleEditForm"
       class="article-form">
 
-  <section class="cover-image"
+  <section class="article-cover-image"
            (cosClickOut)="editCoverImage = false">
-    <section class="cover-image__display">
+    <section class="article-cover-image__display">
       <img *ngIf="!coverImageUrl$.value"
-           class="cover-image__image"
+           class="article-cover-image__image"
            src="../../assets/images/logo.png"
            alt="Cover Image">
       <img *ngIf="coverImageUrl$.value"
-           class="cover-image__image"
+           class="article-cover-image__image"
            [src]="coverImageUrl$ | async"
            [alt]="articleEditForm.value.imageAlt">
       <button class="mat-icon-btn"
@@ -21,7 +21,7 @@
       </button>
     </section>
     <section *ngIf="editCoverImage"
-             class="cover-image__editor">
+             class="article-cover-image__editor">
       <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">
         Progress: {{coverImageUploadPercent$ | async}}% Complete
       </p>
@@ -42,7 +42,7 @@
     </section>
   </section>
 
-  <section class="title"
+  <section class="article-title"
            (cosClickOut)="editTitle = false">
     <h2 *ngIf="!editTitle"
         class="static-display">
@@ -69,7 +69,7 @@
     </button>
   </section>
 
-  <section class="intro"
+  <section class="article-intro"
     (cosClickOut)="editIntro = false">
     <p *ngIf="!editIntro"
       class="static-display">
@@ -97,13 +97,13 @@
     </button>
   </section>
 
-  <p class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
+  <p class="article-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
 
   <section #ckeditorBoundingBox
-           class="ckeditor"
+           class="article-body"
            [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}"
            (window:scroll)="setCkeditorButtonOffset()">
-    <div class="ckeditor-interior"
+    <div class="article-body__interior"
          [ngClass]="{'border': loggedInUser.uid && editBody}">
       <button class="mat-icon-btn"
               [ngClass]="{'active': loggedInUser.uid && editBody}"
@@ -119,7 +119,7 @@
                 [disabled]="!loggedInUser.uid || !editBody">
       </ckeditor>
       <div *ngIf="articleEditForm.value.body === '' && !editBody"
-           class="ck ck-editor__editable_inline ck-editor__placeholder">
+           class="ck ck-editor__editable_inline article-body__placeholder">
         <div *ngIf="!articleIsNew">
           <p>The article body is empty.</p>
         </div>
@@ -138,7 +138,7 @@
     </div>
   </section>
 
-  <section class="tags"
+  <section class="article-tags"
            (cosClickOut)="editTags = false">
     <h3>Tags</h3>
     <p *ngIf="articleEditForm.value.tags.length === 0 && !editTags">This article has no tags.</p>
@@ -177,7 +177,7 @@
 
   <section *ngIf="articleHasUnsavedChanges() || articleIsNew"
            class="flex-center-justify">
-    <button class="cos-btn article-form__save-btn"
+    <button class="cos-btn article-save-btn"
             type="button"
             [disabled]="!articleEditForm.valid"
             (click)="editorAuthCheck() ? saveChanges() : null">

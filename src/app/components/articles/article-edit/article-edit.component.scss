@@ -1,5 +1,7 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
+// Uses Modified CKEditor Styles
+@import "../../../sass-variables-mixins/ckeditor.scss";
 // Uses CommentList Styles for Top Level Comments Section
 @import "../../comments/comment-list/comment-list.component.scss";
 
@@ -35,58 +37,61 @@
   }
 }
 
-.cover-image__display {
-  position: relative;
-  margin-bottom: 15px;
+.article-cover-image {
 
-  button {
-    visibility: hidden;
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
+  &__display {
+    position: relative;
+    margin-bottom: 15px;
 
-    &.active {
+    button {
+      visibility: hidden;
+      position: absolute;
+      right: 15px;
+      bottom: 15px;
+
+      &.active {
+        visibility: visible;
+      }
+    }
+
+    &:hover button {
       visibility: visible;
     }
   }
 
-  &:hover button {
-    visibility: visible;
-  }
-}
-
-.cover-image__image {
-  max-width: 100%;
-  display: block;
-  margin: 0 auto;
-}
-
-.cover-image__editor {
-  margin-bottom: 24px;
-  padding: 20px;
-  box-shadow: 0 2px 2px $light-gray-50;
-
-  input {
-    padding-top: 10px;
+  &__image {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
   }
 
-  .file-input {
-    flex-direction: column;
+  &__editor {
+    margin-bottom: 24px;
+    padding: 20px;
+    box-shadow: 0 2px 2px $light-gray-50;
 
     input {
-      width: 100%;
-      min-width: 0;
-      max-width: 250px;
-      padding: 6px;
-      border: 1px solid $light-gray-50;
-      border-radius: 4px;
-      background-color: #f8f8f8;
-      cursor: pointer;
+      padding-top: 10px;
+    }
+
+    .file-input {
+      flex-direction: column;
+
+      input {
+        width: 100%;
+        min-width: 0;
+        max-width: 250px;
+        padding: 6px;
+        border: 1px solid $light-gray-50;
+        border-radius: 4px;
+        background-color: #f8f8f8;
+        cursor: pointer;
+      }
     }
   }
 }
 
-.title, .intro {
+.article-title, .article-intro {
   position: relative;
 
   mat-form-field {
@@ -116,7 +121,7 @@
   }
 }
 
-.title {
+.article-title {
 
   h2 {
     margin: 0;
@@ -131,7 +136,7 @@
   }
 }
 
-.intro {
+.article-intro {
 
   p {
     margin: 0;
@@ -149,47 +154,47 @@
   }
 }
 
-.edit-date {
+.article-date {
   color: $medium-gray;
 }
 
-.ckeditor {
+.article-body {
   margin-bottom: 24px;
-}
 
-.ckeditor-interior {
-  position: relative;
-  border-radius: 4px;
-  border: 1px solid #fff;
-  transition: border 0.5s;
+  &__interior {
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    transition: border 0.5s;
 
-  &.border {
-    border: 1px solid $accent-color-1;
+    &.border {
+      border: 1px solid $accent-color-1;
+    }
+
+    button {
+      visibility: hidden;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    &:hover button, button.active {
+      visibility: visible;
+    }
   }
 
-  button {
-    visibility: hidden;
+  &__placeholder {
     position: absolute;
-    top: 10px;
-    right: 10px;
-  }
+    top: 0;
+    left: 0;
 
-  &:hover button, button.active {
-    visibility: visible;
-  }
-}
-
-.ck-editor__placeholder {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  h2 {
-    margin-top: 0;
+    h2 {
+      margin-top: 0;
+    }
   }
 }
 
-.tags {
+.article-tags {
   position: relative;
   margin-bottom: 24px;
   padding: 0 10px;
@@ -244,7 +249,7 @@
   }
 }
 
-.article-form__save-btn {
+.article-save-btn {
   margin-bottom: 20px;
 }
 
