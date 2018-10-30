@@ -160,10 +160,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.coverImageFile = null;
     }
     if (!this.articleEditForm.value.articleId) {
-      const articleSaved = await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
-      if (articleSaved === 'success') {
+      try {
+        await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
         this.articleIsNew = false;
         this.router.navigate([`article/${this.articleId}`]);
+      } catch (error) {
+        alert('There was a problem saving the article' + error);
       }
     } else {
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
