@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
 import { AuthService } from '../../../services/auth.service';
-import { ArticleDetailFirestore } from 'app/shared/class/article-info';
+import { ArticleDetailPreview } from 'app/shared/class/article-info';
 
 @Component({
   selector: 'cos-article-preview-card',
@@ -10,7 +10,7 @@ import { ArticleDetailFirestore } from 'app/shared/class/article-info';
 })
 
 export class ArticlePreviewCardComponent implements OnInit {
-  @Input() articleData: ArticleDetailFirestore;
+  @Input() articleData: ArticleDetailPreview;
   @Input() userId: string;
   isArticleBookmarked: boolean;
   constructor(
@@ -22,6 +22,8 @@ export class ArticlePreviewCardComponent implements OnInit {
     if (this.userId) {
       this.checkIfBookmarked();
     }
+    // console.log(this.articleData);
+    // console.log(this.articleData.articleId);
   }
 
   async checkIfBookmarked() {

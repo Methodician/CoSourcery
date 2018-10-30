@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { ArticleDetailFirestore } from 'app/shared/class/article-info';
+import { ArticleDetailFirestore, ArticleDetailPreview } from 'app/shared/class/article-info';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireObject} from '@angular/fire/database';
@@ -53,12 +53,12 @@ export class ArticleService {
     docRef.set({ path: fullPath, downloadUrl: url });
   }
 
-  latestArticlesRef(): AngularFirestoreCollection<ArticleDetailFirestore> {
-    return this.fsdb.collection('articleData/articles/articles', ref => ref.orderBy('timestamp', 'desc').limit(12));
+  latestArticlesRef(): AngularFirestoreCollection<ArticleDetailPreview> {
+    return this.fsdb.collection('articleData/articles/previews', ref => ref.orderBy('timestamp', 'desc').limit(12));
   }
 
-  allArticlesRef(): AngularFirestoreCollection<ArticleDetailFirestore> {
-    return this.fsdb.collection('articleData/articles/articles', ref => ref.orderBy('lastUpdated', 'desc'));
+  allArticlesRef(): AngularFirestoreCollection<ArticleDetailPreview> {
+    return this.fsdb.collection('articleData/articles/previews', ref => ref.orderBy('lastUpdated', 'desc'));
   }
 
 
@@ -78,7 +78,7 @@ export class ArticleService {
 
 
   articleRefById(articleId: string) {
-    return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    return this.fsdb.doc(`articleData/articles/previews/${articleId}`);
   }
 
 // This is only used in the article-ppreview-list component that is not currently being used so I did not refactor this yet
