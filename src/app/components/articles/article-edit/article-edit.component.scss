@@ -35,36 +35,23 @@
   }
 }
 
-.section-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 24px;
-
-  &__title {
-    margin-top: 0;
-    color: $primary-color;
-    text-align: center;
-  }
-}
-
 .cover-image__display {
   position: relative;
   margin-bottom: 15px;
 
   button {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     right: 15px;
     bottom: 15px;
 
     &.active {
-      opacity: 1;
+      visibility: visible;
     }
   }
 
   &:hover button {
-    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -104,6 +91,7 @@
 
   mat-form-field {
     width: 100%;
+    padding-right: 50px
   }
 
   input {
@@ -112,27 +100,23 @@
   }
 
   button {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     top: 0;
     right: 0;
     margin-left: 10px;
 
     &.active {
-      opacity: 1;
-      position: relative;
+      visibility: visible;
     }
   }
 
   &:hover button {
-    opacity: 1;
+    visibility: visible;
   }
 }
 
 .title {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
 
   h2 {
     margin: 0;
@@ -148,9 +132,6 @@
 }
 
 .intro {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
 
   p {
     margin: 0;
@@ -187,14 +168,14 @@
   }
 
   button {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     top: 10px;
     right: 10px;
   }
 
   &:hover button, button.active {
-    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -248,80 +229,38 @@
   }
 
   button {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     top: -10px;
     right: 0;
 
     &.active {
-      opacity: 1;
+      visibility: visible;
     }
   }
 
   &:hover button {
-    opacity: 1;
-  }
-}
-
-.comment-section {
-  margin-bottom: 48px;
-}
-
-button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  box-shadow: 0 2px 2px $medium-gray;
-  background-color: $accent-color-1;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  z-index: 10;
-
-  &.save {
-    margin: 24px 0;
-    background-color: darken($accent-color-2, 10%);
-
-    &:hover {
-      background-color: $primary-color;
-    }
-  }
-
-  &:hover {
-    background-color: darken($accent-color-2, 10%);
-  }
-
-  &:disabled, &:disabled:hover {
-    background-color: $medium-gray;
-    opacity: 0.5;
-    cursor: default;
-  }
-}
-
-button.mat-icon-button {
-  border-radius: 100%;
-
-  ::ng-deep .mat-button-wrapper {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tooltip {
-    visibility: hidden;
-    position: absolute;
-    right: 100%;
-    margin-right: 10px;
-    padding: 5px 15px;
-    border-radius: 4px;
-    background: $dark-gray;
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-
-  &:hover .tooltip {
     visibility: visible;
+  }
+}
+
+.article-form__save-btn {
+  margin-bottom: 20px;
+}
+
+.article-comments {
+  margin-bottom: 48px;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    margin-top: 0;
+    color: $primary-color;
+    text-align: center;
   }
 }

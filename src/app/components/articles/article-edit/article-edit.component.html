@@ -1,8 +1,8 @@
 <form [formGroup]="articleEditForm"
-  class="article-form">
+      class="article-form">
 
   <section class="cover-image"
-    (cosClickOut)="editCoverImage = false">
+           (cosClickOut)="editCoverImage = false">
     <section class="cover-image__display">
       <img *ngIf="!coverImageUrl$.value"
            class="cover-image__image"
@@ -12,59 +12,60 @@
            class="cover-image__image"
            [src]="coverImageUrl$ | async"
            [alt]="articleEditForm.value.imageAlt">
-      <button mat-icon-button
-        [ngClass]="{'active': editCoverImage}"
-        type="button"
-        (click)="editorAuthCheck() ? toggleEditCoverImage() : null">
+      <button class="mat-icon-btn"
+              [ngClass]="{'active': editCoverImage}"
+              type="button"
+              (click)="editorAuthCheck() ? toggleEditCoverImage() : null">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
-        <span class="tooltip">{{editCoverImage ? 'Close Image' : 'Edit Image'}}</span>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editCoverImage ? 'Close Image' : 'Edit Image'}}</span>
       </button>
     </section>
     <section *ngIf="editCoverImage"
-      class="cover-image__editor">
-      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">Progress: {{coverImageUploadPercent$ | async}}%
-        Complete</p>
+             class="cover-image__editor">
+      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">
+        Progress: {{coverImageUploadPercent$ | async}}% Complete
+      </p>
       <mat-form-field>
         <label>Image Alt Description</label>
         <input #imageAlt
-          matInput
-          type="text"
-          formControlName="imageAlt"
-          maxlength="100">
+               matInput
+               type="text"
+               formControlName="imageAlt"
+               maxlength="100">
         <mat-hint align="end">{{imageAlt.value.length}} / 100</mat-hint>
       </mat-form-field>
       <div class="file-input flex-center-align">
         <input accept="image/*"
-          type="file"
-          (change)="onSelectCoverImage($event)">
+               type="file"
+               (change)="onSelectCoverImage($event)">
       </div>
     </section>
   </section>
 
   <section class="title"
-    (cosClickOut)="editTitle = false">
+           (cosClickOut)="editTitle = false">
     <h2 *ngIf="!editTitle"
-      class="static-display">
+        class="static-display">
       {{articleEditForm.value.title}}
       <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
     </h2>
     <mat-form-field *ngIf="editTitle">
       <h2><input #title
-          matInput
-          type="text"
-          formControlName="title"
-          maxlength="100"
-          required>
+                 matInput
+                 type="text"
+                 formControlName="title"
+                 maxlength="100"
+                 required>
       </h2>
       <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
       <mat-error>Please give your article a title.</mat-error>
     </mat-form-field>
-    <button mat-icon-button
-      [ngClass]="{'active': editTitle}"
-      type="button"
-      (click)="editorAuthCheck() ? toggleEditTitle() : null">
+    <button class="mat-icon-btn"
+            [ngClass]="{'active': editTitle}"
+            type="button"
+            (click)="editorAuthCheck() ? toggleEditTitle() : null">
       <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
-      <span class="tooltip">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
+      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
     </button>
   </section>
 
@@ -77,45 +78,45 @@
     </p>
     <mat-form-field *ngIf="editIntro">
       <p><textarea #introduction
-          matInput
-          type="text"
-          formControlName="introduction"
-          rows="5"
-          maxlength="300"
-          required>
+                   matInput
+                   type="text"
+                   formControlName="introduction"
+                   rows="5"
+                   maxlength="300"
+                   required>
       </textarea></p>
       <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>
-    <button mat-icon-button
-      [ngClass]="{'active': editIntro}"
-      type="button"
-      (click)="editorAuthCheck() ? toggleEditIntro() : null">
+    <button class="mat-icon-btn"
+            [ngClass]="{'active': editIntro}"
+            type="button"
+            (click)="editorAuthCheck() ? toggleEditIntro() : null">
       <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
-      <span class="tooltip">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
+      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
     </button>
   </section>
 
   <p class="edit-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
 
   <section #ckeditorBoundingBox
-    class="ckeditor"
-    [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}"
-    (window:scroll)="setCkeditorButtonOffset()">
+           class="ckeditor"
+           [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}"
+           (window:scroll)="setCkeditorButtonOffset()">
     <div class="ckeditor-interior"
-      [ngClass]="{'border': loggedInUser.uid && editBody}">
-      <button mat-icon-button
-        [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
-        [ngClass]="{'active': loggedInUser.uid && editBody}"
-        type="button"
-        (click)="editorAuthCheck() ? toggleEditBody() : null">
+         [ngClass]="{'border': loggedInUser.uid && editBody}">
+      <button class="mat-icon-btn"
+              [ngClass]="{'active': loggedInUser.uid && editBody}"
+              [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
+              type="button"
+              (click)="editorAuthCheck() ? toggleEditBody() : null">
         <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>
-        <span class="tooltip">{{loggedInUser.uid && editBody ? 'Close Body' : 'Edit Body'}}</span>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' : 'Edit Body'}}</span>
       </button>
       <ckeditor formControlName="body"
-        [editor]="ckeditor"
-        [config]="ckeditorConfig"
-        [disabled]="!loggedInUser.uid || !editBody">
+                [editor]="ckeditor"
+                [config]="ckeditorConfig"
+                [disabled]="!loggedInUser.uid || !editBody">
       </ckeditor>
       <div *ngIf="articleEditForm.value.body === '' && !editBody"
            class="ck ck-editor__editable_inline ck-editor__placeholder">
@@ -138,7 +139,7 @@
   </section>
 
   <section class="tags"
-    (cosClickOut)="editTags = false">
+           (cosClickOut)="editTags = false">
     <h3>Tags</h3>
     <p *ngIf="articleEditForm.value.tags.length === 0 && !editTags">This article has no tags.</p>
     <mat-chip-list *ngIf="!editTags">
@@ -148,7 +149,7 @@
     <mat-form-field *ngIf="editTags">
       <mat-chip-list #chipList>
         <mat-chip *ngFor="let articleTag of articleEditForm.value.tags"
-          (removed)="removeTag(articleTag)">
+                  (removed)="removeTag(articleTag)">
           {{articleTag}}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
@@ -165,18 +166,18 @@
       </mat-hint>
       <mat-hint align="end">{{tagInput.value.length}} / 25</mat-hint>
     </mat-form-field>
-    <button mat-icon-button
-      [ngClass]="{'active': editTags}"
-      type="button"
-      (click)="editorAuthCheck() ? toggleEditTags() : null">
+    <button class="mat-icon-btn"
+            [ngClass]="{'active': editTags}"
+            type="button"
+            (click)="editorAuthCheck() ? toggleEditTags() : null">
       <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
-      <span class="tooltip">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
+      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>
   </section>
 
   <section *ngIf="articleHasUnsavedChanges() || articleIsNew"
            class="flex-center-justify">
-    <button class="save"
+    <button class="cos-btn article-form__save-btn"
             type="button"
             [disabled]="!articleEditForm.valid"
             (click)="editorAuthCheck() ? saveChanges() : null">
@@ -185,13 +186,13 @@
   </section>
 </form>
 
+<!-- Top-Level Comment -->
 <section *ngIf="!articleIsNew"
-         class="comment-section">
-<!-- New Top-Level Comment -->
-  <section class="section-header">
-    <h2 class="section-header__title">Discussion</h2>
+         class="article-comments">
+  <section class="article-comments__header">
+    <h2 class="article-comments__title">Discussion</h2>
     <button *ngIf="commentReplyInfo.replyParentKey !== articleId || !loggedInUser.uid"
-            class="button"
+            class="cos-btn"
             (click)="editorAuthCheck() ? enterNewCommentMode() : null">
       Comment
     </button>
@@ -210,17 +211,15 @@
                    [comment]="newCommentStub">
       </cos-comment>
       <section class="comment-controls">
-        <button mat-icon-button
-                class="button-mat-icon button-mat-icon_small"
+        <button class="mat-icon-btn mat-icon-btn_small"
                 (click)="onAddComment()">
-          <mat-icon>check</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Save</span>
+          <mat-icon class="mat-icon_small">check</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Save</span>
         </button>
-        <button mat-icon-button
-                class="button-mat-icon button-mat-icon_small"
+        <button class="mat-icon-btn mat-icon-btn_small"
                 (click)="onCancelNewComment()">
-          <mat-icon>clear</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Cancel</span>
+          <mat-icon class="mat-icon_small">clear</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Cancel</span>
         </button>
       </section>
     </section>

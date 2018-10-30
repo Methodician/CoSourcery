@@ -16,19 +16,17 @@
             {{commentMap[key].voteCount}}
           </span>
         </div>
-        <button mat-icon-button
-                class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden"
-                [ngClass]="{'button-mat-icon_rating_voted': hasUserVoted(key, 'up')}"
+        <button class="mat-icon-btn mat-icon-btn_small comment-rating__btn comment-rating__btn_hidden"
+                [ngClass]="{'comment-rating__btn_voted': hasUserVoted(key, 'up')}"
                 (click)="commentAuthCheck() ? onUpvoteComment(key) : null">
           <mat-icon>expand_less</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'up') ? 'Remove Vote' : 'Upvote'}}</span>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_right">{{hasUserVoted(key, 'up') ? 'Remove Vote' : 'Upvote'}}</span>
         </button>
-        <button mat-icon-button
-                class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden"
-                [ngClass]="{'button-mat-icon_rating_voted': hasUserVoted(key, 'down')}"
+        <button class="mat-icon-btn mat-icon-btn_small comment-rating__btn comment-rating__btn_hidden"
+                [ngClass]="{'comment-rating__btn_voted': hasUserVoted(key, 'down')}"
                 (click)="commentAuthCheck() ? onDownvoteComment(key) : null">
           <mat-icon>expand_more</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'down') ? 'Remove Vote' : 'Downvote'}}</span>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_right">{{hasUserVoted(key, 'down') ? 'Remove Vote' : 'Downvote'}}</span>
         </button>
       </section>
 
@@ -47,41 +45,36 @@
 
       <section class="comment-controls">
         <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key || !loggedInUser.uid"
-                mat-icon-button
-                class="button-mat-icon button-mat-icon_small"
+                class="mat-icon-btn mat-icon-btn_small"
                 (click)="commentAuthCheck() ? enterNewCommentMode(key) : null">
-          <mat-icon>reply</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Reply</span>
+          <mat-icon class="mat-icon_small">reply</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Reply</span>
         </button>
         <div *ngIf="loggedInUser.uid === commentMap[key].authorId"
              class="comment-controls__btn-group">
           <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
-                  mat-icon-button
-                  class="button-mat-icon button-mat-icon_small"
+                  class="mat-icon-btn mat-icon-btn_small"
                   (click)="enterEditMode(key)">
-            <mat-icon>edit</mat-icon>
-            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Edit</span>
+            <mat-icon class="mat-icon_small">edit</mat-icon>
+            <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Edit</span>
           </button>
           <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
-                  mat-icon-button
-                  class="button-mat-icon button-mat-icon_small"
+                  class="mat-icon-btn mat-icon-btn_small"
                   (click)="onRemoveComment(key)">
-            <mat-icon>clear</mat-icon>
-            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Remove</span>
+            <mat-icon class="mat-icon_small">clear</mat-icon>
+            <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Remove</span>
           </button>
           <button *ngIf="commentIsBeingEdited(key)"
-                  mat-icon-button
-                  class="button-mat-icon button-mat-icon_small"
+                  class="mat-icon-btn mat-icon-btn_small"
                   (click)="onSaveEdits(key)">
-            <mat-icon>check</mat-icon>
-            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Save</span>
+            <mat-icon class="mat-icon_small">check</mat-icon>
+            <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Save</span>
           </button>
           <button *ngIf="commentIsBeingEdited(key)"
-                  mat-icon-button
-                  class="button-mat-icon button-mat-icon_small"
+                  class="mat-icon-btn mat-icon-btn_small"
                   (click)="onCancelEdit()">
-            <mat-icon>clear</mat-icon>
-            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Cancel</span>
+            <mat-icon class="mat-icon_small">clear</mat-icon>
+            <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Cancel</span>
           </button>
         </div>
       </section>
@@ -99,17 +92,15 @@
                      [comment]="newCommentStub">
         </cos-comment>
         <section class="comment-controls">
-          <button mat-icon-button
-                  class="button-mat-icon button-mat-icon_small"
+          <button class="mat-icon-btn mat-icon-btn_small"
                   (click)="onAddComment()">
-            <mat-icon>check</mat-icon>
-            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Save</span>
+            <mat-icon class="mat-icon_small">check</mat-icon>
+            <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Save</span>
           </button>
-          <button mat-icon-button
-                  class="button-mat-icon button-mat-icon_small"
+          <button class="mat-icon-btn mat-icon-btn_small"
                   (click)="onCancelNewComment()">
-            <mat-icon>clear</mat-icon>
-            <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Cancel</span>
+            <mat-icon class="mat-icon_small">clear</mat-icon>
+            <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Cancel</span>
           </button>
         </section>
       </section>
