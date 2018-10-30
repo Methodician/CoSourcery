@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { ArticleDetailFirestore } from 'app/shared/class/article-info';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { UserInfoOpen } from 'app/shared/class/user-info';
-import { AngularFireDatabase, AngularFireObject} from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
 
@@ -13,7 +14,6 @@ import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference 
 export class ArticleService {
   bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
   timestampNow = firebase.firestore.Timestamp.now();
-  currentArticle$ = new Subject<any>();
 
   constructor(
     private storage: AngularFireStorage,
@@ -63,40 +63,38 @@ export class ArticleService {
 
 
   watchBookmarkedArticles(userKey) {
+    const articleList$ = new BehaviorSubject<ArticleDetailFirestore[]>([]);
     const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`);
-    bookmarksRef.snapshotChanges().subscribe(articleIds => {
-      const articlesList = new Array<any>();
-      articleIds.forEach(key => {
-        const articleRef= this.articleRefById(key.key);
-        articleRef.valueChanges().subscribe(article => {
-          articlesList.push(article);
-          this.bookmarkedArticles$.next(articlesList);
+    bookmarksRef.snapshotChanges().pipe(map(keySnaps => {
+      return keySnaps.map(snap => {
+        return this.getArticleRefById(snap.key).valueChanges();
+      })
+    })).subscribe(articleObservables => {
+      let articleMap = {};
+      for (let article$ of articleObservables) {
+        article$.subscribe(article => {
+          if (!!article) {
+            articleMap[article.articleId] = article;
+            articleList$.next(Object.values(articleMap));
+          }
         });
-      });
+      }
     });
+    return articleList$;
   }
 
 
-  articleRefById(articleId: string) {
+  getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetailFirestore> {
     return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
   }
 
-// This is only used in the article-ppreview-list component that is not currently being used so I did not refactor this yet
+  // This is only used in the article-ppreview-list component that is not currently being used so I did not refactor this yet
   authorRef(uid: string) {
     return this.rtdb.object(`userInfo/open/${uid}`);
   }
 
-
   bookmarkedRef(userKey, articleId) {
     return this.rtdb.object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`);
-  }
-
-
-  async setCurrentArticle(articleId: string) {
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    await articleRef.valueChanges().subscribe(articleData => {
-      this.currentArticle$.next(articleData);
-    });
   }
 
   unBookmarkArticle(userKey, articleId) {
@@ -150,7 +148,7 @@ export class ArticleService {
     articleRef.delete();
   }
 
-//with refactor this is no longer used
+  //with refactor this is no longer used
   // arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
   //   const array = [];
   //   querySnapshot.forEach(doc => {
