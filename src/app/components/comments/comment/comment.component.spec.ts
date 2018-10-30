@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { CommentComponent } from './comment.component';
 
 import { UserInfoOpen } from '../../../shared/class/user-info';
+import { MatFormFieldModule, MatInputModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 class UserInfoOpenStub {
   constructor(
@@ -42,13 +44,18 @@ class CommentStub {
   }
 }
 
-describe('CommentComponent', () => {
+describe('CommentComponent - ', () => {
   let component: CommentComponent;
   let fixture: ComponentFixture<CommentComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule ],
+      imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule
+      ],
       declarations: [ CommentComponent ]
     })
     .compileComponents();
@@ -70,15 +77,16 @@ describe('CommentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('authorInfo tests', () => {
+  describe('authorInfo - ', () => {
 
     it('should render the author\'s alias if one is recieved', () => {
       component.authorInfo = new UserInfoOpen('J-Boi', 'Jeff', 'Goldblum');
 
       fixture.detectChanges();
 
-      const de = fixture.debugElement.query(By.css('.comment-author-name'));
-      const el: HTMLElement = de.nativeElement;
+      const de = fixture.debugElement.query(By.css('.comment__author'));
+
+      const el: HTMLElement = de.nativeElement.children[0];
 
       expect(el.innerText).toContain('J-Boi');
     });
@@ -88,23 +96,23 @@ describe('CommentComponent', () => {
 
       fixture.detectChanges();
 
-      const de = fixture.debugElement.query(By.css('.comment-author-name'));
-      const el: HTMLElement = de.nativeElement;
+      const de = fixture.debugElement.query(By.css('.comment__author'));
+      const el: HTMLElement = de.nativeElement.children[0];
 
       expect(el.innerText).toContain('Jeff');
     });
 
     it('should render nothing for author name if no authorInfo is recieved', () => {
 
-      const de = fixture.debugElement.query(By.css('.comment-author-name'));
-      const el: HTMLElement = de.nativeElement;
+      const de = fixture.debugElement.query(By.css('.comment__author'));
+      const el: HTMLElement = de.nativeElement.children[0];
 
-      expect(el.innerText).toBe('Author:');
+      expect(el.innerText).toBe('Posted by');
     });
 
     it('should render default img if no authorInfo img is set', () => {
 
-      const de = fixture.debugElement.query(By.css('.comment-author-img'));
+      const de = fixture.debugElement.query(By.css('.comment__author-image'));
       const el: HTMLImageElement = de.nativeElement;
 
 
@@ -116,7 +124,7 @@ describe('CommentComponent', () => {
 
       fixture.detectChanges();
 
-      const de = fixture.debugElement.query(By.css('.comment-author-img'));
+      const de = fixture.debugElement.query(By.css('.comment__author-image'));
       const el: HTMLImageElement = de.nativeElement;
 
 
@@ -125,14 +133,14 @@ describe('CommentComponent', () => {
 
   });
 
-  describe('comment tests', () => {
+  describe('comment - ', () => {
 
     it('should display comment text if !isBeingUpdated', () => {
       component.comment.text = 'I\'m a comment, hurr durr';
 
       fixture.detectChanges();
 
-      const de = fixture.debugElement.query(By.css('.comment-body'));
+      const de = fixture.debugElement.query(By.css('.comment__text'));
       const el: HTMLElement = de.nativeElement;
 
       expect(el.innerText).toContain('I\'m a comment, hurr durr');
@@ -143,10 +151,10 @@ describe('CommentComponent', () => {
 
       fixture.detectChanges();
 
-      const de = fixture.debugElement.query(By.css('.comment-body'));
+      const de = fixture.debugElement.query(By.css('.comment__text'));
       const el: HTMLElement = de.nativeElement;
 
-      expect(el.children[0].tagName).toBe('INPUT');
+      expect(el.children[0].tagName).toBe('TEXTAREA');
     });
 
     it('comment-body should should start with value of original comment text when being edited', () => {
@@ -155,14 +163,14 @@ describe('CommentComponent', () => {
 
       fixture.detectChanges();
 
-      const de = fixture.debugElement.query(By.css('.comment-body'));
-      const el: HTMLInputElement = de.nativeElement.children[0].attributes[2].nodeValue;
+      const de = fixture.debugElement.query(By.css('.comment__text'));
+      const el: HTMLInputElement = de.nativeElement.children[0].attributes[6].nodeValue;
 
       expect(el).toContain('I\'m a comment, hurr durr');
     });
 
     it('should display last updated date appropriately if none given', () => {
-      const de = fixture.debugElement.query(By.css('.comment-last-updated'));
+      const de = fixture.debugElement.query(By.css('.comment__author-detail_light'));
       const el: HTMLElement = de.nativeElement;
 
       const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -175,7 +183,7 @@ describe('CommentComponent', () => {
 
       fixture.detectChanges();
 
-      const de = fixture.debugElement.query(By.css('.comment-last-updated'));
+      const de = fixture.debugElement.query(By.css('.comment__author-detail_light'));
       const el: HTMLElement = de.nativeElement;
 
       const options = { year: 'numeric', month: 'short', day: 'numeric' };
