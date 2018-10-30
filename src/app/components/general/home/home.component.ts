@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
-import { ActivatedRoute } from '@angular/router';
 import { ArticleDetailFirestore } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
@@ -12,17 +11,15 @@ import { Observable } from 'rxjs';
   providers: [ArticleService]
 })
 export class HomeComponent implements OnInit {
-  routeParams;
   UserId;
   featuredArticles;
-  latestArticles: Observable<any>;
-  allArticles: Observable<any>;
+  latestArticles: Observable<ArticleDetailFirestore[]>;
+  allArticles: Observable<ArticleDetailFirestore[]>;
   bookmarkedArticles;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
 
 
   constructor(
-    private route: ActivatedRoute,
     private articleSvc: ArticleService,
     private authSvc: AuthService) { }
 
@@ -38,9 +35,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  async initializeArticles() {
-    this.latestArticles = await this.articleSvc.latestArticlesRef();
-    this.allArticles = await this.articleSvc.allArticlesRef();
+  initializeArticles() {
+    this.latestArticles = this.articleSvc.latestArticlesRef().valueChanges();
+    this.allArticles = this.articleSvc.allArticlesRef().valueChanges();
   }
 
   watchBookmarkedArticles(){

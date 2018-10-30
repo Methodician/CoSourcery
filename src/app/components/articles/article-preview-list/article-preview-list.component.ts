@@ -22,7 +22,7 @@ export class ArticlePreviewListComponent implements OnInit {
 
   ngOnInit() {
     this.author = this.articleService
-    .getAuthor(this.articleData.authorId);
+    .authorRef(this.articleData.authorId).valueChanges();
   }
 
   navigateToArticleDetail() {

@@ -53,22 +53,22 @@ export class ArticleService {
     docRef.set({ path: fullPath, downloadUrl: url });
   }
 
-  async latestArticlesRef() {
-    return this.fsdb.collection('articleData/articles/articles', ref => ref.orderBy('timestamp', 'desc').limit(12)).valueChanges();
+  latestArticlesRef(): AngularFirestoreCollection<ArticleDetailFirestore> {
+    return this.fsdb.collection('articleData/articles/articles', ref => ref.orderBy('timestamp', 'desc').limit(12));
   }
 
-  async allArticlesRef() {
-    return this.fsdb.collection('articleData/articles/articles', ref => ref.orderBy('lastUpdated', 'desc')).valueChanges();
+  allArticlesRef(): AngularFirestoreCollection<ArticleDetailFirestore> {
+    return this.fsdb.collection('articleData/articles/articles', ref => ref.orderBy('lastUpdated', 'desc'));
   }
 
 
   watchBookmarkedArticles(userKey) {
-    const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`).snapshotChanges();
-    bookmarksRef.subscribe(articleIds => {
+    const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`);
+    bookmarksRef.snapshotChanges().subscribe(articleIds => {
       const articlesList = new Array<any>();
-      articleIds.forEach(async key => {
-        const articleRef= await this.getArticleById(key.key);
-        articleRef.subscribe(article => {
+      articleIds.forEach(key => {
+        const articleRef= this.articleRefById(key.key);
+        articleRef.valueChanges().subscribe(article => {
           articlesList.push(article);
           this.bookmarkedArticles$.next(articlesList);
         });
@@ -77,25 +77,25 @@ export class ArticleService {
   }
 
 
-  async getArticleById(articleId: string) {
-    return this.fsdb.doc(`articleData/articles/articles/${articleId}`).valueChanges();
+  articleRefById(articleId: string) {
+    return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
   }
 
 // This is only used in the article-ppreview-list component that is not currently being used so I did not refactor this yet
-  async getAuthor(uid: string) {
-    return this.rtdb.object(`userInfo/open/${uid}`).valueChanges();
+  authorRef(uid: string) {
+    return this.rtdb.object(`userInfo/open/${uid}`);
   }
 
 
-  async bookmarkedRef(userKey, articleId) {
-    return this.rtdb.object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`).valueChanges();
+  bookmarkedRef(userKey, articleId) {
+    return this.rtdb.object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`);
   }
 
 
   async setCurrentArticle(articleId: string) {
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`).valueChanges();
-    await articleRef.subscribe(snapshotData => {
-      this.currentArticle$.next(snapshotData);
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    await articleRef.valueChanges().subscribe(articleData => {
+      this.currentArticle$.next(articleData);
     });
   }
 
@@ -129,19 +129,16 @@ export class ArticleService {
 
   createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    // Updating New Article Object.
-    // Probably a better way to do this.
-    const newArt = article;
-    newArt.authorId = author.uid;
-    newArt.articleId = articleId;
-    newArt.lastUpdated = this.timestampNow;
-    newArt.timestamp = this.timestampNow;
-    newArt.lastEditorId = author.uid;
-    newArt.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png';
+    article.authorId = author.uid;
+    article.articleId = articleId;
+    article.lastUpdated = this.timestampNow;
+    article.timestamp = this.timestampNow;
+    article.lastEditorId = author.uid;
+    article.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png';
 
     let outcome = 'success';
     try {
-      articleRef.set(newArt, {merge: true});
+      articleRef.set(article, {merge: true});
     } catch (error) {
       console.error(error);
       outcome = 'Error (logged to console)';
@@ -161,16 +158,16 @@ export class ArticleService {
   }
 
 //with refactor this is no longer used
-  arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
-    const array = [];
-    querySnapshot.forEach(doc => {
-      if (shouldAttachId) {
-        array.push({ id: doc.id, ...doc.data() });
-      } else {
-        array.push(doc.data());
-      }
-    });
-    return array;
-  }
+  // arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
+  //   const array = [];
+  //   querySnapshot.forEach(doc => {
+  //     if (shouldAttachId) {
+  //       array.push({ id: doc.id, ...doc.data() });
+  //     } else {
+  //       array.push(doc.data());
+  //     }
+  //   });
+  //   return array;
+  // }
 
 }
