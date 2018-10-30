@@ -11,7 +11,7 @@ import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
-import { Comment, ParentTypes } from 'app/shared/class/comment';
+import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-article-edit',
@@ -39,6 +39,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   userMap: UserMap = {};
   userKeys: string[];
+
+  userVotesMap: KeyMap<VoteDirections> = {};
 
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   ckeditorButtonOffset: number = 0;
@@ -104,9 +106,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    //  May abstract this out to an ID now that we have user map...
+    //  May abstract userInfo out to an ID now that we have user map...
     this.userSvc.userInfo$.subscribe(user => {
       this.loggedInUser = user;
+      this.mapUserVotes();
     });
     this.setArticleId();
     this.subscribeToArticle();
@@ -117,6 +120,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.abortChanges();
     this.currentArticleSubscription.unsubscribe();
+  }
+
+  mapUserVotes(){
+    this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
+    .snapshotChanges().subscribe(snaps => {
+      this.userVotesMap = {};
+      for(let snap of snaps){
+        this.userVotesMap[snap.key] = snap.payload.val() as any;
+      }
+    });
   }
 
   // Form Setup & Breakdown Functions
