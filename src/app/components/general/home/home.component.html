@@ -24,8 +24,8 @@
 
 <!-- ARTICLE COLLECTIONS -->
 <section id="latest-articles"
-     class="article-grid"
-     *ngIf="currentSelectedTab === 1 && latestArticles">
+         class="article-grid"
+         *ngIf="currentSelectedTab === 1 && latestArticles">
 
   <cos-article-preview-card [userId]="UserId"
                             [articleData]="article"
@@ -33,16 +33,16 @@
   </cos-article-preview-card>
 </section>
 <section id="all-articles"
-     class="article-grid"
-     *ngIf="currentSelectedTab === 2 && allArticles">
+         class="article-grid"
+         *ngIf="currentSelectedTab === 2 && allArticles">
   <cos-article-preview-card [userId]="UserId"
                             [articleData]="article"
                             *ngFor="let article of allArticles | async">
   </cos-article-preview-card>
 </section>
 <section id="bookmarked-articles"
-     class="article-grid"
-     *ngIf="currentSelectedTab === 3 && bookmarkedArticles">
+         class="article-grid"
+         *ngIf="currentSelectedTab === 3 && bookmarkedArticles">
   <cos-article-preview-card [userId]="UserId"
                             [articleData]="article"
                             *ngFor="let article of bookmarkedArticles | reverseArray ">

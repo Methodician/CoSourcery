@@ -109,13 +109,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.loggedInUser = user;
     });
     this.setArticleId();
-    this.subscribeToArticleId();
+    this.subscribeToArticle();
     this.userMap = this.userSvc.userMap;
     this.userKeys = Object.keys(this.userMap);
   }
 
   ngOnDestroy() {
     this.abortChanges();
+    this.currentArticleSubscription.unsubscribe();
   }
 
   // Form Setup & Breakdown Functions
@@ -132,17 +133,22 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToArticleId() {
-    this.articleSvc.setCurrentArticle(this.articleId);
-    this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-      if (!this.formIsReady) {
-        this.setDefaultFormData(articleData);
-        this.formIsReady = true;
-      } else {
-        this.updateCoverImageUrl(articleData.imageUrl);
-        this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
-      }
-    });
+  subscribeToArticle() {
+    if (this.currentArticleSubscription) {
+      this.currentArticleSubscription.unsubscribe();
+    }
+    this.currentArticleSubscription = this.articleSvc
+      .getArticleRefById(this.articleId)
+      .valueChanges()
+      .subscribe(articleData => {
+        if (!this.formIsReady) {
+          this.setDefaultFormData(articleData);
+          this.formIsReady = true;
+        } else {
+          this.updateCoverImageUrl(articleData.imageUrl);
+          this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
+        }
+      });
   }
 
   setDefaultFormData(data) {

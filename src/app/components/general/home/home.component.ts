@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
     this.authSvc.authInfo$.subscribe(authInfo => {
       if (authInfo) {
         this.UserId = authInfo.uid;
-        if(this.UserId){
+        if (this.UserId) {
           this.watchBookmarkedArticles();
         }
       }
@@ -40,10 +40,9 @@ export class HomeComponent implements OnInit {
     this.allArticles = this.articleSvc.allArticlesRef().valueChanges();
   }
 
-  watchBookmarkedArticles(){
-    this.articleSvc.watchBookmarkedArticles(this.UserId);
-    this.articleSvc.bookmarkedArticles$.subscribe(list => {
-      this.bookmarkedArticles = list;
+  watchBookmarkedArticles() {
+    this.articleSvc.watchBookmarkedArticles(this.UserId).subscribe(articles => {
+      this.bookmarkedArticles = articles;
     });
   }
 
