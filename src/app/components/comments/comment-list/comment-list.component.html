@@ -6,10 +6,10 @@
 
     <section class="comment-unit">
       <section class="comment-rating">
-        <button (click)="onUpvoteComment(key)"
-                mat-icon-button
+        <button mat-icon-button
                 class="button-mat-icon button-mat-icon_rating"
-                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'up'), 'button-mat-icon_rating_voted': hasUserVoted(key, 'up')}">
+                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'up'), 'button-mat-icon_rating_voted': hasUserVoted(key, 'up')}"
+                (click)="commentAuthCheck() ? onUpvoteComment(key) : null">
           <mat-icon>expand_less</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'up') ? 'Remove Vote' : 'Upvote'}}</span>
         </button>
@@ -20,9 +20,9 @@
           </span>
         </div>
         <button mat-icon-button
-                (click)="onDownvoteComment(key)"
                 class="button-mat-icon button-mat-icon_rating"
-                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'down'), 'button-mat-icon_rating_voted': hasUserVoted(key, 'down')}">
+                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'down'), 'button-mat-icon_rating_voted': hasUserVoted(key, 'down')}"
+                (click)="commentAuthCheck() ? onDownvoteComment(key) : null">
           <mat-icon>expand_more</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'down') ? 'Remove Vote' : 'Downvote'}}</span>
         </button>
@@ -30,7 +30,7 @@
       <cos-comment [comment]="commentMap[key]"
                    [loggedInUser]="loggedInUser"
                    [authorInfo]="userMap[commentMap[key].authorId]"
-                   [isBeingEdited]="commentIsBeingEdited(key)">
+                   [isBeingEdited]="commentIsBeingEdited(key) && loggedInUser.uid">
       </cos-comment>
       <p *ngIf="commentMap[key].replyCount > 0"
          class="reply-count">
@@ -40,10 +40,10 @@
       </p>
 
       <section class="comment-controls">
-        <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
+        <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key || !loggedInUser.uid"
                 mat-icon-button
                 class="button-mat-icon button-mat-icon_small"
-                (click)="commentListUnfurlMap[key] = true; enterNewCommentMode(key)">
+                (click)="commentAuthCheck() ? enterNewCommentMode(key) : null">
           <mat-icon>reply</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Reply</span>
         </button>
@@ -81,7 +81,7 @@
       </section>
 
       <!-- New Reply Stub -->
-      <section *ngIf="commentReplyInfo.replyParentKey === key"
+      <section *ngIf="commentReplyInfo.replyParentKey === key && loggedInUser.uid"
                class="comment-group comment-group_new comment-unit">
         <cos-comment [isBeingEdited]="true"
                      [loggedInUser]="loggedInUser"

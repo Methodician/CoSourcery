@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
@@ -29,8 +30,10 @@ export class CommentListComponent implements OnInit, OnDestroy {
   commentKeys: string[];
   commentListUnfurlMap: KeyMap<boolean> = {};
 
-  constructor(private commentSvc: CommentService) {
-  }
+  constructor(
+    private router: Router,
+    private commentSvc: CommentService
+  ) { }
 
   ngOnInit() {
     this.fillDataMaps();
@@ -62,8 +65,20 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   enterNewCommentMode(replyParentKey) {
     this.commentEditInfo.commentKey = null;
+    this.commentListUnfurlMap[replyParentKey] = true
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey, ParentTypes.comment);
     this.commentReplyInfo.replyParentKey = replyParentKey;
+  }
+
+  commentAuthCheck() {
+    if (this.loggedInUser.uid) {
+      return true;
+    } else {
+      if (confirm("Login Required: Would you like to login now?")) {
+        this.router.navigate(['/login']);
+      }
+      return false;
+    }
   }
 
   onCancelNewComment() {
