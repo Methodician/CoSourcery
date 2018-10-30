@@ -15,7 +15,7 @@
       <button mat-icon-button
         [ngClass]="{'active': editCoverImage}"
         type="button"
-        (click)="editBody = false; editCoverImage = !editCoverImage">
+        (click)="editorAuthCheck() ? toggleEditCoverImage() : null">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
         <span class="tooltip">{{editCoverImage ? 'Close Image' : 'Edit Image'}}</span>
       </button>
@@ -62,7 +62,7 @@
     <button mat-icon-button
       [ngClass]="{'active': editTitle}"
       type="button"
-      (click)="editBody = false; editTitle = !editTitle">
+      (click)="editorAuthCheck() ? toggleEditTitle() : null">
       <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
     </button>
@@ -90,7 +90,7 @@
     <button mat-icon-button
       [ngClass]="{'active': editIntro}"
       type="button"
-      (click)="editBody = false; editIntro = !editIntro">
+      (click)="editorAuthCheck() ? toggleEditIntro() : null">
       <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
     </button>
@@ -100,22 +100,22 @@
 
   <section #ckeditorBoundingBox
     class="ckeditor"
-    [ngClass]="{'not-editable': !editBody}"
+    [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}"
     (window:scroll)="setCkeditorButtonOffset()">
     <div class="ckeditor-interior"
-      [ngClass]="{'border': editBody}">
+      [ngClass]="{'border': loggedInUser.uid && editBody}">
       <button mat-icon-button
         [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
-        [ngClass]="{'active': editBody}"
+        [ngClass]="{'active': loggedInUser.uid && editBody}"
         type="button"
-        (click)="editBody = !editBody">
-        <mat-icon>{{editBody ? 'clear' : 'edit'}}</mat-icon>
-        <span class="tooltip">{{editBody ? 'Close Body' : 'Edit Body'}}</span>
+        (click)="editorAuthCheck() ? toggleEditBody() : null">
+        <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>
+        <span class="tooltip">{{loggedInUser.uid && editBody ? 'Close Body' : 'Edit Body'}}</span>
       </button>
       <ckeditor formControlName="body"
         [editor]="ckeditor"
         [config]="ckeditorConfig"
-        [disabled]="!editBody">
+        [disabled]="!loggedInUser.uid || !editBody">
       </ckeditor>
       <div *ngIf="articleEditForm.value.body === '' && !editBody"
            class="ck ck-editor__editable_inline ck-editor__placeholder">
@@ -168,7 +168,7 @@
     <button mat-icon-button
       [ngClass]="{'active': editTags}"
       type="button"
-      (click)="editBody = false; editTags = !editTags">
+      (click)="editorAuthCheck() ? toggleEditTags() : null">
       <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
       <span class="tooltip">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>
@@ -179,7 +179,7 @@
     <button class="save"
             type="button"
             [disabled]="!articleEditForm.valid"
-            (click)="saveChanges()">
+            (click)="editorAuthCheck() ? saveChanges() : null">
       Save Article
     </button>
   </section>
@@ -190,15 +190,15 @@
 <!-- New Top-Level Comment -->
   <section class="section-header">
     <h2 class="section-header__title">Discussion</h2>
-    <button *ngIf="commentReplyInfo.replyParentKey !== articleId"
+    <button *ngIf="commentReplyInfo.replyParentKey !== articleId || !loggedInUser.uid"
             class="button"
-            (click)="enterNewCommentMode()">
+            (click)="editorAuthCheck() ? enterNewCommentMode() : null">
       Comment
     </button>
   </section>
 
   <section class="comment-list_root">
-    <section *ngIf="commentReplyInfo.replyParentKey === articleId"
+    <section *ngIf="commentReplyInfo.replyParentKey === articleId && loggedInUser.uid"
              class="comment-group comment-group_new comment-unit">
       <cos-comment [isBeingEdited]="true"
                    [loggedInUser]="loggedInUser"
