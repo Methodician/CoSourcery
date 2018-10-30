@@ -43,7 +43,7 @@ class UserInfoOpenStub {
   }
 }
 
-describe('CommentListComponent', () => {
+describe('CommentListComponent - ', () => {
   let component: CommentListComponent;
   let fixture: ComponentFixture<CommentListComponent>;
 
@@ -52,7 +52,7 @@ describe('CommentListComponent', () => {
   beforeEach(async(() => {
 
     CommentServiceStub = {
-      createComment: () => {
+      createCommentStub: () => {
         return of('test');
       },
       removeComment: () => {
@@ -62,24 +62,24 @@ describe('CommentListComponent', () => {
         return of('test');
       },
       watchCommentsByParent: (parentKey) => {
-          const testComment = {
-            payload: {
-              val: () => {
-                return {
-                  authorId: 'testID',
-                  parentKey: parentKey,
-                  text: 'test Comment',
-                  lastUpdated: 123456,
-                  timestamp: 123456
-                };
-              },
+        const testComment = {
+          payload: {
+            val: () => {
+              return {
+                authorId: 'testID',
+                parentKey: parentKey,
+                text: 'test Comment',
+                lastUpdated: 123456,
+                timestamp: 123456
+              };
             },
-            key: 'testSnapKey' + (Math.random() * 100).toString()
-          };
-          const comments = of([of(testComment)]);
+          },
+          key: 'testSnapKey' + (Math.random() * 100).toString()
+        };
+        const comments = of([of(testComment)]);
 
-          // return of('test');
-          return of(comments);
+        // return of('test');
+        return of(comments);
       },
       getUserInfo: () => {
         return of('test');
@@ -121,7 +121,7 @@ describe('CommentListComponent', () => {
       userKey3: new UserInfoOpenStub('', 'elaine', 'benes', '123', 'elaineURL', 'email.com', 'zipcode', 'bio', 'city', 'state'),
     };
     component.userKeys = ['userKey1', 'userKey2', 'userKey3'];
-    component.commentReplyInfo = {replyParentKey: null};
+    component.commentReplyInfo = { replyParentKey: null };
     fixture.detectChanges();
   });
 
@@ -133,7 +133,7 @@ describe('CommentListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  xdescribe('initialization', () => {
+  xdescribe('initialization - ', () => {
     let watchCommentsByParentSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -167,7 +167,7 @@ describe('CommentListComponent', () => {
 
   });
 
-  describe('comment controls', () => {
+  describe('comment controls - ', () => {
     beforeEach(async(() => {
       fixture.detectChanges();
       component.commentMap = {
@@ -179,6 +179,12 @@ describe('CommentListComponent', () => {
       component.keyOfCommentBeingEdited = null;
       fixture.detectChanges();
     }));
+
+    it('commentIsBeingEdited should return true if keyOfCommentBeingEdited matches the current comment key', () => {
+      component.keyOfCommentBeingEdited = 'testerKey';
+      expect(component.commentIsBeingEdited('test')).toBe(false);
+      expect(component.commentIsBeingEdited('testerKey')).toBe(true);
+    });
 
     it('SHOULD NOT display control buttons for comment that user did not submit', async(() => {
       const de = fixture.debugElement.query(By.css('#testKey2'));
@@ -192,6 +198,50 @@ describe('CommentListComponent', () => {
       expect(de.nativeElement.children.length).toBe(2);
     }));
 
+    it('should update buttons appropriately when edit is clicked', () => {
+      const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__sub-unit'));
+      const editButton: HTMLElement = de.nativeElement.children[0];
+
+      expect(de.nativeElement.children[0].textContent).toContain('Edit');
+      expect(de.nativeElement.children[1].textContent).toContain('Remove');
+
+      editButton.click();
+      fixture.detectChanges();
+
+      expect(de.nativeElement.children[0].textContent).toContain('Save');
+      expect(de.nativeElement.children[1].textContent).toContain('Cancel');
+
+    });
+
+    describe('reply button', () => {
+      it('should call enterNewCommentMode() with testKey on click', async(() => {
+        spyOn(component, 'enterNewCommentMode');
+
+        const de = fixture.debugElement.query(By.css('#testKey1'));
+        const replyButton: HTMLElement = de.nativeElement.children[0];
+
+        replyButton.click();
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(component.enterNewCommentMode).toHaveBeenCalledWith('testKey1');
+        });
+      }));
+
+      it('enterNewCommentMode(key) should call removeComment(key) in service', async () => {
+        const commentSvc = TestBed.get(CommentService);
+        const createCommentStubSpy = spyOn(commentSvc, 'createCommentStub');
+
+        component.enterNewCommentMode(component.parentKey);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(createCommentStubSpy).toHaveBeenCalledWith(component.loggedInUser.uid, 'testParentKey', 'comment');
+        });
+      });
+
+    });
+
     describe('edit button', () => {
       it('component should default to not editing a comment', async () => {
         fixture.whenStable().then(() => {
@@ -199,7 +249,7 @@ describe('CommentListComponent', () => {
         });
       });
 
-      it('should call enterEditMode() with testKey on click', async(() => {
+      it('should call enterEditMode(key) with testKey on click', async(() => {
         spyOn(component, 'enterEditMode');
 
         const de = fixture.debugElement.query(By.css('#testKey1'));
@@ -219,31 +269,10 @@ describe('CommentListComponent', () => {
         expect(component.keyOfCommentBeingEdited).toBe('testKey');
       });
 
-      it('commentIsBeingEdited should return true if keyOfCommentBeingEdited matches the current comment key', () => {
-        component.keyOfCommentBeingEdited = 'testerKey';
-        expect(component.commentIsBeingEdited('test')).toBe(false);
-        expect(component.commentIsBeingEdited('testerKey')).toBe(true);
-      });
-
-      it('should update buttons appropriately when clicked', () => {
-        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__sub-unit'));
-        const editButton: HTMLElement = de.nativeElement.children[0];
-
-        expect(de.nativeElement.children[0].textContent).toContain('Edit');
-        expect(de.nativeElement.children[1].textContent).toContain('Remove');
-
-        editButton.click();
-        fixture.detectChanges();
-
-        expect(de.nativeElement.children[0].textContent).toContain('Save');
-        expect(de.nativeElement.children[1].textContent).toContain('Cancel');
-
-      });
-
     });
 
     describe('remove button', () => {
-      it('should call onRemoveComment() with testKey on click', async(() => {
+      it('should call onRemoveComment(key) with testKey on click', async(() => {
         spyOn(component, 'onRemoveComment');
         const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__sub-unit'));
         const removeButton: HTMLElement = de.nativeElement.children[1];
@@ -273,7 +302,82 @@ describe('CommentListComponent', () => {
 
     });
 
+    describe('save button', () => {
+      it('should call onSaveEdits() with testKey on click', async(() => {
+        spyOn(component, 'onSaveEdits');
+        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__sub-unit'));
+        const editButton: HTMLElement = de.nativeElement.children[0];
 
+        editButton.click();
+        fixture.detectChanges();
+
+        const saveButton: HTMLElement = de.nativeElement.children[0];
+
+        saveButton.click();
+        fixture.detectChanges();
+
+
+        fixture.whenStable().then(() => {
+          expect(component.onSaveEdits).toHaveBeenCalledWith('testKey1');
+        });
+      }));
+
+      it('onSaveEdits() should call updateComment(Comment, key) in service', async () => {
+        const commentSvc = TestBed.get(CommentService);
+        const updateCommentSpy = spyOn(commentSvc, 'updateComment');
+        component.keyOfCommentBeingEdited = 'testKey1';
+
+        component.onSaveEdits();
+
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(updateCommentSpy).toHaveBeenCalledWith(component.commentMap['testKey1'], 'testKey1');
+        });
+      });
+
+      it('onSaveEdits() should update keyOfCommentBeingUpdated to null', () => {
+        component.keyOfCommentBeingEdited = 'testKey';
+
+        component.onSaveEdits();
+        fixture.detectChanges();
+        
+        expect(component.keyOfCommentBeingEdited).toBe(null);
+      });
+
+    });
+
+    describe('cancel button', () => {
+      it('should call onCancelEdit() with testKey on click', async(() => {
+        spyOn(component, 'onCancelEdit');
+        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__sub-unit'));
+        const editButton: HTMLElement = de.nativeElement.children[0];
+
+        editButton.click();
+        fixture.detectChanges();
+
+        const cancelButton: HTMLElement = de.nativeElement.children[1];
+
+        cancelButton.click();
+        fixture.detectChanges();
+
+
+        fixture.whenStable().then(() => {
+          expect(component.onCancelEdit).toHaveBeenCalled();
+        });
+      }));
+
+      it('onCancelEdit() should update keyOfCommentBeingUpdated to null', () => {
+        component.keyOfCommentBeingEdited = 'testKey';
+        expect(component.keyOfCommentBeingEdited).toBe('testKey');
+
+        component.onCancelEdit();
+        fixture.detectChanges();
+
+        expect(component.keyOfCommentBeingEdited).toBe(null);
+      });
+
+    });
 
   });
 });
