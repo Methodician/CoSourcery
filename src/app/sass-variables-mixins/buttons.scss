@@ -22,12 +22,6 @@ button {
   &:hover {
     background-color: darken($accent-color-2, 10%);
   }
-
-  &:disabled, &:disabled:hover {
-    background-color: $medium-gray;
-    opacity: 0.5;
-    cursor: default;
-  }
 }
 
 .mat-icon-btn {
