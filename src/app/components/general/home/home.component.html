@@ -42,7 +42,7 @@
 </section>
 <section id="bookmarked-articles"
          class="article-grid"
-         *ngIf="currentSelectedTab === 3 && bookmarkedArticles && bookmarkedArticles">
+         *ngIf="currentSelectedTab === 3 && bookmarkedArticles">
   <cos-article-preview-card [userId]="UserId"
                             [articleData]="article"
                             *ngFor="let article of bookmarkedArticles | reverseArray ">
