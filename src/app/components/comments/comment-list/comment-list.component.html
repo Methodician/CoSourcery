@@ -1,18 +1,15 @@
+<!-- Comment Loop for Current Parent -->
 <section *ngFor="let key of commentKeys | reverseArray"
-         class="comment-list"
-         [ngClass]="{'comment-list_root': !isUnderComment}">
-  <section class="comment-group"
-           [ngClass]="{'comment_root': !isUnderComment}">
+         class="comment-wrapper"
+         [ngClass]="{'comment-wrapper_root': !isUnderComment}">
 
-    <section class="comment-unit">
+  <section class="comment-container">
+    <div class="comment-container__border-decoration">
+      <div class="border-endpoint border-endpoint_bottom"></div>
+    </div>
+    <section class="comment-content-region">
+
       <section class="comment-rating">
-        <button mat-icon-button
-                class="button-mat-icon button-mat-icon_rating"
-                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'up'), 'button-mat-icon_rating_voted': hasUserVoted(key, 'up')}"
-                (click)="commentAuthCheck() ? onUpvoteComment(key) : null">
-          <mat-icon>expand_less</mat-icon>
-          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'up') ? 'Remove Vote' : 'Upvote'}}</span>
-        </button>
         <div class="comment-rating__score-container">
           <span class="comment-rating__score"
                 [ngClass]="{'comment-rating__score_negative': commentMap[key].voteCount < 0}">
@@ -20,20 +17,29 @@
           </span>
         </div>
         <button mat-icon-button
-                class="button-mat-icon button-mat-icon_rating"
-                [ngClass]="{'button-mat-icon_rating_hidden': !hasUserVoted(key, 'down'), 'button-mat-icon_rating_voted': hasUserVoted(key, 'down')}"
+                class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden"
+                [ngClass]="{'button-mat-icon_rating_voted': hasUserVoted(key, 'up')}"
+                (click)="commentAuthCheck() ? onUpvoteComment(key) : null">
+          <mat-icon>expand_less</mat-icon>
+          <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'up') ? 'Remove Vote' : 'Upvote'}}</span>
+        </button>
+        <button mat-icon-button
+                class="button-mat-icon button-mat-icon_rating button-mat-icon_rating_hidden"
+                [ngClass]="{'button-mat-icon_rating_voted': hasUserVoted(key, 'down')}"
                 (click)="commentAuthCheck() ? onDownvoteComment(key) : null">
           <mat-icon>expand_more</mat-icon>
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_right">{{hasUserVoted(key, 'down') ? 'Remove Vote' : 'Downvote'}}</span>
         </button>
       </section>
+
       <cos-comment [comment]="commentMap[key]"
                    [loggedInUser]="loggedInUser"
                    [authorInfo]="userMap[commentMap[key].authorId]"
                    [isBeingEdited]="commentIsBeingEdited(key) && loggedInUser.uid">
       </cos-comment>
+
       <p *ngIf="commentMap[key].replyCount > 0"
-         class="reply-count">
+         class="comment-reply-count">
         <a (click)="toggleCommentListUnfurl(key)">
           {{commentListUnfurlMap[key] ? 'Hide' : 'Show'}} {{commentMap[key].replyCount}} {{commentMap[key].replyCount === 1 ? 'Reply' : 'Replies'}}
         </a>
@@ -48,7 +54,7 @@
           <span class="button-mat-icon__tooltip button-mat-icon__tooltip_left">Reply</span>
         </button>
         <div *ngIf="loggedInUser.uid === commentMap[key].authorId"
-             class="comment-controls__sub-unit">
+             class="comment-controls__btn-group">
           <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key"
                   mat-icon-button
                   class="button-mat-icon button-mat-icon_small"
@@ -82,7 +88,11 @@
 
       <!-- New Reply Stub -->
       <section *ngIf="commentReplyInfo.replyParentKey === key && loggedInUser.uid"
-               class="comment-group comment-group_new comment-unit">
+               class="comment-container comment-container_new-reply comment-content-region">
+        <div class="comment-container__border-decoration">
+          <div class="border-endpoint border-endpoint_top border-endpoint_accent-2"></div>
+          <div class="border-endpoint border-endpoint_bottom border-endpoint_accent-2"></div>
+        </div>
         <cos-comment [isBeingEdited]="true"
                      [loggedInUser]="loggedInUser"
                      [authorInfo]="loggedInUser"
@@ -104,6 +114,8 @@
         </section>
       </section>
     </section>
+
+    <!-- List of Nested Comments -->
     <cos-comment-list *ngIf="commentListUnfurlMap[key]"
                       [parentKey]="key"
                       [loggedInUser]="loggedInUser"
