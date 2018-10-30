@@ -136,14 +136,7 @@ export class ArticleService {
     article.lastEditorId = author.uid;
     article.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png';
 
-    let outcome = 'success';
-    try {
-      articleRef.set(article, {merge: true});
-    } catch (error) {
-      console.error(error);
-      outcome = 'Error (logged to console)';
-    }
-    return outcome;
+    return articleRef.set(article, { merge: true });
   }
 
 
