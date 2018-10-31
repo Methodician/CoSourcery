@@ -1,5 +1,9 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
+// Uses Modified CKEditor Styles
+@import "../../../sass-variables-mixins/ckeditor.scss";
+// Uses CommentList Styles for Top Level Comments Section
+@import "../../comments/comment-list/comment-list.component.scss";
 
 .article-form {
   width: 100%;
@@ -33,75 +37,66 @@
   }
 }
 
-.section-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 24px;
+.article-cover-image {
 
-  &__title {
-    margin-top: 0;
-    color: $primary-color;
-    text-align: center;
-  }
-}
+  &__display {
+    position: relative;
+    margin-bottom: 15px;
 
-.cover-image__display {
-  position: relative;
-  margin-bottom: 15px;
+    button {
+      visibility: hidden;
+      position: absolute;
+      right: 15px;
+      bottom: 15px;
 
-  button {
-    opacity: 0;
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
+      &.active {
+        visibility: visible;
+      }
+    }
 
-    &.active {
-      opacity: 1;
+    &:hover button {
+      visibility: visible;
     }
   }
 
-  &:hover button {
-    opacity: 1;
-  }
-}
-
-.cover-image__image {
-  max-width: 100%;
-  display: block;
-  margin: 0 auto;
-}
-
-.cover-image__editor {
-  margin-bottom: 24px;
-  padding: 20px;
-  box-shadow: 0 2px 2px $light-gray-50;
-
-  input {
-    padding-top: 10px;
+  &__image {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
   }
 
-  .file-input {
-    flex-direction: column;
+  &__editor {
+    margin-bottom: 24px;
+    padding: 20px;
+    box-shadow: 0 2px 2px $light-gray-50;
 
     input {
-      width: 100%;
-      min-width: 0;
-      max-width: 250px;
-      padding: 6px;
-      border: 1px solid $light-gray-50;
-      border-radius: 4px;
-      background-color: #f8f8f8;
-      cursor: pointer;
+      padding-top: 10px;
+    }
+
+    .file-input {
+      flex-direction: column;
+
+      input {
+        width: 100%;
+        min-width: 0;
+        max-width: 250px;
+        padding: 6px;
+        border: 1px solid $light-gray-50;
+        border-radius: 4px;
+        background-color: #f8f8f8;
+        cursor: pointer;
+      }
     }
   }
 }
 
-.title, .intro {
+.article-title, .article-intro {
   position: relative;
 
   mat-form-field {
     width: 100%;
+    padding-right: 50px
   }
 
   input {
@@ -110,27 +105,23 @@
   }
 
   button {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     top: 0;
     right: 0;
     margin-left: 10px;
 
     &.active {
-      opacity: 1;
-      position: relative;
+      visibility: visible;
     }
   }
 
   &:hover button {
-    opacity: 1;
+    visibility: visible;
   }
 }
 
-.title {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+.article-title {
 
   h2 {
     margin: 0;
@@ -145,10 +136,7 @@
   }
 }
 
-.intro {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+.article-intro {
 
   p {
     margin: 0;
@@ -166,47 +154,47 @@
   }
 }
 
-.edit-date {
+.article-date {
   color: $medium-gray;
 }
 
-.ckeditor {
+.article-body {
   margin-bottom: 24px;
-}
 
-.ckeditor-interior {
-  position: relative;
-  border-radius: 4px;
-  border: 1px solid #fff;
-  transition: border 0.5s;
+  &__interior {
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    transition: border 0.5s;
 
-  &.border {
-    border: 1px solid $accent-color-1;
+    &.border {
+      border: 1px solid $accent-color-1;
+    }
+
+    button {
+      visibility: hidden;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    &:hover button, button.active {
+      visibility: visible;
+    }
   }
 
-  button {
-    opacity: 0;
+  &__placeholder {
     position: absolute;
-    top: 10px;
-    right: 10px;
-  }
+    top: 0;
+    left: 0;
 
-  &:hover button, button.active {
-    opacity: 1;
-  }
-}
-
-.ck-editor__placeholder {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  h2 {
-    margin-top: 0;
+    h2 {
+      margin-top: 0;
+    }
   }
 }
 
-.tags {
+.article-tags {
   position: relative;
   margin-bottom: 24px;
   padding: 0 10px;
@@ -246,197 +234,38 @@
   }
 
   button {
-    opacity: 0;
+    visibility: hidden;
     position: absolute;
     top: -10px;
     right: 0;
 
     &.active {
-      opacity: 1;
+      visibility: visible;
     }
   }
 
   &:hover button {
-    opacity: 1;
-  }
-}
-
-.comment-section {
-  margin-bottom: 48px;
-}
-
-.comment-list_root {
-  margin-left: 30px;
-}
-
-.comment-group {
-  min-width: 250px;
-  max-width: 768px;
-  position: relative;
-  margin: 0 auto;
-  padding-left: 30px;
-  border-left: 2px solid lighten($accent-color-1, 30%);
-
-  &_new {
-    padding-bottom: 20px;
-    border-left: 2px solid lighten($accent-color-2, 30%);
-  }
-}
-
-.comment-controls {
-  display: flex;
-
-  @media screen and (min-width: 500px) {
-    visibility: hidden;
-    position: absolute;
-    top: -12px;
-    right: 15px;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-}
-
-.comment-unit {
-  padding-right: 30px;
-
-  @media screen and (min-width: 500px) {
-    padding-right: 60px;
-  }
-
-  &:hover {
-
-    .comment-controls {
-      visibility: visible;
-    }
-  }
-}
-
-button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  box-shadow: 0 2px 2px $medium-gray;
-  background-color: $accent-color-1;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  z-index: 10;
-
-  &.save {
-    margin: 24px 0;
-    background-color: darken($accent-color-2, 10%);
-
-    &:hover {
-      background-color: $primary-color;
-    }
-  }
-
-  &:hover {
-    background-color: darken($accent-color-2, 10%);
-  }
-
-  &:disabled, &:disabled:hover {
-    background-color: $medium-gray;
-    opacity: 0.5;
-    cursor: default;
-  }
-}
-
-button.mat-icon-button {
-  border-radius: 100%;
-
-  ::ng-deep .mat-button-wrapper {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tooltip {
-    visibility: hidden;
-    position: absolute;
-    right: 100%;
-    margin-right: 10px;
-    padding: 5px 15px;
-    border-radius: 4px;
-    background: $dark-gray;
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-
-  &:hover .tooltip {
     visibility: visible;
   }
 }
 
-.button-mat-icon {
-  margin: 5px;
-  border-radius: 100%;
-  box-shadow: none;
-  background-color: transparent;
-  color: lighten($accent-color-1-dark, 30%);
+.article-save-btn {
+  margin-bottom: 20px;
+}
 
-  &:hover {
-    background-color: transparent;
-  }
+.article-comments {
+  margin-bottom: 48px;
 
-  ::ng-deep .mat-button-wrapper {
-    height: 100%;
-    width: 100%;
+  &__header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    margin-bottom: 24px;
   }
 
-  &_small {
-    height: 32px;
-    width: 32px;
-  }
-
-  &__tooltip {
-    visibility: hidden;
-    position: absolute;
-    padding: 5px 15px;
-    border-radius: 4px;
-    background: $dark-gray;
-    color: #fff;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    z-index: 10;
-
-    &_above {
-      bottom: 100%;
-      margin-bottom: 10px;
-    }
-
-    &_below {
-      top: 100%;
-      margin-top: 10px;
-    }
-
-    &_left {
-      right: 100%;
-      margin-right: 10px;
-    }
-
-    &_right {
-      left: 100%;
-      margin-left: 10px;
-    }
-  }
-
-  @media screen and (min-width: 500px) {
-    color: #fff;
-    background-color: $accent-color-1;
-    box-shadow: 0 2px 2px $medium-gray;
-
-    &:hover {
-      background-color: darken($accent-color-2, 10%);
-    }
-
-    &:hover &__tooltip {
-      visibility: visible;
-    }
+  &__title {
+    margin-top: 0;
+    color: $primary-color;
+    text-align: center;
   }
 }

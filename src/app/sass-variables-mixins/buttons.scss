@@ -1,0 +1,96 @@
+@import "./vars.scss";
+
+button {
+  border: none;
+  z-index: 10;
+
+  &:disabled, &:disabled:hover {
+    background-color: $medium-gray;
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.cos-btn {
+  padding: 5px 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px $medium-gray;
+  background-color: $accent-color-1;
+  color: #fff;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: darken($accent-color-2, 10%);
+  }
+}
+
+.mat-icon-btn {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  border-radius: 100%;
+  color: lighten($accent-color-1-dark, 30%);
+
+  &_small {
+    height: 30px;
+    width: 30px;
+  }
+
+  @media screen and (min-width: 500px) {
+    box-shadow: 0 2px 2px $medium-gray;
+    background-color: $accent-color-1;
+    color: #fff;
+
+    &:hover {
+      background-color: darken($accent-color-2, 10%);
+    }
+
+    &:hover &__tooltip {
+      visibility: visible;
+    }
+  }
+
+  &__tooltip {
+    visibility: hidden;
+    position: absolute;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: $dark-gray;
+    color: #fff;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    z-index: 10;
+
+    &_above {
+      bottom: 100%;
+      margin-bottom: 10px;
+    }
+
+    &_below {
+      top: 100%;
+      margin-top: 10px;
+    }
+
+    &_left {
+      right: 100%;
+      margin-right: 10px;
+    }
+
+    &_right {
+      left: 100%;
+      margin-left: 10px;
+    }
+  }
+}
+
+.mat-icon.mat-icon {
+
+  &_small {
+    height: 20px;
+    width: 20px;
+    font-size: 20px;
+  }
+}

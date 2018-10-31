@@ -1,6 +1,6 @@
-@import "../sass-variables-mixins/vars.scss";
+@import "./vars.scss";
 
-.ck .ck.ck-balloon-panel {
+::ng-deep .ck .ck.ck-balloon-panel {
   max-width: 70%;
   z-index: 5;
 
@@ -13,11 +13,11 @@
   }
 }
 
-.ckeditor .ck.ck-editor__editable_inline > :first-child {
+::ng-deep .ck.ck-editor__editable_inline > :first-child {
   margin-top: 0;
 }
 
-.ckeditor .ck.ck-editor__editable_inline {
+::ng-deep .ck.ck-editor__editable_inline {
   min-height: 300px;
   padding: 10px;
 
@@ -62,17 +62,18 @@
   }
 }
 
-.ckeditor.not-editable .ck {
+/* Custom Class .not-editable applied via ngClass */
+::ng-deep .not-editable {
 
-  .ck-widget,
-  .ck-widget:hover,
-  .ck-widget.ck-widget_selected,
-  .ck-widget.ck-widget_selected:hover {
+  .ck .ck-widget,
+  .ck .ck-widget:hover,
+  .ck .ck-widget.ck-widget_selected,
+  .ck .ck-widget.ck-widget_selected:hover {
     outline-color: transparent;
     transition: none;
   }
 
-  .ck-editor__editable.ck-editor__nested-editable.ck-placeholder {
+  .ck .ck-editor__editable.ck-editor__nested-editable.ck-placeholder {
     display: none;
   }
 }

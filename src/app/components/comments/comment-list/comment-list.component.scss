@@ -1,7 +1,15 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
-.comment-group {
+.comment-wrapper {
+  padding-top: 40px;
+
+  &_root {
+    margin-left: 30px;
+  }
+}
+
+.comment-container {
   min-width: 250px;
   max-width: 768px;
   position: relative;
@@ -9,48 +17,44 @@
   padding-left: 30px;
   border-left: 2px solid lighten($accent-color-1, 30%);
 
-  &_new {
+  &_new-reply {
     margin-top: 40px;
     padding-bottom: 20px;
     border-left: 2px solid lighten($accent-color-2, 30%);
   }
-}
 
-.comment-rating {
-  position: absolute;
-  top: -10px;
-  left: -21px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.reply-count {
-  margin-left: 10px;
-}
-
-.comment-controls {
-  display: flex;
-
-  &__sub-unit {
+  &__border-decoration {
+    height: 100%;
     display: flex;
-  }
-
-  @media screen and (min-width: 500px) {
-    visibility: hidden;
-    position: absolute;
-    top: -12px;
-    right: 15px;
     flex-direction: column;
-    align-items: flex-end;
-
-    &__sub-unit {
-      flex-direction: column;
-    }
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: -1px;
   }
 }
 
-.comment-unit {
+.border-endpoint {
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  border-radius: 2px;
+  background-color: lighten($accent-color-1, 30%);
+
+  &_top {
+    top: 0px;
+  }
+
+  &_bottom {
+    bottom: 0px;
+  }
+
+  &_accent-2 {
+    background-color: lighten($accent-color-2, 30%);
+  }
+}
+
+.comment-content-region {
   padding-right: 30px;
 
   @media screen and (min-width: 500px) {
@@ -63,97 +67,56 @@
       visibility: visible;
     }
 
-    .button-mat-icon_rating {
-      border: 2px solid lighten($accent-color-2, 30%);
-
-      &_hidden {
-        visibility: visible;
-      }
+    .comment-rating__btn_hidden {
+      visibility: visible;
     }
   }
 }
 
-.comment-list {
-  padding-top: 40px;
+.comment-rating {
+  height: 100%;
+  position: absolute;
+  top: -10px;
+  left: -21px;
 
-  &_root {
-    margin-left: 30px;
-  }
-}
-
-.button-mat-icon {
-  margin: 5px;
-  border-radius: 100%;
-  color: lighten($accent-color-1-dark, 30%);
-
-  ::ng-deep .mat-button-wrapper {
-    height: 100%;
-    width: 100%;
+  &__score-container {
+    height: 40px;
+    width: 40px;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  &_small {
-    height: 32px;
-    width: 32px;
-  }
-
-  &__tooltip {
-    visibility: hidden;
+  &__score {
+    min-width: 30px;
     position: absolute;
-    padding: 5px 15px;
-    border-radius: 4px;
-    background: $dark-gray;
-    color: #fff;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    z-index: 10;
-
-    &_above {
-      bottom: 100%;
-      margin-bottom: 10px;
-    }
-
-    &_below {
-      top: 100%;
-      margin-top: 10px;
-    }
-
-    &_left {
-      right: 100%;
-      margin-right: 10px;
-    }
-
-    &_right {
-      left: 100%;
-      margin-left: 10px;
-    }
-  }
-
-  @media screen and (min-width: 500px) {
-    color: #fff;
-    background-color: $accent-color-1;
-    box-shadow: 0 2px 2px $medium-gray;
-
-    &:hover {
-      background-color: darken($accent-color-2, 10%);
-    }
-
-    &:hover &__tooltip {
-      visibility: visible;
-    }
-  }
-
-  &_rating {
-    height: 30px;
-    width: 30px;
+    padding: 4px 5px;
+    border-radius: 5px;
     border: 2px solid lighten($accent-color-1, 30%);
     background-color: #fff;
     color: $accent-color-1-dark;
+    text-align: center;
+
+    &_negative {
+      color: red;
+    }
+  }
+
+  &__btn {
+    margin: 0 5px 8px;
     box-shadow: none;
+    border: 2px solid lighten($accent-color-1, 30%);
+    background-color: #fff;
+    color: $accent-color-1-dark;
+
+    &_voted {
+      border: 2px solid lighten($primary-color, 30%);
+      color: $primary-color;
+    }
 
     &:hover {
+      border: 2px solid lighten($accent-color-2, 30%);
       background-color: lighten($accent-color-2, 30%);
     }
 
@@ -162,6 +125,31 @@
       &_hidden {
         visibility: hidden;
       }
+    }
+  }
+}
+
+.comment-reply-count {
+  margin-left: 10px;
+}
+
+.comment-controls {
+  display: flex;
+
+  &__btn-group {
+    display: flex;
+  }
+
+  @media screen and (min-width: 500px) {
+    visibility: hidden;
+    position: absolute;
+    top: -12px;
+    right: 15px;
+    flex-direction: column;
+    align-items: flex-end;
+
+    &__btn-group {
+      flex-direction: column;
     }
   }
 }

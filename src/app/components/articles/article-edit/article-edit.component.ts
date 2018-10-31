@@ -30,6 +30,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   newCommentStub: Comment;
   commentReplyInfo = { replyParentKey: null };
+  commentEditInfo = { commentKey: null };
 
   coverImageFile: File;
   tempCoverImageUploadPath: string;
@@ -94,7 +95,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     tags: [[], Validators.maxLength(25)],
     isFeatured: false,
   });
-
 
   constructor(
     private fb: FormBuilder,
@@ -212,6 +212,42 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Form Edit Mode Controls
+  toggleEditCoverImage() {
+    this.editBody = false;
+    this.editCoverImage = !this.editCoverImage;
+  }
+
+  toggleEditTitle() {
+    this.editBody = false;
+    this.editTitle = !this.editTitle;
+  }
+
+  toggleEditIntro() {
+    this.editBody = false;
+    this.editIntro = !this.editIntro;
+  }
+
+  toggleEditBody() {
+    this.editBody = !this.editBody;
+  }
+
+  toggleEditTags() {
+    this.editBody = false;
+    this.editTags = !this.editTags;
+  }
+
+  editorAuthCheck() {
+    if (this.loggedInUser.uid) {
+      return true;
+    } else {
+      if (confirm("Login Required: Would you like to login now?")) {
+        this.router.navigate(['/login']);
+      }
+      return false;
+    }
+  }
+
   // Cover Image Upload Functions
   async onSelectCoverImage(e: HtmlInputEvent) {
     this.coverImageFile = e.target.files.item(0);
@@ -251,16 +287,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Article Tagging Functions
   addTag(event: MatChipInputEvent): void {
-    const inputElement = event.input;
     const tag = event.value.toUpperCase();
     const isDuplicate = this.checkForDuplicateTag(tag);
     if (tag.trim() && !isDuplicate) {
       this.articleEditForm.value.tags.push(tag.trim());
+      event.input.value = '';
+      this.tagsEdited = true;
     }
-    if (inputElement) {
-      inputElement.value = '';
-    }
-    this.tagsEdited = true;
   }
 
   checkForDuplicateTag(value) {
@@ -272,8 +305,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const tagIndex = this.articleEditForm.value.tags.indexOf(selectedTag);
     if (tagIndex >= 0) {
       this.articleEditForm.value.tags.splice(tagIndex, 1);
+      this.tagsEdited = true;
     }
-    this.tagsEdited = true;
   }
 
   // Manual Input Validation
@@ -294,7 +327,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
+  // Top-Level Commenting Functions
   enterNewCommentMode() {
+    this.commentEditInfo.commentKey = null;
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId, ParentTypes.article);
     this.commentReplyInfo.replyParentKey = this.articleId;
   }
