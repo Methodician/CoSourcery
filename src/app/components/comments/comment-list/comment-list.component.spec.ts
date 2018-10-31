@@ -174,7 +174,7 @@ describe('CommentListComponent - ', () => {
 
   });
 
-  fdescribe('comment controls - ', () => {
+  describe('comment controls - ', () => {
     beforeEach(() => {
       fixture.detectChanges();
       component.commentMap = {
