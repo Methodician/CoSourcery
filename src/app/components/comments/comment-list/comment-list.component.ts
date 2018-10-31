@@ -43,16 +43,16 @@ export class CommentListComponent implements OnInit, OnDestroy {
     this.commentsSubscription.unsubscribe();
   }
 
-  onUpvoteComment(commentKey: string){
+  onUpvoteComment(commentKey: string) {
     this.commentSvc.upvoteComment(this.loggedInUser.uid, commentKey, VoteDirections.up);
   }
 
-  onDownvoteComment(commentKey: string){
+  onDownvoteComment(commentKey: string) {
     this.commentSvc.downvoteComment(this.loggedInUser.uid, commentKey, VoteDirections.down);
   }
 
-  hasUserVoted(commentKey: string, voteDirection: VoteDirections){
-    if(!this.userVotesMap[commentKey]){
+  hasUserVoted(commentKey: string, voteDirection: VoteDirections) {
+    if (!this.userVotesMap[commentKey]) {
       return false
     }
     return this.userVotesMap[commentKey] as number === VoteDirections[voteDirection] as any as number;
@@ -105,36 +105,39 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   fillDataMaps() {
-    // console.log('in fill maps');
-    this.commentsSubscription = this.commentSvc.watchCommentsByParent(this.parentKey)
+    // leads to large method call chain - may be candidate for further refactor
+    this.commentsSubscription = this.unfurlCommentObservables();
+  }
+
+  unfurlCommentObservables(): Subscription {
+    return this.commentSvc.watchCommentsByParent(this.parentKey)
       .subscribe(comments => {
-        // console.log('in subscribe');
-        // debugger;
-        for (const comment$ of comments) {
-          comment$.subscribe(async commentSnap => {
-            // console.log('in subscribe L2');
-            const val = commentSnap.payload.val() as any;
-            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType, val.voteCount);
-            this.commentMap[commentSnap.key] = comment;
-            // debugger;
-            this.commentKeys = Object.keys(this.commentMap);
-            if(!!!this.userMap[val.authorId]){
-              const authorSnap = await this.getAuthorSnapshot(val.authorId);
-              if(authorSnap){
-                const authorVal = authorSnap.val();
-                const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
-                this.userMap[authorSnap.key] = author;
-                this.userKeys = Object.keys(this.userMap);
-              }
-            }
+        for (let comment$ of comments) {
+          comment$.subscribe(commentSnap => {
+            this.mapCommentSnapshot(commentSnap);
           });
         }
       });
   }
 
-  async getAuthorSnapshot(authorId) {
-    const authorInfo = await this.commentSvc.getUserInfo(authorId);
-    return authorInfo;
+  mapCommentSnapshot(snapshot: any) {
+    const val = snapshot.payload.val() as any;
+    const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType, val.voteCount);
+    this.commentMap[snapshot.key] = comment;
+    this.commentKeys = Object.keys(this.commentMap);
+    if (!this.userMap[val.authorId]) {
+      this.mapUser(val.authorId);
+    }
+  }
+
+  async mapUser(userId: string) {
+    const authorSnap = await this.commentSvc.getUserInfo(userId);
+    if (authorSnap) {
+      const authorVal = authorSnap.val();
+      const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
+      this.userMap[authorSnap.key] = author;
+      this.userKeys = Object.keys(this.userMap);
+    }
   }
 
   commentIsBeingEdited(commentKey) {
