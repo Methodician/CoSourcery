@@ -6,8 +6,8 @@ import { of } from 'rxjs/internal/observable/of';
 
 import { CommentListComponent } from './comment-list.component';
 import { CommentComponent } from '../comment/comment.component';
-import { CommentService } from '../../../services/comment.service';
 import { Comment } from 'app/shared/class/comment';
+import { CommentService } from '../../../services/comment.service';
 import { By } from '@angular/platform-browser';
 import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

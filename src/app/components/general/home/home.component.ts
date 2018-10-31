@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
-import { ActivatedRoute } from '@angular/router';
-import { ArticleDetailFirestore } from '../../../shared/class/article-info';
+import { ArticleDetailPreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'cos-home',
@@ -11,17 +11,15 @@ import { AuthService } from '../../../services/auth.service';
   providers: [ArticleService]
 })
 export class HomeComponent implements OnInit {
-  routeParams;
   UserId;
-  featuredArticles: ArticleDetailFirestore[];
-  latestArticles: ArticleDetailFirestore[];
-  allArticles: ArticleDetailFirestore[];
+  featuredArticles;
+  latestArticles: Observable<ArticleDetailPreview[]>;
+  allArticles: Observable<ArticleDetailPreview[]>;
   bookmarkedArticles;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
 
 
   constructor(
-    private route: ActivatedRoute,
     private articleSvc: ArticleService,
     private authSvc: AuthService) { }
 
@@ -30,16 +28,21 @@ export class HomeComponent implements OnInit {
     this.authSvc.authInfo$.subscribe(authInfo => {
       if (authInfo) {
         this.UserId = authInfo.uid;
+        if (this.UserId) {
+          this.watchBookmarkedArticles();
+        }
       }
     });
   }
 
-  async initializeArticles() {
-    this.latestArticles = await this.articleSvc.getLatestArticles();
-    this.allArticles = await this.articleSvc.getAllArticles();
-    this.articleSvc.watchBookmarkedArticles(this.UserId);
-    this.articleSvc.bookmarkedArticles$.subscribe(list => {
-      this.bookmarkedArticles = list;
+  initializeArticles() {
+    this.latestArticles = this.articleSvc.latestArticlesRef().valueChanges();
+    this.allArticles = this.articleSvc.allArticlesRef().valueChanges();
+  }
+
+  watchBookmarkedArticles() {
+    this.articleSvc.watchBookmarkedArticles(this.UserId).subscribe(articles => {
+      this.bookmarkedArticles = articles;
     });
   }
 
@@ -63,5 +66,3 @@ export enum SelectedTab {
   'all',
   'bookmark'
 }
-
-

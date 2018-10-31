@@ -11,6 +11,26 @@ const fs = admin.firestore();
 const db = admin.database();
 fs.settings({ timestampsInSnapshots: true });
 
+exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{userId}/{commentKey}`).onWrite(async (change, context) => {
+ 
+    const before = change.before.val();
+    const after = change.after.val();
+    // null = 0
+    const diff = after - before;
+    const commentKey = context.params['commentKey'];
+    const commentRef = db.ref(`commentData/comments/${commentKey}`);
+    return commentRef.transaction((commmentToUpdate: Comment) => {
+        if(!commmentToUpdate) {
+            return null;
+        }
+        const oldCount = commmentToUpdate.voteCount || 0;
+        const newCount = oldCount + diff;
+        commmentToUpdate.voteCount = newCount;
+        return commmentToUpdate;
+    });
+});
+
+
 exports.trackCommentDeletions = functions.database.ref('commentData/comments/{commentKey}/removedAt').onCreate(async (snap, context) => {
     const commentRef = snap.ref.parent;
     const archiveRef = snap.ref.parent.parent.parent.child('commentArchive');
@@ -22,7 +42,6 @@ exports.trackCommentDeletions = functions.database.ref('commentData/comments/{co
 })
 
 exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{commentKey}/replyCount').onUpdate(async(change, context) => {
-    
     const incrementReplyCount = (commentRef: admin.database.Reference) => {
         return commentRef.transaction((commentToUpdate: Comment) => {
             if(commentToUpdate) {
@@ -196,7 +215,7 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
     const previewRef = fs.doc(`articleData/articles/previews/${id}`);
     if (context.eventType !== 'google.firestore.document.delete') {
         const previewObject = {
-            id: articleObject.articleId,
+            articleId: articleObject.articleId,
             authorId: articleObject.authorId,
             title: articleObject.title,
             introduction: articleObject.introduction,

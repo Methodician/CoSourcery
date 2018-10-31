@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
 import { ArticleDetailFirestore } from 'app/shared/class/article-info';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cos-article-preview-list',
@@ -15,20 +16,21 @@ export class ArticlePreviewListComponent implements OnInit {
   hoverBg: string;
   constructor(
     private articleService: ArticleService,
+    private router: Router
 
   ) { }
 
   ngOnInit() {
     this.author = this.articleService
-    .getAuthor(this.articleData.authorId);
+    .authorRef(this.articleData.authorId).valueChanges();
   }
 
   navigateToArticleDetail() {
-    this.articleService.navigateToArticleDetail(this.articleData.articleId);
+    this.router.navigate([`articledetail/${this.articleData.articleId}`]);
   }
 
   navigateToProfile() {
-    this.articleService.navigateToProfile(this.articleData.authorId);
+    this.router.navigate([`profile/${this.articleData.authorId}`]);
   }
 
 

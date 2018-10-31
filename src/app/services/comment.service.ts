@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 import { combineLatest } from 'rxjs/operators';
-import { Comment, ParentTypes } from 'app/shared/class/comment';
+import { Comment, ParentTypes, VoteDirections } from 'app/shared/class/comment';
+
 const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
 
 @Injectable({
@@ -20,9 +21,45 @@ export class CommentService {
       parentKey: parentKey,
       text: '',
       replyCount: 0,
-      parentType: parentType
+      parentType: parentType,
+      voteCount: 0
     }
     return newComment;
+  }
+
+  getUserVotesRef(userId: string){
+    return this.rtdb.list(`commentData/votesByUser/${userId}`);
+  }
+
+  getVoteRef(voterId: string, commentKey: string): AngularFireObject<VoteDirections>{
+    return this.rtdb.object(`commentData/votesByUser/${voterId}/${commentKey}`);
+  }
+  
+  async getExistingVote(voteRef: AngularFireObject<VoteDirections>){
+    const existingVoteSnap = await voteRef.query.once('value');
+    return existingVoteSnap.val();
+  }
+
+  async upvoteComment(voterId: string, commentKey: string, voteDirection: VoteDirections) {
+    console.log('voter', voterId, 'comment', commentKey, 'voteDirection', voteDirection, 'voteType', VoteDirections[voteDirection]);
+    const voteRef = this.getVoteRef(voterId, commentKey);
+    const oldVote = await this.getExistingVote(voteRef);
+    console.log('old vote', oldVote);
+    if(oldVote && oldVote === VoteDirections.up){
+      return voteRef.set(null);
+    }
+    return voteRef.set(VoteDirections.up);    
+  }
+
+  async downvoteComment(voterId: string, commentKey: string, voteDirection: VoteDirections) {
+    console.log('voter', voterId, 'comment', commentKey, 'voteDirection', voteDirection, 'voteType', VoteDirections[voteDirection]);
+    const voteRef = this.getVoteRef(voterId, commentKey);
+    const oldVote = await this.getExistingVote(voteRef);
+    console.log('old vote', oldVote);
+    if(oldVote && oldVote === VoteDirections.down){
+      return voteRef.set(null);
+    }
+    return voteRef.set(VoteDirections.down);  
   }
 
   async createComment(comment: Comment) {
@@ -34,6 +71,7 @@ export class CommentService {
       timestamp: serverTimestamp,
       parentType: comment.parentType,
       replyCount: comment.replyCount,
+      voteCount: comment.voteCount,
     }
 
     return this.rtdb
@@ -84,3 +122,4 @@ export class CommentService {
 
 
 }
+

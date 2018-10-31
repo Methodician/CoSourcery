@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
-import { Comment, CommentMap, ParentTypes, KeyMap } from 'app/shared/class/comment';
+import { Comment, CommentMap, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-comment-list',
@@ -15,21 +16,24 @@ export class CommentListComponent implements OnInit, OnDestroy {
   @Input() loggedInUser: UserInfoOpen
   @Input() userMap: UserMap = {};
   @Input() userKeys: string[];
+  @Input() userVotesMap: KeyMap<VoteDirections>;
   @Input() commentReplyInfo;
+  @Input() commentEditInfo;
 
   commentsSubscription: Subscription;
   //  ToDo: FILL THIS WITH OTHER SUBSCRIPTIONS TO BREAK DOWN ON DESTROY
   // commentSubscriptions: Subscription[];
 
-  keyOfCommentBeingEdited: string;
   newCommentStub: Comment;
 
   commentMap: CommentMap = {};
   commentKeys: string[];
   commentListUnfurlMap: KeyMap<boolean> = {};
 
-  constructor(private commentSvc: CommentService) {
-  }
+  constructor(
+    private router: Router,
+    private commentSvc: CommentService
+  ) { }
 
   ngOnInit() {
     this.fillDataMaps();
@@ -39,13 +43,42 @@ export class CommentListComponent implements OnInit, OnDestroy {
     this.commentsSubscription.unsubscribe();
   }
 
+  onUpvoteComment(commentKey: string){
+    this.commentSvc.upvoteComment(this.loggedInUser.uid, commentKey, VoteDirections.up);
+  }
+
+  onDownvoteComment(commentKey: string){
+    this.commentSvc.downvoteComment(this.loggedInUser.uid, commentKey, VoteDirections.down);
+  }
+
+  hasUserVoted(commentKey: string, voteDirection: VoteDirections){
+    if(!this.userVotesMap[commentKey]){
+      return false
+    }
+    return this.userVotesMap[commentKey] as number === VoteDirections[voteDirection] as any as number;
+  }
+
   enterEditMode(commentKey: string) {
-    this.keyOfCommentBeingEdited = commentKey;
+    this.commentReplyInfo.replyParentKey = null;
+    this.commentEditInfo.commentKey = commentKey;
   }
 
   enterNewCommentMode(replyParentKey) {
+    this.commentEditInfo.commentKey = null;
+    this.commentListUnfurlMap[replyParentKey] = true
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey, ParentTypes.comment);
     this.commentReplyInfo.replyParentKey = replyParentKey;
+  }
+
+  commentAuthCheck() {
+    if (this.loggedInUser.uid) {
+      return true;
+    } else {
+      if (confirm("Login Required: Would you like to login now?")) {
+        this.router.navigate(['/login']);
+      }
+      return false;
+    }
   }
 
   onCancelNewComment() {
@@ -58,7 +91,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   onCancelEdit() {
-    this.keyOfCommentBeingEdited = null;
+    this.commentEditInfo.commentKey = null;
   }
 
   onRemoveComment(commentKey: string) {
@@ -66,9 +99,9 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   onSaveEdits() {
-    const commentEdited = this.commentMap[this.keyOfCommentBeingEdited];
-    this.commentSvc.updateComment(commentEdited, this.keyOfCommentBeingEdited);
-    this.keyOfCommentBeingEdited = null;
+    const commentEdited = this.commentMap[this.commentEditInfo.commentKey];
+    this.commentSvc.updateComment(commentEdited, this.commentEditInfo.commentKey);
+    this.commentEditInfo.commentKey = null;
   }
 
   fillDataMaps() {
@@ -81,16 +114,18 @@ export class CommentListComponent implements OnInit, OnDestroy {
           comment$.subscribe(async commentSnap => {
             // console.log('in subscribe L2');
             const val = commentSnap.payload.val() as any;
-            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType);
+            const comment = new Comment(val.authorId, val.parentKey, val.text, val.lastUpdated, val.timestamp, val.replyCount, val.parentType, val.voteCount);
             this.commentMap[commentSnap.key] = comment;
             // debugger;
             this.commentKeys = Object.keys(this.commentMap);
             if(!!!this.userMap[val.authorId]){
               const authorSnap = await this.getAuthorSnapshot(val.authorId);
-              const authorVal = authorSnap.val();
-              const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
-              this.userMap[authorSnap.key] = author;
-              this.userKeys = Object.keys(this.userMap);
+              if(authorSnap){
+                const authorVal = authorSnap.val();
+                const author = new UserInfoOpen(authorVal.alias, authorVal.fName, authorVal.lName, authorSnap.key, authorVal.imageUrl);
+                this.userMap[authorSnap.key] = author;
+                this.userKeys = Object.keys(this.userMap);
+              }
             }
           });
         }
@@ -103,7 +138,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   }
 
   commentIsBeingEdited(commentKey) {
-    return this.keyOfCommentBeingEdited === commentKey;
+    return this.commentEditInfo.commentKey === commentKey;
   }
 
   toggleCommentListUnfurl(key) {

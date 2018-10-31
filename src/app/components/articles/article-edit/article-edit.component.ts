@@ -11,7 +11,7 @@ import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
-import { Comment, ParentTypes } from 'app/shared/class/comment';
+import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
 
 @Component({
   selector: 'cos-article-edit',
@@ -30,6 +30,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   newCommentStub: Comment;
   commentReplyInfo = { replyParentKey: null };
+  commentEditInfo = { commentKey: null };
 
   coverImageFile: File;
   tempCoverImageUploadPath: string;
@@ -39,6 +40,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   userMap: UserMap = {};
   userKeys: string[];
+
+  userVotesMap: KeyMap<VoteDirections> = {};
 
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   ckeditorButtonOffset: number = 0;
@@ -93,7 +96,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     isFeatured: false,
   });
 
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -104,18 +106,30 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    //  May abstract this out to an ID now that we have user map...
+    //  May abstract userInfo out to an ID now that we have user map...
     this.userSvc.userInfo$.subscribe(user => {
       this.loggedInUser = user;
+      this.mapUserVotes();
     });
     this.setArticleId();
-    this.subscribeToArticleId();
+    this.subscribeToArticle();
     this.userMap = this.userSvc.userMap;
     this.userKeys = Object.keys(this.userMap);
   }
 
   ngOnDestroy() {
     this.abortChanges();
+    this.currentArticleSubscription.unsubscribe();
+  }
+
+  mapUserVotes(){
+    this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
+    .snapshotChanges().subscribe(snaps => {
+      this.userVotesMap = {};
+      for(let snap of snaps){
+        this.userVotesMap[snap.key] = snap.payload.val() as any;
+      }
+    });
   }
 
   // Form Setup & Breakdown Functions
@@ -132,17 +146,22 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToArticleId() {
-    this.articleSvc.setCurrentArticle(this.articleId);
-    this.currentArticleSubscription = this.articleSvc.currentArticle$.subscribe(articleData => {
-      if (!this.formIsReady) {
-        this.setDefaultFormData(articleData);
-        this.formIsReady = true;
-      } else {
-        this.updateCoverImageUrl(articleData.imageUrl);
-        this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
-      }
-    });
+  subscribeToArticle() {
+    if (this.currentArticleSubscription) {
+      this.currentArticleSubscription.unsubscribe();
+    }
+    this.currentArticleSubscription = this.articleSvc
+      .getArticleRefById(this.articleId)
+      .valueChanges()
+      .subscribe(articleData => {
+        if (!this.formIsReady) {
+          this.setDefaultFormData(articleData);
+          this.formIsReady = true;
+        } else {
+          this.updateCoverImageUrl(articleData.imageUrl);
+          this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
+        }
+      });
   }
 
   setDefaultFormData(data) {
@@ -160,10 +179,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.coverImageFile = null;
     }
     if (!this.articleEditForm.value.articleId) {
-      const articleSaved = await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
-      if (articleSaved === 'success') {
+      try {
+        await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
         this.articleIsNew = false;
         this.router.navigate([`article/${this.articleId}`]);
+      } catch (error) {
+        alert('There was a problem saving the article' + error);
       }
     } else {
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
@@ -188,6 +209,42 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.deleteTempCoverImage
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
+    }
+  }
+
+  // Form Edit Mode Controls
+  toggleEditCoverImage() {
+    this.editBody = false;
+    this.editCoverImage = !this.editCoverImage;
+  }
+
+  toggleEditTitle() {
+    this.editBody = false;
+    this.editTitle = !this.editTitle;
+  }
+
+  toggleEditIntro() {
+    this.editBody = false;
+    this.editIntro = !this.editIntro;
+  }
+
+  toggleEditBody() {
+    this.editBody = !this.editBody;
+  }
+
+  toggleEditTags() {
+    this.editBody = false;
+    this.editTags = !this.editTags;
+  }
+
+  editorAuthCheck() {
+    if (this.loggedInUser.uid) {
+      return true;
+    } else {
+      if (confirm("Login Required: Would you like to login now?")) {
+        this.router.navigate(['/login']);
+      }
+      return false;
     }
   }
 
@@ -230,16 +287,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Article Tagging Functions
   addTag(event: MatChipInputEvent): void {
-    const inputElement = event.input;
     const tag = event.value.toUpperCase();
     const isDuplicate = this.checkForDuplicateTag(tag);
     if (tag.trim() && !isDuplicate) {
       this.articleEditForm.value.tags.push(tag.trim());
+      event.input.value = '';
+      this.tagsEdited = true;
     }
-    if (inputElement) {
-      inputElement.value = '';
-    }
-    this.tagsEdited = true;
   }
 
   checkForDuplicateTag(value) {
@@ -251,8 +305,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const tagIndex = this.articleEditForm.value.tags.indexOf(selectedTag);
     if (tagIndex >= 0) {
       this.articleEditForm.value.tags.splice(tagIndex, 1);
+      this.tagsEdited = true;
     }
-    this.tagsEdited = true;
   }
 
   // Manual Input Validation
@@ -273,7 +327,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
+  // Top-Level Commenting Functions
   enterNewCommentMode() {
+    this.commentEditInfo.commentKey = null;
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId, ParentTypes.article);
     this.commentReplyInfo.replyParentKey = this.articleId;
   }
