@@ -4,32 +4,14 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
 import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
+import * as algoliasearch from 'algoliasearch';
 
 
 admin.initializeApp();
 const fs = admin.firestore();
 const db = admin.database();
 fs.settings({ timestampsInSnapshots: true });
-
-exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{userId}/{commentKey}`).onWrite(async (change, context) => {
- 
-    const before = change.before.val();
-    const after = change.after.val();
-    // null = 0
-    const diff = after - before;
-    const commentKey = context.params['commentKey'];
-    const commentRef = db.ref(`commentData/comments/${commentKey}`);
-    return commentRef.transaction((commmentToUpdate: Comment) => {
-        if(!commmentToUpdate) {
-            return null;
-        }
-        const oldCount = commmentToUpdate.voteCount || 0;
-        const newCount = oldCount + diff;
-        commmentToUpdate.voteCount = newCount;
-        return commmentToUpdate;
-    });
-});
-
+const client = algoliasearch(functions.config().algolia.app_id, functions.config().algolia.admin_key);
 
 exports.trackCommentDeletions = functions.database.ref('commentData/comments/{commentKey}/removedAt').onCreate(async (snap, context) => {
     const commentRef = snap.ref.parent;
@@ -42,6 +24,7 @@ exports.trackCommentDeletions = functions.database.ref('commentData/comments/{co
 })
 
 exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{commentKey}/replyCount').onUpdate(async(change, context) => {
+
     const incrementReplyCount = (commentRef: admin.database.Reference) => {
         return commentRef.transaction((commentToUpdate: Comment) => {
             if(commentToUpdate) {
@@ -89,7 +72,7 @@ exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{com
 });
 
 exports.countNewComment = functions.database.ref('commentData/comments/{commentKey}').onCreate(async (snap, context) => {
-    
+
     const incrementReplyCount = (commentRef: admin.database.Reference) => {
         return commentRef.transaction((commentToUpdate: Comment) => {
             if(commentToUpdate) {
@@ -233,5 +216,23 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
         })
     } else {
         return null;
+    }
+});
+
+exports.updateAlgoliaIndex =
+functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
+    const articleObject = change.after.data();
+    const index = client.initIndex('dev_articles');
+    if(context.eventType !== 'google.firestore.document.delete'){
+      const previewObject = {
+          objectID: articleObject.articleId,
+          title: articleObject.title,
+          introduction: articleObject.introduction,
+          body: articleObject.body,
+          tags: articleObject.tags
+      }
+      return index.saveObject(previewObject);
+    } else{
+      return index.deleteObject(articleObject.articleId);
     }
 });
