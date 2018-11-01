@@ -10,6 +10,7 @@
     </a>
 
     <ul class="menu">
+
       <li class="menu__item">
         <form class="search-bar">
           <input #searchInput
@@ -24,35 +25,83 @@
           </button>
         </form>
       </li>
+
       <li *ngIf="authInfo.uid !== null"
-          class="menu__item">
+          class="menu__item menu__item_collapse">
         <button class="mat-icon-btn"
                 routerLink="createarticle">
           <mat-icon>edit</mat-icon>
-          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_below">Post</span>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_below">Post Article</span>
         </button>
       </li>
+
       <li *ngIf="authInfo.uid === null"
-          class="menu__item">
+          class="menu__item menu__item_collapse">
         <button class="cos-btn"
                 routerLink="login">
           Login
         </button>
       </li>
+
       <li *ngIf="authInfo.uid !== null"
-          class="menu__item">
+          class="menu__item menu__item_collapse">
         <button class="cos-btn"
                 (click)="onLogOut()">
           Logout
         </button>
       </li>
+
       <li *ngIf="authInfo.uid === null"
-          class="menu__item">
+          class="menu__item menu__item_collapse">
         <button class="cos-btn cos-btn_color_primary"
                 routerLink="register">
           Register
         </button>
       </li>
+
+      <li class="menu__item menu__item_mobile"
+          (cosClickOut)="showMobileMenu = false">
+        <button class="mat-icon-btn"
+                (click)="showMobileMenu = !showMobileMenu">
+          <mat-icon>menu</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_below">Menu</span>
+        </button>
+        <ul *ngIf="showMobileMenu"
+            class="mobile-menu">
+          <li *ngIf="authInfo.uid !== null"
+              class="mobile-menu__item">
+            <a routerLink="createarticle"
+               class="mobile-menu__link"
+               (click)="showMobileMenu = false">
+              Post Article
+            </a>
+          </li>
+          <li *ngIf="authInfo.uid === null"
+              class="mobile-menu__item">
+            <a routerLink="login"
+               class="mobile-menu__link"
+               (click)="showMobileMenu = false">
+              Login
+            </a>
+          </li>
+          <li *ngIf="authInfo.uid !== null"
+              class="mobile-menu__item">
+            <a (click)="onLogOut(); showMobileMenu = false"
+               class="mobile-menu__link">
+               Logout
+            </a>
+          </li>
+          <li *ngIf="authInfo.uid === null"
+              class="mobile-menu__item">
+            <a routerLink="register"
+               class="mobile-menu__link"
+               (click)="showMobileMenu = false">
+               Register
+            </a>
+          </li>
+        </ul>
+      </li>
+
     </ul>
 
   </nav>

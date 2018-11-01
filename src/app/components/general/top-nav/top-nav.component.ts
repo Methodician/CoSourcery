@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthInfo } from '../../../shared/class/auth-info';
 import { AuthService } from '../../../services/auth.service';
-import { ArticleService } from '../../../services/article.service';
 
 @Component({
   selector: 'cos-top-nav',
@@ -13,11 +12,11 @@ import { ArticleService } from '../../../services/article.service';
 export class TopNavComponent implements OnInit {
   authInfo: AuthInfo;
   displayName;
+  showMobileMenu: boolean = false;
 
   constructor(
     private authSvc: AuthService,
-    private router: Router,
-    private articleSvc: ArticleService
+    private router: Router
   ) { }
 
   ngOnInit() {
