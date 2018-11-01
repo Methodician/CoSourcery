@@ -31,7 +31,7 @@ export class TopNavComponent implements OnInit {
   }
 
   onLogOut() {
-    this.authSvc.signOut();
+    this.authSvc.logout();
   }
 
 }

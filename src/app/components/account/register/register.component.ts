@@ -46,31 +46,32 @@ export class RegisterComponent implements OnInit {
   }
 
   onLogOut() {
-    this.authSvc.signOut();
+    this.authSvc.logout();
   }
 
-  register() {
+  async register() {
     const val = this.form.value;
-    this.authSvc
-      .register(val.email, val.password)
-      .subscribe(async res => {
-        delete val.password;
-        delete val.confirmPass;
-        this.authSvc.sendVerificationEmail();
-        alert(`
-          Thanks for creating an account!
-          Play nice, make friends, and contribute to the wealth of knowledge we\'re building together.`
-        );
-        try {
-          await this.userSvc.createUser(val, res.user.uid);
-          if (val.alias) {
-            this.authSvc.setDisplayName(val.alias);
-          }
-          this.router.navigate(['home']);
-        } catch (err) {
-          alert('We might not have saved your user info quite right. Woops!' + err);
-        }
-      }, err => alert(err));
+    try {
+      const res = await this.authSvc.register(val.email, val.password);
+      console.log('successfully registered', res);
+      alert(`
+        Thanks for creating an account!
+        Play nice, make friends, and contribute to the wealth of knowledge we\'re building together.`);
+      delete val.password;
+      delete val.confirmPass;
+      this.authSvc.sendVerificationEmail();
+      this.createNewUser(val, res.user.uid)
+    } catch (error) {
+      alert('There was a problem with registration' + error);
+    }
+  }
+
+  async createNewUser(formValue, userId: string) {
+    try {
+      await this.userSvc.createUser(formValue, userId);
+    } catch (err) {
+      alert('We might not have saved your user info quite right. Woops!' + err);
+    }
   }
 
   isErrorVisible(field: string, error: string) {

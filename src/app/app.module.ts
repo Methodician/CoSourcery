@@ -3,6 +3,7 @@ import { environment } from 'environments/environment';
 // Firebase and AngularFire imports
 import * as fb from 'firebase/app';
 import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
@@ -115,6 +116,7 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     ReactiveFormsModule,
     CKEditorModule,
     AngularFireModule.initializeApp(environment.fbConfig),
+    AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule
