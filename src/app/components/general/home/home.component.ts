@@ -3,7 +3,7 @@ import { ArticleService } from '../../../services/article.service';
 import { ArticleDetailPreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'cos-home',
@@ -25,7 +25,6 @@ export class HomeComponent implements OnInit {
   constructor(
     private articleSvc: ArticleService,
     private authSvc: AuthService,
-    private router: Router,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
