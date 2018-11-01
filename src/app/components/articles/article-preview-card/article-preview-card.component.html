@@ -30,9 +30,9 @@
       </div>
     </div>
     <button class="mat-icon-btn mat-icon-btn_transparent bookmark-icon"
-            (click)="bookmarkToggle()">
-      <mat-icon>{{isArticleBookmarked? 'bookmark' : 'bookmark_border'}}</mat-icon>
-      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{isArticleBookmarked ? 'Remove Bookmark' : 'Bookmark'}}</span>
+            (click)="authCheck() ? bookmarkToggle() : null">
+      <mat-icon>{{isArticleBookmarked && userId ? 'bookmark' : 'bookmark_border'}}</mat-icon>
+      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{isArticleBookmarked && userId ? 'Remove Bookmark' : 'Bookmark'}}</span>
     </button>
   </section>
 

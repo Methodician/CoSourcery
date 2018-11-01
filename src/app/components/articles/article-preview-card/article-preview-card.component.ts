@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
 import { AuthService } from '../../../services/auth.service';
 import { ArticleDetailPreview } from 'app/shared/class/article-info';
@@ -14,6 +15,7 @@ export class ArticlePreviewCardComponent implements OnInit {
   @Input() userId: string;
   isArticleBookmarked: boolean;
   constructor(
+    private router: Router,
     private articleSvc: ArticleService,
     private authSvc: AuthService
   ) { }
@@ -44,6 +46,17 @@ export class ArticlePreviewCardComponent implements OnInit {
       } else {
         this.articleSvc.bookmarkArticle(this.userId, this.articleData.articleId);
       }
+    }
+  }
+
+  authCheck() {
+    if (this.userId) {
+      return true;
+    } else {
+      if (confirm("Login Required: Would you like to login now?")) {
+        this.router.navigate(['/login']);
+      }
+      return false;
     }
   }
 
