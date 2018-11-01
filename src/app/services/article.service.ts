@@ -7,13 +7,16 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
+// import * as algoliasearch from 'algoliasearch'; I could not get it to work using this, it broke everything so I used the require statement below;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArticleService {
-  bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
+  searchedArticles$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
   timestampNow = firebase.firestore.Timestamp.now();
+  algoliasearch = require ('algoliasearch/dist/algoliasearch.js'); //used in lieu of import statement above, throws terminal error, but page works with no problems
+  client = this.algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
 
   constructor(
     private storage: AngularFireStorage,
@@ -63,7 +66,7 @@ export class ArticleService {
 
 
   watchBookmarkedArticles(userKey) {
-    const articleList$ = new BehaviorSubject<ArticleDetailFirestore[]>([]);
+    const articleList$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
     const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`);
     bookmarksRef.snapshotChanges().pipe(map(keySnaps => {
       return keySnaps.map(snap => {
@@ -150,6 +153,30 @@ export class ArticleService {
   deleteArticleRef(articleId) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     articleRef.delete();
+  }
+
+  async searchArticles(query){
+    const index = this.client.initIndex('dev_articles'); //using index dev articles for now, in production will want to change this.
+    const searchResults = await index.search({
+      query: query,
+      attributesToRetrieve: ['objectId'],
+      hitsPerPage: 50
+    });
+
+    const articleList = new Array<any>();
+    if(searchResults.hits.length > 0){
+      const articleIds = [];
+      searchResults.hits.forEach(article => { //creates array of articleIds from search results
+        articleIds.push(article.objectID);
+      });
+      articleIds.forEach(key => { //creates array of articlePreviews
+        this.getPreviewRefById(key).valueChanges().subscribe(article => {
+          articleList.push(article);
+        });
+      });
+    }
+    this.searchedArticles$.next(articleList);
+
   }
 
   //with refactor this is no longer used
