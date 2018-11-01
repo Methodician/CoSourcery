@@ -73,6 +73,11 @@ button {
     }
   }
 
+  &_transparent, &_transparent:hover {
+    box-shadow: none;
+    background-color: transparent;
+  }
+
   &__tooltip {
     visibility: hidden;
     position: absolute;

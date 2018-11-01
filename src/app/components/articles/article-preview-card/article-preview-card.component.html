@@ -1,39 +1,39 @@
 <article class="preview-card">
 
-  <div class="card-content">
-    <a [routerLink]="'/article/' + articleData.articleId">
-      <img class="cover-image"
+  <a [routerLink]="'/article/' + articleData.articleId">
+    <section class="card-content">
+      <img class="card-content__image"
            [src]="(articleData.imageUrl) ? articleData.imageUrl : '../../assets/images/logo.png'"
            [alt]="(articleData.imageAlt) ? articleData.imageAlt : 'Cover Image'">
-      <h2 class="title">{{articleData.title | truncateString: 20}}</h2>
-      <p class="date">Last Updated: {{articleData?.lastUpdated?.toDate() | date}}</p>
+      <h2 class="card-content__title">{{articleData.title | truncateString: 20}}</h2>
+      <p class="card-content__date">Last Updated: {{articleData?.lastUpdated?.toDate() | date}}</p>
       <p>{{articleData.introduction | truncateString: 100}}</p>
-    </a>
-  </div>
+    </section>
+  </a>
 
-  <div class="card-icons flex">
-    <div class="counters flex">
-      <div class="flex-center-align">
+  <section class="card-icons">
+    <div class="counter-icons">
+      <div class="counter-icons__item">
         <mat-icon>comment</mat-icon>
-        <p>{{articleData.commentCount ? articleData.commentCount : '0'}}</p>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleData.commentCount}} Comment(s)</span>
+        <span class="counter-icons__stat">{{articleData.commentCount}}</span>
       </div>
-      <div class="flex-center-align"
-           title="Revised {{articleData.version}} time(s)">
+      <div class="counter-icons__item">
         <mat-icon>border_color</mat-icon>
-        <p>{{articleData.version}}</p>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleData.version}} Edit(s)</span>
+        <span class="counter-icons__stat">{{articleData.version}}</span>
       </div>
-      <div class="flex-center-align"
-           *ngIf="articleData.tags">
+      <div class="counter-icons__item">
         <mat-icon>loyalty</mat-icon>
-        <p>{{articleData.tags.length}}</p>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleData.tags.length}} Tag(s)</span>
+        <span class="counter-icons__stat">{{articleData.tags.length}}</span>
       </div>
     </div>
-    <div class="flex-center-align">
-      <mat-icon class="bookmark"
-                (click)="bookmarkToggle()">
-        {{isArticleBookmarked? 'bookmark' : 'bookmark_border'}}
-      </mat-icon>
-    </div>
-  </div>
+    <button class="mat-icon-btn mat-icon-btn_transparent bookmark-icon"
+            (click)="bookmarkToggle()">
+      <mat-icon>{{isArticleBookmarked? 'bookmark' : 'bookmark_border'}}</mat-icon>
+      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{isArticleBookmarked ? 'Remove Bookmark' : 'Bookmark'}}</span>
+    </button>
+  </section>
 
 </article>
