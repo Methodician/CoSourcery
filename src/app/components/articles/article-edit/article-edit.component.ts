@@ -57,6 +57,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         'numberedList',
         'blockQuote',
         'imageUpload',
+        'mediaEmbed',
         'insertTable'
       ],
       viewportTopOffset: 70
