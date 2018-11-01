@@ -29,11 +29,11 @@
         <span class="counter-icons__stat">{{articleData.tags.length}}</span>
       </div>
     </div>
-    <button class="mat-icon-btn mat-icon-btn_transparent bookmark-icon"
-            (click)="authCheck() ? bookmarkToggle() : null">
+    <div class="counter-icons__item bookmark-icon"
+         (click)="authCheck() ? bookmarkToggle() : null">
       <mat-icon>{{isArticleBookmarked && userId ? 'bookmark' : 'bookmark_border'}}</mat-icon>
       <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{isArticleBookmarked && userId ? 'Remove Bookmark' : 'Bookmark'}}</span>
-    </button>
+    </div>
   </section>
 
 </article>
