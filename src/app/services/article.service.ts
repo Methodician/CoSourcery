@@ -7,7 +7,7 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
-// import * as algoliasearch from 'algoliasearch'; I could not get it to work using this, it broke everything so I used the require statement below;
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference 
 export class ArticleService {
   searchedArticles$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
   timestampNow = firebase.firestore.Timestamp.now();
-  algoliasearch = require ('algoliasearch/dist/algoliasearch.js'); //used in lieu of import statement above, throws terminal error, but page works with no problems
+  algoliasearch = require ('algoliasearch/dist/algoliasearch.js');
   client = this.algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
 
   constructor(
