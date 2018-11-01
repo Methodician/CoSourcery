@@ -3,6 +3,7 @@ import { ArticleService } from '../../../services/article.service';
 import { ArticleDetailPreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cos-home',
@@ -11,17 +12,21 @@ import { Observable } from 'rxjs';
   providers: [ArticleService]
 })
 export class HomeComponent implements OnInit {
+  query: string;
   UserId;
   featuredArticles;
   latestArticles: Observable<ArticleDetailPreview[]>;
   allArticles: Observable<ArticleDetailPreview[]>;
   bookmarkedArticles;
+  searchedArticles;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
 
 
   constructor(
     private articleSvc: ArticleService,
-    private authSvc: AuthService) { }
+    private authSvc: AuthService,
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.initializeArticles();
@@ -31,6 +36,13 @@ export class HomeComponent implements OnInit {
         if (this.UserId) {
           this.watchBookmarkedArticles();
         }
+      }
+    });
+    this.route.params.subscribe(params => {
+      if (params['query']) {
+        this.query = params['query'];
+        this.currentSelectedTab = SelectedTab.search;
+        this.searchArticles(this.query);
       }
     });
   }
@@ -59,10 +71,21 @@ export class HomeComponent implements OnInit {
     this.currentSelectedTab = SelectedTab.bookmark;
   }
 
+  selectSearch() {
+    this.currentSelectedTab = SelectedTab.search;
+  }
+  searchArticles(query){
+    this.articleSvc.searchArticles(query);
+    this.articleSvc.searchedArticles$.subscribe(articles => {
+      this.searchedArticles = articles;
+    });
+  }
+
 }
 
 export enum SelectedTab {
   'latest' = 1,
   'all',
-  'bookmark'
+  'bookmark',
+  'search'
 }

@@ -27,7 +27,7 @@ export class TopNavComponent implements OnInit {
   }
 
   onSearch(input) {
-    // Need search function.
+    this.router.navigate([`search/${input}`]);
   }
 
   onLogOut() {

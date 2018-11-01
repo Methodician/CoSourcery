@@ -10,6 +10,7 @@ import { DataCleanupComponent } from './admin/components/data-cleanup/data-clean
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'search/:query', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   {
