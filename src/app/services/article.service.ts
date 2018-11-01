@@ -74,14 +74,19 @@ export class ArticleService {
       })
     })).subscribe(previewObservables => {
       let articleMap = {};
-      for (let article$ of previewObservables) {
-        article$.subscribe(article => {
-          if (!!article) {
-            articleMap[article.articleId] = article;
-            articleList$.next(Object.values(articleMap));
-          }
-        });
+      if(previewObservables.length > 0){
+        for (let article$ of previewObservables) {
+          article$.subscribe(article => {
+            if (!!article) {
+              articleMap[article.articleId] = article;
+              articleList$.next(Object.values(articleMap));
+            }
+          });
+        }
+      }else {
+        articleList$.next(Object.values(articleMap));
       }
+
     });
     return articleList$;
   }

@@ -53,7 +53,7 @@
                             *ngFor="let article of bookmarkedArticles | reverseArray ">
   </cos-article-preview-card>
 </section>
-<div *ngIf="query">
+<div *ngIf="currentSelectedTab === 4 && query">
   <h1>Search results for '{{query}}':</h1>
   <h3 *ngIf='searchedArticles.length == 0'>There are no matching articles!</h3>
   <section id="searched-articles"
