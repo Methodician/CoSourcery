@@ -41,6 +41,7 @@ button {
   box-shadow: 0 2px 2px $medium-gray;
   background-color: $accent-color-1;
   color: #fff;
+  outline: none;
 
   @media screen and (min-width: 500px) {
 

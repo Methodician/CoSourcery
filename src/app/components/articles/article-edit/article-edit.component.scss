@@ -184,9 +184,7 @@
   }
 
   &__placeholder {
-    position: absolute;
-    top: 0;
-    left: 0;
+    margin-top: -300px;
 
     h2 {
       margin-top: 0;
