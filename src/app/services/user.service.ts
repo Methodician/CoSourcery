@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import * as firebase from 'firebase';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
 
@@ -25,22 +25,24 @@ export class UserService {
   ) {
     this.authSvc.authInfo$.subscribe(authInfo => {
       if (authInfo.uid) {
-        this.getUserInfo(authInfo.uid).then(info => {
-          const userInfo = new UserInfoOpen(
-            info.alias,
-            info.fName,
-            info.lName,
-            authInfo.uid,
-            info.imageUrl,
-            info.email,
-            info.zipCode,
-            info.bio,
-            info.city,
-            info.state,
-          );
-          this.userInfo$.next(userInfo);
-          this.userMap[authInfo.uid] = userInfo;
-        });
+        this.userInfoRef(authInfo.uid)
+          .valueChanges()
+          .subscribe(info => {
+            const userInfo = new UserInfoOpen(
+              info.alias,
+              info.fName,
+              info.lName,
+              authInfo.uid,
+              info.imageUrl,
+              info.email,
+              info.zipCode,
+              info.bio,
+              info.city,
+              info.state,
+            );
+            this.userMap[authInfo.uid] = userInfo;
+            this.userInfo$.next(userInfo);
+          });
       } else {
         this.userInfo$.next(this.NULL_USER);
       }
@@ -69,7 +71,7 @@ export class UserService {
   }
 
   trackUploadedProfileImages(uid, fullPath, url) {
-    const docRef = this.fsdb.doc(`fileUploads/profileImages/${uid}`);
+    const docRef = this.fsdb.doc(`fileUploads/profileUploads/profileImages/${uid}`);
     docRef.set({ path: fullPath, downloadUrl: url });
   }
 
@@ -86,13 +88,18 @@ export class UserService {
       .set(userInfo);
   }
 
+  updateUser(userInfo) {
+    return this.rtdb
+      .object(`userInfo/open/${userInfo.uid}`)
+      .update(userInfo);
+  }
+
+  userInfoRef(uid: string): AngularFireObject<UserInfoOpen> {
+    return this.rtdb.object(`userInfo/open/${uid}`);
+  }
+
   async getUserInfo(uid) {
     if (uid) {
-      try {
-
-      } catch (error) {
-
-      }
       const userRef = await this.rtdb.object(`userInfo/open/${uid}`).query.once(`value`);
       const userData = userRef.val();
       return userData;

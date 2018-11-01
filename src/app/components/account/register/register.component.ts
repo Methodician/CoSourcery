@@ -69,6 +69,7 @@ export class RegisterComponent implements OnInit {
   async createNewUser(formValue, userId: string) {
     try {
       await this.userSvc.createUser(formValue, userId);
+      this.router.navigate(['profile']);
     } catch (err) {
       alert('We might not have saved your user info quite right. Woops!' + err);
     }

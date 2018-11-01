@@ -1,3 +1,44 @@
-<p>
-  profile works!
-</p>
+<div *ngIf="loggedInUser">
+  image: <input accept="image/*"
+         type="file"
+         (change)="onSelectProfileImage($event)">
+  <div *ngIf="uploadTracker">upload%: {{ imageUploadPercent$ | async }}</div>
+
+  <img [src]="loggedInUser.imageUrl"
+       alt="profile image"
+       style="height: 200px;">
+  <br>
+  fName: <input type="text"
+         [(ngModel)]="loggedInUser.fName">
+  <br>
+  lName: <input type="text"
+         [(ngModel)]="loggedInUser.lName">
+  <br>
+  alias: <input type="text"
+         [(ngModel)]="loggedInUser.alias">
+  <br>
+  email: <input type="text"
+         [(ngModel)]="loggedInUser.email">
+  <br>
+  bio: <input type="text"
+         [(ngModel)]="loggedInUser.bio">
+  <br>
+  city: <input type="text"
+         [(ngModel)]="loggedInUser.city">
+  <br>
+  state: <input type="text"
+         [(ngModel)]="loggedInUser.state">
+  <br>
+  zipCode: <input type="text"
+         [(ngModel)]="loggedInUser.zipCode">
+</div>
+<button (click)="onSaveProfileChanges()">Update My Profile</button>
+
+<!-- USER:
+<pre>{{ loggedInUser | json }}</pre> -->
+
+USERMAP:
+<pre>{{ userMap | json }}</pre>
+
+DBUSER:
+<pre>{{ dbUser | json }}</pre>

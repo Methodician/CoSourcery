@@ -45,9 +45,14 @@
 
       <li *ngIf="authInfo.uid !== null"
           class="menu__item menu__item_collapse">
-        <button class="cos-btn"
+        <!-- <button class="cos-btn"
                 (click)="onLogOut()">
           Logout
+        </button> -->
+        <!-- TESTING -->
+        <button class="cos-btn"
+                routerLink="profile">
+          profile
         </button>
       </li>
 
@@ -88,7 +93,7 @@
               class="mobile-menu__item">
             <a (click)="onLogOut(); showMobileMenu = false"
                class="mobile-menu__link">
-               Logout
+              Logout
             </a>
           </li>
           <li *ngIf="authInfo.uid === null"
@@ -96,7 +101,7 @@
             <a routerLink="register"
                class="mobile-menu__link"
                (click)="showMobileMenu = false">
-               Register
+              Register
             </a>
           </li>
         </ul>

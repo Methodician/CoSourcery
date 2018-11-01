@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
     const val = this.form.value;
     this.authSvc.login(val.email, val.password).then(res => {
       console.log('Successfully logged in');
+      this.router.navigate(['profile']);
     }).catch(err => {
       alert('Couldn\'t log in... ' + err);
     });
