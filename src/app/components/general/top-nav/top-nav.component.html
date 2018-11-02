@@ -17,9 +17,9 @@
                  class="search-bar__input"
                  type="text"
                  placeholder="Search Articles"
-                 (keyup.enter)="onSearch(searchInput)">
+                 (keyup.enter)="onSearch(searchInput.value); searchInput.value=''">
           <button class="mat-icon-btn"
-                  (click)="onSearch(searchInput)">
+                  (click)="onSearch(searchInput.value); searchInput.value=''">
             <mat-icon>search</mat-icon>
             <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_below">Search</span>
           </button>

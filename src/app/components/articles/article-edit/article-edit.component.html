@@ -17,7 +17,8 @@
               type="button"
               (click)="editorAuthCheck() ? toggleEditCoverImage() : null">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editCoverImage ? 'Close Image' : 'Edit Image'}}</span>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editCoverImage ? 'Close Image' : 'Edit
+          Image'}}</span>
       </button>
     </section>
     <section *ngIf="editCoverImage"
@@ -51,11 +52,11 @@
     </h2>
     <mat-form-field *ngIf="editTitle">
       <h2><input #title
-                 matInput
-                 type="text"
-                 formControlName="title"
-                 maxlength="100"
-                 required>
+               matInput
+               type="text"
+               formControlName="title"
+               maxlength="100"
+               required>
       </h2>
       <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
       <mat-error>Please give your article a title.</mat-error>
@@ -70,21 +71,20 @@
   </section>
 
   <section class="article-intro"
-    (cosClickOut)="editIntro = false">
+           (cosClickOut)="editIntro = false">
     <p *ngIf="!editIntro"
-      class="static-display">
+       class="static-display">
       {{articleEditForm.value.introduction}}
-      <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is about.</span>
+      <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
+        about.</span>
     </p>
     <mat-form-field *ngIf="editIntro">
-      <p><textarea #introduction
-                   matInput
-                   type="text"
-                   formControlName="introduction"
-                   rows="5"
-                   maxlength="300"
-                   required>
-      </textarea></p>
+      <p><input #introduction
+               matInput
+               type="text"
+               formControlName="introduction"
+               maxlength="300"
+               required /></p>
       <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
     </mat-form-field>
@@ -111,7 +111,8 @@
               type="button"
               (click)="editorAuthCheck() ? toggleEditBody() : null">
         <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' : 'Edit Body'}}</span>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' :
+          'Edit Body'}}</span>
       </button>
       <ckeditor formControlName="body"
                 [editor]="ckeditor"
@@ -223,9 +224,9 @@
         </button>
       </section>
     </section>
-</section>
+  </section>
 
-<!-- Existing Comments -->
+  <!-- Existing Comments -->
   <cos-comment-list [isUnderComment]="false"
                     [commentReplyInfo]="commentReplyInfo"
                     [commentEditInfo]="commentEditInfo"

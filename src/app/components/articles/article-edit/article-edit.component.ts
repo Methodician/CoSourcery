@@ -1,9 +1,8 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
@@ -20,6 +19,14 @@ import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/c
 })
 
 export class ArticleEditComponent implements OnInit, OnDestroy {
+  @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    if (this.articleHasUnsavedChanges()) {
+      $event.returnValue = true;
+    }
+  }
+
   loggedInUser: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
@@ -43,7 +50,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   userVotesMap: KeyMap<VoteDirections> = {};
 
-  @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   ckeditorButtonOffset: number = 0;
   ckeditor = InlineEditor;
   ckeditorConfig = {
@@ -123,14 +129,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleSubscription.unsubscribe();
   }
 
-  mapUserVotes(){
+  mapUserVotes() {
     this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
-    .snapshotChanges().subscribe(snaps => {
-      this.userVotesMap = {};
-      for(let snap of snaps){
-        this.userVotesMap[snap.key] = snap.payload.val() as any;
-      }
-    });
+      .snapshotChanges().subscribe(snaps => {
+        this.userVotesMap = {};
+        for (let snap of snaps) {
+          this.userVotesMap[snap.key] = snap.payload.val() as any;
+        }
+      });
   }
 
   // Form Setup & Breakdown Functions

@@ -8,15 +8,38 @@ import { RegisterComponent } from 'app/components/account/register/register.comp
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
 import { ProfileComponent } from './components/account/profile/profile.component';
+import { UnsavedChangesGuard } from './shared/guards/unsaved-changes.guard';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'search/:query', component: HomeComponent },
+  { path: 'search', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   {
     path: 'createarticle',
     canActivate: [AuthGuard],
-    component: ArticleEditComponent
+    canDeactivate: [UnsavedChangesGuard],
+    component: ArticleEditComponent,
+  },
+  {
+    path: 'article/:key',
+    canDeactivate: [UnsavedChangesGuard],
+    component: ArticleEditComponent,
+  },
+  {
+    path: 'profile',
+    children: [
+      {
+        path: ':key',
+        component: ProfileComponent
+      },
+      {
+        path: '',
+        component: ProfileComponent,
+        // canActivate: [AuthGuard],
+      }
+    ]
   },
   // {
   //   path: 'account',
@@ -32,21 +55,7 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  {
-    path: 'profile',
-    children: [
-      {
-        path: ':key',
-        component: ProfileComponent
-      },
-      {
-        path: '',
-        component: ProfileComponent,
-        // canActivate: [AuthGuard],
-      }
-    ]
-  },
-  { path: 'article/:key', component: ArticleEditComponent },
+
   // {
   //   path: 'articlesearch',
   //   children: [

@@ -7,5 +7,6 @@ export const environment = {
     storageBucket: "cosourcery.appspot.com",
     messagingSenderId: "141292210727"
   },
+  algoliaIndex: 'articles',
   production: true
 };
