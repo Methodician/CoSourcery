@@ -127,20 +127,25 @@ export class ArticleService {
 
 
   updateArticle(editor: UserInfoOpen, article, articleId: string) {
-    // fsdb reference for article to be updated
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
-    // Updating article version, lastUpdated, and lastEditor
+    const editors = article.editors || {};
+    const editCount = editors[editor.uid] || 0;
+    editors[editor.uid] = editCount + 1;
+
     let changedArticle = { ...article };
     changedArticle.lastUpdated = this.fsServerTimestamp;
     changedArticle.version++;
     changedArticle.lastEditorId = editor.uid;
+    changedArticle.editors = editors;
     return articleRef.update(changedArticle);
   }
 
 
   createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    article.editors = {};
+    article.editors[author.uid] = 1;
     article.authorId = author.uid;
     article.articleId = articleId;
     article.lastUpdated = this.fsServerTimestamp;

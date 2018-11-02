@@ -31,9 +31,12 @@ export class ArticleDetailFirestore {
         public timestamp: any,
         public lastEditorId: string,
         public version: number,
+        public editors: KeyMap<number>,
         public commentCount?: number,
         public viewCount?: number,
         public tags?: string[],
         public isFeatured?: boolean,
     ) { }
 }
+
+export interface KeyMap<T> { [key: string]: T; }

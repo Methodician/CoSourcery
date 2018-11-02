@@ -257,22 +257,6 @@ exports.createHistoryObject = functions.firestore.document('articleData/articles
     }
 });
 
-// Just noticed while working on "onCreateArticleDetail()" above, that this incorrectly tracks author, and it's also creating a collection but should probably be adding to an object on the article...
-exports.createEditorObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
-    if (context.eventType !== 'google.firestore.document.delete') {
-        const articleId = context.params.articleId;
-        const articleData = change.after.data()
-        const authorId = articleData.authorId
-        const editorObject = { editorID: articleData.authorId };
-        const editorRef = fs.doc(`articleData/articles/articles/${articleId}/editors/${authorId}`)
-        return editorRef.set(editorObject).catch(error => {
-            console.log(error);
-        })
-    } else {
-        return null;
-    }
-});
-
 exports.createPreviewObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
     const articleObject = change.after.data();
     const id = context.params.articleId;
