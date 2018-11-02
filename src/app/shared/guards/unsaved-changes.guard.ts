@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
-import { Observable } from 'rxjs';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
 
 @Injectable({
