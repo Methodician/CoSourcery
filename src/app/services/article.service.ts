@@ -14,7 +14,8 @@ import { environment } from 'environments/environment';
 })
 export class ArticleService {
   searchedArticles$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
-  timestampNow = firebase.firestore.Timestamp.now();
+  fsServerTimestamp = firebase.firestore.FieldValue.serverTimestamp();
+  dbServerTimestamp = firebase.database.ServerValue.TIMESTAMP;
   algoliasearch = require('algoliasearch/dist/algoliasearch.js');
   client = this.algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
 
@@ -118,22 +119,23 @@ export class ArticleService {
   bookmarkArticle(userKey, articleId) {
     this.rtdb
       .object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`)
-      .set(firebase.database.ServerValue.TIMESTAMP);
+      .set(this.dbServerTimestamp);
     this.rtdb
       .object(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`)
-      .set(firebase.database.ServerValue.TIMESTAMP);
+      .set(this.dbServerTimestamp);
   }
 
 
-  async updateArticle(editor: UserInfoOpen, article, articleId: string) {
+  updateArticle(editor: UserInfoOpen, article, articleId: string) {
     // fsdb reference for article to be updated
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
     // Updating article version, lastUpdated, and lastEditor
-    article.lastUpdated = this.timestampNow;
-    article.version++;
-    article.lastEditorId = editor.uid;
-    return articleRef.update(article);
+    let changedArticle = { ...article };
+    changedArticle.lastUpdated = this.fsServerTimestamp;
+    changedArticle.version++;
+    changedArticle.lastEditorId = editor.uid;
+    return articleRef.update(changedArticle);
   }
 
 
@@ -141,8 +143,8 @@ export class ArticleService {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     article.authorId = author.uid;
     article.articleId = articleId;
-    article.lastUpdated = this.timestampNow;
-    article.timestamp = this.timestampNow;
+    article.lastUpdated = this.fsServerTimestamp;
+    article.timestamp = this.fsServerTimestamp;
     article.lastEditorId = author.uid;
     article.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png';
 
