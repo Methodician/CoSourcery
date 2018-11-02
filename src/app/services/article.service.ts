@@ -7,7 +7,7 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
-
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference 
 export class ArticleService {
   searchedArticles$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
   timestampNow = firebase.firestore.Timestamp.now();
-  algoliasearch = require ('algoliasearch/dist/algoliasearch.js');
+  algoliasearch = require('algoliasearch/dist/algoliasearch.js');
   client = this.algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
 
   constructor(
@@ -74,7 +74,7 @@ export class ArticleService {
       })
     })).subscribe(previewObservables => {
       let articleMap = {};
-      if(previewObservables.length > 0){
+      if (previewObservables.length > 0) {
         for (let article$ of previewObservables) {
           article$.subscribe(article => {
             if (!!article) {
@@ -83,7 +83,7 @@ export class ArticleService {
             }
           });
         }
-      }else {
+      } else {
         articleList$.next(Object.values(articleMap));
       }
 
@@ -160,8 +160,8 @@ export class ArticleService {
     articleRef.delete();
   }
 
-  async searchArticles(query){
-    const index = this.client.initIndex('dev_articles'); //using index dev articles for now, in production will want to change this.
+  async searchArticles(query) {
+    const index = this.client.initIndex(environment.algoliaIndex); //using index dev articles for now, in production will want to change this.
     const searchResults = await index.search({
       query: query,
       attributesToRetrieve: ['objectId'],
@@ -169,7 +169,7 @@ export class ArticleService {
     });
 
     const articleList = new Array<any>();
-    if(searchResults.hits.length > 0){
+    if (searchResults.hits.length > 0) {
       const articleIds = [];
       searchResults.hits.forEach(article => { //creates array of articleIds from search results
         articleIds.push(article.objectID);
@@ -181,7 +181,6 @@ export class ArticleService {
       });
     }
     this.searchedArticles$.next(articleList);
-
   }
 
   //with refactor this is no longer used

@@ -5,6 +5,7 @@ import * as admin from 'firebase-admin';
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
 import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
 import * as algoliasearch from 'algoliasearch';
+import { environment } from '../../src/environments/environment';
 
 
 admin.initializeApp();
@@ -14,25 +15,25 @@ fs.settings({ timestampsInSnapshots: true });
 const client = algoliasearch(functions.config().algolia.app_id, functions.config().algolia.admin_key);
 
 exports.updateAlgoliaIndex =
-functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
-    const articleObject = change.after.data();
-    const index = client.initIndex('dev_articles');
-    if(context.eventType !== 'google.firestore.document.delete'){
-      const previewObject = {
-          objectID: articleObject.articleId,
-          title: articleObject.title,
-          introduction: articleObject.introduction,
-          body: articleObject.body,
-          tags: articleObject.tags
-      }
-      return index.saveObject(previewObject);
-    } else{
-      return index.deleteObject(articleObject.articleId);
-    }
-});
+    functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
+        const articleObject = change.after.data();
+        const index = client.initIndex(environment.algoliaIndex);
+        if (context.eventType !== 'google.firestore.document.delete') {
+            const previewObject = {
+                objectID: articleObject.articleId,
+                title: articleObject.title,
+                introduction: articleObject.introduction,
+                body: articleObject.body,
+                tags: articleObject.tags
+            }
+            return index.saveObject(previewObject);
+        } else {
+            return index.deleteObject(articleObject.articleId);
+        }
+    });
 
 exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{userId}/{commentKey}`).onWrite(async (change, context) => {
- 
+
     const before = change.before.val();
     const after = change.after.val();
     // null = 0
@@ -40,7 +41,7 @@ exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{use
     const commentKey = context.params['commentKey'];
     const commentRef = db.ref(`commentData/comments/${commentKey}`);
     return commentRef.transaction((commmentToUpdate: Comment) => {
-        if(!commmentToUpdate) {
+        if (!commmentToUpdate) {
             return null;
         }
         const oldCount = commmentToUpdate.voteCount || 0;
@@ -60,23 +61,23 @@ exports.trackCommentDeletions = functions.database.ref('commentData/comments/{co
     ]);
 })
 
-exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{commentKey}/replyCount').onUpdate(async(change, context) => {
+exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{commentKey}/replyCount').onUpdate(async (change, context) => {
 
     const incrementReplyCount = (commentRef: admin.database.Reference) => {
         return commentRef.transaction((commentToUpdate: Comment) => {
-            if(commentToUpdate) {
+            if (commentToUpdate) {
                 let replyCount = commentToUpdate.replyCount || 0;
                 replyCount = replyCount + 1;
                 commentToUpdate.replyCount = replyCount;
             }
             return commentToUpdate;
         })
-        .then(_ => {
-            console.log('db transaction success!');
-        })
-        .catch(err => {
-            console.log('db transaction failure...', err);
-        });
+            .then(_ => {
+                console.log('db transaction success!');
+            })
+            .catch(err => {
+                console.log('db transaction failure...', err);
+            });
     };
 
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
@@ -85,7 +86,7 @@ exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{com
             const article: ArticleDetailFirestore = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
             commentCount = commentCount + 1;
-            t.update(articleDocRef, {commentCount: commentCount});
+            t.update(articleDocRef, { commentCount: commentCount });
         }).then(res => {
             console.log('Transaction success!');
         }).catch(err => {
@@ -96,10 +97,10 @@ exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{com
     const parentCommentRef = db.ref(`commentData/comments/${context.params.commentKey}`);
     const snap = await parentCommentRef.once('value').then();
     const comment = snap.val()
-    if(comment.parentType === ParentTypes.article){
+    if (comment.parentType === ParentTypes.article) {
         const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
         return incrementCommentCount(articleRef);
-    } else if(comment.parentType === ParentTypes.comment){
+    } else if (comment.parentType === ParentTypes.comment) {
         const ref = db.ref(`commentData/comments/${comment.parentKey}`);
         return incrementReplyCount(ref);
     }
@@ -112,19 +113,19 @@ exports.countNewComment = functions.database.ref('commentData/comments/{commentK
 
     const incrementReplyCount = (commentRef: admin.database.Reference) => {
         return commentRef.transaction((commentToUpdate: Comment) => {
-            if(commentToUpdate) {
+            if (commentToUpdate) {
                 let replyCount = commentToUpdate.replyCount || 0;
                 replyCount = replyCount + 1;
                 commentToUpdate.replyCount = replyCount;
             }
             return commentToUpdate;
         })
-        .then(_ => {
-            console.log('db transaction success!');
-        })
-        .catch(err => {
-            console.log('db transaction failure...', err);
-        });
+            .then(_ => {
+                console.log('db transaction success!');
+            })
+            .catch(err => {
+                console.log('db transaction failure...', err);
+            });
     };
 
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
@@ -133,7 +134,7 @@ exports.countNewComment = functions.database.ref('commentData/comments/{commentK
             const article: ArticleDetailFirestore = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
             commentCount = commentCount + 1;
-            t.update(articleDocRef, {commentCount: commentCount});
+            t.update(articleDocRef, { commentCount: commentCount });
         }).then(res => {
             console.log('Transaction success!');
         }).catch(err => {
@@ -142,10 +143,10 @@ exports.countNewComment = functions.database.ref('commentData/comments/{commentK
     };
 
     const comment: Comment = snap.val();
-    if(comment.parentType === ParentTypes.article){
+    if (comment.parentType === ParentTypes.article) {
         const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
         return incrementCommentCount(articleRef);
-    } else if(comment.parentType === ParentTypes.comment){
+    } else if (comment.parentType === ParentTypes.comment) {
         const commentRef = db.ref(`commentData/comments/${comment.parentKey}`);
         return incrementReplyCount(commentRef);
     }
