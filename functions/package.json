@@ -11,6 +11,7 @@
   },
   "main": "lib/functions/src/index.js",
   "dependencies": {
+    "algoliasearch": "^3.30.0",
     "firebase-admin": "^6.1.0",
     "firebase-functions": "^2.1.0"
   },

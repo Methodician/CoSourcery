@@ -23,6 +23,11 @@
       [class.activeArticleState]="currentSelectedTab === 3">
     Bookmarked
   </li>
+  <li *ngIf="query"
+      (click)="selectSearch()"
+      [class.activeArticleState]="currentSelectedTab === 4">
+    Search Results
+  </li>
 </ul>
 
 <!-- ARTICLE COLLECTIONS -->
@@ -51,3 +56,16 @@
                             *ngFor="let article of bookmarkedArticles | reverseArray ">
   </cos-article-preview-card>
 </section>
+<div *ngIf="currentSelectedTab === 4 && query">
+  <h1>Search results for '{{query}}':</h1>
+  <h3 *ngIf='searchedArticles.length == 0'>There are no matching articles!</h3>
+  <section id="searched-articles"
+           class="article-grid"
+           *ngIf="currentSelectedTab === 4 && searchedArticles">
+    <cos-article-preview-card [userId]="UserId"
+                              [articleData]="article"
+                              *ngFor="let article of searchedArticles">
+    </cos-article-preview-card>
+  </section>
+
+</div>
