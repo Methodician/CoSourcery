@@ -13,6 +13,24 @@ const db = admin.database();
 fs.settings({ timestampsInSnapshots: true });
 const client = algoliasearch(functions.config().algolia.app_id, functions.config().algolia.admin_key);
 
+exports.updateAlgoliaIndex =
+functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
+    const articleObject = change.after.data();
+    const index = client.initIndex('dev_articles');
+    if(context.eventType !== 'google.firestore.document.delete'){
+      const previewObject = {
+          objectID: articleObject.articleId,
+          title: articleObject.title,
+          introduction: articleObject.introduction,
+          body: articleObject.body,
+          tags: articleObject.tags
+      }
+      return index.saveObject(previewObject);
+    } else{
+      return index.deleteObject(articleObject.articleId);
+    }
+});
+
 exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{userId}/{commentKey}`).onWrite(async (change, context) => {
  
     const before = change.before.val();
@@ -238,20 +256,3 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
     }
 });
 
-exports.updateAlgoliaIndex =
-functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
-    const articleObject = change.after.data();
-    const index = client.initIndex('dev_articles');
-    if(context.eventType !== 'google.firestore.document.delete'){
-      const previewObject = {
-          objectID: articleObject.articleId,
-          title: articleObject.title,
-          introduction: articleObject.introduction,
-          body: articleObject.body,
-          tags: articleObject.tags
-      }
-      return index.saveObject(previewObject);
-    } else{
-      return index.deleteObject(articleObject.articleId);
-    }
-});
