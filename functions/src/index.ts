@@ -13,6 +13,25 @@ const db = admin.database();
 fs.settings({ timestampsInSnapshots: true });
 const client = algoliasearch(functions.config().algolia.app_id, functions.config().algolia.admin_key);
 
+exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{userId}/{commentKey}`).onWrite(async (change, context) => {
+ 
+    const before = change.before.val();
+    const after = change.after.val();
+    // null = 0
+    const diff = after - before;
+    const commentKey = context.params['commentKey'];
+    const commentRef = db.ref(`commentData/comments/${commentKey}`);
+    return commentRef.transaction((commmentToUpdate: Comment) => {
+        if(!commmentToUpdate) {
+            return null;
+        }
+        const oldCount = commmentToUpdate.voteCount || 0;
+        const newCount = oldCount + diff;
+        commmentToUpdate.voteCount = newCount;
+        return commmentToUpdate;
+    });
+});
+
 exports.trackCommentDeletions = functions.database.ref('commentData/comments/{commentKey}/removedAt').onCreate(async (snap, context) => {
     const commentRef = snap.ref.parent;
     const archiveRef = snap.ref.parent.parent.parent.child('commentArchive');
