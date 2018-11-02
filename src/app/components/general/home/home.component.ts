@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.initializeArticles();
+    
     this.authSvc.authInfo$.subscribe(authInfo => {
       if (authInfo) {
         this.UserId = authInfo.uid;
@@ -37,6 +38,7 @@ export class HomeComponent implements OnInit {
         }
       }
     });
+    
     this.route.params.subscribe(params => {
       if (params['query']) {
         this.query = params['query'];
@@ -73,6 +75,7 @@ export class HomeComponent implements OnInit {
   selectSearch() {
     this.currentSelectedTab = SelectedTab.search;
   }
+  
   searchArticles(query){
     this.articleSvc.searchArticles(query);
     this.articleSvc.searchedArticles$.subscribe(articles => {
