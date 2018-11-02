@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Injectable({
@@ -13,20 +12,24 @@ export class AuthGuard implements CanActivate {
     private authSvc: AuthService
   ) { }
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): boolean {
-      return this.checkLogin(this.authSvc.isSignedIn());
+  canActivate(): Promise<boolean> {
+    return this.checkLogin(this.authSvc.isSignedIn());
   }
 
-  checkLogin(loginStatus: boolean): boolean {
-    if (loginStatus) {
-      return true;
-    } else {
-      if (confirm("Login Required: Would you like to login now?")) {
-        this.router.navigate(['/login']);
+  checkLogin(loginStatus: Promise<boolean>): Promise<boolean> {
+    const promise = new Promise<boolean>(async (resolve, reject) => {
+      const status = await loginStatus;
+      if (status) {
+        return resolve(true);
+      } else {
+        if (confirm("Login Required: Would you like to login now?")) {
+          this.router.navigate(['/login']);
+        } else {
+          this.router.navigate(['/unauthorized']);
+        }
+        return resolve(false);
       }
-      return false;
-    }
+    })
+    return promise;
   }
 }

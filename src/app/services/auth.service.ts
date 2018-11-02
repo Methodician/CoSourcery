@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as fb from 'firebase';
 import { BehaviorSubject } from 'rxjs';
+import { take, map } from 'rxjs/operators';
 import { AuthInfo } from '../shared/class/auth-info';
 
 @Injectable({
@@ -32,12 +33,17 @@ export class AuthService {
     return this.afAuth.auth.signOut();
   }
 
-  isSignedIn() {
-    return !!this.authInfo$.getValue().uid;
-  }
-
   register(email: string, password: string) {
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  async isSignedIn(): Promise<boolean> {
+    return this.afAuth.authState
+      .pipe(
+        take(1),
+        map(res => {
+          return !!res;
+        })).toPromise();
   }
 
   async sendVerificationEmail() {

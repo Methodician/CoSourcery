@@ -65,6 +65,7 @@ import { CommentService } from './services/comment.service';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
 import { DataCleanupService } from './admin/services/data-cleanup.service';
 import { CommentComponent } from './components/comments/comment/comment.component';
+import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     ClickOutDirective,
     CommentListComponent,
     DataCleanupComponent,
-    CommentComponent
+    CommentComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
