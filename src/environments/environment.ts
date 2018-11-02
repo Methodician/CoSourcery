@@ -11,6 +11,7 @@ export const environment = {
     storageBucket: 'cosourcerytest.appspot.com',
     messagingSenderId: '146479623747'
   },
+  algoliaIndex: 'dev_articles',
   production: false
 };
 

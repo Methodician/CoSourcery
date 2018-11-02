@@ -1,24 +1,32 @@
-<section class="banner flex-center">
+<section class="banner">
   <div class="text center">
-    <h2 class="title">Empowering Makers &amp; Hackers of the World</h2>
+    <h2 class="banner__title">Empowering Makers &amp; Hackers of the World</h2>
     <p class="text italic">network, collaborate, and share knowledge with the community you love</p>
   </div>
 </section>
 
 <!-- ARTICLE FILTERS -->
-<ul class="filter-options flex-center-justify">
-  <li (click)="selectLatest()"
+<ul class="filter-menu">
+  <li class="filter-menu__item"
+      (click)="selectLatest()"
       [class.activeArticleState]="currentSelectedTab === 1">
     Latest
   </li>
-  <li (click)="selectAll()"
+  <li class="filter-menu__item"
+      (click)="selectAll()"
       [class.activeArticleState]="currentSelectedTab === 2">
     All
   </li>
   <li *ngIf="UserId"
+      class="filter-menu__item"
       (click)="selectBookmark()"
       [class.activeArticleState]="currentSelectedTab === 3">
     Bookmarked
+  </li>
+  <li *ngIf="query"
+      (click)="selectSearch()"
+      [class.activeArticleState]="currentSelectedTab === 4">
+    Search Results
   </li>
 </ul>
 
@@ -48,3 +56,16 @@
                             *ngFor="let article of bookmarkedArticles | reverseArray ">
   </cos-article-preview-card>
 </section>
+<div *ngIf="currentSelectedTab === 4 && query">
+  <h1>Search results for '{{query}}':</h1>
+  <h3 *ngIf='searchedArticles.length == 0'>There are no matching articles!</h3>
+  <section id="searched-articles"
+           class="article-grid"
+           *ngIf="currentSelectedTab === 4 && searchedArticles">
+    <cos-article-preview-card [userId]="UserId"
+                              [articleData]="article"
+                              *ngFor="let article of searchedArticles">
+    </cos-article-preview-card>
+  </section>
+
+</div>
