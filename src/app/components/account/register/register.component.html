@@ -1,70 +1,99 @@
-<form autocomplete="off" novalidate [formGroup]="form">
-  <h2 class="text center">Create New Account</h2>
+<form [formGroup]="registerForm"
+      class="register-form">
 
-  <section class="logout-message" *ngIf="currentLogin">
-    <p>Current Login:<br/>
-      <span class="text strong">{{currentLogin}}</span></p>
-    <p>Please logout first, before creating a new account.</p>
-    <button (click)="onLogOut()">Logout</button>
+  <h2 class="register-form__title">Create New Account</h2>
+
+  <section class="register-card" *ngIf="!currentLogin">
+    <mat-form-field class="register-card__input"
+                    [floatLabel]="'always'">
+      <input #email matInput
+             type="email"
+             placeholder="Email"
+             formControlName="email"
+             maxlength="50"
+             (blur)="trimInput('email')"
+             required/>
+      <mat-error>Please provide your e-mail address.</mat-error>
+      <mat-hint align="end">{{email.value.length}} / 50</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="register-card__input"
+                    [floatLabel]="'always'">
+      <input #password matInput
+             type="password"
+             placeholder="Password"
+             formControlName="password"
+             maxlength="30"
+             required/>
+      <mat-error *ngIf="password.value.length === 0">A password is required.</mat-error>
+      <mat-error *ngIf="password.value.length > 0">Must be at least 6 characters in length.</mat-error>
+      <mat-hint align="end">{{password.value.length}} / 30</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="register-card__input"
+                    [floatLabel]="'always'">
+      <input #confirmPassword matInput
+             type="password"
+             placeholder="Confirm Password"
+             formControlName="confirmPass"
+             maxlength="30"
+             required/>
+      <mat-hint align="end">{{confirmPassword.value.length}} / 30</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="register-card__input"
+                    [floatLabel]="'always'">
+      <input #firstName matInput
+             type="text"
+             placeholder="First Name"
+             formControlName="fName"
+             maxlength="30"
+             (blur)="trimInput('fName')"
+             required/>
+      <mat-error>Please provide your first name.</mat-error>
+      <mat-hint align="end">{{firstName.value.length}} / 30</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="register-card__input"
+                    [floatLabel]="'always'">
+      <input #lastName matInput
+             type="text"
+             placeholder="Last Name"
+             formControlName="lName"
+             maxlength="30"
+             (blur)="trimInput('lName')"
+             required/>
+      <mat-error>Please provide your last name.</mat-error>
+      <mat-hint align="end">{{lastName.value.length}} / 30</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="register-card__input"
+                    [floatLabel]="'always'">
+      <input #alias matInput
+             type="text"
+             placeholder="Alias (Optional)"
+             formControlName="alias"
+             maxlength="30"
+             (blur)="trimInput('alias')"/>
+      <mat-hint>If provided, your alias will replace your publicly displayed name.</mat-hint>
+      <mat-hint align="end">{{alias.value.length}} / 30</mat-hint>
+    </mat-form-field>
+
+    <button class="cos-btn"
+            type="button"
+            [disabled]="!registerForm.valid"
+            (click)="register()">
+      Create User
+    </button>
   </section>
 
-  <section class="inputs" *ngIf="!currentLogin">
-    <mat-form-field>
-      <input matInput placeholder="*Email: " [class.input-error]="isErrorVisible('email','required') || isErrorVisible('email','validEmail')" name="email" formControlName="email" type="email"/>
-      <mat-error *ngIf="isErrorVisible('email','required')">We'll need your e-mail address, please.</mat-error>
-      <mat-error *ngIf="isErrorVisible('email','validEmail')">Please enter a valid e-mail address.</mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="*Password:" [class.input-error]="isErrorVisible('password','required')" name="password" formControlName="password" type="password" />
-      <mat-error *ngIf="isErrorVisible('password','required')">A password is required.</mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="*Confirm Password:" [class.input-error]="isErrorVisible('confirmPass','required') || !isPasswordMatch() && isControlDirty('confirmPass')" name="confirmPass" formControlName="confirmPass" type="password" />
-      <mat-error *ngIf="isErrorVisible('confirmPass','required')">Please confirm your password.</mat-error>
-      <mat-error *ngIf="!isPasswordMatch() && isControlDirty('confirmPass')">Oops! Your password does not match yet.</mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="*First Name:" [class.input-error]="isErrorVisible('fName','required')" name="fName" formControlName="fName" type="text" />
-      <mat-error *ngIf="isErrorVisible('fName','required')">Please provide your first name</mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="*Last Name:" [class.input-error]="isErrorVisible('lName','required')" name="lName" formControlName="lName" type="text" />
-      <mat-error *ngIf="isErrorVisible('lName','required')">Please provide your last name</mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="Alias: (Optional, will show instead of name)" type="text" name="alias" formControlName="alias" />
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="Profile Image: (Optional)" type="text" name="imageUrl" formControlName="imageUrl" />
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="Bio: (Optional, a short bio)" type="text" name="bio" formControlName="bio" />
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="City:" type="text" name="city" formControlName="city" />
-    </mat-form-field>
-
-    <div class="state-zipcode">
-      <mat-form-field>
-        <input matInput placeholder="State:" type="text" name="state" formControlName="state" />
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput placeholder="*Zip Code:" type="text" name="zipCode" formControlName="zipCode" />
-        <mat-error *ngIf="isErrorVisible('zipCode','required')">Please provide a zip code. City and state are optional.</mat-error>
-      </mat-form-field>
-    </div>
+  <section *ngIf="currentLogin"
+           class="logout-message">
+    <p class="logout-message__text">Current Login:<br/><strong>{{currentLogin}}</strong></p>
+    <p class="logout-message__text">Please logout first, before creating a new account.</p>
+    <button class="cos-btn"
+            (click)="onLogOut()">
+      Logout
+    </button>
   </section>
-
-  <div class="flex-center-justify" *ngIf="!currentLogin">
-    <button (click)="register()" [disabled]="!isPasswordMatch() || !formValid()">Create User</button>
-  </div>
 </form>
