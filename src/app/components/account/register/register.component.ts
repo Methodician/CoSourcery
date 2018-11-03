@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
@@ -18,13 +18,11 @@ export class RegisterComponent implements OnInit {
     private authSvc: AuthService,
     private userSvc: UserService,
     private fb: FormBuilder,
-  ) { }
-
-  ngOnInit() {
-    this.checkLogin();
+  ) {
     this.registerForm = this.fb.group({
       email: ['', [
         Validators.required,
+        Validators.email,
         Validators.maxLength(50)
       ]],
       password: ['', [
@@ -47,10 +45,11 @@ export class RegisterComponent implements OnInit {
       city: '',
       state: '',
       zipCode: ''
-    });
+    },
+    { validator: passwordMismatch });
   }
 
-  checkLogin() {
+  ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
       this.currentLogin = userData.email;
     });
@@ -92,3 +91,10 @@ export class RegisterComponent implements OnInit {
   }
 
 }
+
+// Custom Validator
+export const passwordMismatch: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
+  const password = formGroup.get('password').value;
+  const retypedPassword = formGroup.get('confirmPass').value;
+  return password !== retypedPassword ? { 'passwordMismatch': true } : null;
+};

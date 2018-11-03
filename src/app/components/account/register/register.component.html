@@ -4,48 +4,46 @@
   <h2 class="register-form__title">Create New Account</h2>
 
   <section class="register-card" *ngIf="!currentLogin">
-    <mat-form-field class="register-card__input"
-                    [floatLabel]="'always'">
-      <input #email matInput
+    <mat-form-field class="register-card__input">
+      <mat-label>Email</mat-label>
+      <input matInput
              type="email"
-             placeholder="Email"
              formControlName="email"
              maxlength="50"
              (blur)="trimInput('email')"
              required/>
-      <mat-error>Please provide your e-mail address.</mat-error>
-      <mat-hint align="end">{{email.value.length}} / 50</mat-hint>
+      <mat-error>Please provide a valid email address.</mat-error>
     </mat-form-field>
 
-    <mat-form-field class="register-card__input"
-                    [floatLabel]="'always'">
+    <mat-form-field class="register-card__input">
+      <mat-label>Password</mat-label>
       <input #password matInput
              type="password"
-             placeholder="Password"
              formControlName="password"
              maxlength="30"
              required/>
-      <mat-error *ngIf="password.value.length === 0">A password is required.</mat-error>
-      <mat-error *ngIf="password.value.length > 0">Must be at least 6 characters in length.</mat-error>
-      <mat-hint align="end">{{password.value.length}} / 30</mat-hint>
+      <mat-error *ngIf="password.value.length === 0">Please create a password.</mat-error>
+      <mat-error *ngIf="password.value.length > 0">Password must be at least 6 characters in length.</mat-error>
     </mat-form-field>
 
-    <mat-form-field class="register-card__input"
-                    [floatLabel]="'always'">
-      <input #confirmPassword matInput
+    <mat-form-field class="register-card__input">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput
              type="password"
-             placeholder="Confirm Password"
              formControlName="confirmPass"
              maxlength="30"
              required/>
-      <mat-hint align="end">{{confirmPassword.value.length}} / 30</mat-hint>
+      <mat-error>Please confirm your password.</mat-error>
+      <mat-hint *ngIf="registerForm.errors?.passwordMismatch && registerForm.controls.confirmPass.touched"
+                class="error">
+        Your password does not match.
+      </mat-hint>
     </mat-form-field>
 
-    <mat-form-field class="register-card__input"
-                    [floatLabel]="'always'">
+    <mat-form-field class="register-card__input">
+      <mat-label>First Name</mat-label>
       <input #firstName matInput
              type="text"
-             placeholder="First Name"
              formControlName="fName"
              maxlength="30"
              (blur)="trimInput('fName')"
@@ -54,11 +52,10 @@
       <mat-hint align="end">{{firstName.value.length}} / 30</mat-hint>
     </mat-form-field>
 
-    <mat-form-field class="register-card__input"
-                    [floatLabel]="'always'">
+    <mat-form-field class="register-card__input">
+      <mat-label>Last Name</mat-label>
       <input #lastName matInput
              type="text"
-             placeholder="Last Name"
              formControlName="lName"
              maxlength="30"
              (blur)="trimInput('lName')"
@@ -67,11 +64,10 @@
       <mat-hint align="end">{{lastName.value.length}} / 30</mat-hint>
     </mat-form-field>
 
-    <mat-form-field class="register-card__input"
-                    [floatLabel]="'always'">
+    <mat-form-field class="register-card__input">
+      <mat-label>Alias (Optional)</mat-label>
       <input #alias matInput
              type="text"
-             placeholder="Alias (Optional)"
              formControlName="alias"
              maxlength="30"
              (blur)="trimInput('alias')"/>

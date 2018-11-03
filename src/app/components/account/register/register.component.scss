@@ -33,6 +33,10 @@ mat-error, mat-hint {
   line-height: 1rem;
 }
 
+mat-hint.error {
+  color: red;
+}
+
 .logout-message {
   display: flex;
   flex-direction: column;
