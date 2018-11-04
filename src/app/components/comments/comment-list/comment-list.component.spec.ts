@@ -6,7 +6,7 @@ import { of } from 'rxjs/internal/observable/of';
 
 import { CommentListComponent } from './comment-list.component';
 import { CommentComponent } from '../comment/comment.component';
-import { Comment } from 'app/shared/class/comment';
+import { Comment, ParentTypes } from 'app/shared/class/comment';
 import { CommentService } from '../../../services/comment.service';
 import { By } from '@angular/platform-browser';
 import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
@@ -65,7 +65,7 @@ describe('CommentListComponent - ', () => {
         const testComment1 = {
           payload: {
             val: () => {
-              return new Comment('userKey3', parentKey, 'test Comment 1', 123456, 123456);
+              return new Comment('userKey3', parentKey, 'test Comment 1', 123456, 123456, 0, ParentTypes.comment, 0);
             },
           },
           key: 'testCommentKey1'
@@ -73,7 +73,7 @@ describe('CommentListComponent - ', () => {
         const testComment2 = {
           payload: {
             val: () => {
-              return new Comment('userKey1', 'otherTestKey', 'test Comment 2', 123456, 123456);
+              return new Comment('userKey1', 'otherTestKey', 'test Comment 2', 123456, 123456, 0, ParentTypes.comment, 0);
             },
           },
           key: 'testCommentKey2'
@@ -81,7 +81,7 @@ describe('CommentListComponent - ', () => {
         const testComment3 = {
           payload: {
             val: () => {
-              return new Comment('userKey2', 'otherTestKey', 'test Comment 3', 123456, 123456);
+              return new Comment('userKey2', 'otherTestKey', 'test Comment 3', 123456, 123456, 0, ParentTypes.comment, 0);
             },
           },
           key: 'testCommentKey3'
@@ -89,7 +89,7 @@ describe('CommentListComponent - ', () => {
         const testComment4 = {
           payload: {
             val: () => {
-              return new Comment('userKey2', 'otherTestKey', 'test Comment 4', 123456, 123456);
+              return new Comment('userKey2', 'otherTestKey', 'test Comment 4', 123456, 123456, 0, ParentTypes.comment, 0);
             },
           },
           key: 'testCommentKey4'
@@ -97,7 +97,7 @@ describe('CommentListComponent - ', () => {
         const testComment5 = {
           payload: {
             val: () => {
-              return new Comment('loggedInUserKey', 'otherTestKey', 'test Comment 5', 123456, 123456);
+              return new Comment('loggedInUserKey', 'otherTestKey', 'test Comment 5', 123456, 123456, 0, ParentTypes.comment, 0);
             },
           },
           key: 'testCommentKey5'
@@ -130,6 +130,12 @@ describe('CommentListComponent - ', () => {
             key: 'userKey3'
           };
         }
+      },
+      upvoteComment(uid, commentKey, direction) {
+
+      },
+      downvoteComment(uid, commentKey, direction) {
+
       }
 
     };
@@ -224,7 +230,6 @@ describe('CommentListComponent - ', () => {
 
     it(`should HAVE a user in commentMap of 5 after init`, async () => {
       fixture.whenStable().then(() => {
-        console.log(component);
         expect(Object.keys(component.commentMap).length).toBe(5);
       });
     });
@@ -243,7 +248,7 @@ describe('CommentListComponent - ', () => {
     });
 
     it('SHOULD NOT display control buttons for comment that user DID NOT submit', () => {
-      const de = fixture.debugElement.query(By.css('#testCommentKey2'));
+      const de = fixture.debugElement.query(By.css('#testCommentKey2 .comment-controls'));
 
       fixture.whenStable().then(() => {
         expect(de.nativeElement.children.length).toBe(1);
@@ -251,7 +256,7 @@ describe('CommentListComponent - ', () => {
     });
 
     it('SHOULD display control buttons for comment that user DID submit', () => {
-      const de = fixture.debugElement.query(By.css('#testCommentKey5'));
+      const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-controls'));
 
       fixture.whenStable().then(() => {
         expect(de.nativeElement.children.length).toBe(2);
@@ -277,7 +282,7 @@ describe('CommentListComponent - ', () => {
     describe('reply button', () => {
       it('should call enterNewCommentMode() with testKey on click', async(() => {
         spyOn(component, 'enterNewCommentMode');
-        const de = fixture.debugElement.query(By.css('#testCommentKey1'));
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-controls'));
 
         fixture.whenStable().then(() => {
           const replyButton: HTMLElement = de.nativeElement.children[0];
@@ -313,7 +318,7 @@ describe('CommentListComponent - ', () => {
       it('should call enterEditMode(key) with testKey on click', async(() => {
         spyOn(component, 'enterEditMode');
 
-        const de = fixture.debugElement.query(By.css('#testCommentKey5'));
+        const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-controls'));
 
         const button: HTMLElement = de.nativeElement.children[1].children[0];
         button.click();
@@ -436,6 +441,167 @@ describe('CommentListComponent - ', () => {
         expect(component.commentEditInfo.commentKey).toBe(null);
       });
 
+    });
+
+  });
+
+  describe('voting - ', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    it('comments should display a vote score', () => {
+      const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating .comment-rating__score-container .comment-rating__score'));
+
+      expect(de.nativeElement.innerText).toBe('0');
+    });
+
+    describe('Upvote Button - ', () => {
+      beforeEach(() => {
+        component.userVotesMap = {testCommentKey5: 1};
+        fixture.detectChanges();
+      });
+
+      it('comments should have an "upvote" button', () => {
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const upButton: HTMLElement = de.nativeElement.children[1];
+
+        expect(upButton.children[1].textContent).toBe('Upvote');
+      });
+
+      it('comments should have an "remove vote" button if already voted up', () => {
+        const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-rating'));
+        const upButton = de.nativeElement.children[1];
+
+        expect(upButton.children[1].textContent).toBe('Remove Vote');
+      });
+
+      it('should call commentAuthCheck() on click', () => {
+        spyOn(component, 'commentAuthCheck');
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const upButton: HTMLElement = de.nativeElement.children[1];
+
+        upButton.click();
+        fixture.detectChanges();
+
+        expect(component.commentAuthCheck).toHaveBeenCalled();
+      });
+
+      it('should call onUpvoteComment() on click', () => {
+        spyOn(component, 'onUpvoteComment');
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const upButton: HTMLElement = de.nativeElement.children[1];
+
+        upButton.click();
+        fixture.detectChanges();
+
+        expect(component.onUpvoteComment).toHaveBeenCalled();
+      });
+
+      it('should call upvoteComment() in service on click', () => {
+        const commentSvc = TestBed.get(CommentService);
+        const spy = spyOn(commentSvc, 'upvoteComment');
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const upButton: HTMLElement = de.nativeElement.children[1];
+
+        upButton.click();
+        fixture.detectChanges();
+
+        expect(spy).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('Downvote Button - ', () => {
+      beforeEach(() => {
+        component.userVotesMap = {testCommentKey5: -1};
+        fixture.detectChanges();
+      });
+
+      it('comments should have an "downvote" button', () => {
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const downButton = de.nativeElement.children[2];
+
+        expect(downButton.children[1].textContent).toBe('Downvote');
+      });
+
+      it('comments should have an "remove vote" button if already voted down', () => {
+        const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-rating'));
+        const downButton = de.nativeElement.children[2];
+
+        expect(downButton.children[1].textContent).toBe('Remove Vote');
+      });
+
+      it('should call commentAuthCheck() on click', () => {
+        spyOn(component, 'commentAuthCheck');
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const upButton: HTMLElement = de.nativeElement.children[2];
+
+        upButton.click();
+        fixture.detectChanges();
+
+        expect(component.commentAuthCheck).toHaveBeenCalled();
+      });
+
+      it('should call onDownvoteComment() on click', () => {
+        spyOn(component, 'onDownvoteComment');
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const upButton: HTMLElement = de.nativeElement.children[2];
+
+        upButton.click();
+        fixture.detectChanges();
+
+        expect(component.onDownvoteComment).toHaveBeenCalled();
+      });
+
+      it('should call downvoteComment() in service on click', () => {
+        const commentSvc = TestBed.get(CommentService);
+        const spy = spyOn(commentSvc, 'downvoteComment');
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const upButton: HTMLElement = de.nativeElement.children[2];
+
+        upButton.click();
+        fixture.detectChanges();
+
+        expect(spy).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('when not logged in', () => {
+      beforeEach(() => {
+        component.parentKey = 'testParentKey';
+        component.loggedInUser = new UserInfoOpenStub('', '', '');
+        component.userMap = {};
+        component.userKeys = [];
+        fixture.detectChanges();
+      });
+
+      it('should NOT call onUpvoteComment() on click when not logged in', () => {
+        const upvoteSpy = spyOn(component, 'onUpvoteComment');
+        spyOn(window, 'confirm').and.returnValue(false);
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const upButton: HTMLElement = de.nativeElement.children[1];
+
+        upButton.click();
+        fixture.detectChanges();
+
+        expect(window.confirm).toHaveBeenCalled();
+        expect(upvoteSpy).not.toHaveBeenCalled();
+      });
+
+      it('should NOT call onDownvoteComment() on click when not logged in', () => {
+        const downvoteSpy = spyOn(component, 'onDownvoteComment');
+        spyOn(window, 'confirm').and.returnValue(false);
+        const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
+        const downButton: HTMLElement = de.nativeElement.children[2];
+
+        downButton.click();
+        fixture.detectChanges();
+
+        expect(window.confirm).toHaveBeenCalled();
+        expect(downvoteSpy).not.toHaveBeenCalled();
+      });
     });
 
   });
