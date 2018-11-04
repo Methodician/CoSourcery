@@ -62,27 +62,74 @@ describe('CommentListComponent - ', () => {
         return of('test');
       },
       watchCommentsByParent: (parentKey) => {
-        const testComment = {
+        const testComment1 = {
           payload: {
             val: () => {
-              return {
-                authorId: 'testID',
-                parentKey: parentKey,
-                text: 'test Comment',
-                lastUpdated: 123456,
-                timestamp: 123456
-              };
+              return new Comment('userKey3', parentKey, 'test Comment 1', 123456, 123456);
             },
           },
-          key: 'testSnapKey' + (Math.random() * 100).toString()
+          key: 'testCommentKey1'
         };
-        const comments = of([of(testComment)]);
+        const testComment2 = {
+          payload: {
+            val: () => {
+              return new Comment('userKey1', 'otherTestKey', 'test Comment 2', 123456, 123456);
+            },
+          },
+          key: 'testCommentKey2'
+        };
+        const testComment3 = {
+          payload: {
+            val: () => {
+              return new Comment('userKey2', 'otherTestKey', 'test Comment 3', 123456, 123456);
+            },
+          },
+          key: 'testCommentKey3'
+        };
+        const testComment4 = {
+          payload: {
+            val: () => {
+              return new Comment('userKey2', 'otherTestKey', 'test Comment 4', 123456, 123456);
+            },
+          },
+          key: 'testCommentKey4'
+        };
+        const testComment5 = {
+          payload: {
+            val: () => {
+              return new Comment('loggedInUserKey', 'otherTestKey', 'test Comment 5', 123456, 123456);
+            },
+          },
+          key: 'testCommentKey5'
+        };
 
-        // return of('test');
-        return of(comments);
+        const comments = of([of(testComment1), of(testComment2), of(testComment3), of(testComment4), of(testComment5)]);
+
+        return comments;
       },
-      getUserInfo: () => {
-        return of('test');
+      getUserInfo: (userId) => {
+        if (userId === 'userKey1') {
+          return {
+            val: () => {
+              return new UserInfoOpenStub( 'J-Boi', 'Jeff', 'Goldblume', 'GoldKey', 'http://8.media.bustedtees.cvcdn.com/1/-/bustedtees.7252ae81-33f1-47fc-af07-52f9127c.gif');
+            },
+            key: 'userKey1'
+          };
+        } else if (userId === 'userKey2') {
+          return {
+            val: () => {
+              return new UserInfoOpenStub('', 'elaine', 'benes', 'userKey2', 'elaineURL', 'email.com', 'zipcode', 'bio', 'city', 'state');
+            },
+            key: 'userKey2'
+          };
+        } else if (userId === 'userKey3') {
+          return {
+            val: () => {
+              return new UserInfoOpenStub('', 'george', 'costanza', 'userKey3', 'georgeURL', 'email.com', 'zipcode', 'bio', 'city', 'state');
+            },
+            key: 'userKey3'
+          };
+        }
       }
 
     };
@@ -115,14 +162,12 @@ describe('CommentListComponent - ', () => {
 
     component.isUnderComment = false;
     component.parentKey = 'testParentKey';
-    component.loggedInUser = new UserInfoOpenStub('test', 'tester', 'testson', 'testUID', 'testImgUrl', 'test@mail.com', 'zipcode', 'testBIo', 'testCity', 'testState');
+    component.loggedInUser = new UserInfoOpenStub('loggedInUser', 'tester', 'testson', 'loggedInUserKey', 'testImgUrl', 'test@mail.com', 'zipcode', 'testBIo', 'testCity', 'testState');
     component.userMap = {
-      userKey1: component.loggedInUser,
-      userKey2: new UserInfoOpenStub('', 'george', 'costanza', '123', 'georgeURL', 'email.com', 'zipcode', 'bio', 'city', 'state'),
-      userKey3: new UserInfoOpenStub('', 'elaine', 'benes', '123', 'elaineURL', 'email.com', 'zipcode', 'bio', 'city', 'state'),
+      loggedInUserKey: component.loggedInUser,
     };
     component.userVotesMap = {};
-    component.userKeys = ['userKey1', 'userKey2', 'userKey3'];
+    component.userKeys = ['loggedInUserKey'];
     component.commentReplyInfo = { replyParentKey: null };
     component.commentEditInfo = { commentKey: null };
 
@@ -131,58 +176,63 @@ describe('CommentListComponent - ', () => {
   });
 
   afterEach(() => {
-    component.commentsSubscription.unsubscribe();
+    if (component.commentsSubscription) {
+      component.commentsSubscription.unsubscribe();
+    }
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  xdescribe('initialization - ', () => {
-    let watchCommentsByParentSpy: jasmine.Spy;
+  describe('initialization - ', () => {
+    let spy: jasmine.Spy;
 
-    beforeEach(() => {
-      fixture.detectChanges();
+    it('should call fillDataMaps()', () => {
+      spy = spyOn(component, 'fillDataMaps');
+      component.ngOnInit();
+
+      expect(spy).toHaveBeenCalled();
     });
 
-    it(`should HAVE a user in userMap after ngOnInit`, async () => {
+    it('should call unfurlCommentObservable()', () => {
+      spy = spyOn(component, 'unfurlCommentObservables');
+      component.ngOnInit();
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call mapCommentSnapshot()', () => {
+      spy = spyOn(component, 'mapCommentSnapshot');
+      component.ngOnInit();
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call mapUser()', () => {
+      spy = spyOn(component, 'mapUser');
+      component.ngOnInit();
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it(`should HAVE a user in userMap of 4 after init`, async () => {
       fixture.whenStable().then(() => {
-        expect(Object.keys(component.commentMap).length).toBe(1);
+        expect(Object.keys(component.userMap).length).toBe(4);
       });
     });
 
-    // testing this method requires Observables to be sent back from the CommentService
-    // to simulate that requrires returning of(comments) (see line 92). This causes an
-    // infinite loop somewhere that I can't pinpoint but essentially fillDataMaps is
-    // called repeatedly and causes karma to crash. Use the debugger to see this.
-    // commenting out comment-list.ts lines 88-93 solves this loop.
-    it('should call watchCommentsByParent() in service', () => {
-      const commentSvc = TestBed.get(CommentService);
-      watchCommentsByParentSpy = spyOn(commentSvc, 'watchCommentsByParent');
-      fixture.detectChanges();
-
-      expect(watchCommentsByParentSpy).toHaveBeenCalledWith('0000test0000');
-    });
-
-    xit('should have populated commentMap after ngOnInit', () => {
-
-    });
-
-    xit('should have populated userMap after ngOnInit', () => {
-
+    it(`should HAVE a user in commentMap of 5 after init`, async () => {
+      fixture.whenStable().then(() => {
+        console.log(component);
+        expect(Object.keys(component.commentMap).length).toBe(5);
+      });
     });
 
   });
 
   describe('comment controls - ', () => {
     beforeEach(() => {
-      fixture.detectChanges();
-      component.commentMap = {
-        testKey1: new Comment('testUID', 'testParentKey', 'test comment 1', null, null),
-        testKey2: new Comment('wrongUID', 'testParentKey', 'test comment 2', null, null),
-        testKey3: new Comment('testUID', 'testParentKey', 'test comment 3', null, null),
-      };
-      component.commentKeys = ['testKey1', 'testKey2', 'testKey3'];
       fixture.detectChanges();
     });
 
@@ -192,20 +242,25 @@ describe('CommentListComponent - ', () => {
       expect(component.commentIsBeingEdited('testerKey')).toBe(true);
     });
 
-    it('SHOULD NOT display control buttons for comment that user did not submit', async(() => {
-      const de = fixture.debugElement.query(By.css('#testKey2'));
+    it('SHOULD NOT display control buttons for comment that user DID NOT submit', () => {
+      const de = fixture.debugElement.query(By.css('#testCommentKey2'));
 
-      expect(de.nativeElement.children.length).toBe(1);
-    }));
+      fixture.whenStable().then(() => {
+        expect(de.nativeElement.children.length).toBe(1);
+      });
+    });
 
-    it('SHOULD display control buttons for comment that user did not submit', async(() => {
-      const de = fixture.debugElement.query(By.css('#testKey1'));
+    it('SHOULD display control buttons for comment that user DID submit', () => {
+      const de = fixture.debugElement.query(By.css('#testCommentKey5'));
 
-      expect(de.nativeElement.children.length).toBe(2);
-    }));
+      fixture.whenStable().then(() => {
+        expect(de.nativeElement.children.length).toBe(2);
+      });
+    });
 
     it('should update buttons appropriately when edit is clicked', () => {
-      const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__btn-group'));
+
+      const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-controls__btn-group'));
       const editButton: HTMLElement = de.nativeElement.children[0];
 
       expect(de.nativeElement.children[0].textContent).toContain('Edit');
@@ -222,15 +277,15 @@ describe('CommentListComponent - ', () => {
     describe('reply button', () => {
       it('should call enterNewCommentMode() with testKey on click', async(() => {
         spyOn(component, 'enterNewCommentMode');
-
-        const de = fixture.debugElement.query(By.css('#testKey1'));
-        const replyButton: HTMLElement = de.nativeElement.children[0];
-
-        replyButton.click();
-        fixture.detectChanges();
+        const de = fixture.debugElement.query(By.css('#testCommentKey1'));
 
         fixture.whenStable().then(() => {
-          expect(component.enterNewCommentMode).toHaveBeenCalledWith('testKey1');
+          const replyButton: HTMLElement = de.nativeElement.children[0];
+
+          replyButton.click();
+          fixture.detectChanges();
+
+          expect(component.enterNewCommentMode).toHaveBeenCalledWith('testCommentKey1');
         });
       }));
 
@@ -258,14 +313,14 @@ describe('CommentListComponent - ', () => {
       it('should call enterEditMode(key) with testKey on click', async(() => {
         spyOn(component, 'enterEditMode');
 
-        const de = fixture.debugElement.query(By.css('#testKey1'));
+        const de = fixture.debugElement.query(By.css('#testCommentKey5'));
 
         const button: HTMLElement = de.nativeElement.children[1].children[0];
         button.click();
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-          expect(component.enterEditMode).toHaveBeenCalledWith('testKey1');
+          expect(component.enterEditMode).toHaveBeenCalledWith('testCommentKey5');
         });
       }));
 
@@ -280,14 +335,14 @@ describe('CommentListComponent - ', () => {
     describe('remove button', () => {
       it('should call onRemoveComment(key) with testKey on click', async(() => {
         spyOn(component, 'onRemoveComment');
-        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__btn-group'));
+        const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-controls__btn-group'));
         const removeButton: HTMLElement = de.nativeElement.children[1];
 
         removeButton.click();
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-          expect(component.onRemoveComment).toHaveBeenCalledWith('testKey1');
+          expect(component.onRemoveComment).toHaveBeenCalledWith('testCommentKey5');
         });
       }));
 
@@ -295,14 +350,14 @@ describe('CommentListComponent - ', () => {
         const commentSvc = TestBed.get(CommentService);
         const removeCommentSpy = spyOn(commentSvc, 'removeComment');
 
-        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__btn-group'));
+        const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-controls__btn-group'));
         const removeButton: HTMLElement = de.nativeElement.children[1];
 
         removeButton.click();
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-          expect(removeCommentSpy).toHaveBeenCalledWith('testKey1');
+          expect(removeCommentSpy).toHaveBeenCalledWith('testCommentKey5');
         });
       });
 
@@ -311,7 +366,7 @@ describe('CommentListComponent - ', () => {
     describe('save button', () => {
       it('should call onSaveEdits() on click', async(() => {
         spyOn(component, 'onSaveEdits');
-        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__btn-group'));
+        const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-controls__btn-group'));
         const editButton: HTMLElement = de.nativeElement.children[0];
 
         editButton.click();
@@ -328,7 +383,7 @@ describe('CommentListComponent - ', () => {
         });
       }));
 
-      it('onSaveEdits() should call updateComment(Comment, key) in service', async () => {
+      it('onSaveEdits() should call updateComment(Comment, key) in service', () => {
         const commentSvc = TestBed.get(CommentService);
         const updateCommentSpy = spyOn(commentSvc, 'updateComment');
         component.commentEditInfo.commentKey = 'testKey1';
@@ -337,9 +392,7 @@ describe('CommentListComponent - ', () => {
 
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          expect(updateCommentSpy).toHaveBeenCalledWith(component.commentMap['testKey1'], 'testKey1');
-        });
+        expect(updateCommentSpy).toHaveBeenCalledWith(component.commentMap['testKey1'], 'testKey1');
       });
 
       it('onSaveEdits() should update keyOfCommentBeingUpdated to null', () => {
@@ -347,7 +400,7 @@ describe('CommentListComponent - ', () => {
 
         component.onSaveEdits();
         fixture.detectChanges();
-        
+
         expect(component.commentEditInfo.commentKey).toBe(null);
       });
 
@@ -356,7 +409,7 @@ describe('CommentListComponent - ', () => {
     describe('cancel button', () => {
       it('should call onCancelEdit() with testKey on click', async(() => {
         spyOn(component, 'onCancelEdit');
-        const de = fixture.debugElement.query(By.css('#testKey1 .comment-controls__btn-group'));
+        const de = fixture.debugElement.query(By.css('#testCommentKey5 .comment-controls__btn-group'));
         const editButton: HTMLElement = de.nativeElement.children[0];
 
         editButton.click();
