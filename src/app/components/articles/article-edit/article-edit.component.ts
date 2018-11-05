@@ -216,7 +216,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   abortChanges() {
     this.currentArticleSubscription.unsubscribe();
     this.cancelUpload(this.coverImageUploadTask);
-    this.deleteTempCoverImage;  // was this method supposed to be called? Currently it's doing nothing.
+    this.deleteTempCoverImage();
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
