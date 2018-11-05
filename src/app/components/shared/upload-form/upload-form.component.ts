@@ -29,12 +29,11 @@ export class UploadFormComponent implements OnInit {
 
   uploadImage() {
     const file = this.selectedFiles.item(0);
-    // using this.currentUpload so we can display progress... 
+    // using this.currentUpload so we can display progress...
     this.currentUpload = new Upload(file);
     if (!!this.articleId) {
       this.upSvc.uploadArticleCoverImage(this.currentUpload, this.articleId, this.articleStatus);
-    }
-    else {
+    } else {
       // may change this to not work for profile images, simplifying the logic.
       this.sendImgToUploadSvc(this.uid, 'uploads/profileImages/');
     }
