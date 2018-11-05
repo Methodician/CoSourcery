@@ -7,15 +7,24 @@ import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
+import { UnsavedChangesGuard } from './shared/guards/unsaved-changes.guard';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'search/:query', component: HomeComponent },
+  { path: 'search', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   {
     path: 'createarticle',
     canActivate: [AuthGuard],
-    component: ArticleEditComponent
+    canDeactivate: [UnsavedChangesGuard],
+    component: ArticleEditComponent,
+  },
+  {
+    path: 'article/:key',
+    canDeactivate: [UnsavedChangesGuard],
+    component: ArticleEditComponent,
   },
   // {
   //   path: 'account',
@@ -45,7 +54,6 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  { path: 'article/:key', component: ArticleEditComponent },
   // {
   //   path: 'articlesearch',
   //   children: [

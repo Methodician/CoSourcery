@@ -7,13 +7,17 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArticleService {
-  bookmarkedArticles$ = new BehaviorSubject<Array<any>>([]);
-  timestampNow = firebase.firestore.Timestamp.now();
+  searchedArticles$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
+  fsServerTimestamp = firebase.firestore.FieldValue.serverTimestamp();
+  dbServerTimestamp = firebase.database.ServerValue.TIMESTAMP;
+  algoliasearch = require('algoliasearch/dist/algoliasearch.js');
+  client = this.algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
 
   constructor(
     private storage: AngularFireStorage,
@@ -63,7 +67,7 @@ export class ArticleService {
 
 
   watchBookmarkedArticles(userKey) {
-    const articleList$ = new BehaviorSubject<ArticleDetailFirestore[]>([]);
+    const articleList$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
     const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`);
     bookmarksRef.snapshotChanges().pipe(map(keySnaps => {
       return keySnaps.map(snap => {
@@ -71,14 +75,19 @@ export class ArticleService {
       })
     })).subscribe(previewObservables => {
       let articleMap = {};
-      for (let article$ of previewObservables) {
-        article$.subscribe(article => {
-          if (!!article) {
-            articleMap[article.articleId] = article;
-            articleList$.next(Object.values(articleMap));
-          }
-        });
+      if (previewObservables.length > 0) {
+        for (let article$ of previewObservables) {
+          article$.subscribe(article => {
+            if (!!article) {
+              articleMap[article.articleId] = article;
+              articleList$.next(Object.values(articleMap));
+            }
+          });
+        }
+      } else {
+        articleList$.next(Object.values(articleMap));
       }
+
     });
     return articleList$;
   }
@@ -110,31 +119,37 @@ export class ArticleService {
   bookmarkArticle(userKey, articleId) {
     this.rtdb
       .object(`userInfo/articleBookmarksPerUser/${userKey}/${articleId}`)
-      .set(firebase.database.ServerValue.TIMESTAMP);
+      .set(this.dbServerTimestamp);
     this.rtdb
       .object(`articleData/userBookmarksPerArticle/${articleId}/${userKey}`)
-      .set(firebase.database.ServerValue.TIMESTAMP);
+      .set(this.dbServerTimestamp);
   }
 
 
-  async updateArticle(editor: UserInfoOpen, article, articleId: string) {
-    // fsdb reference for article to be updated
+  updateArticle(editor: UserInfoOpen, article, articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
-    // Updating article version, lastUpdated, and lastEditor
-    article.lastUpdated = this.timestampNow;
-    article.version++;
-    article.lastEditorId = editor.uid;
-    return articleRef.update(article);
+    const editors = article.editors || {};
+    const editCount = editors[editor.uid] || 0;
+    editors[editor.uid] = editCount + 1;
+
+    let changedArticle = { ...article };
+    changedArticle.lastUpdated = this.fsServerTimestamp;
+    changedArticle.version++;
+    changedArticle.lastEditorId = editor.uid;
+    changedArticle.editors = editors;
+    return articleRef.update(changedArticle);
   }
 
 
   createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    article.editors = {};
+    article.editors[author.uid] = 1;
     article.authorId = author.uid;
     article.articleId = articleId;
-    article.lastUpdated = this.timestampNow;
-    article.timestamp = this.timestampNow;
+    article.lastUpdated = this.fsServerTimestamp;
+    article.timestamp = this.fsServerTimestamp;
     article.lastEditorId = author.uid;
     article.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png';
 
@@ -150,6 +165,29 @@ export class ArticleService {
   deleteArticleRef(articleId) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     articleRef.delete();
+  }
+
+  async searchArticles(query) {
+    const index = this.client.initIndex(environment.algoliaIndex); //using index dev articles for now, in production will want to change this.
+    const searchResults = await index.search({
+      query: query,
+      attributesToRetrieve: ['objectId'],
+      hitsPerPage: 50
+    });
+
+    const articleList = new Array<any>();
+    if (searchResults.hits.length > 0) {
+      const articleIds = [];
+      searchResults.hits.forEach(article => { //creates array of articleIds from search results
+        articleIds.push(article.objectID);
+      });
+      articleIds.forEach(key => { //creates array of articlePreviews
+        this.getPreviewRefById(key).valueChanges().subscribe(article => {
+          articleList.push(article);
+        });
+      });
+    }
+    this.searchedArticles$.next(articleList);
   }
 
   //with refactor this is no longer used

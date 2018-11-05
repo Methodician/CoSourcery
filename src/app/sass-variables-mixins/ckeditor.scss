@@ -1,8 +1,21 @@
 @import "./vars.scss";
 
+/* Cherry-Picked Fix for Un-Clickable Media Embed */
+/* Reset Pointer Events to Auto */
+::ng-deep .ck-media__wrapper {
+	& > *:not(.ck-media__placeholder) {
+		pointer-events: auto;
+	}
+}
+
+/* Cherry-Picked Fix for Un-Clickable Media Embed */
+/* Remove Pointer Events for Editable Media Only */
+::ng-deep *[contenteditable=true] .ck-media__wrapper > *:not(.ck-media__placeholder) {
+	pointer-events: none;
+}
+
 ::ng-deep .ck .ck.ck-balloon-panel {
   max-width: 70%;
-  z-index: 5;
 
   .ck.ck-toolbar.ck-toolbar_floating {
     flex-wrap: wrap;
