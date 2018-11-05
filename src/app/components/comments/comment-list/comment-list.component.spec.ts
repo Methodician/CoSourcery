@@ -181,12 +181,6 @@ describe('CommentListComponent - ', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    if (component.commentsSubscription) {
-      component.commentsSubscription.unsubscribe();
-    }
-  });
-
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
