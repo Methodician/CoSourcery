@@ -11,7 +11,6 @@ import { AuthService } from '../../../services/auth.service';
 
 export class TopNavComponent implements OnInit {
   authInfo: AuthInfo;
-  displayName;
   showMobileMenu: boolean = false;
 
   constructor(
@@ -22,7 +21,6 @@ export class TopNavComponent implements OnInit {
   ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
       this.authInfo = userData;
-      this.displayName = this.authInfo.email;
     });
   }
 
