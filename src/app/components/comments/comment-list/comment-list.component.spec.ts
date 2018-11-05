@@ -14,6 +14,7 @@ import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } fr
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 
+
 describe('CommentListComponent - ', () => {
   let component: CommentListComponent;
   let fixture: ComponentFixture<CommentListComponent>;
