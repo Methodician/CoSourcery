@@ -21,6 +21,11 @@ import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/c
 export class ArticleEditComponent implements OnInit, OnDestroy {
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    if (this.articleHasUnsavedChanges()) {
+      $event.returnValue = true;
+    }
+  }
 
   loggedInUser: UserInfoOpen = null;
   articleId: any;
@@ -125,11 +130,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleSubscription.unsubscribe();
   }
 
-  unloadNotification($event: any) {
-    if (this.articleHasUnsavedChanges()) {
-      $event.returnValue = true;
-    }
-  }
+
 
   mapUserVotes() {
     this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
