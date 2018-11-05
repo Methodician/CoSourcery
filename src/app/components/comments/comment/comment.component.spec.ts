@@ -1,48 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { Comment } from 'app/shared/class/comment';
 
 import { CommentComponent } from './comment.component';
 
 import { UserInfoOpen } from '../../../shared/class/user-info';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-class UserInfoOpenStub {
-  constructor(
-      public alias: string,
-      public fName: string,
-      public lName: string,
-      public uid?: string,
-      public imageUrl?: string,
-  ) { }
-
-  displayName() {
-      return this.alias ? this.alias : this.fName;
-  }
-
-  displayImageUrl() {
-      if (!this.imageUrl || this.imageUrl === '') {
-          return 'assets/images/logo.png';
-      }
-      return this.imageUrl;
-  }
-
-  // returns true if uid contains a truthy value (is neither null nor an empty string)
-  exists() {
-      return !!(this.uid);
-  }
-}
-
-class CommentStub {
-  constructor(
-      public text?: string,
-      public lastUpdated?: number,
-  ) {
-      this.text = text || '';
-      this.lastUpdated = lastUpdated || new Date().getTime();
-  }
-}
 
 describe('CommentComponent - ', () => {
   let component: CommentComponent;
@@ -65,8 +30,8 @@ describe('CommentComponent - ', () => {
     fixture = TestBed.createComponent(CommentComponent);
     component = fixture.componentInstance;
 
-    component.authorInfo = new UserInfoOpenStub(null, null, null);
-    component.comment = new CommentStub;
+    component.authorInfo = new UserInfoOpen(null, null, null);
+    component.comment = new Comment;
     component.loggedInUser = null;
     component.isBeingEdited = false;
 
@@ -92,7 +57,7 @@ describe('CommentComponent - ', () => {
     });
 
     it('should render the author\'s first name if no alias is recieved', () => {
-      component.authorInfo = new UserInfoOpenStub(null, 'Jeff', 'Goldblum');
+      component.authorInfo = new UserInfoOpen(null, 'Jeff', 'Goldblum');
 
       fixture.detectChanges();
 

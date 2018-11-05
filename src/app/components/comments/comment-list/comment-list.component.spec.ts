@@ -4,6 +4,7 @@ import { ReverseArrayPipe } from '../../../shared/pipes/reverse-array.pipe';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs/internal/observable/of';
 
+import {} from 'jasmine';
 import { CommentListComponent } from './comment-list.component';
 import { CommentComponent } from '../comment/comment.component';
 import { Comment, ParentTypes } from 'app/shared/class/comment';
@@ -11,37 +12,7 @@ import { CommentService } from '../../../services/comment.service';
 import { By } from '@angular/platform-browser';
 import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-class UserInfoOpenStub {
-  constructor(
-    public alias: string,
-    public fName: string,
-    public lName: string,
-    public uid?: string,
-    public imageUrl?: string,
-    public email?: string,
-    public zipCode?: string,
-    public bio?: string,
-    public city?: string,
-    public state?: string,
-  ) { }
-
-  displayName() {
-    return this.alias ? this.alias : this.fName;
-  }
-
-  displayImageUrl() {
-    if (!this.imageUrl || this.imageUrl === '') {
-      return 'assets/images/logo.png';
-    }
-    return this.imageUrl;
-  }
-
-  // returns true if uid contains a truthy value (is neither null nor an empty string)
-  exists() {
-    return !!(this.uid);
-  }
-}
+import { UserInfoOpen } from 'app/shared/class/user-info';
 
 describe('CommentListComponent - ', () => {
   let component: CommentListComponent;
@@ -111,21 +82,21 @@ describe('CommentListComponent - ', () => {
         if (userId === 'userKey1') {
           return {
             val: () => {
-              return new UserInfoOpenStub( 'J-Boi', 'Jeff', 'Goldblume', 'GoldKey', 'http://8.media.bustedtees.cvcdn.com/1/-/bustedtees.7252ae81-33f1-47fc-af07-52f9127c.gif');
+              return new UserInfoOpen( 'J-Boi', 'Jeff', 'Goldblume', 'GoldKey', 'http://8.media.bustedtees.cvcdn.com/1/-/bustedtees.7252ae81-33f1-47fc-af07-52f9127c.gif');
             },
             key: 'userKey1'
           };
         } else if (userId === 'userKey2') {
           return {
             val: () => {
-              return new UserInfoOpenStub('', 'elaine', 'benes', 'userKey2', 'elaineURL', 'email.com', 'zipcode', 'bio', 'city', 'state');
+              return new UserInfoOpen('', 'elaine', 'benes', 'userKey2', 'elaineURL', 'email.com', 'zipcode', 'bio', 'city', 'state');
             },
             key: 'userKey2'
           };
         } else if (userId === 'userKey3') {
           return {
             val: () => {
-              return new UserInfoOpenStub('', 'george', 'costanza', 'userKey3', 'georgeURL', 'email.com', 'zipcode', 'bio', 'city', 'state');
+              return new UserInfoOpen('', 'george', 'costanza', 'userKey3', 'georgeURL', 'email.com', 'zipcode', 'bio', 'city', 'state');
             },
             key: 'userKey3'
           };
@@ -168,7 +139,7 @@ describe('CommentListComponent - ', () => {
 
     component.isUnderComment = false;
     component.parentKey = 'testParentKey';
-    component.loggedInUser = new UserInfoOpenStub('loggedInUser', 'tester', 'testson', 'loggedInUserKey', 'testImgUrl', 'test@mail.com', 'zipcode', 'testBIo', 'testCity', 'testState');
+    component.loggedInUser = new UserInfoOpen('loggedInUser', 'tester', 'testson', 'loggedInUserKey', 'testImgUrl', 'test@mail.com', 'zipcode', 'testBIo', 'testCity', 'testState');
     component.userMap = {
       loggedInUserKey: component.loggedInUser,
     };
@@ -216,13 +187,13 @@ describe('CommentListComponent - ', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it(`should HAVE a user in userMap of 4 after init`, async () => {
+    it(`should HAVE users in userMap of 4 after init`, async () => {
       fixture.whenStable().then(() => {
         expect(Object.keys(component.userMap).length).toBe(4);
       });
     });
 
-    it(`should HAVE a user in commentMap of 5 after init`, async () => {
+    it(`should HAVE comments in commentMap of 5 after init`, async () => {
       fixture.whenStable().then(() => {
         expect(Object.keys(component.commentMap).length).toBe(5);
       });
@@ -565,7 +536,7 @@ describe('CommentListComponent - ', () => {
     describe('when not logged in', () => {
       beforeEach(() => {
         component.parentKey = 'testParentKey';
-        component.loggedInUser = new UserInfoOpenStub('', '', '');
+        component.loggedInUser = new UserInfoOpen('', '', '');
         component.userMap = {};
         component.userKeys = [];
         fixture.detectChanges();
