@@ -1,75 +1,50 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
-::ng-deep #auth-container {
-  display: flex;
-  justify-content: center;
-  padding: 48px 24px 24px;
+.login-form {
+  max-width: 500px;
+  margin: auto;
+  padding: 24px 24px 48px;
 
-  &.hide {
-    display: none;
-  }
-
-  .firebaseui-container {
-    width: 100%;
-    max-width: 600px;
-    padding: 12px 24px;
-    box-shadow: 0 2px 5px $light-gray-50;
-  }
-
-  .firebaseui-form-actions {
-    display: flex;
-    justify-content: center;
-  }
-
-  h1 {
+  &__title {
     color: $primary-color;
     text-align: center;
   }
 
-  a {
-    display: block;
-    text-align: center;
+  &__submit-btn {
+    margin-bottom: 20px;
   }
+}
 
-  input {
+.login-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 30px;
+  box-shadow: 0 2px 5px $light-gray-50;
+
+  &__input {
     width: 100%;
-    margin: 10px 0;
-    padding: 5px 10px;
-    border-radius: 4px;
-    border: 2px solid $medium-gray;
-    font-size: 1rem;
+    margin-bottom: 20px;
   }
+}
+
+mat-error, mat-hint {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+mat-hint.error {
+  color: red;
 }
 
 .logout-message {
-  padding: 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  h2 {
-    color: $primary-color;
-  }
-}
-
-::ng-deep #auth-container button, .logout-message button {
-  margin: 12px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  background-color: $accent-color-1-dark;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-
-  &:last-child {
-    background-color: $accent-color-1;
-  }
-
-  &:hover {
-    box-shadow: 0 2px 2px $medium-gray;
-  }
-
-  &:active {
-    box-shadow: none;
+  &__text {
+    margin: 0 0 20px;
+    text-align: center;
   }
 }

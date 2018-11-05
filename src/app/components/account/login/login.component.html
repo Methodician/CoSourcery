@@ -1,9 +1,46 @@
-<section id="auth-container" [class.hide]="(!!currentLogin)"></section>
+<form [formGroup]="loginForm"
+      class="login-form">
 
-<section class="logout-message" *ngIf="currentLogin">
-  <h2>Signed In</h2>
-  <p>Current Login:<br/>
-    <span class="text strong">{{currentLogin}}</span></p>
-  <p>Please logout first, before signing into another account.</p>
-  <button (click)="onLogOut()">Logout</button>
-</section>
+  <h2 class="login-form__title">Sign In</h2>
+
+  <section *ngIf="!currentLogin"
+           class="login-card">
+    <mat-form-field class="login-card__input">
+      <mat-label>Email</mat-label>
+      <input matInput
+             type="email"
+             formControlName="email"
+             required/>
+      <mat-error>Please enter your email address.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="login-card__input">
+      <mat-label>Password</mat-label>
+      <input matInput
+             type="password"
+             formControlName="password"
+             required/>
+      <mat-error>Please enter your password.</mat-error>
+    </mat-form-field>
+
+    <button class="cos-btn login-form__submit-btn"
+            [disabled]="!loginForm.valid"
+            (click)="onLogIn()">
+      Sign In
+    </button>
+
+    <mat-hint *ngIf="loginError"
+              class="error"
+              align="center">{{loginError}}</mat-hint>
+  </section>
+
+  <section *ngIf="currentLogin"
+           class="logout-message">
+    <p class="logout-message__text">Current Login:<br/><strong>{{currentLogin}}</strong></p>
+    <p class="logout-message__text">Please logout first, before creating a new account.</p>
+    <button class="cos-btn"
+            (click)="onLogOut()">
+      Logout
+    </button>
+  </section>
+</form>
