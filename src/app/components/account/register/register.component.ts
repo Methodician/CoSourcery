@@ -12,6 +12,7 @@ import { UserService } from '../../../services/user.service';
 export class RegisterComponent implements OnInit {
   currentLogin: string;
   registerForm: FormGroup;
+  registerError: string = null;
 
   constructor(
     private router: Router,
@@ -60,6 +61,7 @@ export class RegisterComponent implements OnInit {
   }
 
   async register() {
+    this.registerError = null;
     const val = this.registerForm.value;
     try {
       const res = await this.authSvc.register(val.email, val.password);
@@ -71,8 +73,8 @@ export class RegisterComponent implements OnInit {
       delete val.confirmPass;
       this.authSvc.sendVerificationEmail();
       this.createNewUser(val, res.user.uid)
-    } catch (error) {
-      alert('There was a problem with registration' + error);
+    } catch (err) {
+      this.registerError = err;
     }
   }
 
@@ -80,7 +82,7 @@ export class RegisterComponent implements OnInit {
     try {
       await this.userSvc.createUser(formValue, userId);
     } catch (err) {
-      alert('We might not have saved your user info quite right. Woops!' + err);
+      alert('We might not have saved your user info quite right. Woops! ' + err);
     }
   }
 

@@ -10,6 +10,10 @@
     color: $primary-color;
     text-align: center;
   }
+
+  &__submit-btn {
+    margin-bottom: 20px;
+  }
 }
 
 .register-card {
@@ -21,10 +25,7 @@
 
   &__input {
     width: 100%;
-
-    &:not(:last-child) {
-      margin-bottom: 20px;
-    }
+    margin-bottom: 20px;
   }
 }
 

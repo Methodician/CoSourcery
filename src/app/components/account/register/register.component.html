@@ -3,7 +3,8 @@
 
   <h2 class="register-form__title">Create New Account</h2>
 
-  <section class="register-card" *ngIf="!currentLogin">
+  <section *ngIf="!currentLogin"
+           class="register-card">
     <mat-form-field class="register-card__input">
       <mat-label>Email</mat-label>
       <input matInput
@@ -75,12 +76,16 @@
       <mat-hint align="end">{{alias.value.length}} / 30</mat-hint>
     </mat-form-field>
 
-    <button class="cos-btn"
+    <button class="cos-btn register-form__submit-btn"
             type="button"
             [disabled]="!registerForm.valid"
             (click)="register()">
       Create User
     </button>
+
+    <mat-hint *ngIf="registerError"
+              class="error"
+              align="center">{{registerError}}</mat-hint>
   </section>
 
   <section *ngIf="currentLogin"
