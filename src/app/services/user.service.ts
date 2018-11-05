@@ -12,7 +12,7 @@ export class UserService {
   private NULL_USER = new UserInfoOpen(null, null, null, null);
   userInfo$: BehaviorSubject<UserInfoOpen> = new BehaviorSubject<UserInfoOpen>(this.NULL_USER);
   rtdb = firebase.database();
-  userMap: UserMap = {}
+  userMap: UserMap = {};
 
   constructor(
     private authSvc: AuthService,

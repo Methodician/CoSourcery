@@ -12,7 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 export class TopNavComponent implements OnInit {
   authInfo: AuthInfo;
   displayName;
-  showMobileMenu: boolean = false;
+  showMobileMenu = false;
 
   constructor(
     private authSvc: AuthService,

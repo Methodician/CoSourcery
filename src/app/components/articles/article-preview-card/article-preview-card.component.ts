@@ -53,7 +53,7 @@ export class ArticlePreviewCardComponent implements OnInit {
     if (this.userId) {
       return true;
     } else {
-      if (confirm("Login Required: Would you like to login now?")) {
+      if (confirm('Login Required: Would you like to login now?')) {
         this.router.navigate(['/login']);
       }
       return false;

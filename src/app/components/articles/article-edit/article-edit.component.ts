@@ -21,17 +21,12 @@ import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/c
 export class ArticleEditComponent implements OnInit, OnDestroy {
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   @HostListener('window:beforeunload', ['$event'])
-  unloadNotification($event: any) {
-    if (this.articleHasUnsavedChanges()) {
-      $event.returnValue = true;
-    }
-  }
 
   loggedInUser: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
   formIsReady = false;
-  tagsEdited = false
+  tagsEdited = false;
   currentArticleSubscription: Subscription;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
@@ -50,7 +45,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   userVotesMap: KeyMap<VoteDirections> = {};
 
-  ckeditorButtonOffset: number = 0;
+  ckeditorButtonOffset = 0;
   ckeditor = InlineEditor;
   ckeditorConfig = {
     toolbar: {
@@ -72,11 +67,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     fbImageStorage: {}
   };
 
-  editCoverImage: boolean = false;
-  editTitle: boolean = false;
-  editIntro: boolean = false;
-  editBody: boolean = false;
-  editTags: boolean = false;
+  editCoverImage = false;
+  editTitle = false;
+  editIntro = false;
+  editBody = false;
+  editTags = false;
 
   articleEditForm = this.fb.group({
     articleId: '',
@@ -130,11 +125,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleSubscription.unsubscribe();
   }
 
+  unloadNotification($event: any) {
+    if (this.articleHasUnsavedChanges()) {
+      $event.returnValue = true;
+    }
+  }
+
   mapUserVotes() {
     this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
       .snapshotChanges().subscribe(snaps => {
         this.userVotesMap = {};
-        for (let snap of snaps) {
+        for (const snap of snaps) {
           this.userVotesMap[snap.key] = snap.payload.val() as any;
         }
       });
@@ -214,7 +215,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   abortChanges() {
     this.currentArticleSubscription.unsubscribe();
     this.cancelUpload(this.coverImageUploadTask);
-    this.deleteTempCoverImage
+    this.deleteTempCoverImage;  // was this method supposed to be called? Currently it's doing nothing.
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
@@ -249,7 +250,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (this.loggedInUser.uid) {
       return true;
     } else {
-      if (confirm("Login Required: Would you like to login now?")) {
+      if (confirm('Login Required: Would you like to login now?')) {
         this.router.navigate(['/login']);
       }
       return false;
@@ -284,8 +285,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   cancelUpload(task: AngularFireUploadTask) {
-    if (task)
+    if (task) {
       task.cancel();
+    }
   }
 
   updateCoverImageUrl(url) {

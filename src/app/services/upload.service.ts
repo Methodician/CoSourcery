@@ -12,7 +12,7 @@ export class UploadService {
 
 
   uploadArticleCoverImage(upload: Upload, articleId: string, newStatus?: boolean) {
-    const storageRef = this.storage.ref(`uploads/articleCoverImages/${articleId}`)
+    const storageRef = this.storage.ref(`uploads/articleCoverImages/${articleId}`);
     const task = storageRef.put(upload.file);
 
     task.on(firebase.storage.TaskEvent.STATE_CHANGED, async () => {

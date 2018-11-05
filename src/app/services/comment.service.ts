@@ -15,7 +15,7 @@ export class CommentService {
     private rtdb: AngularFireDatabase
   ) { }
 
-  createCommentStub(authorId: string, parentKey: string, parentType: ParentTypes){
+  createCommentStub(authorId: string, parentKey: string, parentType: ParentTypes) {
     const newComment: Comment = {
       authorId: authorId,
       parentKey: parentKey,
@@ -23,19 +23,19 @@ export class CommentService {
       replyCount: 0,
       parentType: parentType,
       voteCount: 0
-    }
+    };
     return newComment;
   }
 
-  getUserVotesRef(userId: string){
+  getUserVotesRef(userId: string) {
     return this.rtdb.list(`commentData/votesByUser/${userId}`);
   }
 
-  getVoteRef(voterId: string, commentKey: string): AngularFireObject<VoteDirections>{
+  getVoteRef(voterId: string, commentKey: string): AngularFireObject<VoteDirections> {
     return this.rtdb.object(`commentData/votesByUser/${voterId}/${commentKey}`);
   }
-  
-  async getExistingVote(voteRef: AngularFireObject<VoteDirections>){
+
+  async getExistingVote(voteRef: AngularFireObject<VoteDirections>) {
     const existingVoteSnap = await voteRef.query.once('value');
     return existingVoteSnap.val();
   }
@@ -45,10 +45,10 @@ export class CommentService {
     const voteRef = this.getVoteRef(voterId, commentKey);
     const oldVote = await this.getExistingVote(voteRef);
     console.log('old vote', oldVote);
-    if(oldVote && oldVote === VoteDirections.up){
+    if (oldVote && oldVote === VoteDirections.up) {
       return voteRef.set(null);
     }
-    return voteRef.set(VoteDirections.up);    
+    return voteRef.set(VoteDirections.up);
   }
 
   async downvoteComment(voterId: string, commentKey: string, voteDirection: VoteDirections) {
@@ -56,10 +56,10 @@ export class CommentService {
     const voteRef = this.getVoteRef(voterId, commentKey);
     const oldVote = await this.getExistingVote(voteRef);
     console.log('old vote', oldVote);
-    if(oldVote && oldVote === VoteDirections.down){
+    if (oldVote && oldVote === VoteDirections.down) {
       return voteRef.set(null);
     }
-    return voteRef.set(VoteDirections.down);  
+    return voteRef.set(VoteDirections.down);
   }
 
   async createComment(comment: Comment) {
@@ -72,7 +72,7 @@ export class CommentService {
       parentType: comment.parentType,
       replyCount: comment.replyCount,
       voteCount: comment.voteCount,
-    }
+    };
 
     return this.rtdb
       .list('commentData/comments')
@@ -83,7 +83,7 @@ export class CommentService {
     const commentToSave = {
       lastUpdated: serverTimestamp,
       text: comment.text,
-    }
+    };
     return this.rtdb
       .object(`commentData/comments/${commentKey}`)
       .update(commentToSave);
