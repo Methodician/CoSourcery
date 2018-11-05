@@ -86,7 +86,12 @@
     transition: none;
   }
 
+	.ck .ck-widget__selection-handler,
   .ck .ck-editor__editable.ck-editor__nested-editable.ck-placeholder {
     display: none;
   }
+
+	.table.ck-widget.ck-widget_selectable {
+		pointer-events: none;
+	}
 }
