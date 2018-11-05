@@ -10,6 +10,10 @@
     color: $primary-color;
     text-align: center;
   }
+
+  &__submit-btn {
+    margin-bottom: 20px;
+  }
 }
 
 .login-card {
@@ -21,9 +25,26 @@
 
   &__input {
     width: 100%;
+    margin-bottom: 20px;
+  }
+}
 
-    &:not(:last-child) {
-      margin-bottom: 24px;
-    }
+mat-error, mat-hint {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+mat-hint.error {
+  color: red;
+}
+
+.logout-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__text {
+    margin: 0 0 20px;
+    text-align: center;
   }
 }

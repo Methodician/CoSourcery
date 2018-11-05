@@ -10,50 +10,34 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
   currentLogin: string;
-  form: FormGroup;
+  loginForm: FormGroup;
+  loginError: string = null;
 
   constructor(
     private authSvc: AuthService,
     private router: Router,
     private fb: FormBuilder
-  ) { }
-
-  ngOnInit() {
-    this.checkLogin();
-    // this.authSvc.startUi('auth-container');
-    this.form = this.fb.group({
+  ) {
+    this.loginForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
-  checkLogin() {
+  ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
       this.currentLogin = userData.email;
     });
   }
 
   onLogIn() {
-    const val = this.form.value;
+    this.loginError = null;
+    const val = this.loginForm.value;
     this.authSvc.login(val.email, val.password).then(res => {
       console.log('Successfully logged in');
     }).catch(err => {
-      alert('Couldn\'t log in... ' + err);
+      this.loginError = 'Your login email or password is incorrect.';
     });
-  }
-
-  isErrorVisible(field: string, error: string) {
-    const control = this.form.controls[field];
-    return control.dirty && control.errors && control.errors[error];
-  }
-
-  isControlDirty(field: string) {
-    const control = this.form.controls[field];
-    return control.dirty;
-  }
-
-  formValid() {
-    return this.form.valid;
   }
 
   onLogOut() {
