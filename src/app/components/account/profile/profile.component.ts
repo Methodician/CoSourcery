@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService, UploadTracker } from 'app/services/user.service';
 import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-
+  profileForm: FormGroup;
   userMap: UserMap;
   loggedInUser: UserInfoOpen;
 
@@ -22,7 +23,31 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private userSvc: UserService,
-  ) { }
+    private fb: FormBuilder,
+  ) {
+    this.profileForm = this.fb.group({
+      alias: ['', Validators.maxLength(30)],
+      fName: ['', [
+        Validators.required,
+        Validators.maxLength(30)
+      ]],
+      lName: ['', [
+        Validators.required,
+        Validators.maxLength(30)
+      ]],
+      uid: ['', Validators.required],
+      imageUrl: '',
+      email: ['', [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(50)
+      ]],
+      zipCode: ['', Validators.maxLength(5)],
+      bio:  ['', Validators.maxLength(500)],
+      city:  ['', Validators.maxLength(30)],
+      state:  ['', Validators.maxLength(2)],
+    });
+  }
 
   ngOnInit() {
     this.userSvc.userInfo$.subscribe(user => {
@@ -31,6 +56,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.userMap = this.userSvc.userMap;
         this.loggedInUser = this.userMap[user.uid];
         this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
+        this.profileForm.patchValue(this.userMap[user.uid]);
+      } else {
+        this.loggedInUser = null;
       }
     });
   }
@@ -51,7 +79,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (this.profileImageFile) {
       await this.saveProfileImage();
     }
-    await this.userSvc.updateUser(this.loggedInUser);
+    await this.userSvc.updateUser(this.profileForm.value);
+    this.profileForm.markAsPristine();
   }
   // Cover Image Upload Functions
   async onSelectProfileImage(e: HtmlInputEvent) {
@@ -86,6 +115,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (task) {
       task.cancel();
     }
+  }
+
+  trimInput(formControlName) {
+    this.profileForm.patchValue(
+      { [formControlName]: this.profileForm.value[formControlName].trim() }
+    );
   }
 
 }
