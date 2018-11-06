@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 export class ProfileComponent implements OnInit, OnDestroy {
   profileForm: FormGroup;
   userMap: UserMap;
-  loggedInUser: UserInfoOpen;
+  loggedInUserId = null;
 
   profileImageFile: File;
   imageUploadTask: AngularFireUploadTask;
@@ -54,11 +54,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
       if (user.uid) {
         // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
         this.userMap = this.userSvc.userMap;
-        this.loggedInUser = this.userMap[user.uid];
+        this.loggedInUserId = user.uid;
         this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
         this.profileForm.patchValue(this.userMap[user.uid]);
       } else {
-        this.loggedInUser = null;
+        this.loggedInUserId = null;
       }
     });
   }
@@ -93,20 +93,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.imageUploadPercent$ = tracker.task.percentageChanges();
     const snap = await tracker.task.then();
     const url = await tracker.ref.getDownloadURL().toPromise();
-    this.loggedInUser.imageUrl = url;
+    this.profileForm.patchValue({ imageUrl: url });
+    this.profileForm.markAsDirty();
     this.tempImageUploadPath = snap.metadata.fullPath;
     return;
   }
 
   async saveProfileImage() {
-    const tracker = this.userSvc.uploadProfileImage(this.loggedInUser.uid, this.profileImageFile);
+    const tracker = this.userSvc.uploadProfileImage(this.loggedInUserId, this.profileImageFile);
     this.imageUploadTask = tracker.task;
     this.imageUploadPercent$ = tracker.task.percentageChanges();
     const snap = await tracker.task.then();
     const url = await tracker.ref.getDownloadURL().toPromise();
-    this.loggedInUser.imageUrl = url;
+    this.profileForm.patchValue({ imageUrl: url });
     // this.dbUser.imageUrl = url;
-    this.userSvc.trackUploadedProfileImages(this.loggedInUser.uid, snap.metadata.fullPath, url);
+    this.userSvc.trackUploadedProfileImages(this.loggedInUserId, snap.metadata.fullPath, url);
     this.userSvc.deleteFile(this.tempImageUploadPath);
     return;
   }
