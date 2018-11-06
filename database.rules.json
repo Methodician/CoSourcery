@@ -1,5 +1,3 @@
-// to deploy rules (file must be included in firebase.json) use:
-// firebase deploy --only database
 {
   "rules": {
     ".read": "true",
