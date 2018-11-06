@@ -23,6 +23,10 @@
     width: 100%;
     min-width: 0;
     margin-bottom: 20px;
+
+    .disabled-input {
+      color: gray;
+    }
   }
 
   &__input-group {

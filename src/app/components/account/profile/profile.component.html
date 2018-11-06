@@ -18,44 +18,51 @@
       </section>
 
       <div>
-        <mat-form-field class="profile-card__input" [floatLabel]="'always'">
+        <mat-form-field class="profile-card__input"
+                        [floatLabel]="'always'">
           <mat-label>First Name</mat-label>
-          <input #firstName matInput
+          <input #firstName
+                 matInput
                  type="text"
                  formControlName="fName"
                  maxlength="30"
                  (blur)="trimInput('fName')"
-                 required/>
+                 required />
           <mat-error>Please provide your first name.</mat-error>
           <mat-hint align="end">{{firstName.value.length}} / 30</mat-hint>
         </mat-form-field>
 
-        <mat-form-field class="profile-card__input" [floatLabel]="'always'">
+        <mat-form-field class="profile-card__input"
+                        [floatLabel]="'always'">
           <mat-label>Last Name</mat-label>
-          <input #lastName matInput
+          <input #lastName
+                 matInput
                  type="text"
                  formControlName="lName"
                  maxlength="30"
                  (blur)="trimInput('lName')"
-                 required/>
+                 required />
           <mat-error>Please provide your last name.</mat-error>
           <mat-hint align="end">{{lastName.value.length}} / 30</mat-hint>
         </mat-form-field>
 
-        <mat-form-field class="profile-card__input" [floatLabel]="'always'">
+        <mat-form-field class="profile-card__input"
+                        [floatLabel]="'always'">
           <mat-label>Alias</mat-label>
-          <input #alias matInput
+          <input #alias
+                 matInput
                  type="text"
                  formControlName="alias"
                  maxlength="30"
-                 (blur)="trimInput('alias')"/>
+                 (blur)="trimInput('alias')" />
           <mat-hint>Alternate display name.</mat-hint>
           <mat-hint align="end">{{alias?.value.length}} / 30</mat-hint>
         </mat-form-field>
       </div>
     </div>
 
-    <mat-form-field class="profile-card__input" [floatLabel]="'always'">
+    <mat-form-field class="profile-card__input"
+                    [floatLabel]="'always'">
       <mat-label>Bio</mat-label>
       <textarea matInput
                 type="text"
@@ -69,44 +76,51 @@
     </mat-form-field>
 
     <div class="profile-card__input-group">
-      <mat-form-field class="profile-card__input" [floatLabel]="'always'">
+      <mat-form-field class="profile-card__input"
+                      [floatLabel]="'always'">
         <mat-label>Email</mat-label>
-        <input matInput
+        <!-- Not allowing email updates yet -->
+        <input class="disabled-input"
+               readonly
+               matInput
                type="email"
                formControlName="email"
                maxlength="50"
                (blur)="trimInput('email')"
-               required/>
+               required />
         <mat-error>Please provide a valid email address.</mat-error>
       </mat-form-field>
 
-      <mat-form-field class="profile-card__input" [floatLabel]="'always'">
+      <mat-form-field class="profile-card__input"
+                      [floatLabel]="'always'">
         <mat-label>City</mat-label>
         <input matInput
                type="text"
                formControlName="city"
                maxlength="30"
-               (blur)="trimInput('city')"/>
+               (blur)="trimInput('city')" />
       </mat-form-field>
     </div>
 
     <div class="profile-card__input-group">
-      <mat-form-field class="profile-card__input" [floatLabel]="'always'">
+      <mat-form-field class="profile-card__input"
+                      [floatLabel]="'always'">
         <mat-label>State</mat-label>
         <input matInput
                type="text"
                formControlName="state"
                maxlength="2"
-               (blur)="trimInput('state')"/>
+               (blur)="trimInput('state')" />
       </mat-form-field>
 
-      <mat-form-field class="profile-card__input" [floatLabel]="'always'">
+      <mat-form-field class="profile-card__input"
+                      [floatLabel]="'always'">
         <mat-label>Zip Code</mat-label>
         <input matInput
                type="text"
                formControlName="zipCode"
                maxlength="5"
-               (blur)="trimInput('zipCode')"/>
+               (blur)="trimInput('zipCode')" />
       </mat-form-field>
     </div>
 
