@@ -40,7 +40,7 @@ export class ArticlePreviewCardComponent implements OnInit {
   }
 
   bookmarkToggle() {
-    if (this.authSvc.isSignedIn()) {
+    if (this.userId) {
       if (this.isArticleBookmarked) {
         this.articleSvc.unBookmarkArticle(this.userId, this.articleData.articleId);
       } else {
