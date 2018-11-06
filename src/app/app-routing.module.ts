@@ -7,7 +7,9 @@ import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
+import { ProfileComponent } from './components/account/profile/profile.component';
 import { UnsavedChangesGuard } from './shared/guards/unsaved-changes.guard';
+import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -26,6 +28,20 @@ const routes: Routes = [
     canDeactivate: [UnsavedChangesGuard],
     component: ArticleEditComponent,
   },
+  {
+    path: 'profile',
+    children: [
+      {
+        path: ':key',
+        component: ProfileComponent,
+      },
+      {
+        path: '',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+      }
+    ]
+  },
   // {
   //   path: 'account',
   //   canActivate: [AuthGuard],
@@ -40,20 +56,7 @@ const routes: Routes = [
   //     }
   //   ]
   // },
-  // {
-  //   path: 'profile',
-  //   canActivate: [AuthGuard],
-  //   children: [
-  //     {
-  //       path: ':key',
-  //       component: ProfileComponent
-  //     },
-  //     {
-  //       path: '',
-  //       component: ProfileComponent
-  //     }
-  //   ]
-  // },
+
   // {
   //   path: 'articlesearch',
   //   children: [
@@ -68,6 +71,7 @@ const routes: Routes = [
   //   ]
   // },
   { path: 'admin/data-cleanup', component: DataCleanupComponent },
+  { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '', component: HomeComponent },
 ];
 
