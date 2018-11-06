@@ -24,6 +24,7 @@
     Bookmarked
   </li>
   <li *ngIf="query"
+      class="filter-menu__item"
       (click)="selectSearch()"
       [class.activeArticleState]="currentSelectedTab === 4">
     Search Results
