@@ -138,6 +138,7 @@ export class ArticleService {
     changedArticle.version++;
     changedArticle.lastEditorId = editor.uid;
     changedArticle.editors = editors;
+    changedArticle.isBeingEdited = false;
     return articleRef.update(changedArticle);
   }
 
@@ -148,6 +149,7 @@ export class ArticleService {
     article.editors[author.uid] = 1;
     article.authorId = author.uid;
     article.articleId = articleId;
+    article.isBeingEdited = false;
     article.lastUpdated = this.fsServerTimestamp;
     article.timestamp = this.fsServerTimestamp;
     article.lastEditorId = author.uid;
@@ -188,6 +190,13 @@ export class ArticleService {
       });
     }
     this.searchedArticles$.next(articleList);
+  }
+
+  toggleArticleEdit(articleId, isBeingEdited){
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    console.log(articleRef);
+    console.log(isBeingEdited);
+    articleRef.update({isBeingEdited: isBeingEdited});
   }
 
   // with refactor this is no longer used

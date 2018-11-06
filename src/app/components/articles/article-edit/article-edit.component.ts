@@ -30,6 +30,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   loggedInUser: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
+  articleIsBeingEdited: boolean;
   formIsReady = false;
   tagsEdited = false;
   currentArticleSubscription: Subscription;
@@ -164,6 +165,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
+        this.articleIsBeingEdited = articleData.isBeingEdited;
         if (!this.formIsReady) {
           this.setDefaultFormData(articleData);
           this.formIsReady = true;
@@ -222,31 +224,54 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
+    if(this.articleHasUnsavedChanges()){
+      this.articleSvc.toggleArticleEdit(this.articleId, false);
+    }
   }
 
   // Form Edit Mode Controls
   toggleEditCoverImage() {
-    this.editBody = false;
-    this.editCoverImage = !this.editCoverImage;
+    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+      alert('Another user is currently editing this article. Try again later.');
+    } else {
+      this.editBody = false;
+      this.editCoverImage = !this.editCoverImage;
+    }
   }
 
   toggleEditTitle() {
-    this.editBody = false;
-    this.editTitle = !this.editTitle;
+    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+      alert('Another user is currently editing this article. Try again later.');
+    } else {
+      this.editBody = false;
+      this.editTitle = !this.editTitle;
+    }
   }
 
   toggleEditIntro() {
-    this.editBody = false;
-    this.editIntro = !this.editIntro;
+    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+      alert('Another user is currently editing this article. Try again later.');
+    } else {
+      this.editBody = false;
+      this.editIntro = !this.editIntro;
+    }
   }
 
   toggleEditBody() {
-    this.editBody = !this.editBody;
+    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+      alert('Another user is currently editing this article. Try again later.');
+    } else {
+      this.editBody = !this.editBody;
+    }
   }
 
   toggleEditTags() {
-    this.editBody = false;
-    this.editTags = !this.editTags;
+    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+      alert('Another user is currently editing this article. Try again later.');
+    } else {
+      this.editBody = false;
+      this.editTags = !this.editTags;
+    }
   }
 
   editorAuthCheck() {
@@ -329,6 +354,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
+    if(!this.articleIsBeingEdited && (this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)){
+      this.articleIsBeingEdited = true;
+      this.articleSvc.toggleArticleEdit(this.articleId, true);
+    }
     return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
   }
 

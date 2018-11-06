@@ -36,6 +36,7 @@ export class ArticleDetailFirestore {
         public viewCount?: number,
         public tags?: string[],
         public isFeatured?: boolean,
+        public isBeingEdited?: boolean
     ) { }
 }
 
