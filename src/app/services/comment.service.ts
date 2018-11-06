@@ -48,7 +48,7 @@ export class CommentService {
     if(oldVote && oldVote === VoteDirections.up){
       return voteRef.set(null);
     }
-    return voteRef.set(VoteDirections.up);    
+    return voteRef.set(VoteDirections.up);
   }
 
   async downvoteComment(voterId: string, commentKey: string, voteDirection: VoteDirections) {

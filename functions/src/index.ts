@@ -14,6 +14,48 @@ const db = admin.database();
 fs.settings({ timestampsInSnapshots: true });
 const client = algoliasearch(functions.config().algolia.app_id, functions.config().algolia.admin_key);
 
+//  Should we consolodate any simple ArticleDetail OnUpdate responses under this trigger?
+const trackArticleEditors = (article) => {
+    const editorId = article.lastEditorId;
+    const articleId = article.articleId;
+    const updatedAt = new Date(article.lastUpdated.toDate()).getTime();
+    const ref = db.ref(`userInfo/articlesEditedPerUser/${editorId}/${articleId}/${updatedAt}`);
+    return ref.set(true);
+}
+exports.onUpdateArticleDetail = functions.firestore.document('articleData/articles/articles/{articleId}').onUpdate(async (change, context) => {
+    const article = change.after.data();
+    try {
+        await trackArticleEditors(article);
+        console.log('tracked article editing');
+    } catch (error) {
+        console.log('can\'t track editing', error);
+    }
+    return null;
+});
+
+//  Should we consolodate any simple ArticleDetail OnCreate responses under this trigger?
+const trackArticleAuthorship = (article) => {
+    const authorId = article.authorId;
+    const articleId = article.articleId;
+    const createdAt = new Date(article.timestamp.toDate()).getTime();
+    const ref = db.ref(`userInfo/articlesAuthoredPerUser/${authorId}/${articleId}`);
+    return ref.set(createdAt);
+}
+exports.onCreateArticleDetail = functions.firestore.document('articleData/articles/articles/{articleId}').onCreate(async (snap, context) => {
+    const article = snap.data();
+    try {
+        await trackArticleAuthorship(article);
+        console.log('tracked article authorship');
+    } catch (error) {
+        console.log('can\'t track authorship', error);
+    }
+    return null;
+});
+
+//  Should we consolodate any simple ArticleDetail OnWrite responses under this trigger?
+// exports.onCreateArticleDetail = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite()
+
+
 exports.updateAlgoliaIndex =
     functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
         const articleObject = change.after.data();
@@ -208,21 +250,6 @@ exports.createHistoryObject = functions.firestore.document('articleData/articles
         const historyId = articleObject.version;
         const historyRef = fs.doc(`articleData/articles/articles/${articleId}/history/${historyId}`);
         return historyRef.set(articleObject).catch(error => {
-            console.log(error);
-        })
-    } else {
-        return null;
-    }
-});
-
-exports.createEditorObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
-    if (context.eventType !== 'google.firestore.document.delete') {
-        const articleId = context.params.articleId;
-        const articleData = change.after.data()
-        const authorId = articleData.authorId
-        const editorObject = { editorID: articleData.authorId };
-        const editorRef = fs.doc(`articleData/articles/articles/${articleId}/editors/${authorId}`)
-        return editorRef.set(editorObject).catch(error => {
             console.log(error);
         })
     } else {
