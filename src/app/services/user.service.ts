@@ -2,7 +2,6 @@ import { UserInfoOpen, UserMap } from '../shared/class/user-info';
 import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import * as firebase from 'firebase';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';

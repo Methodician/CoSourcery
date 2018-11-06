@@ -11,7 +11,8 @@ import { AuthService } from '../../../services/auth.service';
 
 export class TopNavComponent implements OnInit {
   authInfo: AuthInfo;
-  showMobileMenu: boolean = false;
+  displayName;
+  showMobileMenu = false;
 
   constructor(
     private authSvc: AuthService,

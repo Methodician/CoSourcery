@@ -31,5 +31,5 @@ export class UserInfoOpen {
 
 
 
-export interface KeyMap<T> { [key: string]: T; };
-export interface UserMap extends KeyMap<UserInfoOpen> { };
+export interface KeyMap<T> { [key: string]: T; }
+export interface UserMap extends KeyMap<UserInfoOpen> { }

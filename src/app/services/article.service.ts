@@ -33,7 +33,7 @@ export class ArticleService {
     const id = this.createArticleId();
     const storageRef = this.storage.ref(`tempImages/${id}`);
     const task = storageRef.put(file);
-    return { task: task, ref: storageRef }
+    return { task: task, ref: storageRef };
   }
 
   deleteFile(path: string) {
@@ -72,11 +72,11 @@ export class ArticleService {
     bookmarksRef.snapshotChanges().pipe(map(keySnaps => {
       return keySnaps.map(snap => {
         return this.getPreviewRefById(snap.key).valueChanges();
-      })
+      });
     })).subscribe(previewObservables => {
-      let articleMap = {};
+      const articleMap = {};
       if (previewObservables.length > 0) {
-        for (let article$ of previewObservables) {
+        for (const article$ of previewObservables) {
           article$.subscribe(article => {
             if (!!article) {
               articleMap[article.articleId] = article;
@@ -133,7 +133,7 @@ export class ArticleService {
     const editCount = editors[editor.uid] || 0;
     editors[editor.uid] = editCount + 1;
 
-    let changedArticle = { ...article };
+    const changedArticle = { ...article };
     changedArticle.lastUpdated = this.fsServerTimestamp;
     changedArticle.version++;
     changedArticle.lastEditorId = editor.uid;
@@ -168,7 +168,7 @@ export class ArticleService {
   }
 
   async searchArticles(query) {
-    const index = this.client.initIndex(environment.algoliaIndex); //using index dev articles for now, in production will want to change this.
+    const index = this.client.initIndex(environment.algoliaIndex); // using index dev articles for now, in production will want to change this.
     const searchResults = await index.search({
       query: query,
       attributesToRetrieve: ['objectId'],
@@ -178,10 +178,10 @@ export class ArticleService {
     const articleList = new Array<any>();
     if (searchResults.hits.length > 0) {
       const articleIds = [];
-      searchResults.hits.forEach(article => { //creates array of articleIds from search results
+      searchResults.hits.forEach(article => { // creates array of articleIds from search results
         articleIds.push(article.objectID);
       });
-      articleIds.forEach(key => { //creates array of articlePreviews
+      articleIds.forEach(key => { // creates array of articlePreviews
         this.getPreviewRefById(key).valueChanges().subscribe(article => {
           articleList.push(article);
         });
@@ -190,7 +190,7 @@ export class ArticleService {
     this.searchedArticles$.next(articleList);
   }
 
-  //with refactor this is no longer used
+  // with refactor this is no longer used
   // arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
   //   const array = [];
   //   querySnapshot.forEach(doc => {
