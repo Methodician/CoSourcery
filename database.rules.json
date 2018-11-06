@@ -15,16 +15,8 @@
     "commentData": {
       "comments": {
         "$commentId": {
-          ".write": "auth != null && (!data.exists() || auth.uid === data.child('authorKey').val())"
+          ".write": "auth != null && (!data.exists() || auth.uid === data.child('authorId').val())"
         }
-      },
-      "commentsByAuthor": {
-        "$uid": {
-          ".write": "auth.uid == $uid"
-        }
-      },
-      "commentsByParent": {
-        ".write": "auth != null"
       },
       "votesByUser": {
         "$uid": {
@@ -34,16 +26,6 @@
     },
     "userInfo": {
       "articleBookmarksPerUser": {
-        "$uid": {
-          ".write": "auth.uid == $uid"
-        }
-      },
-      "articlesAuthoredPerUser": {
-        "$uid": {
-          ".write": "auth.uid == $uid"
-        }
-      },
-      "articlesEditedPerUser": {
         "$uid": {
           ".write": "auth.uid == $uid"
         }
