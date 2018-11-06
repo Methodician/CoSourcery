@@ -216,7 +216,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   abortChanges() {
     this.currentArticleSubscription.unsubscribe();
     this.cancelUpload(this.coverImageUploadTask);
-    this.deleteTempCoverImage();
+    if (this.tempCoverImageUploadPath) {
+      this.deleteTempCoverImage();
+    }
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
