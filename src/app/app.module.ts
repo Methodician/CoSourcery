@@ -66,6 +66,7 @@ import { CommentService } from './services/comment.service';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
 import { DataCleanupService } from './admin/services/data-cleanup.service';
 import { CommentComponent } from './components/comments/comment/comment.component';
+import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
 import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/edit-timeout.component';
 
 @NgModule({
@@ -97,6 +98,7 @@ import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/e
     CommentListComponent,
     DataCleanupComponent,
     CommentComponent,
+    UnauthorizedComponent,
     EditTimeoutComponent
   ],
   imports: [

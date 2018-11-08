@@ -21,6 +21,12 @@
   box-shadow: 0 2px 5px 0 $light-gray-50;
   background-color: #fff;
   z-index: 1000;
+
+  &__cos-btn {
+    height: 40px;
+    padding: 5px 15px;
+    text-transform: uppercase;
+  }
 }
 
 .logo {
@@ -59,7 +65,7 @@
     list-style: none;
 
     &:not(:first-child) {
-      margin-left: 10px;
+      margin-left: 5px;
     }
   }
 
@@ -117,6 +123,7 @@
   grid-template-columns: 1fr 40px;
   grid-gap: 15px;
   align-items: center;
+  margin-right: 5px;
 
   &__input {
     width: 100%;

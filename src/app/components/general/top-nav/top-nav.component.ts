@@ -22,7 +22,6 @@ export class TopNavComponent implements OnInit {
   ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
       this.authInfo = userData;
-      this.displayName = this.authInfo.email;
     });
   }
 
