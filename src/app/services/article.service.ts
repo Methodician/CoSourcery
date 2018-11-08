@@ -168,14 +168,14 @@ export class ArticleService {
   }
 
   async searchArticles(query) {
+    const articleList = new Array<any>();
+    this.searchedArticles$.next(articleList);
     const index = this.client.initIndex(environment.algoliaIndex); // using index dev articles for now, in production will want to change this.
     const searchResults = await index.search({
       query: query,
       attributesToRetrieve: ['objectId'],
       hitsPerPage: 50
     });
-
-    const articleList = new Array<any>();
     if (searchResults.hits.length > 0) {
       const articleIds = [];
       searchResults.hits.forEach(article => { // creates array of articleIds from search results
