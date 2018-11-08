@@ -29,7 +29,8 @@ import {
   MatChipsModule,
   MatSidenavModule,
   MatTooltipModule,
-  MatTabsModule
+  MatTabsModule,
+  MatDialogModule
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -65,6 +66,7 @@ import { CommentService } from './services/comment.service';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
 import { DataCleanupService } from './admin/services/data-cleanup.service';
 import { CommentComponent } from './components/comments/comment/comment.component';
+import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/edit-timeout.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +96,8 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     ClickOutDirective,
     CommentListComponent,
     DataCleanupComponent,
-    CommentComponent
+    CommentComponent,
+    EditTimeoutComponent
   ],
   imports: [
     BrowserModule,
@@ -108,6 +111,7 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     MatCardModule,
     MatChipsModule,
     MatIconModule,
+    MatDialogModule,
     MatSidenavModule,
     MatTooltipModule,
     MatTabsModule,
@@ -121,6 +125,9 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     AngularFireStorageModule,
     AngularFireDatabaseModule
   ],
+  entryComponents: [
+    EditTimeoutComponent
+  ],
   providers: [
     AuthService,
     DataCleanupService,
@@ -128,7 +135,8 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     NotificationService,
     ArticleService,
     UserService,
-    CommentService
+    CommentService,
+    // {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ],
   bootstrap: [AppComponent]
 })

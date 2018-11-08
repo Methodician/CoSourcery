@@ -194,8 +194,6 @@ export class ArticleService {
 
   toggleArticleEdit(articleId, isBeingEdited){
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    console.log(articleRef);
-    console.log(isBeingEdited);
     articleRef.update({isBeingEdited: isBeingEdited});
   }
 
