@@ -135,8 +135,7 @@ import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/e
     NotificationService,
     ArticleService,
     UserService,
-    CommentService,
-    // {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+    CommentService
   ],
   bootstrap: [AppComponent]
 })
