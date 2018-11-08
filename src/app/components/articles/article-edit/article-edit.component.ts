@@ -171,17 +171,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .valueChanges()
       .subscribe(articleData => {
         this.articleIsBeingEdited = articleData.isBeingEdited;
-        if (!this.formIsReady) {
-          this.setDefaultFormData(articleData);
-          this.formIsReady = true;
-        } else {
-          this.updateCoverImageUrl(articleData.imageUrl);
-          this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
-        }
+        this.setFormData(articleData);
       });
   }
 
-  setDefaultFormData(data) {
+  setFormData(data) {
     if (!this.articleIsNew) {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
