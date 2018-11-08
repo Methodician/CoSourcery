@@ -183,7 +183,9 @@ export class ArticleService {
       });
       articleIds.forEach(key => { // creates array of articlePreviews
         this.getPreviewRefById(key).valueChanges().subscribe(article => {
-          articleList.push(article);
+          if (article) {
+            articleList.push(article);
+          }
         });
       });
     }
