@@ -1,10 +1,10 @@
-<form *ngIf="loggedInUserId"
-      [formGroup]="profileForm"
-      class="profile-form">
+<section class="profile">
 
-  <h2 class="profile-form__title">Profile</h2>
+  <h2 class="profile__title">Profile</h2>
 
-  <section class="profile-card">
+  <!-- Editable Profile Form -->
+  <form [formGroup]="profileForm"
+        class="profile-card">
     <div class="profile-card__input-group">
       <section class="profile-image">
         <img class="profile-image__src"
@@ -13,6 +13,7 @@
         <input class="profile-image__input"
                accept="image/*"
                type="file"
+               [hidden]="!loggedInUserId"
                (change)="onSelectProfileImage($event)">
         <div *ngIf="uploadTracker">upload%: {{ imageUploadPercent$ | async }}</div>
       </section>
@@ -27,6 +28,7 @@
                  formControlName="fName"
                  maxlength="30"
                  (blur)="trimInput('fName')"
+                 [readonly]="!loggedInUserId"
                  required />
           <mat-error>Please provide your first name.</mat-error>
           <mat-hint align="end">{{firstName.value.length}} / 30</mat-hint>
@@ -41,6 +43,7 @@
                  formControlName="lName"
                  maxlength="30"
                  (blur)="trimInput('lName')"
+                 [readonly]="!loggedInUserId"
                  required />
           <mat-error>Please provide your last name.</mat-error>
           <mat-hint align="end">{{lastName.value.length}} / 30</mat-hint>
@@ -54,7 +57,8 @@
                  type="text"
                  formControlName="alias"
                  maxlength="30"
-                 (blur)="trimInput('alias')" />
+                 (blur)="trimInput('alias')"
+                 [readonly]="!loggedInUserId" />
           <mat-hint>Alternate display name.</mat-hint>
           <mat-hint align="end">{{alias?.value.length}} / 30</mat-hint>
         </mat-form-field>
@@ -70,7 +74,8 @@
                 placeholder="Say something about yourself ..."
                 rows="5"
                 maxlength="500"
-                (blur)="trimInput('bio')">
+                (blur)="trimInput('bio')"
+                [readonly]="!loggedInUserId" >
       </textarea>
       <mat-hint align="end">{{bio?.value.length}} / 500</mat-hint>
     </mat-form-field>
@@ -80,13 +85,12 @@
                       [floatLabel]="'always'">
         <mat-label>Email</mat-label>
         <!-- Not allowing email updates yet -->
-        <input class="disabled-input"
-               readonly
-               matInput
+        <input matInput
                type="email"
                formControlName="email"
                maxlength="50"
                (blur)="trimInput('email')"
+               readonly
                required />
         <mat-error>Please provide a valid email address.</mat-error>
       </mat-form-field>
@@ -98,7 +102,8 @@
                type="text"
                formControlName="city"
                maxlength="30"
-               (blur)="trimInput('city')" />
+               (blur)="trimInput('city')"
+               [readonly]="!loggedInUserId" />
       </mat-form-field>
     </div>
 
@@ -110,7 +115,8 @@
                type="text"
                formControlName="state"
                maxlength="2"
-               (blur)="trimInput('state')" />
+               (blur)="trimInput('state')"
+               [readonly]="!loggedInUserId" />
       </mat-form-field>
 
       <mat-form-field class="profile-card__input"
@@ -120,15 +126,17 @@
                type="text"
                formControlName="zipCode"
                maxlength="5"
-               (blur)="trimInput('zipCode')" />
+               (blur)="trimInput('zipCode')"
+               [readonly]="!loggedInUserId" />
       </mat-form-field>
     </div>
 
-    <button class="cos-btn"
+    <button *ngIf="loggedInUserId"
+            class="cos-btn"
             type="button"
             [disabled]="!profileForm.valid || profileForm.pristine"
             (click)="onSaveProfileChanges()">
       Update
     </button>
-  </section>
-</form>
+  </form>
+</section>
