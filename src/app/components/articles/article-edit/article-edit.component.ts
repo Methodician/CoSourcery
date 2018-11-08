@@ -27,7 +27,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       $event.returnValue = true;
     }
   }
-  test = 0;
+
   loggedInUser: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
