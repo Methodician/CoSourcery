@@ -295,6 +295,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Cover Image Upload Functions
   async onSelectCoverImage(e: HtmlInputEvent) {
+    this.onKeyUp();
     this.coverImageFile = e.target.files.item(0);
     const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
     this.coverImageUploadTask = tracker.task;
@@ -365,18 +366,22 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if(!this.articleIsBeingEdited && (this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)){
       this.articleIsBeingEdited = true;
       this.articleSvc.toggleArticleEdit(this.articleId, true);
-      this.isEditingInterval = setInterval(() => {
-        this.checkStillEditing();
-      }, 20000);
     }
     return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
+  }
+
+  onKeyUp(){
+    clearInterval(this.isEditingInterval);
+    this.isEditingInterval = setInterval(() => {
+      this.checkStillEditing();
+    }, 240000);
   }
 
   checkStillEditing(){
     this.openDialog();
     this.responseTimer = setTimeout(() => {
       this.dialogRef.close();
-    }, 10000);
+    }, 45000);
   }
 
   endEditing(){
