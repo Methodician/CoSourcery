@@ -33,40 +33,49 @@
 
 <!-- ARTICLE COLLECTIONS -->
 <section id="latest-articles"
-         class="article-grid"
-         *ngIf="currentSelectedTab === 1 && latestArticles">
+         *ngIf="currentSelectedTab === 1">
+  <div class="article-grid">
+    <cos-article-preview-card [userId]="UserId"
+                              [articleData]="article"
+                              *ngFor="let article of latestArticles | async">
+    </cos-article-preview-card>
+  </div>
+</section>
 
-  <cos-article-preview-card [userId]="UserId"
-                            [articleData]="article"
-                            *ngFor="let article of latestArticles| async">
-  </cos-article-preview-card>
-</section>
 <section id="all-articles"
-         class="article-grid"
-         *ngIf="currentSelectedTab === 2 && allArticles">
-  <cos-article-preview-card [userId]="UserId"
-                            [articleData]="article"
-                            *ngFor="let article of allArticles | async">
-  </cos-article-preview-card>
+         *ngIf="currentSelectedTab === 2">
+  <div class="article-grid">
+    <cos-article-preview-card [userId]="UserId"
+                              [articleData]="article"
+                              *ngFor="let article of allArticles | async">
+    </cos-article-preview-card>
+  </div>
 </section>
+
 <section id="bookmarked-articles"
-         class="article-grid"
-         *ngIf="currentSelectedTab === 3 && bookmarkedArticles">
-  <cos-article-preview-card [userId]="UserId"
-                            [articleData]="article"
-                            *ngFor="let article of bookmarkedArticles | reverseArray ">
-  </cos-article-preview-card>
+         *ngIf="currentSelectedTab === 3">
+  <h3 class="collection-text">You have
+    <span class="collection-text_accent">{{bookmarkedArticles.length}}</span>
+    {{bookmarkedArticles.length === 1 ? 'bookmark' : 'bookmarks'}}.
+  </h3>
+  <div class="article-grid">
+    <cos-article-preview-card [userId]="UserId"
+                              [articleData]="article"
+                              *ngFor="let article of bookmarkedArticles | reverseArray ">
+    </cos-article-preview-card>
+  </div>
 </section>
-<div *ngIf="currentSelectedTab === 4 && query">
-  <h1>Search results for '{{query}}':</h1>
-  <h3 *ngIf='searchedArticles.length == 0'>There are no matching articles!</h3>
-  <section id="searched-articles"
-           class="article-grid"
-           *ngIf="currentSelectedTab === 4 && searchedArticles">
+
+<section id="searched-articles"
+         *ngIf="currentSelectedTab === 4">
+  <h3 class="collection-text">Found
+    <span class="collection-text_accent">{{searchedArticles.length}}</span> {{searchedArticles.length === 1 ? 'result' : 'results'}} for
+    <span class="collection-text_underline">{{query}}</span>.
+  </h3>
+  <div class="article-grid">
     <cos-article-preview-card [userId]="UserId"
                               [articleData]="article"
                               *ngFor="let article of searchedArticles">
     </cos-article-preview-card>
-  </section>
-
-</div>
+  </div>
+</section>

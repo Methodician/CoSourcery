@@ -7,6 +7,7 @@ import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
+import * as algoliasearch from 'algoliasearch/lite';
 import { environment } from 'environments/environment';
 
 @Injectable({
@@ -16,8 +17,7 @@ export class ArticleService {
   searchedArticles$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
   fsServerTimestamp = firebase.firestore.FieldValue.serverTimestamp();
   dbServerTimestamp = firebase.database.ServerValue.TIMESTAMP;
-  algoliasearch = require('algoliasearch/dist/algoliasearch.js');
-  client = this.algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
+  algoliaClient = algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
 
   constructor(
     private storage: AngularFireStorage,
@@ -168,14 +168,14 @@ export class ArticleService {
   }
 
   async searchArticles(query) {
-    const index = this.client.initIndex(environment.algoliaIndex); // using index dev articles for now, in production will want to change this.
+    const articleList = new Array<any>();
+    this.searchedArticles$.next(articleList);
+    const index = this.algoliaClient.initIndex(environment.algoliaIndex);
     const searchResults = await index.search({
       query: query,
       attributesToRetrieve: ['objectId'],
       hitsPerPage: 50
     });
-
-    const articleList = new Array<any>();
     if (searchResults.hits.length > 0) {
       const articleIds = [];
       searchResults.hits.forEach(article => { // creates array of articleIds from search results
@@ -183,7 +183,9 @@ export class ArticleService {
       });
       articleIds.forEach(key => { // creates array of articlePreviews
         this.getPreviewRefById(key).valueChanges().subscribe(article => {
-          articleList.push(article);
+          if (article) {
+            articleList.push(article);
+          }
         });
       });
     }
