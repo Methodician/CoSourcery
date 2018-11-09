@@ -62,7 +62,6 @@ exports.updateAlgoliaIndex =
     functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
         const articleObject = change.after.data();
         const index = client.initIndex(environment.algoliaIndex);
-        console.log(`search indexing using algolia index "${environment.algoliaIndex}" based on env.`)
         if (context.eventType !== 'google.firestore.document.delete') {
             const previewObject = {
                 objectID: articleObject.articleId,
