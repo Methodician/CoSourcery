@@ -29,7 +29,8 @@ import {
   MatChipsModule,
   MatSidenavModule,
   MatTooltipModule,
-  MatTabsModule
+  MatTabsModule,
+  MatDialogModule
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -66,6 +67,7 @@ import { DataCleanupComponent } from './admin/components/data-cleanup/data-clean
 import { DataCleanupService } from './admin/services/data-cleanup.service';
 import { CommentComponent } from './components/comments/comment/comment.component';
 import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
+import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/edit-timeout.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +98,8 @@ import { UnauthorizedComponent } from './components/general/unauthorized/unautho
     CommentListComponent,
     DataCleanupComponent,
     CommentComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    EditTimeoutComponent
   ],
   imports: [
     BrowserModule,
@@ -110,6 +113,7 @@ import { UnauthorizedComponent } from './components/general/unauthorized/unautho
     MatCardModule,
     MatChipsModule,
     MatIconModule,
+    MatDialogModule,
     MatSidenavModule,
     MatTooltipModule,
     MatTabsModule,
@@ -122,6 +126,9 @@ import { UnauthorizedComponent } from './components/general/unauthorized/unautho
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule
+  ],
+  entryComponents: [
+    EditTimeoutComponent
   ],
   providers: [
     AuthService,

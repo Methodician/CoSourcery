@@ -192,6 +192,17 @@ export class ArticleService {
     this.searchedArticles$.next(articleList);
   }
 
+  setArticleIsBeingEdited(articleId: string, isBeingEdited: boolean) {
+    // onDisconnect not available in AngularFire2 so...
+    const vanilaArticleRef = this.rtdb.database.ref(`articleData/isBeingEdited/${articleId}`);
+    vanilaArticleRef.set(isBeingEdited);
+    vanilaArticleRef.onDisconnect().set(false);
+  }
+
+  getArticleIsBeingEditedRef(articleId: string): AngularFireObject<boolean> {
+    return this.rtdb.object(`articleData/isBeingEdited/${articleId}`);
+  }
+
   // with refactor this is no longer used
   // arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
   //   const array = [];
