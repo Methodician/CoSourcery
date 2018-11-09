@@ -27,6 +27,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       $event.returnValue = true;
     }
   }
+  @HostListener('window:keyup', ['$event'])
+  onkkeyup($event: any) {
+    console.log($event);
+  }
+
 
   loggedInUser: UserInfoOpen = null;
   articleId: any;
@@ -154,12 +159,24 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (params['key']) {
         this.articleId = params['key'];
         this.articleIsNew = false;
+        this.subscribeToIsBeingEdited();
       } else {
         this.articleId = this.articleSvc.createArticleId();
         this.articleIsNew = true;
+        this.subscribeToIsBeingEdited();
       }
       this.ckeditorConfig.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
     });
+  }
+
+  subscribeToIsBeingEdited() {
+    this.articleSvc
+      .getArticleIsBeingEditedRef(this.articleId)
+      .valueChanges()
+      .subscribe(beingEdited => {
+        console.log('beingEdited', beingEdited);
+        this.articleIsBeingEdited = beingEdited;
+      });
   }
 
   subscribeToArticle() {
@@ -170,7 +187,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
-        this.articleIsBeingEdited = articleData.isBeingEdited;
         if (!this.formIsReady) {
           this.setDefaultFormData(articleData);
           this.formIsReady = true;
@@ -219,7 +235,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.editIntro = false;
     this.editBody = false;
     this.editTags = false;
-    this.articleSvc.toggleArticleEdit(this.articleId, false);
+    this.articleSvc.setArticleIsBeingEdited(this.articleId, false);
   }
 
   abortChanges() {
@@ -231,15 +247,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
-    if(this.articleHasUnsavedChanges()){
-      this.articleSvc.toggleArticleEdit(this.articleId, false);
+    if (this.articleHasUnsavedChanges()) {
+      this.articleSvc.setArticleIsBeingEdited(this.articleId, false);
       clearInterval(this.isEditingInterval);
     }
   }
 
   // Form Edit Mode Controls
   toggleEditCoverImage() {
-    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
       alert('Another user is currently editing this article. Try again later.');
     } else {
       this.editBody = false;
@@ -248,7 +264,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   toggleEditTitle() {
-    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
       alert('Another user is currently editing this article. Try again later.');
     } else {
       this.editBody = false;
@@ -257,7 +273,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   toggleEditIntro() {
-    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
       alert('Another user is currently editing this article. Try again later.');
     } else {
       this.editBody = false;
@@ -266,7 +282,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   toggleEditBody() {
-    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
       alert('Another user is currently editing this article. Try again later.');
     } else {
       this.editBody = !this.editBody;
@@ -274,7 +290,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   toggleEditTags() {
-    if(this.articleIsBeingEdited && !this.articleHasUnsavedChanges()){
+    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
       alert('Another user is currently editing this article. Try again later.');
     } else {
       this.editBody = false;
@@ -363,48 +379,48 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    if(!this.articleIsBeingEdited && (this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)){
+    if (!this.articleIsBeingEdited && (this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)) {
       this.articleIsBeingEdited = true;
-      this.articleSvc.toggleArticleEdit(this.articleId, true);
+      this.articleSvc.setArticleIsBeingEdited(this.articleId, true);
     }
     return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
   }
 
-  onKeyUp(){
+  onKeyUp() {
     clearInterval(this.isEditingInterval);
     this.isEditingInterval = setInterval(() => {
       this.checkStillEditing();
     }, 240000);
   }
 
-  checkStillEditing(){
+  checkStillEditing() {
     this.openDialog();
     this.responseTimer = setTimeout(() => {
       this.dialogRef.close();
     }, 45000);
   }
 
-  endEditing(){
+  endEditing() {
     clearInterval(this.isEditingInterval);
     this.resetEditStates();
     this.router.navigate(['home']);
     alert('Your editing session has ended');
   }
 
-  openDialog(){
+  openDialog() {
     this.dialogRef = this.dialog.open(EditTimeoutComponent, {
       width: '250px',
-      data: {editing: false}
+      data: { editing: false }
     });
 
     this.dialogRef.afterClosed().subscribe(result => {
-      if(result){
+      if (result) {
         clearTimeout(this.responseTimer);
         const editing = result.editing;
-        if(!editing){
+        if (!editing) {
           this.endEditing();
         }
-      }else{
+      } else {
         this.endEditing();
       }
     });

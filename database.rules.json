@@ -8,6 +8,11 @@
             ".write": "auth.uid == $uid"
           }
         }
+      },
+      "isBeingEdited": {
+        "$articleId": {
+          ".write": "auth != null"
+        }
       }
     },
     "commentData": {

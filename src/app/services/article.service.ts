@@ -192,9 +192,15 @@ export class ArticleService {
     this.searchedArticles$.next(articleList);
   }
 
-  toggleArticleEdit(articleId, isBeingEdited){
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    articleRef.update({isBeingEdited: isBeingEdited});
+  setArticleIsBeingEdited(articleId: string, isBeingEdited: boolean) {
+    // onDisconnect not available in AngularFire2 so...
+    const vanilaArticleRef = this.rtdb.database.ref(`articleData/isBeingEdited/${articleId}`);
+    vanilaArticleRef.set(isBeingEdited);
+    vanilaArticleRef.onDisconnect().set(false);
+  }
+
+  getArticleIsBeingEditedRef(articleId: string): AngularFireObject<boolean> {
+    return this.rtdb.object(`articleData/isBeingEdited/${articleId}`);
   }
 
   // with refactor this is no longer used
