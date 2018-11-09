@@ -176,7 +176,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleIsBeingEditedRef(this.articleId)
       .valueChanges()
       .subscribe(beingEdited => {
-        console.log('beingEdited', beingEdited);
         this.articleIsBeingEdited = beingEdited;
       });
   }
