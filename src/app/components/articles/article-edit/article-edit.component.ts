@@ -33,7 +33,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.resetIsEditingInterval();
     }
   }
-
+  // This makes the enum available in the HTML Template
+  CtrlNames = CtrlNames;
 
   loggedInUser: UserInfoOpen = null;
   articleId: any;

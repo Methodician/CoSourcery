@@ -5,7 +5,9 @@ import * as admin from 'firebase-admin';
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
 import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
 import * as algoliasearch from 'algoliasearch';
-import { environment } from '../../src/environments/environment';
+// WATCH OUT - Currently, can't figure out way to build for prod, so need to swap these when deploying to production server...
+// import { environment } from '../../src/environments/environment';
+import { environment } from '../../src/environments/environment.prod';
 
 
 admin.initializeApp();
@@ -60,6 +62,7 @@ exports.updateAlgoliaIndex =
     functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
         const articleObject = change.after.data();
         const index = client.initIndex(environment.algoliaIndex);
+        console.log(`search indexing using algolia index "${environment.algoliaIndex}" based on env.`)
         if (context.eventType !== 'google.firestore.document.delete') {
             const previewObject = {
                 objectID: articleObject.articleId,

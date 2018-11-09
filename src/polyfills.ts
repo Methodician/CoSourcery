@@ -81,5 +81,5 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 
 //  Current work-around for Algolia import bugs:
 (window as any).process = {
-    enf: { DEBUG: undefined }
+    env: { DEBUG: undefined }
 };

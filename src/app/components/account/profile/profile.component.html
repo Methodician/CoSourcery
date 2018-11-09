@@ -15,7 +15,7 @@
                type="file"
                [hidden]="!loggedInUserId"
                (change)="onSelectProfileImage($event)">
-        <div *ngIf="uploadTracker">upload%: {{ imageUploadPercent$ | async }}</div>
+        <div *ngIf="imageUploadPercent$">upload%: {{ imageUploadPercent$ | async }}</div>
       </section>
 
       <div>
@@ -68,14 +68,15 @@
     <mat-form-field class="profile-card__input"
                     [floatLabel]="'always'">
       <mat-label>Bio</mat-label>
-      <textarea matInput
+      <textarea #bio
+                matInput
                 type="text"
                 formControlName="bio"
                 placeholder="Say something about yourself ..."
                 rows="5"
                 maxlength="500"
                 (blur)="trimInput('bio')"
-                [readonly]="!loggedInUserId" >
+                [readonly]="!loggedInUserId">
       </textarea>
       <mat-hint align="end">{{bio?.value.length}} / 500</mat-hint>
     </mat-form-field>
