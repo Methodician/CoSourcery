@@ -189,7 +189,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
-        this.articleIsBeingEdited = articleData.isBeingEdited;
         this.setFormData(articleData);
       });
   }
