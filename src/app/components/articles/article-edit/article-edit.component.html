@@ -16,7 +16,7 @@
               *ngIf="!articleisBeingEdited || articleHasUnsavedChanges()"
               [ngClass]="{'active': editCoverImage}"
               type="button"
-              (click)="editorAuthCheck() ? toggleEditCoverImage() : null">
+              (click)="toggleEditControl('coverImage')">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editCoverImage ? 'Close Image' : 'Edit
           Image'}}</span>
@@ -65,7 +65,7 @@
     <button class="mat-icon-btn"
             [ngClass]="{'active': editTitle}"
             type="button"
-            (click)="editorAuthCheck() ? toggleEditTitle() : null">
+            (click)="toggleEditControl('title')">
       <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
       <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
     </button>
@@ -92,7 +92,7 @@
     <button class="mat-icon-btn"
             [ngClass]="{'active': editIntro}"
             type="button"
-            (click)="editorAuthCheck() ? toggleEditIntro() : null">
+            (click)="toggleEditControl('intro')">
       <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
       <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
     </button>
@@ -110,7 +110,7 @@
               [ngClass]="{'active': loggedInUser.uid && editBody}"
               [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
               type="button"
-              (click)="editorAuthCheck() ? toggleEditBody() : null">
+              (click)="toggleEditControl('body')">
         <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' :
           'Edit Body'}}</span>
@@ -171,7 +171,7 @@
     <button class="mat-icon-btn"
             [ngClass]="{'active': editTags}"
             type="button"
-            (click)="editorAuthCheck() ? toggleEditTags() : null">
+            (click)="toggleEditControl('tags')">
       <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
       <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>

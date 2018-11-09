@@ -250,47 +250,29 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   // Form Edit Mode Controls
-  toggleEditCoverImage() {
+  toggleEditControl(ctrlName: CtrlNames) {
     if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
       alert('Another user is currently editing this article. Try again later.');
-    } else {
-      this.editBody = false;
-      this.editCoverImage = !this.editCoverImage;
-    }
-  }
-
-  toggleEditTitle() {
-    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
-      alert('Another user is currently editing this article. Try again later.');
-    } else {
-      this.editBody = false;
-      this.editTitle = !this.editTitle;
-    }
-  }
-
-  toggleEditIntro() {
-    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
-      alert('Another user is currently editing this article. Try again later.');
-    } else {
-      this.editBody = false;
-      this.editIntro = !this.editIntro;
-    }
-  }
-
-  toggleEditBody() {
-    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
-      alert('Another user is currently editing this article. Try again later.');
-    } else {
-      this.editBody = !this.editBody;
-    }
-  }
-
-  toggleEditTags() {
-    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
-      alert('Another user is currently editing this article. Try again later.');
-    } else {
-      this.editBody = false;
-      this.editTags = !this.editTags;
+    } else if (this.editorAuthCheck()) {
+      switch (ctrlName) {
+        case CtrlNames.coverImage:
+          this.editBody = false;
+          this.editCoverImage = !this.editCoverImage;
+          break;
+        case CtrlNames.title:
+          this.editBody = false;
+          this.editTitle = !this.editTitle;
+        case CtrlNames.intro:
+          this.editBody = false;
+          this.editIntro = !this.editIntro;
+        case CtrlNames.tags:
+          this.editBody = false;
+          this.editTags = !this.editTags;
+        case CtrlNames.body:
+          this.editBody = !this.editBody;
+        default:
+          break;
+      }
     }
   }
 
@@ -450,4 +432,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
 export interface HtmlInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
+}
+
+export enum CtrlNames {
+  coverImage = 'coverImage',
+  title = 'title',
+  intro = 'intro',
+  body = 'body',
+  tags = 'tags',
 }
