@@ -13,7 +13,7 @@
            [src]="coverImageUrl$ | async"
            [alt]="articleEditForm.value.imageAlt">
       <button class="mat-icon-btn"
-              *ngIf ="!articleisBeingEdited || articleHasUnsavedChanges()"
+              *ngIf="!articleisBeingEdited || articleHasUnsavedChanges()"
               [ngClass]="{'active': editCoverImage}"
               type="button"
               (click)="editorAuthCheck() ? toggleEditCoverImage() : null">
@@ -33,8 +33,7 @@
                matInput
                type="text"
                formControlName="imageAlt"
-               maxlength="100"
-               (keyup)="onKeyUp()">
+               maxlength="100">
         <mat-hint align="end">{{imageAlt.value.length}} / 100</mat-hint>
       </mat-form-field>
       <div class="file-input flex-center-align">
@@ -58,7 +57,6 @@
                type="text"
                formControlName="title"
                maxlength="100"
-               (keyup)="onKeyUp()"
                required>
       </h2>
       <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
@@ -87,7 +85,6 @@
                type="text"
                formControlName="introduction"
                maxlength="300"
-               (keyup)="onKeyUp()"
                required /></p>
       <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
       <mat-error>Please tell us a little something about what this article is about.</mat-error>
@@ -119,7 +116,6 @@
           'Edit Body'}}</span>
       </button>
       <ckeditor formControlName="body"
-                (keyup)="onKeyUp()"
                 [editor]="ckeditor"
                 [config]="ckeditorConfig"
                 [disabled]="!loggedInUser.uid || !editBody">
@@ -162,7 +158,6 @@
         <input #tagInput
                [ngClass]="{'error': isInvalidTagInput(tagInput.value)}"
                maxlength="25"
-               (keyup)="onKeyUp()"
                [matChipInputFor]="chipList"
                [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
                [matChipInputAddOnBlur]="true"

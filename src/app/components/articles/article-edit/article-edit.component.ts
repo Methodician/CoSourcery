@@ -28,8 +28,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
   @HostListener('window:keyup', ['$event'])
-  onkkeyup($event: any) {
-    console.log($event);
+  onkeyup() {
+    if (this.articleIsBeingEdited) {
+      this.resetIsEditingInterval();
+    }
   }
 
 
@@ -311,7 +313,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Cover Image Upload Functions
   async onSelectCoverImage(e: HtmlInputEvent) {
-    this.onKeyUp();
+    this.resetIsEditingInterval();
     this.coverImageFile = e.target.files.item(0);
     const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
     this.coverImageUploadTask = tracker.task;
@@ -386,7 +388,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
   }
 
-  onKeyUp() {
+  resetIsEditingInterval() {
     clearInterval(this.isEditingInterval);
     this.isEditingInterval = setInterval(() => {
       this.checkStillEditing();
