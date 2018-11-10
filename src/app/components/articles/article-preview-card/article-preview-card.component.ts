@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
 import { AuthService } from '../../../services/auth.service';
 import { ArticleDetailPreview } from 'app/shared/class/article-info';
+import { MatDialog } from '@angular/material';
+import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-article-preview-card',
@@ -17,15 +19,14 @@ export class ArticlePreviewCardComponent implements OnInit {
   constructor(
     private router: Router,
     private articleSvc: ArticleService,
-    private authSvc: AuthService
+    private authSvc: AuthService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
     if (this.userId) {
       this.checkIfBookmarked();
     }
-    // console.log(this.articleData);
-    // console.log(this.articleData.articleId);
   }
 
   async checkIfBookmarked() {
@@ -53,11 +54,13 @@ export class ArticlePreviewCardComponent implements OnInit {
     if (this.userId) {
       return true;
     } else {
-      if (confirm('Login Required: Would you like to login now?')) {
-        this.router.navigate(['/login']);
-      }
+      this.openLoginModal();
       return false;
     }
+  }
+
+  openLoginModal() {
+    this.dialog.open(LoginDialogComponent);
   }
 
 }
