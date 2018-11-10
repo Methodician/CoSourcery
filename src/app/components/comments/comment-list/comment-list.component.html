@@ -18,13 +18,13 @@
         </div>
         <button class="mat-icon-btn mat-icon-btn_small comment-rating__btn comment-rating__btn_hidden"
                 [ngClass]="{'comment-rating__btn_voted': hasUserVoted(key, 'up')}"
-                (click)="commentAuthCheck() ? onUpvoteComment(key) : null">
+                (click)="authCheck() ? onUpvoteComment(key) : null">
           <mat-icon>expand_less</mat-icon>
           <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_right">{{hasUserVoted(key, 'up') ? 'Remove Vote' : 'Upvote'}}</span>
         </button>
         <button class="mat-icon-btn mat-icon-btn_small comment-rating__btn comment-rating__btn_hidden"
                 [ngClass]="{'comment-rating__btn_voted': hasUserVoted(key, 'down')}"
-                (click)="commentAuthCheck() ? onDownvoteComment(key) : null">
+                (click)="authCheck() ? onDownvoteComment(key) : null">
           <mat-icon>expand_more</mat-icon>
           <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_right">{{hasUserVoted(key, 'down') ? 'Remove Vote' : 'Downvote'}}</span>
         </button>
@@ -46,7 +46,7 @@
       <section class="comment-controls">
         <button *ngIf="!commentIsBeingEdited(key) && commentReplyInfo.replyParentKey !== key || !loggedInUser.uid"
                 class="mat-icon-btn mat-icon-btn_small"
-                (click)="commentAuthCheck() ? enterNewCommentMode(key) : null">
+                (click)="authCheck() ? enterNewCommentMode(key) : null">
           <mat-icon class="mat-icon_small">reply</mat-icon>
           <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Reply</span>
         </button>
