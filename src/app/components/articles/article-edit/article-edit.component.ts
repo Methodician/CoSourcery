@@ -12,6 +12,7 @@ import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
 import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
 import { EditTimeoutComponent } from '../../shared/dialogs/edit-timeout/edit-timeout.component';
+import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-article-edit',
@@ -253,7 +254,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   toggleEditControl(ctrlName: CtrlNames) {
     if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
       alert('Another user is currently editing this article. Try again later.');
-    } else if (this.editorAuthCheck()) {
+    } else if (this.authCheck()) {
       switch (ctrlName) {
         case CtrlNames.coverImage:
           this.editBody = false;
@@ -276,15 +277,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  editorAuthCheck() {
+  authCheck() {
     if (this.loggedInUser.uid) {
       return true;
     } else {
-      if (confirm('Login Required: Would you like to login now?')) {
-        this.router.navigate(['/login']);
-      }
+      this.openLoginModal();
       return false;
     }
+  }
+
+  openLoginModal() {
+    this.dialog.open(LoginDialogComponent);
   }
 
   // Cover Image Upload Functions
