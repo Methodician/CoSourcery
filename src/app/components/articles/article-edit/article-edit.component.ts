@@ -125,7 +125,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private articleSvc: ArticleService,
     private userSvc: UserService,
     private commentSvc: CommentService,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -281,13 +281,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (this.loggedInUser.uid) {
       return true;
     } else {
-      this.openLoginModal();
+      this.dialog.open(LoginDialogComponent);
       return false;
     }
-  }
-
-  openLoginModal() {
-    this.dialog.open(LoginDialogComponent);
   }
 
   // Cover Image Upload Functions

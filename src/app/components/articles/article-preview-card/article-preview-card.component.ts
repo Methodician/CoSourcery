@@ -1,7 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { ArticleService } from '../../../services/article.service';
-import { AuthService } from '../../../services/auth.service';
 import { ArticleDetailPreview } from 'app/shared/class/article-info';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
@@ -17,9 +15,7 @@ export class ArticlePreviewCardComponent implements OnInit {
   @Input() userId: string;
   isArticleBookmarked: boolean;
   constructor(
-    private router: Router,
     private articleSvc: ArticleService,
-    private authSvc: AuthService,
     private dialog: MatDialog
   ) { }
 
@@ -54,13 +50,9 @@ export class ArticlePreviewCardComponent implements OnInit {
     if (this.userId) {
       return true;
     } else {
-      this.openLoginModal();
+      this.dialog.open(LoginDialogComponent);
       return false;
     }
-  }
-
-  openLoginModal() {
-    this.dialog.open(LoginDialogComponent);
   }
 
 }
