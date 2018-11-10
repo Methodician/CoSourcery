@@ -2,7 +2,8 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 .login-form {
-  width: 100vw;
+  width: 50vw;
+  min-width: 220px;
   max-width: 300px;
 
   &__title {
@@ -27,12 +28,15 @@
   }
 }
 
+.general-hint {
+  text-align: center;
+
+  &_error {
+    color: red;
+  }
+}
+
 mat-error, mat-hint {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-mat-hint.error {
-  color: red;
-  text-align: center;
 }

@@ -1,7 +1,7 @@
 <form [formGroup]="loginForm"
       class="login-form">
 
-  <h2 class="login-form__title">Sign In</h2>
+  <h2 class="login-form__title">Login</h2>
 
   <section class="login-card">
     <mat-form-field class="login-card__input">
@@ -27,7 +27,7 @@
               type="submit"
               [disabled]="!loginForm.valid"
               (click)="onLogIn()">
-        Login
+        Submit
       </button>
       <button class="cos-btn"
               type="button"
@@ -36,7 +36,13 @@
       </button>
     </div>
 
-    <mat-hint class="error"
-              align="center">{{loginError ? loginError : ''}}</mat-hint>
+    <mat-hint *ngIf="!loginError"
+              class="general-hint">
+      Login or <a routerLink="/register" (click)="onCancel()">Register</a> to use this feature.
+    </mat-hint>
+    <mat-hint *ngIf="loginError"
+              class="general-hint general-hint_error">
+      {{loginError}}
+    </mat-hint>
   </section>
 </form>

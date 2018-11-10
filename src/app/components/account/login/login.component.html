@@ -1,7 +1,7 @@
 <form [formGroup]="loginForm"
       class="login-form">
 
-  <h2 class="login-form__title">Sign In</h2>
+  <h2 class="login-form__title">Login</h2>
 
   <section *ngIf="!currentLogin"
            class="login-card">
@@ -24,14 +24,13 @@
     </mat-form-field>
 
     <button class="cos-btn login-form__submit-btn"
+            type="submit"
             [disabled]="!loginForm.valid"
             (click)="onLogIn()">
-      Sign In
+      Submit
     </button>
 
-    <mat-hint *ngIf="loginError"
-              class="error"
-              align="center">{{loginError}}</mat-hint>
+    <mat-hint class="error">{{loginError ? loginError : ''}}</mat-hint>
   </section>
 
   <section *ngIf="currentLogin"
