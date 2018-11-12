@@ -34,8 +34,7 @@ export class LoginComponent implements OnInit {
     this.loginError = null;
     const val = this.loginForm.value;
     this.authSvc.login(val.email, val.password).then(res => {
-      console.log('Successfully logged in');
-      this.router.navigate(['profile']);
+      this.router.navigate(['home']);
     }).catch(err => {
       this.loginError = 'Your login email or password is incorrect.';
     });

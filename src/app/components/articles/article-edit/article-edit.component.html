@@ -182,7 +182,7 @@
     <button class="cos-btn article-save-btn"
             type="button"
             [disabled]="!articleEditForm.valid"
-            (click)="editorAuthCheck() ? saveChanges() : null">
+            (click)="authCheck() ? saveChanges() : null">
       Save Article
     </button>
   </section>
@@ -195,7 +195,7 @@
     <h2 class="article-comments__title">Discussion</h2>
     <button *ngIf="commentReplyInfo.replyParentKey !== articleId || !loggedInUser.uid"
             class="cos-btn"
-            (click)="editorAuthCheck() ? enterNewCommentMode() : null">
+            (click)="authCheck() ? enterNewCommentMode() : null">
       Comment
     </button>
   </section>

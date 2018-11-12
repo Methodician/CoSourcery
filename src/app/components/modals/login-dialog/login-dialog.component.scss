@@ -2,16 +2,17 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 .login-form {
-  max-width: 500px;
-  margin: auto;
-  padding: 24px 24px 48px;
+  width: 50vw;
+  min-width: 220px;
+  max-width: 300px;
 
   &__title {
+    margin-top: 0;
     color: $primary-color;
     text-align: center;
   }
 
-  &__submit-btn {
+  &__btn-group {
     margin-bottom: 20px;
   }
 }
@@ -20,8 +21,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 30px;
-  box-shadow: 0 2px 5px $light-gray-50;
 
   &__input {
     width: 100%;
@@ -29,23 +28,15 @@
   }
 }
 
+.general-hint {
+  text-align: center;
+
+  &_error {
+    color: red;
+  }
+}
+
 mat-error, mat-hint {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-mat-hint.error {
-  color: red;
-  text-align: center;
-}
-
-.logout-message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  &__text {
-    margin: 0 0 20px;
-    text-align: center;
-  }
 }

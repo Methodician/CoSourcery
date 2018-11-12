@@ -68,6 +68,7 @@ import { DataCleanupService } from './admin/services/data-cleanup.service';
 import { CommentComponent } from './components/comments/comment/comment.component';
 import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
 import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/edit-timeout.component';
+import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/e
     DataCleanupComponent,
     CommentComponent,
     UnauthorizedComponent,
-    EditTimeoutComponent
+    EditTimeoutComponent,
+    LoginDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -128,7 +130,8 @@ import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/e
     AngularFireDatabaseModule
   ],
   entryComponents: [
-    EditTimeoutComponent
+    EditTimeoutComponent,
+    LoginDialogComponent
   ],
   providers: [
     AuthService,
