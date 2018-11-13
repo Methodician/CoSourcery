@@ -26,7 +26,7 @@ export class LoginDialogComponent {
   onLogIn() {
     this.loginError = null;
     const val = this.loginForm.value;
-    this.authSvc.login(val.email, val.password).then(res => {
+    this.authSvc.login(val.email, val.password).then(() => {
       this.dialogRef.close();
     }).catch(err => {
       this.handleLoginError(err);
