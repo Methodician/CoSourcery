@@ -37,7 +37,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
 import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
-import { LoginComponent } from 'app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { AccountComponent } from 'app/components/account/account/account.component';
 import { FollowedUserComponent } from 'app/components/account/followed-user/followed-user.component';
@@ -73,7 +72,6 @@ import { LoginDialogComponent } from './components/modals/login-dialog/login-dia
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     TopNavComponent,
     HomeComponent,
     AccountComponent,
