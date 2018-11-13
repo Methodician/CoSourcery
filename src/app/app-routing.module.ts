@@ -70,7 +70,7 @@ const routes: Routes = [
   // },
   { path: 'admin/data-cleanup', component: DataCleanupComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: '', component: HomeComponent },
+  { path: '**', component: HomeComponent },
 ];
 
 @NgModule({
