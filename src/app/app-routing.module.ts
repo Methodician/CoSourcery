@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './shared/guards/auth.guard';
 
-import { LoginComponent } from '../app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
@@ -12,11 +11,10 @@ import { UnsavedChangesGuard } from './shared/guards/unsaved-changes.guard';
 import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  { path: '', component: HomeComponent },
   { path: 'search/:query', component: HomeComponent },
   { path: 'search', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
   {
     path: 'createarticle',
     canActivate: [AuthGuard],
@@ -72,7 +70,7 @@ const routes: Routes = [
   // },
   { path: 'admin/data-cleanup', component: DataCleanupComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: '', component: HomeComponent },
+  { path: '**', redirectTo: ''},
 ];
 
 @NgModule({

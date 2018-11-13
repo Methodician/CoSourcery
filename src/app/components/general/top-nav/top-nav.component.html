@@ -2,7 +2,7 @@
   <nav class="navbar">
 
     <a class="logo"
-       routerLink="home">
+       routerLink="">
       <img class="logo__image"
            src="../../assets/images/logo.png"
            alt="CoSourcery Logo">
@@ -47,7 +47,7 @@
       <li *ngIf="authInfo.uid"
           class="menu__item menu__item_collapse">
         <button class="cos-btn navbar__cos-btn"
-                (click)="onLogOut()">
+                (click)="onLogout()">
           Logout
         </button>
       </li>
@@ -55,7 +55,7 @@
       <li *ngIf="!authInfo.uid"
           class="menu__item menu__item_collapse">
         <button class="cos-btn navbar__cos-btn"
-                routerLink="login">
+                (click)="onLogin()">
           Login
         </button>
       </li>
