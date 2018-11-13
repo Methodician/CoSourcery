@@ -11,7 +11,7 @@ import { UnsavedChangesGuard } from './shared/guards/unsaved-changes.guard';
 import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  { path: '', component: HomeComponent },
   { path: 'search/:query', component: HomeComponent },
   { path: 'search', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
@@ -70,7 +70,7 @@ const routes: Routes = [
   // },
   { path: 'admin/data-cleanup', component: DataCleanupComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: '**', component: HomeComponent },
+  { path: '**', redirectTo: ''},
 ];
 
 @NgModule({
