@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as fb from 'firebase';
 import { BehaviorSubject } from 'rxjs';
+import { take, map } from 'rxjs/operators';
 import { AuthInfo } from '../shared/class/auth-info';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,7 @@ export class AuthService {
   authInfo$ = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
 
   constructor(
-    private afAuth: AngularFireAuth,
-    private router: Router
+    private afAuth: AngularFireAuth
   ) {
     this.afAuth.user.subscribe(user => {
       if (user) {
@@ -23,24 +22,28 @@ export class AuthService {
       } else {
         this.authInfo$.next(new AuthInfo(null, false, null, null));
       }
-      this.router.navigate(['home']);
     });
   }
 
   login(email: string, password: string) {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password)
+    return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
   logout() {
     return this.afAuth.auth.signOut();
   }
 
-  isSignedIn() {
-    return !!this.authInfo$.getValue().uid;
-  }
-
   register(email: string, password: string) {
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  async isSignedIn(): Promise<boolean> {
+    return this.afAuth.authState
+      .pipe(
+        take(1),
+        map(res => {
+          return !!res;
+        })).toPromise();
   }
 
   async sendVerificationEmail() {

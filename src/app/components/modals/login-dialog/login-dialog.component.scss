@@ -1,0 +1,42 @@
+// Uses Global Default Styles in src/styles.scss
+@import "../../../sass-variables-mixins/vars.scss";
+
+.login-form {
+  width: 50vw;
+  min-width: 220px;
+  max-width: 300px;
+
+  &__title {
+    margin-top: 0;
+    color: $primary-color;
+    text-align: center;
+  }
+
+  &__btn-group {
+    margin-bottom: 20px;
+  }
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__input {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+.general-hint {
+  text-align: center;
+
+  &_error {
+    color: red;
+  }
+}
+
+mat-error, mat-hint {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}

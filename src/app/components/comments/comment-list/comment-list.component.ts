@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { Comment, CommentMap, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
+import { MatDialog } from '@angular/material';
+import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-comment-list',
@@ -31,8 +32,8 @@ export class CommentListComponent implements OnInit, OnDestroy {
   commentListUnfurlMap: KeyMap<boolean> = {};
 
   constructor(
-    private router: Router,
-    private commentSvc: CommentService
+    private commentSvc: CommentService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -70,13 +71,11 @@ export class CommentListComponent implements OnInit, OnDestroy {
     this.commentReplyInfo.replyParentKey = replyParentKey;
   }
 
-  commentAuthCheck() {
+  authCheck() {
     if (this.loggedInUser.uid) {
       return true;
     } else {
-      if (confirm('Login Required: Would you like to login now?')) {
-        this.router.navigate(['/login']);
-      }
+      this.dialog.open(LoginDialogComponent);
       return false;
     }
   }

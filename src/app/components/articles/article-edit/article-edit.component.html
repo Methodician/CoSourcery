@@ -13,9 +13,10 @@
            [src]="coverImageUrl$ | async"
            [alt]="articleEditForm.value.imageAlt">
       <button class="mat-icon-btn"
+              *ngIf="!articleIsBeingEdited || articleHasUnsavedChanges()"
               [ngClass]="{'active': editCoverImage}"
               type="button"
-              (click)="editorAuthCheck() ? toggleEditCoverImage() : null">
+              (click)="toggleEditControl(CtrlNames.coverImage)">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editCoverImage ? 'Close Image' : 'Edit
           Image'}}</span>
@@ -64,7 +65,7 @@
     <button class="mat-icon-btn"
             [ngClass]="{'active': editTitle}"
             type="button"
-            (click)="editorAuthCheck() ? toggleEditTitle() : null">
+            (click)="toggleEditControl(CtrlNames.title)">
       <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
       <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
     </button>
@@ -91,7 +92,7 @@
     <button class="mat-icon-btn"
             [ngClass]="{'active': editIntro}"
             type="button"
-            (click)="editorAuthCheck() ? toggleEditIntro() : null">
+            (click)="toggleEditControl(CtrlNames.intro)">
       <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
       <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
     </button>
@@ -109,7 +110,7 @@
               [ngClass]="{'active': loggedInUser.uid && editBody}"
               [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
               type="button"
-              (click)="editorAuthCheck() ? toggleEditBody() : null">
+              (click)="toggleEditControl(CtrlNames.body)">
         <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' :
           'Edit Body'}}</span>
@@ -170,7 +171,7 @@
     <button class="mat-icon-btn"
             [ngClass]="{'active': editTags}"
             type="button"
-            (click)="editorAuthCheck() ? toggleEditTags() : null">
+            (click)="toggleEditControl(CtrlNames.tags)">
       <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
       <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>
@@ -181,7 +182,7 @@
     <button class="cos-btn article-save-btn"
             type="button"
             [disabled]="!articleEditForm.valid"
-            (click)="editorAuthCheck() ? saveChanges() : null">
+            (click)="authCheck() ? saveChanges() : null">
       Save Article
     </button>
   </section>
@@ -194,7 +195,7 @@
     <h2 class="article-comments__title">Discussion</h2>
     <button *ngIf="commentReplyInfo.replyParentKey !== articleId || !loggedInUser.uid"
             class="cos-btn"
-            (click)="editorAuthCheck() ? enterNewCommentMode() : null">
+            (click)="authCheck() ? enterNewCommentMode() : null">
       Comment
     </button>
   </section>

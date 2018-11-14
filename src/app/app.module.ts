@@ -29,14 +29,14 @@ import {
   MatChipsModule,
   MatSidenavModule,
   MatTooltipModule,
-  MatTabsModule
+  MatTabsModule,
+  MatDialogModule
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
 import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
-import { LoginComponent } from 'app/components/account/login/login.component';
 import { HomeComponent } from 'app/components/general/home/home.component';
 import { AccountComponent } from 'app/components/account/account/account.component';
 import { FollowedUserComponent } from 'app/components/account/followed-user/followed-user.component';
@@ -65,11 +65,13 @@ import { CommentService } from './services/comment.service';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
 import { DataCleanupService } from './admin/services/data-cleanup.service';
 import { CommentComponent } from './components/comments/comment/comment.component';
+import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
+import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/edit-timeout.component';
+import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     TopNavComponent,
     HomeComponent,
     AccountComponent,
@@ -94,7 +96,10 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     ClickOutDirective,
     CommentListComponent,
     DataCleanupComponent,
-    CommentComponent
+    CommentComponent,
+    UnauthorizedComponent,
+    EditTimeoutComponent,
+    LoginDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -108,6 +113,7 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     MatCardModule,
     MatChipsModule,
     MatIconModule,
+    MatDialogModule,
     MatSidenavModule,
     MatTooltipModule,
     MatTabsModule,
@@ -120,6 +126,10 @@ import { CommentComponent } from './components/comments/comment/comment.componen
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule
+  ],
+  entryComponents: [
+    EditTimeoutComponent,
+    LoginDialogComponent
   ],
   providers: [
     AuthService,

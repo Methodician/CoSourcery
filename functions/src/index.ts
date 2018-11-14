@@ -5,7 +5,9 @@ import * as admin from 'firebase-admin';
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
 import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
 import * as algoliasearch from 'algoliasearch';
+// WATCH OUT - Currently, can't figure out way to build for prod, so need to swap these when deploying to production server...
 import { environment } from '../../src/environments/environment';
+// import { environment } from '../../src/environments/environment.prod';
 
 
 admin.initializeApp();

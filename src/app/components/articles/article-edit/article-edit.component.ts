@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent, MatDialog } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
@@ -11,6 +11,8 @@ import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
 import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
+import { EditTimeoutComponent } from '../../shared/dialogs/edit-timeout/edit-timeout.component';
+import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-article-edit',
@@ -26,10 +28,22 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       $event.returnValue = true;
     }
   }
+  @HostListener('window:keyup', ['$event'])
+  onkeyup() {
+    if (this.articleIsBeingEdited) {
+      this.resetIsEditingInterval();
+    }
+  }
+  // This makes the enum available in the HTML Template
+  CtrlNames = CtrlNames;
 
   loggedInUser: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
+  articleIsBeingEdited: boolean;
+  isEditingInterval;
+  responseTimer;
+  dialogRef;
   formIsReady = false;
   tagsEdited = false;
   currentArticleSubscription: Subscription;
@@ -111,6 +125,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private articleSvc: ArticleService,
     private userSvc: UserService,
     private commentSvc: CommentService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -148,12 +163,23 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (params['key']) {
         this.articleId = params['key'];
         this.articleIsNew = false;
+        this.subscribeToIsBeingEdited();
       } else {
         this.articleId = this.articleSvc.createArticleId();
         this.articleIsNew = true;
+        this.subscribeToIsBeingEdited();
       }
       this.ckeditorConfig.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
     });
+  }
+
+  subscribeToIsBeingEdited() {
+    this.articleSvc
+      .getArticleIsBeingEditedRef(this.articleId)
+      .valueChanges()
+      .subscribe(beingEdited => {
+        this.articleIsBeingEdited = beingEdited;
+      });
   }
 
   subscribeToArticle() {
@@ -164,17 +190,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
-        if (!this.formIsReady) {
-          this.setDefaultFormData(articleData);
-          this.formIsReady = true;
-        } else {
-          this.updateCoverImageUrl(articleData.imageUrl);
-          this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
-        }
+        this.setFormData(articleData);
       });
   }
 
-  setDefaultFormData(data) {
+  setFormData(data) {
     if (!this.articleIsNew) {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
@@ -199,6 +219,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     } else {
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
     }
+    clearInterval(this.isEditingInterval);
     this.resetEditStates();
   }
 
@@ -211,6 +232,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.editIntro = false;
     this.editBody = false;
     this.editTags = false;
+    this.articleSvc.setArticleIsBeingEdited(this.articleId, false);
   }
 
   abortChanges() {
@@ -222,46 +244,51 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
+    if (this.articleHasUnsavedChanges()) {
+      this.articleSvc.setArticleIsBeingEdited(this.articleId, false);
+      clearInterval(this.isEditingInterval);
+    }
   }
 
   // Form Edit Mode Controls
-  toggleEditCoverImage() {
-    this.editBody = false;
-    this.editCoverImage = !this.editCoverImage;
+  toggleEditControl(ctrlName: CtrlNames) {
+    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
+      alert('Another user is currently editing this article. Try again later.');
+    } else if (this.authCheck()) {
+      switch (ctrlName) {
+        case CtrlNames.coverImage:
+          this.editBody = false;
+          this.editCoverImage = !this.editCoverImage;
+          break;
+        case CtrlNames.title:
+          this.editBody = false;
+          this.editTitle = !this.editTitle;
+        case CtrlNames.intro:
+          this.editBody = false;
+          this.editIntro = !this.editIntro;
+        case CtrlNames.tags:
+          this.editBody = false;
+          this.editTags = !this.editTags;
+        case CtrlNames.body:
+          this.editBody = !this.editBody;
+        default:
+          break;
+      }
+    }
   }
 
-  toggleEditTitle() {
-    this.editBody = false;
-    this.editTitle = !this.editTitle;
-  }
-
-  toggleEditIntro() {
-    this.editBody = false;
-    this.editIntro = !this.editIntro;
-  }
-
-  toggleEditBody() {
-    this.editBody = !this.editBody;
-  }
-
-  toggleEditTags() {
-    this.editBody = false;
-    this.editTags = !this.editTags;
-  }
-
-  editorAuthCheck() {
+  authCheck() {
     if (this.loggedInUser.uid) {
       return true;
     } else {
-      if (confirm('Login Required: Would you like to login now?')) {
-        this.router.navigate(['/login']);
-      }
+      this.dialog.open(LoginDialogComponent);
       return false;
     }
   }
 
   // Cover Image Upload Functions
   async onSelectCoverImage(e: HtmlInputEvent) {
+    this.resetIsEditingInterval();
     this.coverImageFile = e.target.files.item(0);
     const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
     this.coverImageUploadTask = tracker.task;
@@ -329,7 +356,51 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
+    if (!this.articleIsBeingEdited && (this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)) {
+      this.articleIsBeingEdited = true;
+      this.articleSvc.setArticleIsBeingEdited(this.articleId, true);
+    }
     return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
+  }
+
+  resetIsEditingInterval() {
+    clearInterval(this.isEditingInterval);
+    this.isEditingInterval = setInterval(() => {
+      this.checkStillEditing();
+    }, 240000);
+  }
+
+  checkStillEditing() {
+    this.openDialog();
+    this.responseTimer = setTimeout(() => {
+      this.dialogRef.close();
+    }, 45000);
+  }
+
+  endEditing() {
+    clearInterval(this.isEditingInterval);
+    this.resetEditStates();
+    this.router.navigate(['home']);
+    alert('Your editing session has ended');
+  }
+
+  openDialog() {
+    this.dialogRef = this.dialog.open(EditTimeoutComponent, {
+      width: '250px',
+      data: { editing: false }
+    });
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        clearTimeout(this.responseTimer);
+        const editing = result.editing;
+        if (!editing) {
+          this.endEditing();
+        }
+      } else {
+        this.endEditing();
+      }
+    });
   }
 
   // CKEditor Button Scroll to Float
@@ -360,4 +431,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
 export interface HtmlInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
+}
+
+export enum CtrlNames {
+  coverImage = 'coverImage',
+  title = 'title',
+  intro = 'intro',
+  body = 'body',
+  tags = 'tags',
 }
