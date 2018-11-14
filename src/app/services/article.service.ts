@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ArticleDetailFirestore, ArticleDetailPreview } from 'app/shared/class/article-info';
 import { UserInfoOpen } from 'app/shared/class/user-info';
-import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
 import * as algoliasearch from 'algoliasearch/lite';
@@ -192,15 +192,36 @@ export class ArticleService {
     this.searchedArticles$.next(articleList);
   }
 
-  setArticleIsBeingEdited(articleId: string, isBeingEdited: boolean) {
-    // onDisconnect not available in AngularFire2 so...
-    const vanilaArticleRef = this.rtdb.database.ref(`articleData/isBeingEdited/${articleId}`);
-    vanilaArticleRef.set(isBeingEdited);
-    vanilaArticleRef.onDisconnect().set(false);
+  setArticleEditStatus(articleId: string, editorId: string) {
+    // onDisconnect not available in AngularFire2 so using vanilla db
+    // Solution looks overcomplicated because it is.
+    // Future-proofing for case where we allow multiple concurrent editors of single article (gDocs style)
+    // Also allowing for one person to have multiple tabs open and be editing multiple articles
+    const editorsByArticlePath = `articleData/editStatus/editorsByArticle/${articleId}/${editorId}`;
+    const articlesByEditorPath = `articleData/editStatus/articlesByEditor/${editorId}/${articleId}`;
+    const updates = {}
+    const editorsRef = this.rtdb.database.ref(editorsByArticlePath);
+    const articlesRef = this.rtdb.database.ref(articlesByEditorPath);
+    updates[editorsByArticlePath] = true;
+    updates[articlesByEditorPath] = true;
+
+    this.rtdb.database.ref().update(updates);
+
+    editorsRef.onDisconnect().set(null);
+    articlesRef.onDisconnect().set(null);
   }
 
-  getArticleIsBeingEditedRef(articleId: string): AngularFireObject<boolean> {
-    return this.rtdb.object(`articleData/isBeingEdited/${articleId}`);
+  removeArticleEditStatus(articleId: string, editorId: string) {
+    const editorByArticlePath = `articleData/editStatus/editorsByArticle/${articleId}/${editorId}`;
+    const articleByEditorPath = `articleData/editStatus/articlesByEditor/${editorId}/${articleId}`;
+    const updates = {}
+    updates[editorByArticlePath] = null;
+    updates[articleByEditorPath] = null;
+    this.rtdb.database.ref().update(updates);
+  }
+
+  getEditorsByArticleRef(articleId: string): AngularFireList<boolean> {
+    return this.rtdb.list(`articleData/editStatus/editorsByArticle/${articleId}`);
   }
 
   // with refactor this is no longer used
