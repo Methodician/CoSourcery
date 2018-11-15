@@ -18,7 +18,7 @@
 
   mat-form-field {
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   ::ng-deep .mat-form-field-infix {
@@ -41,7 +41,7 @@
 
   &__display {
     position: relative;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 
     button {
       visibility: hidden;
@@ -66,9 +66,9 @@
   }
 
   &__editor {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     padding: 20px;
-    box-shadow: 0 2px 2px $light-gray-50;
+    box-shadow: 0 2px 4px $light-gray-50;
 
     input {
       padding-top: 10px;
@@ -89,6 +89,12 @@
       }
     }
   }
+}
+
+.article-header {
+  margin-bottom: 24px;
+  padding: 0 20px 20px;
+  box-shadow: 0 2px 4px $light-gray-50;
 }
 
 .article-title, .article-intro {
@@ -131,7 +137,6 @@
   }
 
   h2.static-display {
-    margin-bottom: 5px;
     padding: 5px 0;
   }
 }
@@ -145,17 +150,23 @@
   }
 
   p.static-display {
-    margin-bottom: 15px;
+    min-height: 80px;
   }
 
   textarea {
     margin: 0 0 2px;
     padding: 0;
   }
+
+  mat-form-field {
+    margin-bottom: 0;
+  }
 }
 
 .article-date {
+  margin: 0 0 5px;
   color: $medium-gray;
+  font-size: 0.8rem;
 }
 
 .article-body {
@@ -210,9 +221,6 @@
     margin: 6px;
     box-shadow: 0 0 5px $light-gray;
     background-color: #fff;
-  }
-
-  mat-form-field {
   }
 
   input {

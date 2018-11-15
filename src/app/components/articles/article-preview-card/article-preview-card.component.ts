@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
 import { ArticleDetailPreview } from 'app/shared/class/article-info';
 import { MatDialog } from '@angular/material';
@@ -21,6 +21,12 @@ export class ArticlePreviewCardComponent implements OnInit {
 
   ngOnInit() {
     if (this.userId) {
+      this.checkIfBookmarked();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.userId.currentValue) {
       this.checkIfBookmarked();
     }
   }

@@ -27,7 +27,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   loggedInUser: UserInfoOpen = null;
   articleId: any;
   articleIsNew: boolean;
-  articleIsBeingEdited: boolean;
+  currentArticleEditors = {};
   isEditingInterval;
   responseTimer;
   dialogRef;
@@ -114,7 +114,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
   @HostListener('window:keyup', ['$event'])
   onkeyup() {
-    if (this.articleIsBeingEdited) {
+    if (this.userIsEditingArticle()) {
       this.resetIsEditingInterval();
     }
   }
@@ -126,7 +126,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private articleSvc: ArticleService,
     private userSvc: UserService,
     private commentSvc: CommentService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -147,6 +147,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
 
+  addUserEditingStatus() {
+    this.articleSvc.setArticleEditStatus(this.articleId, this.loggedInUser.uid);
+    this.currentArticleEditors[this.loggedInUser.uid] = true;
+  }
 
   mapUserVotes() {
     this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
@@ -164,22 +168,25 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (params['key']) {
         this.articleId = params['key'];
         this.articleIsNew = false;
-        this.subscribeToIsBeingEdited();
+        this.subscribeToCurrentEditors();
       } else {
         this.articleId = this.articleSvc.createArticleId();
         this.articleIsNew = true;
-        this.subscribeToIsBeingEdited();
+        this.subscribeToCurrentEditors();
       }
       this.ckeditorConfig.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
     });
   }
 
-  subscribeToIsBeingEdited() {
+  subscribeToCurrentEditors() {
     this.articleSvc
-      .getArticleIsBeingEditedRef(this.articleId)
-      .valueChanges()
-      .subscribe(beingEdited => {
-        this.articleIsBeingEdited = beingEdited;
+      .getEditorsByArticleRef(this.articleId)
+      .snapshotChanges()
+      .subscribe(snapList => {
+        this.currentArticleEditors = {};
+        for (let snap of snapList) {
+          this.currentArticleEditors[snap.key] = true;
+        }
       });
   }
 
@@ -201,6 +208,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.coverImageUrl$.next(data.imageUrl);
     }
     this.articleEditForm.markAsPristine();
+    this.articleEditForm.valueChanges.subscribe(val => {
+      if (this.articleEditForm.dirty) {
+        this.addUserEditingStatus();
+      }
+    });
   }
 
   async saveChanges() {
@@ -225,7 +237,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   resetEditStates() {
-    this.articleEditForm.markAsPristine();
     this.tagsEdited = false;
     this.coverImageFile = null;
     this.editCoverImage = false;
@@ -233,7 +244,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.editIntro = false;
     this.editBody = false;
     this.editTags = false;
-    this.articleSvc.setArticleIsBeingEdited(this.articleId, false);
+    this.articleEditForm.markAsPristine();
+    this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
   }
 
   abortChanges() {
@@ -246,32 +258,30 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
     if (this.articleHasUnsavedChanges()) {
-      this.articleSvc.setArticleIsBeingEdited(this.articleId, false);
+      this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
       clearInterval(this.isEditingInterval);
     }
   }
 
   // Form Edit Mode Controls
   toggleEditControl(ctrlName: CtrlNames) {
-    if (this.articleIsBeingEdited && !this.articleHasUnsavedChanges()) {
+    // For now doesn't allow multiple editors. Will change later...
+    if (!this.userIsEditingArticle() && this.articleHasEditors()) {
       alert('Another user is currently editing this article. Try again later.');
     } else if (this.authCheck()) {
       switch (ctrlName) {
         case CtrlNames.coverImage:
-          this.editBody = false;
           this.editCoverImage = !this.editCoverImage;
-          break;
         case CtrlNames.title:
-          this.editBody = false;
           this.editTitle = !this.editTitle;
           break;
         case CtrlNames.intro:
-          this.editBody = false;
           this.editIntro = !this.editIntro;
           break;
         case CtrlNames.tags:
-          this.editBody = false;
           this.editTags = !this.editTags;
+        case CtrlNames.notBody:
+          this.editBody = false;
           break;
         case CtrlNames.body:
           this.editBody = !this.editBody;
@@ -302,6 +312,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const url = await tracker.ref.getDownloadURL().toPromise();
     this.coverImageUrl$.next(url);
     this.tempCoverImageUploadPath = snap.metadata.fullPath;
+    this.addUserEditingStatus();
   }
 
   async saveCoverImage() {
@@ -337,6 +348,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (tag.trim() && !isDuplicate) {
       this.articleEditForm.value.tags.push(tag.trim());
       event.input.value = '';
+      this.addUserEditingStatus();
       this.tagsEdited = true;
     }
   }
@@ -350,6 +362,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const tagIndex = this.articleEditForm.value.tags.indexOf(selectedTag);
     if (tagIndex >= 0) {
       this.articleEditForm.value.tags.splice(tagIndex, 1);
+      this.addUserEditingStatus();
       this.tagsEdited = true;
     }
   }
@@ -360,12 +373,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return nonLetterNumberSpace.test(value) ? true : false;
   }
 
+  articleHasEditors() {
+    return Object.keys(this.currentArticleEditors).length > 0;
+  }
+
+  userIsEditingArticle() {
+    return this.currentArticleEditors[this.loggedInUser.uid];
+  }
+
   articleHasUnsavedChanges(): boolean {
-    if (!this.articleIsBeingEdited && (this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)) {
-      this.articleIsBeingEdited = true;
-      this.articleSvc.setArticleIsBeingEdited(this.articleId, true);
-    }
-    return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
+    return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)
   }
 
   resetIsEditingInterval() {
@@ -444,4 +461,5 @@ export enum CtrlNames {
   intro = 'intro',
   body = 'body',
   tags = 'tags',
+  notBody = 'notBody'
 }
