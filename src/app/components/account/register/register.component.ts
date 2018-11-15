@@ -72,7 +72,7 @@ export class RegisterComponent implements OnInit {
       delete val.password;
       delete val.confirmPass;
       this.authSvc.sendVerificationEmail();
-      this.createNewUser(val, res.user.uid)
+      this.createNewUser(val, res.user.uid);
     } catch (err) {
       this.registerError = err;
     }

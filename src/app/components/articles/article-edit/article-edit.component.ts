@@ -21,19 +21,6 @@ import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.com
 })
 
 export class ArticleEditComponent implements OnInit, OnDestroy {
-  @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
-  @HostListener('window:beforeunload', ['$event'])
-  unloadNotification($event: any) {
-    if (this.articleHasUnsavedChanges()) {
-      $event.returnValue = true;
-    }
-  }
-  @HostListener('window:keyup', ['$event'])
-  onkeyup() {
-    if (this.userIsEditingArticle()) {
-      this.resetIsEditingInterval();
-    }
-  }
   // This makes the enum available in the HTML Template
   CtrlNames = CtrlNames;
 
@@ -117,6 +104,20 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     isFeatured: false,
     editors: {},
   });
+
+  @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    if (this.articleHasUnsavedChanges()) {
+      $event.returnValue = true;
+    }
+  }
+  @HostListener('window:keyup', ['$event'])
+  onkeyup() {
+    if (this.userIsEditingArticle()) {
+      this.resetIsEditingInterval();
+    }
+  }
 
   constructor(
     private fb: FormBuilder,
