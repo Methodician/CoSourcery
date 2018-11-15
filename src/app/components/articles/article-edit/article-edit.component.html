@@ -13,7 +13,6 @@
            [src]="coverImageUrl$ | async"
            [alt]="articleEditForm.value.imageAlt">
       <button class="mat-icon-btn"
-              *ngIf="!articleIsBeingEdited || articleHasUnsavedChanges()"
               [ngClass]="{'active': editCoverImage}"
               type="button"
               (click)="toggleEditControl(CtrlNames.coverImage)">
