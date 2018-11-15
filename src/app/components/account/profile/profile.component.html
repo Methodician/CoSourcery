@@ -145,6 +145,6 @@
 
   <!-- Read Only Profile View -->
   <div *ngIf="!isLoggedInUsersProfile">
-      <h2 class="profile__title">{{ readOnlyUserInfo?.alias || readOnlyUserInfo?.fName }}'s Profile</h2>
+      <h2 *ngIf="isLoggedInUsersProfile !== undefined" class="profile__title">{{ readOnlyUserInfo?.alias || readOnlyUserInfo?.fName }}'s Profile</h2>
   </div>
 </section>

@@ -55,18 +55,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  // break up this ngOnInit into smaller functions
+  // break up this ngOnInit into smaller descriptive functions
   ngOnInit() {
     this._route.params.subscribe((params: Params) => {
       this.profileKey = params['key'];
-      this.isLoggedInUsersProfile = this.checkProfileOwnership();
-      console.log('isLoggedInUsersProfile', this.isLoggedInUsersProfile);
 
       this.userSvc.userInfo$.subscribe(user => {
         if (user.uid) {
           // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
           this.userMap = this.userSvc.userMap;
           this.loggedInUserId = user.uid;
+          this.isLoggedInUsersProfile = this.checkProfileOwnership();
+          console.log('isLoggedInUsersProfile', this.isLoggedInUsersProfile);
           // checks to see if uid in the url is same as logged in user's id i.e. the logged in users profile.
           if (this.isLoggedInUsersProfile) {
             this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
