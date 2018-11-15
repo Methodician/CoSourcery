@@ -43,61 +43,65 @@
     </section>
   </section>
 
-  <section class="article-title"
-           (cosClickOut)="editTitle = false">
-    <h2 *ngIf="!editTitle"
-        class="static-display">
-      {{articleEditForm.value.title}}
-      <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
-    </h2>
-    <mat-form-field *ngIf="editTitle">
-      <h2><input #title
-               matInput
-               type="text"
-               formControlName="title"
-               maxlength="100"
-               required>
+  <section class="article-header">
+    <section class="article-title"
+             (cosClickOut)="editTitle = false">
+      <h2 *ngIf="!editTitle"
+          class="static-display">
+        {{articleEditForm.value.title}}
+        <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
       </h2>
-      <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
-      <mat-error>Please give your article a title.</mat-error>
-    </mat-form-field>
-    <button class="mat-icon-btn"
-            [ngClass]="{'active': editTitle}"
-            type="button"
-            (click)="toggleEditControl(CtrlNames.title)">
-      <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
-      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
-    </button>
-  </section>
+      <mat-form-field *ngIf="editTitle">
+        <h2><input #title
+                 matInput
+                 type="text"
+                 formControlName="title"
+                 maxlength="100"
+                 required>
+        </h2>
+        <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
+        <mat-error>Please give your article a title.</mat-error>
+      </mat-form-field>
+      <button class="mat-icon-btn"
+              [ngClass]="{'active': editTitle}"
+              type="button"
+              (click)="toggleEditControl(CtrlNames.title)">
+        <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
+      </button>
+    </section>
 
-  <section class="article-intro"
-           (cosClickOut)="editIntro = false">
-    <p *ngIf="!editIntro"
-       class="static-display">
-      {{articleEditForm.value.introduction}}
-      <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
-        about.</span>
-    </p>
-    <mat-form-field *ngIf="editIntro">
-      <p><input #introduction
-               matInput
-               type="text"
-               formControlName="introduction"
-               maxlength="300"
-               required /></p>
-      <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
-      <mat-error>Please tell us a little something about what this article is about.</mat-error>
-    </mat-form-field>
-    <button class="mat-icon-btn"
-            [ngClass]="{'active': editIntro}"
-            type="button"
-            (click)="toggleEditControl(CtrlNames.intro)">
-      <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
-      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
-    </button>
-  </section>
+    <p class="article-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
 
-  <p class="article-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
+    <section class="article-intro"
+             (cosClickOut)="editIntro = false">
+      <p *ngIf="!editIntro"
+         class="static-display">
+        {{articleEditForm.value.introduction}}
+        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
+          about.</span>
+      </p>
+      <mat-form-field *ngIf="editIntro">
+        <p><textarea #introduction
+                 matInput
+                 type="text"
+                 formControlName="introduction"
+                 rows="3"
+                 maxlength="300"
+                 required></textarea>
+        </p>
+        <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
+        <mat-error>Please tell us a little something about what this article is about.</mat-error>
+      </mat-form-field>
+      <button class="mat-icon-btn"
+              [ngClass]="{'active': editIntro}"
+              type="button"
+              (click)="toggleEditControl(CtrlNames.intro)">
+        <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
+      </button>
+    </section>
+  </section>
 
   <section #ckeditorBoundingBox
            class="article-body"

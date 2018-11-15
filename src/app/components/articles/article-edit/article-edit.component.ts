@@ -145,6 +145,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleSubscription.unsubscribe();
   }
 
+
   addUserEditingStatus() {
     this.articleSvc.setArticleEditStatus(this.articleId, this.loggedInUser.uid);
     this.currentArticleEditors[this.loggedInUser.uid] = true;
@@ -269,18 +270,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     } else if (this.authCheck()) {
       switch (ctrlName) {
         case CtrlNames.coverImage:
-          this.editBody = false;
           this.editCoverImage = !this.editCoverImage;
-          break;
         case CtrlNames.title:
-          this.editBody = false;
           this.editTitle = !this.editTitle;
         case CtrlNames.intro:
-          this.editBody = false;
           this.editIntro = !this.editIntro;
         case CtrlNames.tags:
-          this.editBody = false;
           this.editTags = !this.editTags;
+        case CtrlNames.notBody:
+          this.editBody = false;
+          break;
         case CtrlNames.body:
           this.editBody = !this.editBody;
         default:
@@ -458,4 +457,5 @@ export enum CtrlNames {
   intro = 'intro',
   body = 'body',
   tags = 'tags',
+  notBody = 'notBody'
 }
