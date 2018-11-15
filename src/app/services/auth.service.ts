@@ -4,6 +4,7 @@ import * as fb from 'firebase';
 import { BehaviorSubject } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import { AuthInfo } from '../shared/class/auth-info';
+import { AngularFireDatabase } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class AuthService {
   authInfo$ = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
 
   constructor(
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private rtdb: AngularFireDatabase,
   ) {
     this.afAuth.user.subscribe(user => {
       if (user) {
@@ -25,11 +27,31 @@ export class AuthService {
     });
   }
 
+  articlesBeingEditedByUserRef() {
+    const uid = this.authInfo$.value.uid;
+    return this.rtdb.list(`articleData/editStatus/articlesByEditor/${uid}`);
+  }
+
   login(email: string, password: string) {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
-  logout() {
+  async cleanupEditorTrackingInfo() {
+    const uid = this.authInfo$.value.uid;
+    const updates = {};
+    const snapshot = await this.rtdb
+      .list(`articleData/editStatus/articlesByEditor/${uid}`).query
+      .once('value');
+    const articleIds = Object.keys(snapshot.val());
+    for (let id of articleIds) {
+      updates[`articleData/editStatus/editorsByArticle/${id}/${uid}`] = null;
+      updates[`articleData/editStatus/articlesByEditor/${uid}/${id}`] = null;
+    }
+    return this.rtdb.database.ref().update(updates);
+  }
+
+  async logout() {
+    await this.cleanupEditorTrackingInfo();
     return this.afAuth.auth.signOut();
   }
 

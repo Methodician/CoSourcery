@@ -9,10 +9,8 @@
           }
         }
       },
-      "isBeingEdited": {
-        "$articleId": {
-          ".write": "auth != null"
-        }
+      "editStatus": {
+        ".write": "auth != null"
       }
     },
     "commentData": {

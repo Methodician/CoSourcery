@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   // varible only used if the logged in UID isn't the same as the UID in the url.
   readOnlyUserInfo: UserInfoOpen;
   isLoggedInUsersProfile: boolean;
+  profileKey: string;
 
   profileImageFile: File;
   imageUploadTask: AngularFireUploadTask;
@@ -54,25 +55,31 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+  // break up this ngOnInit into smaller functions
   ngOnInit() {
-    this.isLoggedInUsersProfile = this.checkProfileOwnership();
-    this.userSvc.userInfo$.subscribe(user => {
-      if (user.uid) {
-        // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
-        this.userMap = this.userSvc.userMap;
-        this.loggedInUserId = user.uid;
-        // checks to see if uid in the url is same as logged in user's id i.e. the logged in users profile.
-        if (this.isLoggedInUsersProfile) {
-          this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
-          this.profileForm.patchValue(this.userMap[user.uid]);
+    this._route.params.subscribe((params: Params) => {
+      this.profileKey = params['key'];
+      this.isLoggedInUsersProfile = this.checkProfileOwnership();
+      console.log('isLoggedInUsersProfile', this.isLoggedInUsersProfile);
+
+      this.userSvc.userInfo$.subscribe(user => {
+        if (user.uid) {
+          // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
+          this.userMap = this.userSvc.userMap;
+          this.loggedInUserId = user.uid;
+          // checks to see if uid in the url is same as logged in user's id i.e. the logged in users profile.
+          if (this.isLoggedInUsersProfile) {
+            this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
+            this.profileForm.patchValue(this.userMap[user.uid]);
+          } else {
+            // get user info of the user that isn't currently logged in.
+            // this could be redundant and maybe with some refactoring only one call to the userSvc would be neccessary.
+            this.getUserInfo();
+          }
         } else {
-          // get user info of the user that isn't currently logged in.
-          // this could be redundant and maybe with some refactoring only one call to the userSvc would be neccessary.
-          this.getUserInfo();
+          this.loggedInUserId = null;
         }
-      } else {
-        this.loggedInUserId = null;
-      }
+      });
     });
   }
 
@@ -89,28 +96,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getUserInfo() {
-    this._route.params.subscribe((params: Params) => {
-      console.log('params:', params);
-      console.log('this.userSvc.userInfo$:', this.userSvc.userInfo$);
-      console.log('user map:', this.userMap);
-      console.log('user map in service:', this.userSvc.userMap);
-      this.userSvc.getUserInfo(params['key']).then((data) => {
-        console.log(data);
-        this.readOnlyUserInfo = data;
-      });
+    console.log('profileKey:', this.profileKey);
+    console.log('this.userSvc.userInfo$:', this.userSvc.userInfo$);
+    console.log('user map:', this.userMap);
+    console.log('user map in service:', this.userSvc.userMap);
+    this.userSvc.getUserInfo(this.profileKey).then((data) => {
+      console.log(data);
+      this.readOnlyUserInfo = data;
     });
   }
 
   checkProfileOwnership(): any {
-    this._route.params.subscribe(params => {
-      if (params['key'] === this.loggedInUserId) {
-        // console.log('comparing success: ', params['key'], this.loggedInUserId);
-        return true;
-      } else {
-        // console.log('comparing failure: ', params['key'], this.loggedInUserId);
-        return false;
-      }
-    });
+    if (this.profileKey === this.loggedInUserId || !this.profileKey) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async onSaveProfileChanges() {
@@ -161,7 +162,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       { [formControlName]: this.profileForm.value[formControlName].trim() }
     );
   }
-
 }
 
 export interface HtmlInputEvent extends Event {

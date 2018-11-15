@@ -17,7 +17,7 @@ export class EditTimeoutComponent implements OnInit {
   ngOnInit() {
     this.timeout = setInterval(() => {
       this.countDown--;
-      if(this.countDown === 0){
+      if (this.countDown === 0) {
         clearInterval(this.timeout);
       }
     }, 1000);
