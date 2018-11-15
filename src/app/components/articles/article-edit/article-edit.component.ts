@@ -283,7 +283,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           break;
         case CtrlNames.body:
           this.editBody = !this.editBody;
-          break;
         default:
           break;
       }
