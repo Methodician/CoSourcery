@@ -144,7 +144,63 @@
 </div>
 
   <!-- Read Only Profile View -->
-  <div *ngIf="!isLoggedInUsersProfile">
-      <h2 *ngIf="isLoggedInUsersProfile !== undefined" class="profile__title">{{ readOnlyUserInfo?.alias || readOnlyUserInfo?.fName }}'s Profile</h2>
+  <div *ngIf="!isLoggedInUsersProfile && isLoggedInUsersProfile !== undefined">
+
+      <h2 class="profile__title">{{ readOnlyUserInfo?.alias || readOnlyUserInfo?.fName }}'s Profile</h2>
+
+      <div class="profile-card__input-group">
+          <section class="profile-image">
+            <img class="profile-image__src"
+                [src]="readOnlyUserInfo?.imageUrl ? readOnlyUserInfo?.imageUrl : '../../assets/images/logo.png'"
+                alt="Profile Image">
+          </section>
+  
+          <div>
+            <div class="profile-card__input">
+              <h6 class="read-only-label">First Name</h6>
+              <h3 class="read-only-text">{{ readOnlyUserInfo?.fName }}</h3>
+            </div>
+  
+            <div class="profile-card__input">
+              <h6 class="read-only-label">Last Name</h6>
+              <h3 class="read-only-text">{{ readOnlyUserInfo?.lName }}</h3>
+            </div>
+  
+            <div class="profile-card__input">
+              <h6 class="read-only-label">Alias</h6>
+              <h3 class="read-only-text">{{ readOnlyUserInfo?.alias }}</h3>
+            </div>
+          </div>
+      </div>
+
+      <div class="profile-card__input">
+        <h6 class="read-only-label">Bio</h6>
+        <p class="read-only-text">{{ readOnlyUserInfo?.bio }}</p>
+      </div>
+
+      <div class="profile-card__input-group">
+        <div class="profile-card__input">
+          <h6 class="read-only-label">Email</h6>
+          <p class="read-only-text">{{ readOnlyUserInfo?.email }}</p>
+        </div>
+
+        <div class="profile-card__input">
+          <h6 class="read-only-label">City</h6>
+          <p class="read-only-text">{{ readOnlyUserInfo?.city }}</p>
+        </div>
+      </div>
+
+      <div class="profile-card__input-group">
+        <div class="profile-card__input">
+          <h6 class="read-only-label">State</h6>
+          <p class="read-only-text">{{ readOnlyUserInfo?.state }}</p>
+        </div>
+
+        <div class="profile-card__input">
+          <h6 class="read-only-label">Zip Code</h6>
+          <p class="read-only-text">{{ readOnlyUserInfo?.zipCode }}</p>
+        </div>
+      </div>
+
   </div>
 </section>
