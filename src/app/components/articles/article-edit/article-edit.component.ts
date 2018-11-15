@@ -274,10 +274,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           this.editCoverImage = !this.editCoverImage;
         case CtrlNames.title:
           this.editTitle = !this.editTitle;
-          break;
         case CtrlNames.intro:
           this.editIntro = !this.editIntro;
-          break;
         case CtrlNames.tags:
           this.editTags = !this.editTags;
         case CtrlNames.notBody:
