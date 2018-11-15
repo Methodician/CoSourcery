@@ -269,17 +269,21 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (!this.userIsEditingArticle() && this.articleHasEditors()) {
       alert('Another user is currently editing this article. Try again later.');
     } else if (this.authCheck()) {
+      if (ctrlName !== CtrlNames.body) {
+        this.editBody = false;
+      }
       switch (ctrlName) {
         case CtrlNames.coverImage:
           this.editCoverImage = !this.editCoverImage;
+          break;
         case CtrlNames.title:
           this.editTitle = !this.editTitle;
+          break;
         case CtrlNames.intro:
           this.editIntro = !this.editIntro;
+          break;
         case CtrlNames.tags:
           this.editTags = !this.editTags;
-        case CtrlNames.notBody:
-          this.editBody = false;
           break;
         case CtrlNames.body:
           this.editBody = !this.editBody;
