@@ -92,6 +92,13 @@ export class ArticleService {
     return articleList$;
   }
 
+  getArticlesByAuthorId(authorId: string): AngularFirestoreCollection<ArticleDetailPreview> {
+    return this.fsdb.collection('articleData/articles/previews', ref => ref.where('authorId', '==', authorId));
+  }
+
+  getArticleIdsByEditorId(editorId: string) {
+    return this.rtdb.object(`userInfo/articlesEditedPerUser/${editorId}`).valueChanges();
+  }
 
   getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetailFirestore> {
     return this.fsdb.doc(`articleData/articles/articles/${articleId}`);

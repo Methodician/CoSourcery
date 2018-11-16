@@ -5,6 +5,7 @@ import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { Params, ActivatedRoute } from '@angular/router';
+import { ArticleService } from 'app/services/article.service';
 
 @Component({
   selector: 'cos-profile',
@@ -25,11 +26,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   imageUploadPercent$: Observable<number>;
   tempImageUploadPath: string;
   dbUser: UserInfoOpen;
+  authoredArticles: any[];
+  editedArticles: any[];
 
   constructor(
     private userSvc: UserService,
     private fb: FormBuilder,
     private _route: ActivatedRoute,
+    private articleSvc: ArticleService,
   ) {
     this.profileForm = this.fb.group({
       alias: ['', Validators.maxLength(30)],
@@ -59,6 +63,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._route.params.subscribe((params: Params) => {
       this.profileKey = params['key'];
+
+      if (this.profileKey) {
+        this.getAuthoredArticlesById(this.profileKey);
+        this.getEditedArticlesById(this.profileKey);
+      } else {
+        this.getAuthoredArticlesById(this.loggedInUserId);
+        this.getEditedArticlesById(this.loggedInUserId);
+      }
 
       this.userSvc.userInfo$.subscribe(user => {
         if (user.uid) {
@@ -103,6 +115,37 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userSvc.getUserInfo(this.profileKey).then((data) => {
       console.log('readOnlyUserInfo', data);
       this.readOnlyUserInfo = data;
+    });
+  }
+
+  getAuthoredArticlesById(authorId: string) {
+    this.authoredArticles = [];
+
+    const articlesRef = this.articleSvc.getArticlesByAuthorId(authorId).get();
+
+    articlesRef.subscribe(articlesSnap => {
+
+      articlesSnap.docs.forEach(docSnap => {
+        this.articleSvc.getArticleRefById(docSnap.id)
+        .snapshotChanges()
+        .subscribe(article => {
+          this.authoredArticles.push(article.payload.data());
+        });
+
+      });
+    });
+  }
+
+  getEditedArticlesById(editorId: string) {
+    this.editedArticles = [];
+
+    this.articleSvc.getArticleIdsByEditorId(editorId).subscribe(articleKeysListSnapshot => {
+      Object.keys(articleKeysListSnapshot).forEach(key => {
+        this.articleSvc.getArticleRefById(key).valueChanges().subscribe(article => {
+          console.log('edited article: ', article);
+          this.editedArticles.push(article);
+        });
+      });
     });
   }
 

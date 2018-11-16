@@ -202,5 +202,27 @@
         </div>
       </div>
 
+      <div id="edited-articles">
+        <h3><u>Articles They Edited</u></h3>
+        <div class="article-preview" *ngFor="let article of editedArticles">
+          <img class="article-preview-image" *ngIf="article.imageUrl" src="{{article.imageUrl}}" style="max-width: 100px;" alt="article image">
+          <div class="article-preview-body">
+            <h5><a href="/article/{{article.articleId}}">{{ article.title }}</a></h5>
+            <p>{{ article.introduction }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="authored-articles">
+        <h3><u>Articles They Authored</u></h3>
+        <div class="article-preview" *ngFor="let article of authoredArticles">
+          <img class="article-preview-image" *ngIf="article.imageUrl" src="{{article.imageUrl}}" style="max-width: 100px;" alt="article image">
+          <div class="article-preview-body">
+            <h5><a href="/article/{{article.articleId}}">{{ article.title }}</a></h5>
+            <p>{{ article.introduction }}</p>
+          </div>
+        </div>
+      </div>
+
   </div>
 </section>
