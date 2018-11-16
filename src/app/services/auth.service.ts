@@ -42,7 +42,9 @@ export class AuthService {
     const snapshot = await this.rtdb
       .list(`articleData/editStatus/articlesByEditor/${uid}`).query
       .once('value');
-    const articleIds = Object.keys(snapshot.val());
+    const val = snapshot.val();
+    if (!val) return;
+    const articleIds = Object.keys(val);
     for (let id of articleIds) {
       updates[`articleData/editStatus/editorsByArticle/${id}/${uid}`] = null;
       updates[`articleData/editStatus/articlesByEditor/${uid}/${id}`] = null;

@@ -7,6 +7,7 @@ import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
@@ -31,7 +32,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   isEditingInterval;
   responseTimer;
   dialogRef;
-  formIsReady = false;
   tagsEdited = false;
   currentArticleSubscription: Subscription;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
@@ -79,6 +79,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   editBody = false;
   editTags = false;
 
+  articleBody: string;
   articleEditForm = this.fb.group({
     articleId: '',
     authorId: '',
@@ -112,9 +113,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       $event.returnValue = true;
     }
   }
-  @HostListener('window:keyup', ['$event'])
-  onkeyup() {
+  @HostListener('window:keydown', ['$event'])
+  onkeydown($event: any) {
     if (this.userIsEditingArticle()) {
+      if ($event.ctrlKey && $event.code === 'KeyS') {
+        $event.preventDefault();
+        this.saveChanges();
+      }
       this.resetIsEditingInterval();
     }
   }
@@ -144,12 +149,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.abortChanges();
     this.currentArticleSubscription.unsubscribe();
-  }
-
-
-  addUserEditingStatus() {
-    this.articleSvc.setArticleEditStatus(this.articleId, this.loggedInUser.uid);
-    this.currentArticleEditors[this.loggedInUser.uid] = true;
   }
 
   mapUserVotes() {
@@ -198,6 +197,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
+        this.articleBody = articleData.body;
         this.setFormData(articleData);
       });
   }
@@ -207,12 +207,24 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
     }
-    this.articleEditForm.markAsPristine();
-    this.articleEditForm.valueChanges.subscribe(val => {
-      if (this.articleEditForm.dirty) {
+    this.articleEditForm.valueChanges.subscribe(() => {
+      if (this.articleEditForm.dirty && !this.userIsEditingArticle()) {
         this.addUserEditingStatus();
       }
     });
+  }
+
+  onCKEditorChanged({ event, editor }: ChangeEvent) {
+    // We're not using CKEditor as a normal FormControl because its scripts would mark the form as "dirty" even when the data was coming from DB.
+    // This approach allows us to manually mark it as dirty only when the changes are coming from locally...
+    const contents = editor.getData();
+    this.articleEditForm.markAsDirty();
+    this.articleEditForm.patchValue({ body: contents });
+  }
+
+  addUserEditingStatus() {
+    this.articleSvc.setArticleEditStatus(this.articleId, this.loggedInUser.uid);
+    this.currentArticleEditors[this.loggedInUser.uid] = true;
   }
 
   async saveChanges() {
@@ -237,6 +249,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   resetEditStates() {
+    this.articleEditForm.markAsPristine();
     this.tagsEdited = false;
     this.coverImageFile = null;
     this.editCoverImage = false;
@@ -244,7 +257,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.editIntro = false;
     this.editBody = false;
     this.editTags = false;
-    this.articleEditForm.markAsPristine();
     this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
   }
 
