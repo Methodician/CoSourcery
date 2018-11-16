@@ -108,12 +108,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getUserInfo() {
-    console.log('profileKey:', this.profileKey);
-    console.log('this.userSvc.userInfo$:', this.userSvc.userInfo$);
-    console.log('user map:', this.userMap);
-    console.log('user map in service:', this.userSvc.userMap);
     this.userSvc.getUserInfo(this.profileKey).then((data) => {
-      console.log('readOnlyUserInfo', data);
       this.readOnlyUserInfo = data;
     });
   }
