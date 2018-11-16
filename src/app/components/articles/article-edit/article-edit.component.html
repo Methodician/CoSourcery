@@ -83,12 +83,12 @@
       </p>
       <mat-form-field *ngIf="editIntro">
         <p><textarea #introduction
-                 matInput
-                 type="text"
-                 formControlName="introduction"
-                 rows="3"
-                 maxlength="300"
-                 required></textarea>
+                    matInput
+                    type="text"
+                    formControlName="introduction"
+                    rows="3"
+                    maxlength="300"
+                    required></textarea>
         </p>
         <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
         <mat-error>Please tell us a little something about what this article is about.</mat-error>
@@ -118,7 +118,9 @@
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' :
           'Edit Body'}}</span>
       </button>
-      <ckeditor formControlName="body"
+      <ckeditor *ngIf="articleBody"
+                (change)="onCKEditorChanged($event)"
+                [data]="articleBody"
                 [editor]="ckeditor"
                 [config]="ckeditorConfig"
                 [disabled]="!loggedInUser.uid || !editBody">
