@@ -31,7 +31,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   isEditingInterval;
   responseTimer;
   dialogRef;
-  formIsReady = false;
   tagsEdited = false;
   currentArticleSubscription: Subscription;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
@@ -146,12 +145,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleSubscription.unsubscribe();
   }
 
-
-  addUserEditingStatus() {
-    this.articleSvc.setArticleEditStatus(this.articleId, this.loggedInUser.uid);
-    this.currentArticleEditors[this.loggedInUser.uid] = true;
-  }
-
   mapUserVotes() {
     this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
       .snapshotChanges().subscribe(snaps => {
@@ -207,12 +200,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
     }
-    this.articleEditForm.markAsPristine();
-    this.articleEditForm.valueChanges.subscribe(val => {
-      if (this.articleEditForm.dirty) {
+    this.articleEditForm.valueChanges.subscribe(() => {
+      if (this.articleEditForm.dirty && !this.userIsEditingArticle()) {
         this.addUserEditingStatus();
       }
     });
+  }
+
+  addUserEditingStatus() {
+    this.articleSvc.setArticleEditStatus(this.articleId, this.loggedInUser.uid);
+    this.currentArticleEditors[this.loggedInUser.uid] = true;
   }
 
   async saveChanges() {
@@ -237,6 +234,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   resetEditStates() {
+    this.articleEditForm.markAsPristine();
     this.tagsEdited = false;
     this.coverImageFile = null;
     this.editCoverImage = false;
@@ -244,7 +242,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.editIntro = false;
     this.editBody = false;
     this.editTags = false;
-    this.articleEditForm.markAsPristine();
     this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
   }
 
