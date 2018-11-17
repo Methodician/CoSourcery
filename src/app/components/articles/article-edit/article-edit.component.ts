@@ -473,6 +473,5 @@ export enum CtrlNames {
   title = 'title',
   intro = 'intro',
   body = 'body',
-  tags = 'tags',
-  notBody = 'notBody'
+  tags = 'tags'
 }
