@@ -169,6 +169,48 @@
   font-size: 0.8rem;
 }
 
+.article-utils {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 0 20px;
+  border-radius: 4px;
+  background-color: lighten($accent-color-1-dark, 25%);
+}
+
+.counters {
+  display: flex;
+  align-items: center;
+
+  &__item {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #fff;
+    cursor: default;
+
+    &:not(:first-child) {
+      margin-left: 20px;
+    }
+
+    &:hover .mat-icon-btn__tooltip {
+      visibility: visible;
+    }
+
+    &-stat {
+      display: block;
+      margin-left: 15px;
+    }
+
+    &_clickable {
+      cursor: pointer;
+    }
+  }
+}
+
 .article-body {
   margin-bottom: 24px;
 

@@ -101,6 +101,37 @@
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
       </button>
     </section>
+
+    <section class="article-utils">
+      <div class="counters">
+        <div class="counters__item">
+          <mat-icon>comment</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+                style="left: 0;">
+            {{articleEditForm.value.commentCount}} Comment(s)
+          </span>
+          <span class="counters__item-stat">{{articleEditForm.value.commentCount}}</span>
+        </div>
+        <div class="counters__item">
+          <mat-icon>border_color</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleEditForm.value.version}} Edit(s)</span>
+          <span class="counters__item-stat">{{articleEditForm.value.version}}</span>
+        </div>
+        <div class="counters__item">
+          <mat-icon>loyalty</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleEditForm.value.tags.length}} Tag(s)</span>
+          <span class="counters__item-stat">{{articleEditForm.value.tags.length}}</span>
+        </div>
+      </div>
+      <div class="counters__item counters__item_clickable"
+           (click)="authCheck() ? bookmarkToggle() : null">
+        <mat-icon>{{isArticleBookmarked && loggedInUser.uid ? 'bookmark' : 'bookmark_border'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+              style="right: 0;">
+          {{isArticleBookmarked && loggedInUser.uid ? 'Remove Bookmark' : 'Bookmark'}}
+        </span>
+      </div>
+    </section>
   </section>
 
   <section #ckeditorBoundingBox
