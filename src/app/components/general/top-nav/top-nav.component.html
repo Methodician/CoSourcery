@@ -95,7 +95,7 @@
             </a>
           </li>
           <li class="mobile-menu__item">
-            <a (click)="onLogOut(); showMobileMenu = false"
+            <a (click)="onLogout(); showMobileMenu = false"
                class="mobile-menu__link">
               Logout
             </a>
@@ -106,9 +106,8 @@
         <ul *ngIf="showMobileMenu && !authInfo.uid"
             class="mobile-menu">
           <li class="mobile-menu__item">
-            <a routerLink="login"
-               class="mobile-menu__link"
-               (click)="showMobileMenu = false">
+            <a class="mobile-menu__link"
+               (click)="onLogin(); showMobileMenu = false">
               Login
             </a>
           </li>
