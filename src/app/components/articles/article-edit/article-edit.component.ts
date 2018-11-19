@@ -26,6 +26,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   CtrlNames = CtrlNames;
 
   loggedInUser: UserInfoOpen = null;
+  isArticleBookmarked: boolean;
   articleId: any;
   articleIsNew: boolean;
   currentArticleEditors = {};
@@ -135,12 +136,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.setArticleId();
     //  May abstract userInfo out to an ID now that we have user map...
     this.userSvc.userInfo$.subscribe(user => {
       this.loggedInUser = user;
+      this.checkIfBookmarked();
       this.mapUserVotes();
     });
-    this.setArticleId();
     this.subscribeToArticle();
     this.userMap = this.userSvc.userMap;
     this.userKeys = Object.keys(this.userMap);
@@ -174,6 +176,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.subscribeToCurrentEditors();
       }
       this.ckeditorConfig.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
+    });
+  }
+
+  checkIfBookmarked() {
+    const ref = this.articleSvc.bookmarkedRef(this.loggedInUser.uid, this.articleId);
+    ref.valueChanges().subscribe(snapshot => {
+      if (snapshot && snapshot.toString().length === 13) {
+        this.isArticleBookmarked = true;
+      } else {
+        this.isArticleBookmarked = false;
+      }
     });
   }
 
@@ -275,7 +288,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Form Edit Mode Controls
+  // Toggle Controls
+  bookmarkToggle() {
+    if (this.authCheck()) {
+      if (this.isArticleBookmarked) {
+        this.articleSvc.unBookmarkArticle(this.loggedInUser.uid, this.articleId);
+      } else {
+        this.articleSvc.bookmarkArticle(this.loggedInUser.uid, this.articleId);
+      }
+    }
+  }
+
   toggleEditControl(ctrlName: CtrlNames) {
     // For now doesn't allow multiple editors. Will change later...
     if (!this.userIsEditingArticle() && this.articleHasEditors()) {
@@ -473,6 +496,5 @@ export enum CtrlNames {
   title = 'title',
   intro = 'intro',
   body = 'body',
-  tags = 'tags',
-  notBody = 'notBody'
+  tags = 'tags'
 }
