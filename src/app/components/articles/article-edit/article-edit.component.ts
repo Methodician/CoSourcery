@@ -179,8 +179,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  async checkIfBookmarked() {
-    const ref = await this.articleSvc.bookmarkedRef(this.loggedInUser.uid, this.articleId);
+  checkIfBookmarked() {
+    const ref = this.articleSvc.bookmarkedRef(this.loggedInUser.uid, this.articleId);
     ref.valueChanges().subscribe(snapshot => {
       if (snapshot && snapshot.toString().length === 13) {
         this.isArticleBookmarked = true;
