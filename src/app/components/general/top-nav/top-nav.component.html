@@ -4,7 +4,7 @@
     <a class="logo"
        routerLink="">
       <img class="logo__image"
-           src="../../assets/images/logo.png"
+           src="../../assets/images/logo.svg"
            alt="CoSourcery Logo">
       <h1 class="logo__text">CoSourcery</h1>
     </a>
@@ -95,7 +95,7 @@
             </a>
           </li>
           <li class="mobile-menu__item">
-            <a (click)="onLogOut(); showMobileMenu = false"
+            <a (click)="onLogout(); showMobileMenu = false"
                class="mobile-menu__link">
               Logout
             </a>
@@ -106,9 +106,8 @@
         <ul *ngIf="showMobileMenu && !authInfo.uid"
             class="mobile-menu">
           <li class="mobile-menu__item">
-            <a routerLink="login"
-               class="mobile-menu__link"
-               (click)="showMobileMenu = false">
+            <a class="mobile-menu__link"
+               (click)="onLogin(); showMobileMenu = false">
               Login
             </a>
           </li>
