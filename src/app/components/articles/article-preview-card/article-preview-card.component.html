@@ -3,7 +3,7 @@
   <a [routerLink]="'/article/' + articleData.articleId">
     <section class="card-content">
       <img class="card-content__image"
-           [src]="(articleData.imageUrl) ? articleData.imageUrl : '../../assets/images/logo.png'"
+           [src]="(articleData.imageUrl) ? articleData.imageUrl : '../../assets/images/logo.svg'"
            [alt]="(articleData.imageAlt) ? articleData.imageAlt : 'Cover Image'">
       <h2 class="card-content__title">{{articleData.title | truncateString: 20}}</h2>
       <p class="card-content__date">Last Updated: {{articleData?.lastUpdated?.toDate() | date}}</p>
