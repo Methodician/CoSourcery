@@ -18,7 +18,7 @@ export class UserInfoOpen {
 
     displayImageUrl() {
         if (!this.imageUrl || this.imageUrl === '') {
-            return 'assets/images/logo.png';
+            return 'assets/images/logo.svg';
         }
         return this.imageUrl;
     }
