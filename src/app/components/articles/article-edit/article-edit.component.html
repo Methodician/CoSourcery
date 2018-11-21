@@ -149,30 +149,13 @@
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' :
           'Edit Body'}}</span>
       </button>
-      <ckeditor *ngIf="articleBody"
+      <ckeditor *ngIf="ckeditor.content"
                 (change)="onCKEditorChanged($event)"
-                [data]="articleBody"
-                [editor]="ckeditor"
-                [config]="ckeditorConfig"
+                [data]="ckeditor.content"
+                [editor]="ckeditor.build"
+                [config]="ckeditor.config"
                 [disabled]="!loggedInUser.uid || !editBody">
       </ckeditor>
-      <div *ngIf="articleEditForm.value.body === '' && !editBody"
-           class="ck ck-editor__editable_inline article-body__placeholder">
-        <div *ngIf="!articleIsNew">
-          <p>The article body is empty.</p>
-        </div>
-        <div *ngIf="articleIsNew">
-          <h2>Creating a New Article</h2>
-          <ol>
-            <li>Add an eye-catching <strong>Cover Image</strong> above.</li>
-            <li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li>
-            <li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it's so cool!</li>
-            <li>Add the <strong>Body</strong> of your article by editing this block of content.</li>
-            <li>Add some <strong>Tags</strong> below to help people find your article.</li>
-            <li>Click <strong>Save Article</strong> when you're done.</li>
-          </ol>
-        </div>
-      </div>
     </div>
   </section>
 
