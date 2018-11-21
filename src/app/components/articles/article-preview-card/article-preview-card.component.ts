@@ -23,6 +23,9 @@ export class ArticlePreviewCardComponent implements OnInit {
     if (this.userId) {
       this.checkIfBookmarked();
     }
+    if (!this.articleData.imageUrl) {
+      this.articleSvc.setThumbnailImageUrl(this.articleData.articleId);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
