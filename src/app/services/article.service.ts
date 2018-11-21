@@ -29,34 +29,6 @@ export class ArticleService {
     return firebase.storage().ref(path);
   }
 
-  uploadTempImage(file: File): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
-    const id = this.createArticleId();
-    const storageRef = this.storage.ref(`tempImages/${id}`);
-    const task = storageRef.put(file);
-    return { task: task, ref: storageRef };
-  }
-
-  deleteFile(path: string) {
-    const storageRef = this.storage.ref(path);
-    storageRef.delete().subscribe(res => {
-      console.log('DELETED TEMP IMAGE (maybe), result: ', res);
-    });
-  }
-
-  uploadCoverImage(articleId: string, file: File, isNew = false): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
-    const storageRef = this.storage.ref(`articleCoverImages/${articleId}`);
-    const task = storageRef.put(file);
-    return {
-      task: task,
-      ref: storageRef
-    };
-  }
-
-  trackUploadedCoverImages(articleId, fullPath, url) {
-    const docRef = this.fsdb.doc(`fileUploads/articleUploads/coverImages/${articleId}`);
-    docRef.set({ path: fullPath, downloadUrl: url });
-  }
-
   latestArticlesRef(): AngularFirestoreCollection<ArticleDetailPreview> {
     return this.fsdb.collection('articleData/articles/previews', ref => ref.orderBy('timestamp', 'desc').limit(12));
   }
@@ -64,7 +36,6 @@ export class ArticleService {
   allArticlesRef(): AngularFirestoreCollection<ArticleDetailPreview> {
     return this.fsdb.collection('articleData/articles/previews', ref => ref.orderBy('lastUpdated', 'desc'));
   }
-
 
   watchBookmarkedArticles(userKey) {
     const articleList$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
@@ -91,7 +62,6 @@ export class ArticleService {
     });
     return articleList$;
   }
-
 
   getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetailFirestore> {
     return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
@@ -125,7 +95,6 @@ export class ArticleService {
       .set(this.dbServerTimestamp);
   }
 
-
   updateArticle(editor: UserInfoOpen, article, articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
@@ -154,6 +123,50 @@ export class ArticleService {
     article.authorImageUrl = author.imageUrl || '../../assets/images/noUserImage.png';
 
     return articleRef.set(article, { merge: true });
+  }
+
+  uploadTempImage(file: File): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
+    const id = this.createArticleId();
+    const storageRef = this.storage.ref(`tempImages/${id}`);
+    const task = storageRef.put(file);
+    return { task: task, ref: storageRef };
+  }
+
+  deleteFile(path: string) {
+    const storageRef = this.storage.ref(path);
+    storageRef.delete().subscribe(res => {
+      console.log('DELETED TEMP IMAGE (maybe), result: ', res);
+    });
+  }
+
+  uploadCoverImage(articleId: string, file: File, isNew = false): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
+    const storageRef = this.storage.ref(`articleCoverImages/${articleId}`);
+    const task = storageRef.put(file);
+    return {
+      task: task,
+      ref: storageRef
+    };
+  }
+
+  trackUploadedCoverImages(articleId, fullPath, url) {
+    const docRef = this.fsdb.doc(`fileUploads/articleUploads/coverImages/${articleId}`);
+    docRef.set({ path: fullPath, downloadUrl: url });
+  }
+
+  async setThumbnailImageUrl(articleId: string) {
+    const storagePath = `articleCoverThumbnails/${articleId}`;
+    const storageRef = this.storage.ref(storagePath);
+    const url = await storageRef.getDownloadURL().toPromise()
+    if (!url) {
+      return;
+    }
+    const trackerDocRef = this.fsdb.doc(`fileUploads/articleUploads/coverThumbnails/${articleId}`);
+    const articleDocRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
+    trackerDocRef.set({
+      downloadUrl: url,
+      path: storagePath
+    });
+    return await articleDocRef.update({ imageUrl: url });
   }
 
 
