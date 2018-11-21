@@ -52,27 +52,31 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   userVotesMap: KeyMap<VoteDirections> = {};
 
-  ckeditorButtonOffset = 0;
-  ckeditor = InlineEditor;
-  ckeditorConfig = {
-    toolbar: {
-      items: [
-        'heading',
-        'bold',
-        'italic',
-        'link',
-        'bulletedList',
-        'numberedList',
-        'blockQuote',
-        'imageUpload',
-        'mediaEmbed',
-        'insertTable'
-      ],
-      viewportTopOffset: 70
+  ckeditor = {
+    build: InlineEditor,
+    config: {
+      toolbar: {
+        items: [
+          'heading',
+          'bold',
+          'italic',
+          'link',
+          'bulletedList',
+          'numberedList',
+          'blockQuote',
+          'imageUpload',
+          'mediaEmbed',
+          'insertTable'
+        ],
+        viewportTopOffset: 70
+      },
+      // fbImageStorage is declared here but set after articleId is set.
+      fbImageStorage: {}
     },
-    // fbImageStorage is declared here but set after articleId is set.
-    fbImageStorage: {}
-  };
+    placeholder: '<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you\'re done.</li></ol>',
+    content: null
+  }
+  ckeditorToggleBtnOffset = 0;
 
   editCoverImage = false;
   editTitle = false;
@@ -80,7 +84,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   editBody = false;
   editTags = false;
 
-  articleBody: string;
   articleEditForm = this.fb.group({
     articleId: '',
     authorId: '',
@@ -175,7 +178,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.articleIsNew = true;
         this.subscribeToCurrentEditors();
       }
-      this.ckeditorConfig.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
+      this.ckeditor.config.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
     });
   }
 
@@ -210,7 +213,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
-        this.articleBody = articleData.body;
+        this.ckeditor.content = articleData ? articleData.body : this.ckeditor.placeholder;
         this.setFormData(articleData);
       });
   }
@@ -463,10 +466,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // CKEditor Button Scroll to Float
   setCkeditorButtonOffset() {
-    const viewportTopOffset = this.ckeditorConfig.toolbar.viewportTopOffset;
+    const viewportTopOffset = this.ckeditor.config.toolbar.viewportTopOffset;
     const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
     const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
-    this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+    this.ckeditorToggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
   // Top-Level Commenting Functions
