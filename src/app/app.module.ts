@@ -68,7 +68,7 @@ import { ProfileComponent } from 'app/components/account/profile/profile.compone
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
 import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
-import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/edit-timeout.component';
+import { EditTimeoutDialogComponent } from './components/modals/edit-timeout-dialog/edit-timeout-dialog.component';
 import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
 
 @NgModule({
@@ -95,7 +95,7 @@ import { LoginDialogComponent } from './components/modals/login-dialog/login-dia
     DataCleanupComponent,
     CommentComponent,
     UnauthorizedComponent,
-    EditTimeoutComponent,
+    EditTimeoutDialogComponent,
     LoginDialogComponent
   ],
   imports: [
@@ -125,7 +125,7 @@ import { LoginDialogComponent } from './components/modals/login-dialog/login-dia
     AngularFireDatabaseModule
   ],
   entryComponents: [
-    EditTimeoutComponent,
+    EditTimeoutDialogComponent,
     LoginDialogComponent
   ],
   providers: [

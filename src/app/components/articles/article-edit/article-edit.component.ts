@@ -12,7 +12,7 @@ import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
 import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
-import { EditTimeoutComponent } from '../../shared/dialogs/edit-timeout/edit-timeout.component';
+import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edit-timeout-dialog.component';
 import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
 @Component({
@@ -446,7 +446,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   openDialog() {
-    this.dialogRef = this.dialog.open(EditTimeoutComponent, {
+    this.dialogRef = this.dialog.open(EditTimeoutDialogComponent, {
       width: '250px',
       data: { editing: false }
     });
