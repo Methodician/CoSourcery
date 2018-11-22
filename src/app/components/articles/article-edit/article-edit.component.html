@@ -71,7 +71,10 @@
       </button>
     </section>
 
-    <p class="article-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
+    <p *ngIf="!formIsInCreateView"
+       class="article-date">
+      Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}
+    </p>
 
     <section class="article-intro"
              (cosClickOut)="editIntro = false">
@@ -126,10 +129,10 @@
       <div *ngIf="!articleIsNew"
            class="counters__item counters__item_clickable"
            (click)="authCheck() ? bookmarkToggle() : null">
-        <mat-icon class="counters__icon">{{isArticleBookmarked && loggedInUser.uid ? 'bookmark' : 'bookmark_border'}}</mat-icon>
+        <mat-icon class="counters__icon">{{articleIsBookmarked && loggedInUser.uid ? 'bookmark' : 'bookmark_border'}}</mat-icon>
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
               style="right: 0;">
-          {{isArticleBookmarked && loggedInUser.uid ? 'Remove Bookmark' : 'Bookmark'}}
+          {{articleIsBookmarked && loggedInUser.uid ? 'Remove Bookmark' : 'Bookmark'}}
         </span>
       </div>
     </section>
