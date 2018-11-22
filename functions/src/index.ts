@@ -302,20 +302,7 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
     const id = context.params.articleId;
     const previewRef = adminFS.doc(`articleData/articles/previews/${id}`);
     if (context.eventType !== 'google.firestore.document.delete') {
-        const previewObject = {
-            articleId: articleObject.articleId,
-            authorId: articleObject.authorId,
-            title: articleObject.title,
-            introduction: articleObject.introduction,
-            lastUpdated: articleObject.lastUpdated,
-            timestamp: articleObject.timestamp,
-            version: articleObject.version,
-            commentCount: articleObject.commentCount,
-            viewCount: articleObject.viewCount,
-            tags: articleObject.tags,
-            imageUrl: articleObject.imageUrl,
-            imageAlt: articleObject.imageAlt
-        }
+        const previewObject = previewFromArticle(articleObject);
         return previewRef.set(previewObject).catch(error => {
             console.log(error);
         })
@@ -323,4 +310,10 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
         return null;
     }
 });
+
+function previewFromArticle(articleObject) {
+    const { articleId, authorId, title, introduction, lastUpdated, timestamp, version, commentCount, viewCount, tags, imageUrl, imageAlt } = articleObject;
+    const url = imageUrl && imageUrl.length > 0 ? 'unset' : 'empty';
+    return { articleId, authorId, title, introduction, lastUpdated, timestamp, version, commentCount, viewCount, tags, imageUrl: url, imageAlt };
+}
 

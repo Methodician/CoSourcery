@@ -23,8 +23,12 @@ export class ArticlePreviewCardComponent implements OnInit {
     if (this.userId) {
       this.checkIfBookmarked();
     }
-    if (!this.articleData.imageUrl) {
+    const url = this.articleData.imageUrl;
+    if (url === "unset") {
       this.articleSvc.setThumbnailImageUrl(this.articleData.articleId);
+    }
+    if (url === "empty") {
+      this.articleData.imageUrl = '';
     }
   }
 
