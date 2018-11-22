@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import * as fb from 'firebase';
-import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'cos-root',
@@ -9,6 +7,6 @@ import { AuthService } from 'app/services/auth.service';
 })
 export class AppComponent {
 
-  constructor(private AuthSvc: AuthService) { }
+  constructor() { }
 
 }

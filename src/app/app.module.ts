@@ -8,16 +8,15 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 
-// general
-import { BrowserModule } from '@angular/platform-browser';
+// Modules
 import { NgModule } from '@angular/core';
-import { AuthService } from './services/auth.service';
-import { UploadService } from './services/upload.service';
-import { ArticleService } from './services/article.service';
-import { NotificationService } from './services/notification.service';
-import { UserService } from './services/user.service';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from 'app/app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
-// Material and Associated Imports
+// Angular Material Modules
 import {
   MatButtonModule,
   MatInputModule,
@@ -32,23 +31,20 @@ import {
   MatTabsModule,
   MatDialogModule
 } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AppRoutingModule } from 'app/app-routing.module';
-import { AppComponent } from 'app/app.component';
-import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
-import { HomeComponent } from 'app/components/general/home/home.component';
-import { AccountComponent } from 'app/components/account/account/account.component';
-import { FollowedUserComponent } from 'app/components/account/followed-user/followed-user.component';
-import { FollowerUserComponent } from 'app/components/account/follower-user/follower-user.component';
-import { ProfileComponent } from 'app/components/account/profile/profile.component';
-import { RegisterComponent } from 'app/components/account/register/register.component';
-import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
-import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
-import { ArticleSearchResultsComponent } from 'app/components/articles/article-search-results/article-search-results.component';
-import { ArticlePreviewCardComponent } from 'app/components/articles/article-preview-card/article-preview-card.component';
-import { ArticlePreviewListComponent } from 'app/components/articles/article-preview-list/article-preview-list.component';
-import { UploadFormComponent } from 'app/components/shared/upload-form/upload-form.component';
+// Services
+import { ArticleService } from './services/article.service';
+import { AuthService } from './services/auth.service';
+import { NotificationService } from './services/notification.service';
+import { UploadService } from './services/upload.service';
+import { UserService } from './services/user.service';
+import { CommentService } from './services/comment.service';
+import { DataCleanupService } from './admin/services/data-cleanup.service';
+
+// Directives
+import { ClickOutDirective } from './directives/click-out.directive';
+
+// Pipes
 import { RelatedArticlePipe } from './shared/pipes/related-article.pipe';
 import { ArticleSearchPipe } from './shared/pipes/article-search.pipe';
 import { ReverseArrayPipe } from './shared/pipes/reverse-array.pipe';
@@ -57,14 +53,20 @@ import { SafeUrlPipe } from './shared/pipes/safe-url.pipe';
 import { TimeElapsedPipe } from './shared/pipes/time-elapsed.pipe';
 import { TruncateTagsPipe } from './shared/pipes/truncate-tags.pipe';
 import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { ClickOutDirective } from './directives/click-out.directive';
-import { CommentListComponent } from './components/comments/comment-list/comment-list.component';
-import { CommentService } from './services/comment.service';
-import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
-import { DataCleanupService } from './admin/services/data-cleanup.service';
+
+// Components
+import { AppComponent } from 'app/app.component';
+import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
+import { ArticlePreviewCardComponent } from 'app/components/articles/article-preview-card/article-preview-card.component';
+import { ArticlePreviewListComponent } from 'app/components/articles/article-preview-list/article-preview-list.component';
+import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
 import { CommentComponent } from './components/comments/comment/comment.component';
+import { CommentListComponent } from './components/comments/comment-list/comment-list.component';
+import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
+import { HomeComponent } from 'app/components/general/home/home.component';
+import { ProfileComponent } from 'app/components/account/profile/profile.component';
+import { RegisterComponent } from 'app/components/account/register/register.component';
+import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
 import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
 import { EditTimeoutComponent } from './components/shared/dialogs/edit-timeout/edit-timeout.component';
 import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
@@ -74,17 +76,12 @@ import { LoginDialogComponent } from './components/modals/login-dialog/login-dia
     AppComponent,
     TopNavComponent,
     HomeComponent,
-    AccountComponent,
-    FollowedUserComponent,
-    FollowerUserComponent,
     ProfileComponent,
     RegisterComponent,
     ArticleRelatedComponent,
     ArticleEditComponent,
-    ArticleSearchResultsComponent,
     ArticlePreviewCardComponent,
     ArticlePreviewListComponent,
-    UploadFormComponent,
     RelatedArticlePipe,
     ArticleSearchPipe,
     ReverseArrayPipe,
@@ -144,8 +141,6 @@ import { LoginDialogComponent } from './components/modals/login-dialog/login-dia
 })
 
 export class AppModule {
-
-
 
   constructor() {
     fb.initializeApp(environment.fbConfig);
