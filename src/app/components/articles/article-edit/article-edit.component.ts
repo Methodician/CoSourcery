@@ -74,9 +74,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       fbImageStorage: {}
     },
     placeholder: '<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you\'re done.</li></ol>',
-    content: null
+    content: null,
+    toggleBtnOffset: 0
   }
-  ckeditorToggleBtnOffset = 0;
 
   editCoverImage = false;
   editTitle = false;
@@ -469,7 +469,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const viewportTopOffset = this.ckeditor.config.toolbar.viewportTopOffset;
     const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
     const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
-    this.ckeditorToggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+    this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
   // Top-Level Commenting Functions
