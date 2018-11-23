@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatChipInputEvent, MatDialog } from '@angular/material';
+import { MatChipInputEvent, MatDialog, MatDialogConfig } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
@@ -52,10 +52,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   // Article Form State
   formIsInCreateView: boolean;
   articleEditFormSubscription: Subscription;
-
   editSessionTimeout;
-  responseTimer;
-  dialogRef;
 
   CtrlNames = CtrlNames; // Enum Availablility in HTML Template
   editCoverImage: boolean = false;
@@ -378,41 +375,30 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   setEditSessionTimeout() {
     clearTimeout(this.editSessionTimeout);
     this.editSessionTimeout = setTimeout(() => {
-      this.checkStillEditing();
+      this.openTimeoutDialog();
     }, 300000);
   }
 
-  checkStillEditing() {
-    this.openDialog();
-    this.responseTimer = setTimeout(() => {
-      this.dialogRef.close();
-    }, 45000);
+  openTimeoutDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+
+    const dialogRef = this.dialog.open(EditTimeoutDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(res => {
+      const editorIsActive = res ? res : false;
+      if (editorIsActive) {
+        this.setEditSessionTimeout();
+      } else {
+        this.endEditing();
+      }
+    });
   }
 
   endEditing() {
     clearTimeout(this.editSessionTimeout);
     this.resetEditStates();
+    alert('Edit Session Ended. Changes Aborted.');
     this.router.navigate(['home']);
-    alert('Your editing session has ended');
-  }
-
-  openDialog() {
-    this.dialogRef = this.dialog.open(EditTimeoutDialogComponent, {
-      width: '250px',
-      data: { editing: false }
-    });
-
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        clearTimeout(this.responseTimer);
-        const editing = result.editing;
-        if (!editing) {
-          this.endEditing();
-        }
-      } else {
-        this.endEditing();
-      }
-    });
   }
 
   // UI Display

@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'cos-edit-timeout-dialog',
@@ -8,30 +8,33 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 })
 export class EditTimeoutDialogComponent implements OnInit {
 
-  countDown = 45;
-  timeout;
+  responseTimer;
+  responseWaitTime: number = 60;
+  editorIsActive: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<EditTimeoutDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {editing: boolean}) { }
+  constructor(
+    private dialogRef: MatDialogRef<EditTimeoutDialogComponent>
+  ) { }
 
   ngOnInit() {
-    this.timeout = setInterval(() => {
-      this.countDown--;
-      if (this.countDown === 0) {
-        clearInterval(this.timeout);
+    this.responseTimer = setInterval(() => {
+      this.responseWaitTime--;
+      if (this.responseWaitTime <= 0) {
+        clearInterval(this.responseTimer);
+        this.dialogRef.close(this.editorIsActive);
       }
     }, 1000);
   }
 
-  onNoClick(): void {
-    clearInterval(this.timeout);
-    this.dialogRef.close(this.data);
+  onSelectNo(): void {
+    clearInterval(this.responseTimer);
+    this.dialogRef.close(this.editorIsActive);
   }
 
-  onYesClick(): void {
-    clearInterval(this.timeout);
-    this.data.editing = true;
-    this.dialogRef.close(this.data);
+  onSelectYes(): void {
+    clearInterval(this.responseTimer);
+    this.editorIsActive = true;
+    this.dialogRef.close(this.editorIsActive);
   }
 
 }
