@@ -51,6 +51,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Article Form State
   formIsInCreateView: boolean;
+  articleEditFormSubscription: Subscription;
 
   editSessionTimeout;
   responseTimer;
@@ -139,12 +140,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private articleSvc: ArticleService,
     private userSvc: UserService,
     private commentSvc: CommentService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
     this.setArticleId();
     this.subscribeToArticle();
+    this.subscribeToFormChanges();
     this.subscribeToCurrentEditors();
     //  May abstract userInfo out to an ID now that we have user map...
     this.userSvc.userInfo$.subscribe(user => {
@@ -159,6 +161,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.articleSubscription.unsubscribe();
     this.articleEditorSubscription.unsubscribe();
+    this.articleEditFormSubscription.unsubscribe();
     this.abortChanges();
   }
 
@@ -195,10 +198,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
     }
-    this.articleEditForm.valueChanges.subscribe(() => {
-      this.setEditSessionTimeout();
-      if (this.articleEditForm.dirty && !this.userIsEditingArticle()) {
-        this.addUserEditingStatus();
+  }
+
+  subscribeToFormChanges() {
+    this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe(() => {
+      if (this.articleEditForm.dirty) {
+        this.setEditSessionTimeout();
+        if (!this.userIsEditingArticle()) {
+          this.addUserEditingStatus();
+        }
       }
     });
   }
