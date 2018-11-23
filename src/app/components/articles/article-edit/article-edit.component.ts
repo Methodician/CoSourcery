@@ -36,7 +36,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         $event.preventDefault();
         this.saveChanges();
       }
-      this.resetIsEditingInterval();
     }
   }
 
@@ -53,9 +52,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   // Article Form State
   formIsInCreateView: boolean;
 
-  dialogRef;
-  isEditingInterval;
+  editSessionTimeout;
   responseTimer;
+  dialogRef;
 
   CtrlNames = CtrlNames; // Enum Availablility in HTML Template
   editCoverImage: boolean = false;
@@ -96,7 +95,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     viewCount: 0,
     tags: [[], Validators.maxLength(25)],
     isFeatured: false,
-    editors: {},
+    editors: {}
   });
 
   ckeditor = {
@@ -125,7 +124,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     toggleBtnOffset: 0
   }
 
-  // Top Level Comments State
+  // Top-Level Comments State
   newCommentStub: Comment;
   commentReplyInfo = { replyParentKey: null };
   commentEditInfo = { commentKey: null };
@@ -197,6 +196,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.coverImageUrl$.next(data.imageUrl);
     }
     this.articleEditForm.valueChanges.subscribe(() => {
+      this.setEditSessionTimeout();
       if (this.articleEditForm.dirty && !this.userIsEditingArticle()) {
         this.addUserEditingStatus();
       }
@@ -213,13 +213,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
     if (this.articleHasUnsavedChanges()) {
       this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
-      clearInterval(this.isEditingInterval);
+      clearTimeout(this.editSessionTimeout);
     }
   }
 
   // Cover Image Upload
   async onSelectCoverImage(e: HtmlInputEvent) {
-    this.resetIsEditingInterval();
+    this.setEditSessionTimeout();
     this.coverImageFile = e.target.files.item(0);
     const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
     this.coverImageUploadTask = tracker.task;
@@ -303,21 +303,23 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.deleteTempCoverImage();
       this.coverImageFile = null;
     }
+    // Create New Article
     if (!this.articleEditForm.value.articleId) {
       try {
         await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
         this.articleIsNew = false;
-        clearInterval(this.isEditingInterval);
         this.articleEditorSubscription.unsubscribe();
         this.currentArticleEditors = {};
+        clearTimeout(this.editSessionTimeout);
         this.resetEditStates();
         this.router.navigate([`article/${this.articleId}`]);
       } catch (error) {
         alert('There was a problem saving the article' + error);
       }
+    // Update Existing Article
     } else {
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
-      clearInterval(this.isEditingInterval);
+      clearTimeout(this.editSessionTimeout);
       this.resetEditStates();
     }
   }
@@ -356,19 +358,20 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleEditors[this.loggedInUser.uid] = true;
   }
 
-  articleHasEditors() {
+  articleHasEditors(): boolean {
     return Object.keys(this.currentArticleEditors).length > 0;
   }
 
-  userIsEditingArticle() {
+  userIsEditingArticle(): boolean {
     return this.currentArticleEditors[this.loggedInUser.uid];
   }
 
-  resetIsEditingInterval() {
-    clearInterval(this.isEditingInterval);
-    this.isEditingInterval = setInterval(() => {
+  // Editor Session Management
+  setEditSessionTimeout() {
+    clearTimeout(this.editSessionTimeout);
+    this.editSessionTimeout = setTimeout(() => {
       this.checkStillEditing();
-    }, 240000);
+    }, 300000);
   }
 
   checkStillEditing() {
@@ -379,7 +382,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   endEditing() {
-    clearInterval(this.isEditingInterval);
+    clearTimeout(this.editSessionTimeout);
     this.resetEditStates();
     this.router.navigate(['home']);
     alert('Your editing session has ended');
