@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } fro
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
 
 @Component({
   selector: 'cos-register',
@@ -19,6 +21,7 @@ export class RegisterComponent implements OnInit {
     private authSvc: AuthService,
     private userSvc: UserService,
     private fb: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.registerForm = this.fb.group({
       email: ['', [
@@ -65,10 +68,7 @@ export class RegisterComponent implements OnInit {
     const val = this.registerForm.value;
     try {
       const res = await this.authSvc.register(val.email, val.password);
-      console.log('Successful Registration:', res);
-      alert(`
-        Thanks for creating an account!
-        Play nice, make friends, and contribute to the wealth of knowledge we\'re building together.`);
+      this.openMessageDialog('Successful Registration', 'Thanks for creating an account!', 'Play nice, make friends, and contribute to the wealth of knowledge we\'re building together.');
       delete val.password;
       delete val.confirmPass;
       this.authSvc.sendVerificationEmail();
@@ -83,7 +83,7 @@ export class RegisterComponent implements OnInit {
       await this.userSvc.createUser(formValue, userId);
       this.router.navigate(['profile']);
     } catch (err) {
-      alert('We might not have saved your user info quite right. Woops! ' + err);
+      this.openMessageDialog('Registration Error', 'Oops! We might not have saved your user info quite right.', `Error: ${err}`);
     }
   }
 
@@ -91,6 +91,17 @@ export class RegisterComponent implements OnInit {
     this.registerForm.patchValue(
       { [formControlName]: this.registerForm.value[formControlName].trim() }
     );
+  }
+
+  openMessageDialog(title: string, msg1: string, msg2: string = null) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      messageTitle: title ? title : null,
+      messageLine1: msg1 ? msg1 : null,
+      messageLine2: msg2 ? msg2 : null
+    }
+    return this.dialog.open(MessageDialogComponent, dialogConfig);
   }
 
 }
