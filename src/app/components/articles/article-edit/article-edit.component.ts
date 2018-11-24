@@ -145,16 +145,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setArticleId();
-    this.subscribeToArticle();
-    this.subscribeToCurrentEditors();
-    //  May abstract userInfo out to an ID now that we have user map...
-    this.userSvc.userInfo$.subscribe(user => {
-      this.loggedInUser = user;
-      this.checkIfBookmarked();
-      this.mapUserVotes();
-    });
-    this.userMap = this.userSvc.userMap;
-    this.userKeys = Object.keys(this.userMap);
+    this.watchArticle();
+    this.watchCurrentEditors();
+    this.watchUserInfo();
   }
 
   ngOnDestroy() {
@@ -178,17 +171,28 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToArticle() {
+  watchUserInfo() {
+    //  May abstract userInfo out to an ID now that we have user map...
+    this.userSvc.userInfo$.subscribe(user => {
+      this.loggedInUser = user;
+      this.checkIfBookmarked();
+      this.mapUserVotes();
+    });
+    this.userMap = this.userSvc.userMap;
+    this.userKeys = Object.keys(this.userMap);
+  }
+
+  watchArticle() {
     if (this.articleSubscription) {
       this.articleSubscription.unsubscribe();
     }
     this.articleSubscription = this.articleSvc
-    .getArticleRefById(this.articleId)
-    .valueChanges()
-    .subscribe(articleData => {
-      this.ckeditor.content = articleData ? articleData.body : this.ckeditor.placeholder;
-      this.setFormData(articleData);
-    });
+      .getArticleRefById(this.articleId)
+      .valueChanges()
+      .subscribe(articleData => {
+        this.ckeditor.content = articleData ? articleData.body : this.ckeditor.placeholder;
+        this.setFormData(articleData);
+      });
   }
 
   setFormData(data) {
@@ -339,16 +343,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   // Editor Tracking
-  subscribeToCurrentEditors() {
+  watchCurrentEditors() {
     this.articleEditorSubscription = this.articleSvc
-    .getEditorsByArticleRef(this.articleId)
-    .snapshotChanges()
-    .subscribe(snapList => {
-      this.currentArticleEditors = {};
-      for (let snap of snapList) {
-        this.currentArticleEditors[snap.key] = true;
-      }
-    });
+      .getEditorsByArticleRef(this.articleId)
+      .snapshotChanges()
+      .subscribe(snapList => {
+        this.currentArticleEditors = {};
+        for (let snap of snapList) {
+          this.currentArticleEditors[snap.key] = true;
+        }
+      });
   }
 
   addUserEditingStatus() {
