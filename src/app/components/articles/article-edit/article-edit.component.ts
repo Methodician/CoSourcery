@@ -433,7 +433,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  authCheck() {
+  authCheck(): boolean {
     if (this.loggedInUser.uid) {
       return true;
     } else {
