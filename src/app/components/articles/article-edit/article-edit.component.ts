@@ -406,7 +406,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   toggleEditControl(ctrlName: CtrlNames) {
     // For now doesn't allow multiple editors. Will change later...
     if (!this.userIsEditingArticle() && this.articleHasEditors()) {
-      alert('Another user is currently editing this article. Try again later.');
+      this.openMessageDialog('Edit Locked', 'Someone is currently editing this article.', 'Please try again later.');
     } else if (this.authCheck()) {
       if (ctrlName !== CtrlNames.body) {
         this.editBody = false;
