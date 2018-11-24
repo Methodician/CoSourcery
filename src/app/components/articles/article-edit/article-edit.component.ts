@@ -360,12 +360,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleEditors[this.loggedInUser.uid] = true;
   }
 
-  articleHasEditors() {
+  articleHasEditors(): boolean {
     return Object.keys(this.currentArticleEditors).length > 0;
   }
 
-  userIsEditingArticle() {
-    return this.currentArticleEditors[this.loggedInUser.uid];
+  userIsEditingArticle(): boolean {
+    return !!this.currentArticleEditors[this.loggedInUser.uid];
   }
 
   resetIsEditingInterval() {
