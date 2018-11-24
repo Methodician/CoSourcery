@@ -146,8 +146,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setArticleId();
     this.watchArticle();
-    this.watchCurrentEditors();
     this.watchUserInfo();
+    this.watchCurrentEditors();
   }
 
   ngOnDestroy() {
@@ -169,17 +169,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
       this.ckeditor.config.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
     });
-  }
-
-  watchUserInfo() {
-    //  May abstract userInfo out to an ID now that we have user map...
-    this.userSvc.userInfo$.subscribe(user => {
-      this.loggedInUser = user;
-      this.checkIfBookmarked();
-      this.mapUserVotes();
-    });
-    this.userMap = this.userSvc.userMap;
-    this.userKeys = Object.keys(this.userMap);
   }
 
   watchArticle() {
@@ -342,7 +331,18 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)
   }
 
-  // Editor Tracking
+  // Editor and User Info Tracking
+  watchUserInfo() {
+    //  May abstract userInfo out to an ID now that we have user map...
+    this.userSvc.userInfo$.subscribe(user => {
+      this.loggedInUser = user;
+      this.checkIfBookmarked();
+      this.mapUserVotes();
+    });
+    this.userMap = this.userSvc.userMap;
+    this.userKeys = Object.keys(this.userMap);
+  }
+
   watchCurrentEditors() {
     this.articleEditorSubscription = this.articleSvc
       .getEditorsByArticleRef(this.articleId)
