@@ -143,7 +143,7 @@
          [ngClass]="{'border': loggedInUser.uid && editBody}">
       <button class="mat-icon-btn"
               [ngClass]="{'active': loggedInUser.uid && editBody}"
-              [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
+              [ngStyle]="{'transform': 'translateY(' + ckeditor.toggleBtnOffset + 'px)'}"
               type="button"
               (click)="toggleEditControl(CtrlNames.body)">
         <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>

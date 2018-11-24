@@ -2,16 +2,16 @@ import { Component, OnInit, Inject } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
-  selector: 'cos-edit-timeout',
-  templateUrl: './edit-timeout.component.html',
-  styleUrls: ['./edit-timeout.component.scss']
+  selector: 'cos-edit-timeout-dialog',
+  templateUrl: './edit-timeout-dialog.component.html',
+  styleUrls: ['./edit-timeout-dialog.component.scss']
 })
-export class EditTimeoutComponent implements OnInit {
+export class EditTimeoutDialogComponent implements OnInit {
 
   countDown = 45;
   timeout;
 
-  constructor(public dialogRef: MatDialogRef<EditTimeoutComponent>,
+  constructor(public dialogRef: MatDialogRef<EditTimeoutDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {editing: boolean}) { }
 
   ngOnInit() {

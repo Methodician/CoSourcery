@@ -40,34 +40,6 @@ const routes: Routes = [
       }
     ]
   },
-  // {
-  //   path: 'account',
-  //   canActivate: [AuthGuard],
-  //   children: [
-  //     {
-  //       path: ':key',
-  //       component: AccountComponent
-  //     },
-  //     {
-  //       path: '',
-  //       component: AccountComponent
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: 'articlesearch',
-  //   children: [
-  //     {
-  //       path: ':query',
-  //       component: ArticleSearchResultsComponent
-  //     },
-  //     {
-  //       path: '',
-  //       component: ArticleSearchResultsComponent
-  //     }
-  //   ]
-  // },
   { path: 'admin/data-cleanup', component: DataCleanupComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: ''},

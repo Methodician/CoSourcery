@@ -12,7 +12,7 @@ import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
 import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
-import { EditTimeoutComponent } from '../../shared/dialogs/edit-timeout/edit-timeout.component';
+import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edit-timeout-dialog.component';
 import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
 @Component({
@@ -74,9 +74,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       fbImageStorage: {}
     },
     placeholder: '<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you\'re done.</li></ol>',
-    content: null
+    content: null,
+    toggleBtnOffset: 0
   }
-  ckeditorToggleBtnOffset = 0;
 
   editCoverImage = false;
   editTitle = false;
@@ -446,7 +446,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   openDialog() {
-    this.dialogRef = this.dialog.open(EditTimeoutComponent, {
+    this.dialogRef = this.dialog.open(EditTimeoutDialogComponent, {
       width: '250px',
       data: { editing: false }
     });
@@ -469,7 +469,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const viewportTopOffset = this.ckeditor.config.toolbar.viewportTopOffset;
     const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
     const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
-    this.ckeditorToggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+    this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
   // Top-Level Commenting Functions

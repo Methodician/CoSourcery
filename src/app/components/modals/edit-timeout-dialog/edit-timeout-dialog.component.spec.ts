@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FollowerUserComponent } from './follower-user.component';
+import { EditTimeoutDialogComponent } from './edit-timeout-dialog.component';
 
-xdescribe('FollowerUserComponent', () => {
-  let component: FollowerUserComponent;
-  let fixture: ComponentFixture<FollowerUserComponent>;
+describe('EditTimeoutDialogComponent', () => {
+  let component: EditTimeoutDialogComponent;
+  let fixture: ComponentFixture<EditTimeoutDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FollowerUserComponent ]
+      declarations: [ EditTimeoutDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FollowerUserComponent);
+    fixture = TestBed.createComponent(EditTimeoutDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
