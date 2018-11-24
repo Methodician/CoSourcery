@@ -318,7 +318,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.resetEditStates(); // Unsaved changes checked upon route change
         this.router.navigate([`article/${this.articleId}`]);
       } catch (error) {
-        alert('There was a problem saving the article' + error);
+        this.openMessageDialog('Save Error', 'Oops! There was a problem saving your article.', `Error: ${error}`);
       }
     // Update Existing Article
     } else {
