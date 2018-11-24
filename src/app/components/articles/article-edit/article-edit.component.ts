@@ -313,10 +313,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       try {
         await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
         this.articleIsNew = false;
-        this.articleEditorSubscription.unsubscribe();
-        this.currentArticleEditors = {};
         clearTimeout(this.editSessionTimeout);
-        this.resetEditStates();
+        this.resetEditStates(); // Unsaved changes checked upon route change
         this.router.navigate([`article/${this.articleId}`]);
       } catch (error) {
         alert('There was a problem saving the article' + error);
@@ -331,6 +329,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   resetEditStates() {
     this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
+    this.currentArticleEditors[this.loggedInUser.uid] = false;
     this.articleEditForm.markAsPristine();
     this.tagsEdited = false;
     this.coverImageFile = null;
@@ -395,9 +394,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   endEditing() {
-    clearTimeout(this.editSessionTimeout);
-    this.resetEditStates();
     alert('Edit Session Ended. Changes Aborted.');
+    this.resetEditStates();
     this.router.navigate(['home']);
   }
 
