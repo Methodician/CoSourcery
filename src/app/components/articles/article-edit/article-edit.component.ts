@@ -14,6 +14,7 @@ import { CommentService } from 'app/services/comment.service';
 import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
 import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edit-timeout-dialog.component';
 import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
+import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
 
 @Component({
   selector: 'cos-article-edit',
@@ -310,7 +311,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.resetEditStates(); // Unsaved changes checked upon route change
         this.router.navigate([`article/${this.articleId}`]);
       } catch (error) {
-        alert('There was a problem saving the article' + error);
+        this.openMessageDialog('Save Error', 'Oops! There was a problem saving your article.', `Error: ${error}`);
       }
       // Update Existing Article
     } else {
@@ -392,22 +393,24 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (editorIsActive) {
         this.setEditSessionTimeout();
       } else {
-        this.endEditing();
+        this.endEditSession();
       }
     });
   }
 
-  endEditing() {
-    alert('Edit Session Ended. Changes Aborted.');
-    this.resetEditStates();
-    this.router.navigate(['home']);
+  endEditSession() {
+    const dialogRef = this.openMessageDialog('Session Timeout', 'Your changes have been discarded.');
+    dialogRef.afterClosed().subscribe(() => {
+      this.resetEditStates();
+      this.router.navigate(['home']);
+    });
   }
 
   // UI Display
   toggleEditControl(ctrlName: CtrlNames) {
     // For now doesn't allow multiple editors. Will change later...
     if (!this.userIsEditingArticle() && this.articleHasEditors()) {
-      alert('Another user is currently editing this article. Try again later.');
+      this.openMessageDialog('Edit Locked', 'Someone is currently editing this article.', 'Please try again later.');
     } else if (this.authCheck()) {
       if (ctrlName !== CtrlNames.body) {
         this.editBody = false;
@@ -447,6 +450,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
     const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
     this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+  }
+
+  openMessageDialog(title: string, msg1: string, msg2: string = null) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      messageTitle: title ? title : null,
+      messageLine1: msg1 ? msg1 : null,
+      messageLine2: msg2 ? msg2 : null
+    }
+    return this.dialog.open(MessageDialogComponent, dialogConfig);
   }
 
   // Bookmarking

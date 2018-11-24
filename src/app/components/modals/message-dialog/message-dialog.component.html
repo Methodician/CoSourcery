@@ -1,0 +1,11 @@
+<section class="dialog-box">
+  <h1 class="dialog-box__title">{{messageTitle}}</h1>
+    <p>{{messageLine1}}</p>
+    <p *ngIf="messageLine2">{{messageLine2}}</p>
+  <div class="dialog-box__btn-group">
+    <button class="cos-btn"
+            (click)="onConfirm()">
+      OK
+    </button>
+  </div>
+</section>
