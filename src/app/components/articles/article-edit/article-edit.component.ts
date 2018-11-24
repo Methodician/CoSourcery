@@ -142,17 +142,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setArticleId();
-    this.subscribeToArticle();
     this.subscribeToFormChanges();
-    this.subscribeToCurrentEditors();
-    //  May abstract userInfo out to an ID now that we have user map...
-    this.userSvc.userInfo$.subscribe(user => {
-      this.loggedInUser = user;
-      this.checkIfBookmarked();
-      this.mapUserVotes();
-    });
-    this.userMap = this.userSvc.userMap;
-    this.userKeys = Object.keys(this.userMap);
+    this.watchArticle();
+    this.watchUserInfo();
+    this.watchCurrentEditors();
   }
 
   ngOnDestroy() {
@@ -177,17 +170,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeToArticle() {
+  watchArticle() {
     if (this.articleSubscription) {
       this.articleSubscription.unsubscribe();
     }
     this.articleSubscription = this.articleSvc
-    .getArticleRefById(this.articleId)
-    .valueChanges()
-    .subscribe(articleData => {
-      this.ckeditor.content = articleData ? articleData.body : this.ckeditor.placeholder;
-      this.setFormData(articleData);
-    });
+      .getArticleRefById(this.articleId)
+      .valueChanges()
+      .subscribe(articleData => {
+        this.ckeditor.content = articleData ? articleData.body : this.ckeditor.placeholder;
+        this.setFormData(articleData);
+      });
   }
 
   setFormData(data) {
@@ -344,17 +337,28 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)
   }
 
-  // Editor Tracking
-  subscribeToCurrentEditors() {
-    this.articleEditorSubscription = this.articleSvc
-    .getEditorsByArticleRef(this.articleId)
-    .snapshotChanges()
-    .subscribe(snapList => {
-      this.currentArticleEditors = {};
-      for (let snap of snapList) {
-        this.currentArticleEditors[snap.key] = true;
-      }
+  // Editor and User Info Tracking
+  watchUserInfo() {
+    //  May abstract userInfo out to an ID now that we have user map...
+    this.userSvc.userInfo$.subscribe(user => {
+      this.loggedInUser = user;
+      this.checkIfBookmarked();
+      this.mapUserVotes();
     });
+    this.userMap = this.userSvc.userMap;
+    this.userKeys = Object.keys(this.userMap);
+  }
+
+  watchCurrentEditors() {
+    this.articleEditorSubscription = this.articleSvc
+      .getEditorsByArticleRef(this.articleId)
+      .snapshotChanges()
+      .subscribe(snapList => {
+        this.currentArticleEditors = {};
+        for (let snap of snapList) {
+          this.currentArticleEditors[snap.key] = true;
+        }
+      });
   }
 
   addUserEditingStatus() {
@@ -367,7 +371,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   userIsEditingArticle(): boolean {
-    return this.currentArticleEditors[this.loggedInUser.uid];
+    return !!this.currentArticleEditors[this.loggedInUser.uid];
   }
 
   // Editor Session Management
