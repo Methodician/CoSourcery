@@ -258,7 +258,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   // Article Tagging
   addTag(event: MatChipInputEvent): void {
     const tag = event.value.toUpperCase();
-    const isDuplicate = this.isTagDiplicate(tag);
+    const isDuplicate = this.isTagDuplicate(tag);
     if (tag.trim() && !isDuplicate) {
       this.articleEditForm.value.tags.push(tag.trim());
       event.input.value = '';
@@ -272,7 +272,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return nonLetterNumberSpace.test(value) ? true : false;
   }
 
-  isTagDiplicate(value): boolean {
+  isTagDuplicate(value): boolean {
     const tagIndex = this.articleEditForm.value.tags.indexOf(value);
     return (tagIndex >= 0) ? true : false;
   }
