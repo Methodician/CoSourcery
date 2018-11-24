@@ -379,7 +379,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     clearTimeout(this.editSessionTimeout);
     this.editSessionTimeout = setTimeout(() => {
       this.openTimeoutDialog();
-    }, 300000);
+    }, 5000);
   }
 
   openTimeoutDialog() {
