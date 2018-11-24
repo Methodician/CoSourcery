@@ -93,7 +93,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     viewCount: 0,
     tags: [[], Validators.maxLength(25)],
     isFeatured: false,
-    editors: {}
+    editors: {},
   });
 
   ckeditor = {
@@ -137,7 +137,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private articleSvc: ArticleService,
     private userSvc: UserService,
     private commentSvc: CommentService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
