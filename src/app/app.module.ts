@@ -70,6 +70,7 @@ import { TopNavComponent } from 'app/components/general/top-nav/top-nav.componen
 import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
 import { EditTimeoutDialogComponent } from './components/modals/edit-timeout-dialog/edit-timeout-dialog.component';
 import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
+import { MessageDialogComponent } from './components/modals/message-dialog/message-dialog.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { LoginDialogComponent } from './components/modals/login-dialog/login-dia
     CommentComponent,
     UnauthorizedComponent,
     EditTimeoutDialogComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    MessageDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -126,7 +128,8 @@ import { LoginDialogComponent } from './components/modals/login-dialog/login-dia
   ],
   entryComponents: [
     EditTimeoutDialogComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    MessageDialogComponent
   ],
   providers: [
     AuthService,
