@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatChipInputEvent, MatDialog } from '@angular/material';
+import { MatChipInputEvent, MatDialog, MatDialogConfig } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
@@ -36,7 +36,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         $event.preventDefault();
         this.saveChanges();
       }
-      this.resetIsEditingInterval();
     }
   }
 
@@ -52,10 +51,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Article Form State
   formIsInCreateView: boolean;
-
-  dialogRef;
-  isEditingInterval;
-  responseTimer;
+  articleEditFormSubscription: Subscription;
+  editSessionTimeout;
 
   CtrlNames = CtrlNames; // Enum Availablility in HTML Template
   editCoverImage: boolean = false;
@@ -122,10 +119,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     },
     placeholder: '<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you\'re done.</li></ol>',
     content: null,
-    toggleBtnOffset: 0
+    toggleBtnOffset: 0,
   }
 
-  // Top Level Comments State
+  // Top-Level Comments State
   newCommentStub: Comment;
   commentReplyInfo = { replyParentKey: null };
   commentEditInfo = { commentKey: null };
@@ -145,6 +142,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setArticleId();
+    this.watchFormChanges();
     this.watchArticle();
     this.watchUserInfo();
     this.watchCurrentEditors();
@@ -153,6 +151,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.articleSubscription.unsubscribe();
     this.articleEditorSubscription.unsubscribe();
+    this.articleEditFormSubscription.unsubscribe();
     this.abortChanges();
   }
 
@@ -189,9 +188,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
     }
-    this.articleEditForm.valueChanges.subscribe(() => {
-      if (this.articleEditForm.dirty && !this.userIsEditingArticle()) {
-        this.addUserEditingStatus();
+  }
+
+  watchFormChanges() {
+    this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe(() => {
+      if (this.articleEditForm.dirty) {
+        this.setEditSessionTimeout();
+        if (!this.userIsEditingArticle()) {
+          this.addUserEditingStatus();
+        }
       }
     });
   }
@@ -206,13 +211,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
     if (this.articleHasUnsavedChanges()) {
       this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
-      clearInterval(this.isEditingInterval);
+      clearTimeout(this.editSessionTimeout);
     }
   }
 
   // Cover Image Upload
   async onSelectCoverImage(e: HtmlInputEvent) {
-    this.resetIsEditingInterval();
+    this.setEditSessionTimeout();
     this.coverImageFile = e.target.files.item(0);
     const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
     this.coverImageUploadTask = tracker.task;
@@ -253,7 +258,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   // Article Tagging
   addTag(event: MatChipInputEvent): void {
     const tag = event.value.toUpperCase();
-    const isDuplicate = this.checkForDuplicateTag(tag);
+    const isDuplicate = this.isTagDuplicate(tag);
     if (tag.trim() && !isDuplicate) {
       this.articleEditForm.value.tags.push(tag.trim());
       event.input.value = '';
@@ -262,12 +267,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  isInvalidTagInput(value) {
+  isInvalidTagInput(value): boolean {
     const nonLetterNumberSpace = new RegExp('[^a-zA-Z0-9 ]');
     return nonLetterNumberSpace.test(value) ? true : false;
   }
 
-  checkForDuplicateTag(value) {
+  isTagDuplicate(value): boolean {
     const tagIndex = this.articleEditForm.value.tags.indexOf(value);
     return (tagIndex >= 0) ? true : false;
   }
@@ -296,27 +301,28 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.deleteTempCoverImage();
       this.coverImageFile = null;
     }
+    // Create New Article
     if (!this.articleEditForm.value.articleId) {
       try {
         await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
         this.articleIsNew = false;
-        clearInterval(this.isEditingInterval);
-        this.articleEditorSubscription.unsubscribe();
-        this.currentArticleEditors = {};
-        this.resetEditStates();
+        clearTimeout(this.editSessionTimeout);
+        this.resetEditStates(); // Unsaved changes checked upon route change
         this.router.navigate([`article/${this.articleId}`]);
       } catch (error) {
         alert('There was a problem saving the article' + error);
       }
+      // Update Existing Article
     } else {
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
-      clearInterval(this.isEditingInterval);
+      clearTimeout(this.editSessionTimeout);
       this.resetEditStates();
     }
   }
 
   resetEditStates() {
     this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
+    this.currentArticleEditors[this.loggedInUser.uid] = false;
     this.articleEditForm.markAsPristine();
     this.tagsEdited = false;
     this.coverImageFile = null;
@@ -368,44 +374,33 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return !!this.currentArticleEditors[this.loggedInUser.uid];
   }
 
-  resetIsEditingInterval() {
-    clearInterval(this.isEditingInterval);
-    this.isEditingInterval = setInterval(() => {
-      this.checkStillEditing();
-    }, 240000);
+  // Editor Session Management
+  setEditSessionTimeout() {
+    clearTimeout(this.editSessionTimeout);
+    this.editSessionTimeout = setTimeout(() => {
+      this.openTimeoutDialog();
+    }, 300000);
   }
 
-  checkStillEditing() {
-    this.openDialog();
-    this.responseTimer = setTimeout(() => {
-      this.dialogRef.close();
-    }, 45000);
-  }
+  openTimeoutDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
 
-  endEditing() {
-    clearInterval(this.isEditingInterval);
-    this.resetEditStates();
-    this.router.navigate(['home']);
-    alert('Your editing session has ended');
-  }
-
-  openDialog() {
-    this.dialogRef = this.dialog.open(EditTimeoutDialogComponent, {
-      width: '250px',
-      data: { editing: false }
-    });
-
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        clearTimeout(this.responseTimer);
-        const editing = result.editing;
-        if (!editing) {
-          this.endEditing();
-        }
+    const dialogRef = this.dialog.open(EditTimeoutDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(res => {
+      const editorIsActive = res ? res : false;
+      if (editorIsActive) {
+        this.setEditSessionTimeout();
       } else {
         this.endEditing();
       }
     });
+  }
+
+  endEditing() {
+    alert('Edit Session Ended. Changes Aborted.');
+    this.resetEditStates();
+    this.router.navigate(['home']);
   }
 
   // UI Display
@@ -438,7 +433,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  authCheck() {
+  authCheck(): boolean {
     if (this.loggedInUser.uid) {
       return true;
     } else {

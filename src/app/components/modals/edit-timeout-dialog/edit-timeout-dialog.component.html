@@ -1,9 +1,16 @@
-<h1 mat-dialog-title>Timeout Warning</h1>
-<div mat-dialog-content>
-  <p>Are you still editing this article? Selecting 'No' will erase the unsaved changes you have made.</p>
-  <p>Timeout in {{countDown}} seconds</p>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No</button>
-  <button mat-button (click)="onYesClick()">Yes</button>
-</div>
+<section class="dialog-box">
+  <h1 class="dialog-box__title">Are You Still There?</h1>
+    <p>Your changes will be discarded in:</p>
+    <p><strong>{{responseWaitTime}}</strong> seconds.</p>
+    <p>Would you like to keep editing?</p>
+  <div class="dialog-box__btn-group">
+    <button class="cos-btn"
+            (click)="onSelectYes()">
+      Yes
+    </button>
+    <button class="cos-btn"
+            (click)="onSelectNo()">
+      No
+    </button>
+  </div>
+</section>
