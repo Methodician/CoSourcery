@@ -142,7 +142,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setArticleId();
-    this.subscribeToFormChanges();
+    this.watchFormChanges();
     this.watchArticle();
     this.watchUserInfo();
     this.watchCurrentEditors();
@@ -190,7 +190,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  subscribeToFormChanges() {
+  watchFormChanges() {
     this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe(() => {
       if (this.articleEditForm.dirty) {
         this.setEditSessionTimeout();
@@ -312,7 +312,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       } catch (error) {
         alert('There was a problem saving the article' + error);
       }
-    // Update Existing Article
+      // Update Existing Article
     } else {
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
       clearTimeout(this.editSessionTimeout);
