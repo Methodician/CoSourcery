@@ -119,7 +119,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     },
     placeholder: '<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you\'re done.</li></ol>',
     content: null,
-    toggleBtnOffset: 0
+    toggleBtnOffset: 0,
   }
 
   // Top-Level Comments State
