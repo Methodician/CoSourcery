@@ -1,25 +1,40 @@
 'use strict';
 
 import * as functions from 'firebase-functions';
+
 import * as admin from 'firebase-admin';
+admin.initializeApp();
+const adminFS = admin.firestore();
+const adminDB = admin.database();
+adminFS.settings({ timestampsInSnapshots: true });
+
+import * as algoliasearch from 'algoliasearch';
+const client = algoliasearch(functions.config().algolia.app_id, functions.config().algolia.admin_key);
+
+// const { Storage } = require('@google-cloud/storage');
+import { Storage } from '@google-cloud/storage';
+const gcs = new Storage();
+
+import * as cpp from 'child-process-promise';
+const spawn = cpp.spawn;
+
+import * as path from 'path';
+import * as os from 'os';
+import * as fs from 'fs';
+
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
 import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
-import * as algoliasearch from 'algoliasearch';
+// WATCH OUT - Currently, can't figure out way to build for prod, so need to swap these when deploying to production server...
 import { environment } from '../../src/environments/environment';
+// import { environment } from '../../src/environments/environment.prod';
 
-
-admin.initializeApp();
-const fs = admin.firestore();
-const db = admin.database();
-fs.settings({ timestampsInSnapshots: true });
-const client = algoliasearch(functions.config().algolia.app_id, functions.config().algolia.admin_key);
 
 //  Should we consolodate any simple ArticleDetail OnUpdate responses under this trigger?
 const trackArticleEditors = (article) => {
     const editorId = article.lastEditorId;
     const articleId = article.articleId;
     const updatedAt = new Date(article.lastUpdated.toDate()).getTime();
-    const ref = db.ref(`userInfo/articlesEditedPerUser/${editorId}/${articleId}/${updatedAt}`);
+    const ref = adminDB.ref(`userInfo/articlesEditedPerUser/${editorId}/${articleId}/${updatedAt}`);
     return ref.set(true);
 }
 exports.onUpdateArticleDetail = functions.firestore.document('articleData/articles/articles/{articleId}').onUpdate(async (change, context) => {
@@ -38,7 +53,7 @@ const trackArticleAuthorship = (article) => {
     const authorId = article.authorId;
     const articleId = article.articleId;
     const createdAt = new Date(article.timestamp.toDate()).getTime();
-    const ref = db.ref(`userInfo/articlesAuthoredPerUser/${authorId}/${articleId}`);
+    const ref = adminDB.ref(`userInfo/articlesAuthoredPerUser/${authorId}/${articleId}`);
     return ref.set(createdAt);
 }
 exports.onCreateArticleDetail = functions.firestore.document('articleData/articles/articles/{articleId}').onCreate(async (snap, context) => {
@@ -81,7 +96,7 @@ exports.trackCommentVotes = functions.database.ref(`commentData/votesByUser/{use
     // null = 0
     const diff = after - before;
     const commentKey = context.params['commentKey'];
-    const commentRef = db.ref(`commentData/comments/${commentKey}`);
+    const commentRef = adminDB.ref(`commentData/comments/${commentKey}`);
     return commentRef.transaction((commmentToUpdate: Comment) => {
         if (!commmentToUpdate) {
             return null;
@@ -123,7 +138,7 @@ exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{com
     };
 
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
-        return fs.runTransaction(async t => {
+        return adminFS.runTransaction(async t => {
             const snapshot = await t.get(articleDocRef);
             const article: ArticleDetailFirestore = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
@@ -136,14 +151,14 @@ exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{com
         });
     };
 
-    const parentCommentRef = db.ref(`commentData/comments/${context.params.commentKey}`);
+    const parentCommentRef = adminDB.ref(`commentData/comments/${context.params.commentKey}`);
     const snap = await parentCommentRef.once('value').then();
     const comment = snap.val()
     if (comment.parentType === ParentTypes.article) {
-        const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
+        const articleRef = adminFS.doc(`articleData/articles/articles/${comment.parentKey}`);
         return incrementCommentCount(articleRef);
     } else if (comment.parentType === ParentTypes.comment) {
-        const ref = db.ref(`commentData/comments/${comment.parentKey}`);
+        const ref = adminDB.ref(`commentData/comments/${comment.parentKey}`);
         return incrementReplyCount(ref);
     }
 
@@ -171,7 +186,7 @@ exports.countNewComment = functions.database.ref('commentData/comments/{commentK
     };
 
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
-        return fs.runTransaction(async t => {
+        return adminFS.runTransaction(async t => {
             const snapshot = await t.get(articleDocRef);
             const article: ArticleDetailFirestore = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
@@ -186,10 +201,10 @@ exports.countNewComment = functions.database.ref('commentData/comments/{commentK
 
     const comment: Comment = snap.val();
     if (comment.parentType === ParentTypes.article) {
-        const articleRef = fs.doc(`articleData/articles/articles/${comment.parentKey}`);
+        const articleRef = adminFS.doc(`articleData/articles/articles/${comment.parentKey}`);
         return incrementCommentCount(articleRef);
     } else if (comment.parentType === ParentTypes.comment) {
-        const commentRef = db.ref(`commentData/comments/${comment.parentKey}`);
+        const commentRef = adminDB.ref(`commentData/comments/${comment.parentKey}`);
         return incrementReplyCount(commentRef);
     }
     console.log('About to return null. Comments may not be counted...');
@@ -217,17 +232,13 @@ exports.trackFileUploads = functions.storage.object().onFinalize(async object =>
         if (filePath.startsWith('articleBodyImages/')) {
             //  It was a body image.
             await trackArticleBodyImages(filePath);
-            //  Don't do anything else. Exit function just in case.
-            return null;
         }
         if (filePath.startsWith('articleCoverImages/')) {
             //  It was a cover image.
-            console.log('It was a cover image');
+            await createCoverImageThumbnail(object);
         }
-        //  We don't know what kind of image it was. Maybe do something? For now, exit function.
-        return null;
     }
-    //  We're not doing anything, exit function.
+    //  Whether or not we did something, exit funciton
     return null;
 });
 
@@ -236,11 +247,40 @@ async function trackArticleBodyImages(filePath: string) {
     //  The string 'articleCoverImages/' contains 18 characters.
     //  Firestore push IDs contain 20 characters.
     const articleId = filePath.substr(18, 20);
-    const articleDocRef = fs.doc(`articleData/articles/articles/${articleId}`);
+    const articleDocRef = adminFS.doc(`articleData/articles/articles/${articleId}`);
     await articleDocRef.update({
         bodyImagePaths: admin.firestore.FieldValue.arrayUnion(filePath)
     });
 }
+
+async function createCoverImageThumbnail(object: functions.storage.ObjectMetadata) {
+    console.log('creating cover image thumbnail');
+    // looks like cover images on preview card ranges from 260x175 to 360x175 - let's go with a standard 260x175px thumbnail
+    const fileBucket = object.bucket;
+    const filePath = object.name;
+    const contentType = object.contentType;
+
+    // fileName should be an articleId...
+    const fileName = path.basename(filePath);
+    const bucket = gcs.bucket(fileBucket);
+    const tempFilePath = path.join(os.tmpdir(), fileName);
+    const metadata = { contentType: contentType };
+    await bucket.file(filePath).download({
+        destination: tempFilePath,
+    })
+    await spawn('convert', [tempFilePath, '-thumbnail', '260x175>', tempFilePath]);
+    const thumbFilePath = path.join('articleCoverThumbnails', fileName);
+    // upload the thumbnail
+    await bucket.upload(tempFilePath, {
+        destination: thumbFilePath,
+        metadata: metadata
+    });
+
+    // delete the local file to free up space
+    fs.unlinkSync(tempFilePath);
+    return null;
+}
+
 
 // The following which respond to onWrite of an article could be combined.
 exports.createHistoryObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
@@ -248,7 +288,7 @@ exports.createHistoryObject = functions.firestore.document('articleData/articles
         const articleId = context.params.articleId;
         const articleObject = change.after.data();
         const historyId = articleObject.version;
-        const historyRef = fs.doc(`articleData/articles/articles/${articleId}/history/${historyId}`);
+        const historyRef = adminFS.doc(`articleData/articles/articles/${articleId}/history/${historyId}`);
         return historyRef.set(articleObject).catch(error => {
             console.log(error);
         })
@@ -260,22 +300,9 @@ exports.createHistoryObject = functions.firestore.document('articleData/articles
 exports.createPreviewObject = functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
     const articleObject = change.after.data();
     const id = context.params.articleId;
-    const previewRef = fs.doc(`articleData/articles/previews/${id}`);
+    const previewRef = adminFS.doc(`articleData/articles/previews/${id}`);
     if (context.eventType !== 'google.firestore.document.delete') {
-        const previewObject = {
-            articleId: articleObject.articleId,
-            authorId: articleObject.authorId,
-            title: articleObject.title,
-            introduction: articleObject.introduction,
-            lastUpdated: articleObject.lastUpdated,
-            timestamp: articleObject.timestamp,
-            version: articleObject.version,
-            commentCount: articleObject.commentCount,
-            viewCount: articleObject.viewCount,
-            tags: articleObject.tags,
-            imageUrl: articleObject.imageUrl,
-            imageAlt: articleObject.imageAlt
-        }
+        const previewObject = previewFromArticle(articleObject);
         return previewRef.set(previewObject).catch(error => {
             console.log(error);
         })
@@ -283,4 +310,10 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
         return null;
     }
 });
+
+function previewFromArticle(articleObject) {
+    const { articleId, authorId, title, introduction, lastUpdated, timestamp, version, commentCount, viewCount, tags, imageUrl, imageAlt } = articleObject;
+    const url = imageUrl && imageUrl.length > 0 ? 'unset' : 'empty';
+    return { articleId, authorId, title, introduction, lastUpdated, timestamp, version, commentCount, viewCount, tags, imageUrl: url, imageAlt };
+}
 

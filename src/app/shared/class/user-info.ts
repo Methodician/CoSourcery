@@ -18,7 +18,7 @@ export class UserInfoOpen {
 
     displayImageUrl() {
         if (!this.imageUrl || this.imageUrl === '') {
-            return 'assets/images/logo.png';
+            return 'assets/images/logo.svg';
         }
         return this.imageUrl;
     }
@@ -31,5 +31,5 @@ export class UserInfoOpen {
 
 
 
-export interface KeyMap<T> { [key: string]: T; };
-export interface UserMap extends KeyMap<UserInfoOpen> { };
+export interface KeyMap<T> { [key: string]: T; }
+export interface UserMap extends KeyMap<UserInfoOpen> { }

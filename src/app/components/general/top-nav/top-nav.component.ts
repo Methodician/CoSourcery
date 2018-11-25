@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthInfo } from '../../../shared/class/auth-info';
 import { AuthService } from '../../../services/auth.service';
+import { MatDialog } from '@angular/material';
+import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-top-nav',
@@ -11,18 +13,17 @@ import { AuthService } from '../../../services/auth.service';
 
 export class TopNavComponent implements OnInit {
   authInfo: AuthInfo;
-  displayName;
-  showMobileMenu: boolean = false;
+  showMobileMenu = false;
 
   constructor(
     private authSvc: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
       this.authInfo = userData;
-      this.displayName = this.authInfo.email;
     });
   }
 
@@ -30,8 +31,12 @@ export class TopNavComponent implements OnInit {
     this.router.navigate(['search', input]);
   }
 
-  onLogOut() {
-    this.authSvc.signOut();
+  onLogin() {
+    this.dialog.open(LoginDialogComponent);
+  }
+
+  onLogout() {
+    this.authSvc.logout();
   }
 
 }

@@ -18,7 +18,7 @@
 
   mat-form-field {
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   ::ng-deep .mat-form-field-infix {
@@ -41,7 +41,7 @@
 
   &__display {
     position: relative;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 
     button {
       visibility: hidden;
@@ -66,9 +66,9 @@
   }
 
   &__editor {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     padding: 20px;
-    box-shadow: 0 2px 2px $light-gray-50;
+    box-shadow: 0 2px 4px $light-gray-50;
 
     input {
       padding-top: 10px;
@@ -89,6 +89,12 @@
       }
     }
   }
+}
+
+.article-header {
+  margin-bottom: 24px;
+  padding: 0 20px 20px;
+  box-shadow: 0 2px 4px $light-gray-50;
 }
 
 .article-title, .article-intro {
@@ -131,7 +137,6 @@
   }
 
   h2.static-display {
-    margin-bottom: 5px;
     padding: 5px 0;
   }
 }
@@ -145,17 +150,92 @@
   }
 
   p.static-display {
-    margin-bottom: 15px;
+    min-height: 80px;
   }
 
   textarea {
     margin: 0 0 2px;
     padding: 0;
   }
+
+  mat-form-field {
+    margin-bottom: 0;
+  }
 }
 
 .article-date {
+  margin: 0 0 5px;
   color: $medium-gray;
+  font-size: 0.8rem;
+}
+
+.article-utils {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 0 15px;
+  border-radius: 4px;
+  background-color: lighten($accent-color-1-dark, 25%);
+
+  @media screen and (min-width: 500px) {
+    padding: 0 20px;
+  }
+}
+
+.counters {
+  display: flex;
+  align-items: center;
+
+  &__item {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #fff;
+    cursor: default;
+
+    &:not(:first-child) {
+      margin-left: 15px;
+    }
+
+    &:hover .mat-icon-btn__tooltip {
+      visibility: visible;
+    }
+
+    &-stat {
+      display: block;
+      margin-left: 5px;
+      font-size: 0.9rem;
+    }
+
+    &_clickable {
+      cursor: pointer;
+    }
+
+    @media screen and (min-width: 500px) {
+
+      &:not(:first-child) {
+        margin-left: 20px;
+      }
+
+      &-stat {
+        margin-left: 15px;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  &__icon {
+    height: auto;
+    width: auto;
+    font-size: 1.2rem;
+
+    @media screen and (min-width: 500px) {
+      font-size: 1.5rem;
+    }
+  }
 }
 
 .article-body {
@@ -182,14 +262,6 @@
       visibility: visible;
     }
   }
-
-  &__placeholder {
-    margin-top: -300px;
-
-    h2 {
-      margin-top: 0;
-    }
-  }
 }
 
 .article-tags {
@@ -210,9 +282,6 @@
     margin: 6px;
     box-shadow: 0 0 5px $light-gray;
     background-color: #fff;
-  }
-
-  mat-form-field {
   }
 
   input {

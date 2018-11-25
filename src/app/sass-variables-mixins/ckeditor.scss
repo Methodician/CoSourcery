@@ -73,6 +73,16 @@
       margin: 10px 0;
     }
   }
+
+	.table.ck-widget.ck-widget_selectable {
+		display: block;
+		margin: 0 0 20px;
+		overflow-x: auto;
+	}
+
+	.ck-content .table table {
+		table-layout: fixed;
+	}
 }
 
 /* Custom Class .not-editable applied via ngClass */
@@ -86,7 +96,16 @@
     transition: none;
   }
 
+	.ck .ck-widget.ck-widget_selectable .ck-widget__selection-handler,
   .ck .ck-editor__editable.ck-editor__nested-editable.ck-placeholder {
     display: none;
   }
+
+	.ck .ck-widget.table td.ck-editor__nested-editable.ck-editor__nested-editable_focused,
+	.ck .ck-widget.table th.ck-editor__nested-editable.ck-editor__nested-editable_focused {
+		box-shadow: inherit;
+		border: inherit;
+		background: inherit;
+		outline: inherit;
+	}
 }

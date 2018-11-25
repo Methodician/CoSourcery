@@ -2,9 +2,9 @@
   <nav class="navbar">
 
     <a class="logo"
-       routerLink="home">
+       routerLink="">
       <img class="logo__image"
-           src="../../assets/images/logo.png"
+           src="../../assets/images/logo.svg"
            alt="CoSourcery Logo">
       <h1 class="logo__text">CoSourcery</h1>
     </a>
@@ -26,7 +26,7 @@
         </form>
       </li>
 
-      <li *ngIf="authInfo.uid !== null"
+      <li *ngIf="authInfo.uid"
           class="menu__item menu__item_collapse">
         <button class="mat-icon-btn"
                 routerLink="createarticle">
@@ -35,30 +35,40 @@
         </button>
       </li>
 
-      <li *ngIf="authInfo.uid === null"
+      <li *ngIf="authInfo.uid"
           class="menu__item menu__item_collapse">
-        <button class="cos-btn"
-                routerLink="login">
-          Login
+        <button class="mat-icon-btn"
+                routerLink="profile">
+          <mat-icon>person</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_below">Profile</span>
         </button>
       </li>
 
-      <li *ngIf="authInfo.uid !== null"
+      <li *ngIf="authInfo.uid"
           class="menu__item menu__item_collapse">
-        <button class="cos-btn"
-                (click)="onLogOut()">
+        <button class="cos-btn navbar__cos-btn"
+                (click)="onLogout()">
           Logout
         </button>
       </li>
 
-      <li *ngIf="authInfo.uid === null"
+      <li *ngIf="!authInfo.uid"
           class="menu__item menu__item_collapse">
-        <button class="cos-btn cos-btn_color_primary"
+        <button class="cos-btn navbar__cos-btn"
+                (click)="onLogin()">
+          Login
+        </button>
+      </li>
+
+      <li *ngIf="!authInfo.uid"
+          class="menu__item menu__item_collapse">
+        <button class="cos-btn cos-btn_color_primary navbar__cos-btn"
                 routerLink="register">
           Register
         </button>
       </li>
 
+      <!-- Mobile Menus  -->
       <li class="menu__item menu__item_mobile"
           (cosClickOut)="showMobileMenu = false">
         <button class="mat-icon-btn"
@@ -66,37 +76,46 @@
           <mat-icon>menu</mat-icon>
           <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_below">Menu</span>
         </button>
-        <ul *ngIf="showMobileMenu"
+
+        <!-- Authenticated Mobile Menu -->
+        <ul *ngIf="showMobileMenu && authInfo.uid"
             class="mobile-menu">
-          <li *ngIf="authInfo.uid !== null"
-              class="mobile-menu__item">
+          <li class="mobile-menu__item">
             <a routerLink="createarticle"
                class="mobile-menu__link"
                (click)="showMobileMenu = false">
               Post Article
             </a>
           </li>
-          <li *ngIf="authInfo.uid === null"
-              class="mobile-menu__item">
-            <a routerLink="login"
+          <li class="mobile-menu__item">
+            <a routerLink="profile"
                class="mobile-menu__link"
                (click)="showMobileMenu = false">
+              Profile
+            </a>
+          </li>
+          <li class="mobile-menu__item">
+            <a (click)="onLogout(); showMobileMenu = false"
+               class="mobile-menu__link">
+              Logout
+            </a>
+          </li>
+        </ul>
+
+        <!-- Un-Authenticated Mobile Menu -->
+        <ul *ngIf="showMobileMenu && !authInfo.uid"
+            class="mobile-menu">
+          <li class="mobile-menu__item">
+            <a class="mobile-menu__link"
+               (click)="onLogin(); showMobileMenu = false">
               Login
             </a>
           </li>
-          <li *ngIf="authInfo.uid !== null"
-              class="mobile-menu__item">
-            <a (click)="onLogOut(); showMobileMenu = false"
-               class="mobile-menu__link">
-               Logout
-            </a>
-          </li>
-          <li *ngIf="authInfo.uid === null"
-              class="mobile-menu__item">
+          <li class="mobile-menu__item">
             <a routerLink="register"
                class="mobile-menu__link"
                (click)="showMobileMenu = false">
-               Register
+              Register
             </a>
           </li>
         </ul>

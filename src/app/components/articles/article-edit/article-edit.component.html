@@ -6,7 +6,7 @@
     <section class="article-cover-image__display">
       <img *ngIf="!coverImageUrl$.value"
            class="article-cover-image__image"
-           src="../../assets/images/logo.png"
+           src="../../assets/images/logo.svg"
            alt="Cover Image">
       <img *ngIf="coverImageUrl$.value"
            class="article-cover-image__image"
@@ -15,7 +15,7 @@
       <button class="mat-icon-btn"
               [ngClass]="{'active': editCoverImage}"
               type="button"
-              (click)="editorAuthCheck() ? toggleEditCoverImage() : null">
+              (click)="toggleEditControl(CtrlNames.coverImage)">
         <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editCoverImage ? 'Close Image' : 'Edit
           Image'}}</span>
@@ -43,61 +43,100 @@
     </section>
   </section>
 
-  <section class="article-title"
-           (cosClickOut)="editTitle = false">
-    <h2 *ngIf="!editTitle"
-        class="static-display">
-      {{articleEditForm.value.title}}
-      <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
-    </h2>
-    <mat-form-field *ngIf="editTitle">
-      <h2><input #title
-               matInput
-               type="text"
-               formControlName="title"
-               maxlength="100"
-               required>
+  <section class="article-header">
+    <section class="article-title"
+             (cosClickOut)="editTitle = false">
+      <h2 *ngIf="!editTitle"
+          class="static-display">
+        {{articleEditForm.value.title}}
+        <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
       </h2>
-      <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
-      <mat-error>Please give your article a title.</mat-error>
-    </mat-form-field>
-    <button class="mat-icon-btn"
-            [ngClass]="{'active': editTitle}"
-            type="button"
-            (click)="editorAuthCheck() ? toggleEditTitle() : null">
-      <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
-      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
-    </button>
-  </section>
+      <mat-form-field *ngIf="editTitle">
+        <h2><input #title
+                 matInput
+                 type="text"
+                 formControlName="title"
+                 maxlength="100"
+                 required>
+        </h2>
+        <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
+        <mat-error>Please give your article a title.</mat-error>
+      </mat-form-field>
+      <button class="mat-icon-btn"
+              [ngClass]="{'active': editTitle}"
+              type="button"
+              (click)="toggleEditControl(CtrlNames.title)">
+        <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
+      </button>
+    </section>
 
-  <section class="article-intro"
-           (cosClickOut)="editIntro = false">
-    <p *ngIf="!editIntro"
-       class="static-display">
-      {{articleEditForm.value.introduction}}
-      <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
-        about.</span>
+    <p *ngIf="!formIsInCreateView"
+       class="article-date">
+      Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}
     </p>
-    <mat-form-field *ngIf="editIntro">
-      <p><input #introduction
-               matInput
-               type="text"
-               formControlName="introduction"
-               maxlength="300"
-               required /></p>
-      <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
-      <mat-error>Please tell us a little something about what this article is about.</mat-error>
-    </mat-form-field>
-    <button class="mat-icon-btn"
-            [ngClass]="{'active': editIntro}"
-            type="button"
-            (click)="editorAuthCheck() ? toggleEditIntro() : null">
-      <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
-      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
-    </button>
-  </section>
 
-  <p class="article-date">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</p>
+    <section class="article-intro"
+             (cosClickOut)="editIntro = false">
+      <p *ngIf="!editIntro"
+         class="static-display">
+        {{articleEditForm.value.introduction}}
+        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
+          about.</span>
+      </p>
+      <mat-form-field *ngIf="editIntro">
+        <p><textarea #introduction
+                    matInput
+                    type="text"
+                    formControlName="introduction"
+                    rows="3"
+                    maxlength="300"
+                    required></textarea>
+        </p>
+        <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
+        <mat-error>Please tell us a little something about what this article is about.</mat-error>
+      </mat-form-field>
+      <button class="mat-icon-btn"
+              [ngClass]="{'active': editIntro}"
+              type="button"
+              (click)="toggleEditControl(CtrlNames.intro)">
+        <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
+      </button>
+    </section>
+
+    <section class="article-utils">
+      <div class="counters">
+        <div class="counters__item">
+          <mat-icon class="counters__icon">comment</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+                style="left: 0;">
+            {{articleEditForm.value.commentCount}} Comment(s)
+          </span>
+          <span class="counters__item-stat">{{articleEditForm.value.commentCount}}</span>
+        </div>
+        <div class="counters__item">
+          <mat-icon class="counters__icon">border_color</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleEditForm.value.version}} Edit(s)</span>
+          <span class="counters__item-stat">{{articleEditForm.value.version}}</span>
+        </div>
+        <div class="counters__item">
+          <mat-icon class="counters__icon">loyalty</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleEditForm.value.tags.length}} Tag(s)</span>
+          <span class="counters__item-stat">{{articleEditForm.value.tags.length}}</span>
+        </div>
+      </div>
+      <div *ngIf="!articleIsNew"
+           class="counters__item counters__item_clickable"
+           (click)="authCheck() ? bookmarkToggle() : null">
+        <mat-icon class="counters__icon">{{articleIsBookmarked && loggedInUser.uid ? 'bookmark' : 'bookmark_border'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+              style="right: 0;">
+          {{articleIsBookmarked && loggedInUser.uid ? 'Remove Bookmark' : 'Bookmark'}}
+        </span>
+      </div>
+    </section>
+  </section>
 
   <section #ckeditorBoundingBox
            class="article-body"
@@ -107,35 +146,20 @@
          [ngClass]="{'border': loggedInUser.uid && editBody}">
       <button class="mat-icon-btn"
               [ngClass]="{'active': loggedInUser.uid && editBody}"
-              [ngStyle]="{'transform': 'translateY(' + ckeditorButtonOffset + 'px)'}"
+              [ngStyle]="{'transform': 'translateY(' + ckeditor.toggleBtnOffset + 'px)'}"
               type="button"
-              (click)="editorAuthCheck() ? toggleEditBody() : null">
+              (click)="toggleEditControl(CtrlNames.body)">
         <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>
         <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' :
           'Edit Body'}}</span>
       </button>
-      <ckeditor formControlName="body"
-                [editor]="ckeditor"
-                [config]="ckeditorConfig"
+      <ckeditor *ngIf="ckeditor.content"
+                (change)="onCKEditorChanged($event)"
+                [data]="ckeditor.content"
+                [editor]="ckeditor.build"
+                [config]="ckeditor.config"
                 [disabled]="!loggedInUser.uid || !editBody">
       </ckeditor>
-      <div *ngIf="articleEditForm.value.body === '' && !editBody"
-           class="ck ck-editor__editable_inline article-body__placeholder">
-        <div *ngIf="!articleIsNew">
-          <p>The article body is empty.</p>
-        </div>
-        <div *ngIf="articleIsNew">
-          <h2>Creating a New Article</h2>
-          <ol>
-            <li>Add an eye-catching <strong>Cover Image</strong> above.</li>
-            <li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li>
-            <li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it's so cool!</li>
-            <li>Add the <strong>Body</strong> of your article by editing this block of content.</li>
-            <li>Add some <strong>Tags</strong> below to help people find your article.</li>
-            <li>Click <strong>Save Article</strong> when you're done.</li>
-          </ol>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -170,7 +194,7 @@
     <button class="mat-icon-btn"
             [ngClass]="{'active': editTags}"
             type="button"
-            (click)="editorAuthCheck() ? toggleEditTags() : null">
+            (click)="toggleEditControl(CtrlNames.tags)">
       <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
       <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>
@@ -181,7 +205,7 @@
     <button class="cos-btn article-save-btn"
             type="button"
             [disabled]="!articleEditForm.valid"
-            (click)="editorAuthCheck() ? saveChanges() : null">
+            (click)="authCheck() ? saveChanges() : null">
       Save Article
     </button>
   </section>
@@ -194,7 +218,7 @@
     <h2 class="article-comments__title">Discussion</h2>
     <button *ngIf="commentReplyInfo.replyParentKey !== articleId || !loggedInUser.uid"
             class="cos-btn"
-            (click)="editorAuthCheck() ? enterNewCommentMode() : null">
+            (click)="authCheck() ? enterNewCommentMode() : null">
       Comment
     </button>
   </section>

@@ -3,7 +3,7 @@
   <a [routerLink]="'/article/' + articleData.articleId">
     <section class="card-content">
       <img class="card-content__image"
-           [src]="(articleData.imageUrl) ? articleData.imageUrl : '../../assets/images/logo.png'"
+           [src]="(articleData.imageUrl) ? articleData.imageUrl : '../../assets/images/logo.svg'"
            [alt]="(articleData.imageAlt) ? articleData.imageAlt : 'Cover Image'">
       <h2 class="card-content__title">{{articleData.title | truncateString: 20}}</h2>
       <p class="card-content__date">Last Updated: {{articleData?.lastUpdated?.toDate() | date}}</p>
@@ -15,7 +15,10 @@
     <div class="counter-icons">
       <div class="counter-icons__item">
         <mat-icon>comment</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleData.commentCount}} Comment(s)</span>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+              style="left: 0;">
+          {{articleData.commentCount}} Comment(s)
+        </span>
         <span class="counter-icons__stat">{{articleData.commentCount}}</span>
       </div>
       <div class="counter-icons__item">
@@ -32,7 +35,10 @@
     <div class="counter-icons__item bookmark-icon"
          (click)="authCheck() ? bookmarkToggle() : null">
       <mat-icon>{{isArticleBookmarked && userId ? 'bookmark' : 'bookmark_border'}}</mat-icon>
-      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{isArticleBookmarked && userId ? 'Remove Bookmark' : 'Bookmark'}}</span>
+      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+            style="right: 0;">
+        {{isArticleBookmarked && userId ? 'Remove Bookmark' : 'Bookmark'}}
+      </span>
     </div>
   </section>
 

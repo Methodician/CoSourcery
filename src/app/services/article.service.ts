@@ -4,9 +4,10 @@ import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ArticleDetailFirestore, ArticleDetailPreview } from 'app/shared/class/article-info';
 import { UserInfoOpen } from 'app/shared/class/user-info';
-import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
+import * as algoliasearch from 'algoliasearch/lite';
 import { environment } from 'environments/environment';
 
 @Injectable({
@@ -16,8 +17,7 @@ export class ArticleService {
   searchedArticles$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
   fsServerTimestamp = firebase.firestore.FieldValue.serverTimestamp();
   dbServerTimestamp = firebase.database.ServerValue.TIMESTAMP;
-  algoliasearch = require('algoliasearch/dist/algoliasearch.js');
-  client = this.algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
+  algoliaClient = algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
 
   constructor(
     private storage: AngularFireStorage,
@@ -29,34 +29,6 @@ export class ArticleService {
     return firebase.storage().ref(path);
   }
 
-  uploadTempImage(file: File): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
-    const id = this.createArticleId();
-    const storageRef = this.storage.ref(`tempImages/${id}`);
-    const task = storageRef.put(file);
-    return { task: task, ref: storageRef }
-  }
-
-  deleteFile(path: string) {
-    const storageRef = this.storage.ref(path);
-    storageRef.delete().subscribe(res => {
-      console.log('DELETED TEMP IMAGE (maybe), result: ', res);
-    });
-  }
-
-  uploadCoverImage(articleId: string, file: File, isNew = false): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
-    const storageRef = this.storage.ref(`articleCoverImages/${articleId}`);
-    const task = storageRef.put(file);
-    return {
-      task: task,
-      ref: storageRef
-    };
-  }
-
-  trackUploadedCoverImages(articleId, fullPath, url) {
-    const docRef = this.fsdb.doc(`fileUploads/articleUploads/coverImages/${articleId}`);
-    docRef.set({ path: fullPath, downloadUrl: url });
-  }
-
   latestArticlesRef(): AngularFirestoreCollection<ArticleDetailPreview> {
     return this.fsdb.collection('articleData/articles/previews', ref => ref.orderBy('timestamp', 'desc').limit(12));
   }
@@ -65,18 +37,17 @@ export class ArticleService {
     return this.fsdb.collection('articleData/articles/previews', ref => ref.orderBy('lastUpdated', 'desc'));
   }
 
-
   watchBookmarkedArticles(userKey) {
     const articleList$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
     const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`);
     bookmarksRef.snapshotChanges().pipe(map(keySnaps => {
       return keySnaps.map(snap => {
         return this.getPreviewRefById(snap.key).valueChanges();
-      })
+      });
     })).subscribe(previewObservables => {
-      let articleMap = {};
+      const articleMap = {};
       if (previewObservables.length > 0) {
-        for (let article$ of previewObservables) {
+        for (const article$ of previewObservables) {
           article$.subscribe(article => {
             if (!!article) {
               articleMap[article.articleId] = article;
@@ -91,7 +62,6 @@ export class ArticleService {
     });
     return articleList$;
   }
-
 
   getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetailFirestore> {
     return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
@@ -125,7 +95,6 @@ export class ArticleService {
       .set(this.dbServerTimestamp);
   }
 
-
   updateArticle(editor: UserInfoOpen, article, articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
@@ -133,7 +102,7 @@ export class ArticleService {
     const editCount = editors[editor.uid] || 0;
     editors[editor.uid] = editCount + 1;
 
-    let changedArticle = { ...article };
+    const changedArticle = { ...article };
     changedArticle.lastUpdated = this.fsServerTimestamp;
     changedArticle.version++;
     changedArticle.lastEditorId = editor.uid;
@@ -156,6 +125,50 @@ export class ArticleService {
     return articleRef.set(article, { merge: true });
   }
 
+  uploadTempImage(file: File): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
+    const id = this.createArticleId();
+    const storageRef = this.storage.ref(`tempImages/${id}`);
+    const task = storageRef.put(file);
+    return { task: task, ref: storageRef };
+  }
+
+  deleteFile(path: string) {
+    const storageRef = this.storage.ref(path);
+    storageRef.delete().subscribe(res => {
+      console.log('DELETED TEMP IMAGE (maybe), result: ', res);
+    });
+  }
+
+  uploadCoverImage(articleId: string, file: File, isNew = false): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
+    const storageRef = this.storage.ref(`articleCoverImages/${articleId}`);
+    const task = storageRef.put(file);
+    return {
+      task: task,
+      ref: storageRef
+    };
+  }
+
+  trackUploadedCoverImages(articleId, fullPath, url) {
+    const docRef = this.fsdb.doc(`fileUploads/articleUploads/coverImages/${articleId}`);
+    docRef.set({ path: fullPath, downloadUrl: url });
+  }
+
+  async setThumbnailImageUrl(articleId: string) {
+    const storagePath = `articleCoverThumbnails/${articleId}`;
+    const storageRef = this.storage.ref(storagePath);
+    const url = await storageRef.getDownloadURL().toPromise()
+    if (!url) {
+      return;
+    }
+    const trackerDocRef = this.fsdb.doc(`fileUploads/articleUploads/coverThumbnails/${articleId}`);
+    const articleDocRef = this.fsdb.doc(`articleData/articles/previews/${articleId}`);
+    trackerDocRef.set({
+      downloadUrl: url,
+      path: storagePath
+    });
+    return await articleDocRef.update({ imageUrl: url });
+  }
+
 
   createArticleId() {
     return this.fsdb.createId();
@@ -168,29 +181,63 @@ export class ArticleService {
   }
 
   async searchArticles(query) {
-    const index = this.client.initIndex(environment.algoliaIndex); //using index dev articles for now, in production will want to change this.
+    const articleList = new Array<any>();
+    this.searchedArticles$.next(articleList);
+    const index = this.algoliaClient.initIndex(environment.algoliaIndex);
     const searchResults = await index.search({
       query: query,
       attributesToRetrieve: ['objectId'],
       hitsPerPage: 50
     });
-
-    const articleList = new Array<any>();
     if (searchResults.hits.length > 0) {
       const articleIds = [];
-      searchResults.hits.forEach(article => { //creates array of articleIds from search results
+      searchResults.hits.forEach(article => { // creates array of articleIds from search results
         articleIds.push(article.objectID);
       });
-      articleIds.forEach(key => { //creates array of articlePreviews
+      articleIds.forEach(key => { // creates array of articlePreviews
         this.getPreviewRefById(key).valueChanges().subscribe(article => {
-          articleList.push(article);
+          if (article) {
+            articleList.push(article);
+          }
         });
       });
     }
     this.searchedArticles$.next(articleList);
   }
 
-  //with refactor this is no longer used
+  setArticleEditStatus(articleId: string, editorId: string) {
+    // onDisconnect not available in AngularFire2 so using vanilla db
+    // Solution looks overcomplicated because it is.
+    // Future-proofing for case where we allow multiple concurrent editors of single article (gDocs style)
+    // Also allowing for one person to have multiple tabs open and be editing multiple articles
+    const editorsByArticlePath = `articleData/editStatus/editorsByArticle/${articleId}/${editorId}`;
+    const articlesByEditorPath = `articleData/editStatus/articlesByEditor/${editorId}/${articleId}`;
+    const updates = {}
+    const editorsRef = this.rtdb.database.ref(editorsByArticlePath);
+    const articlesRef = this.rtdb.database.ref(articlesByEditorPath);
+    updates[editorsByArticlePath] = true;
+    updates[articlesByEditorPath] = true;
+
+    this.rtdb.database.ref().update(updates);
+
+    editorsRef.onDisconnect().set(null);
+    articlesRef.onDisconnect().set(null);
+  }
+
+  removeArticleEditStatus(articleId: string, editorId: string) {
+    const editorByArticlePath = `articleData/editStatus/editorsByArticle/${articleId}/${editorId}`;
+    const articleByEditorPath = `articleData/editStatus/articlesByEditor/${editorId}/${articleId}`;
+    const updates = {}
+    updates[editorByArticlePath] = null;
+    updates[articleByEditorPath] = null;
+    this.rtdb.database.ref().update(updates);
+  }
+
+  getEditorsByArticleRef(articleId: string): AngularFireList<boolean> {
+    return this.rtdb.list(`articleData/editStatus/editorsByArticle/${articleId}`);
+  }
+
+  // with refactor this is no longer used
   // arrayFromCollectionSnapshot(querySnapshot: any, shouldAttachId: boolean = false) {
   //   const array = [];
   //   querySnapshot.forEach(doc => {

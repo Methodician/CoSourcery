@@ -1,72 +1,63 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
-form {
+.register-form {
   max-width: 768px;
   margin: auto;
-  padding: 24px 0;
+  padding: 24px 24px 48px;
 
-  h2 {
+  &__title {
     color: $primary-color;
+    text-align: center;
   }
 
-  mat-form-field {
+  &__submit-btn {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+.register-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 30px;
+  box-shadow: 0 2px 5px $light-gray-50;
+
+  &__input {
     width: 100%;
-
-    &:not(:last-child) {
-      margin-bottom: 24px;
-    }
+    min-width: 0;
+    margin-bottom: 20px;
   }
 
-  @media screen and (min-width: 500px) {
-    padding: 24px 24px 48px;
-  }
-}
-
-.logout-message {
-  padding: 20px;
-  text-align: center;
-}
-
-.inputs {
-  margin-bottom: 24px;
-  padding: 20px;
-
-  @media screen and (min-width: 500px) {
-    box-shadow: 0 2px 5px $light-gray-50;
-  }
-
-  .state-zipcode {
+  &__input-group {
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr;
 
     @media screen and (min-width: 500px) {
-      grid-template-columns: 1fr 2fr;
-      grid-gap: 24px;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 20px;
     }
   }
 }
 
-button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  background-color: $accent-color-1;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
+mat-error, mat-hint {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
 
-  &:hover {
-    box-shadow: 0 2px 2px $medium-gray;
-  }
+mat-hint.error {
+  color: red;
+}
 
-  &:active {
-    box-shadow: none;
-  }
+.logout-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  &:disabled {
-    opacity: 0.5;
-    box-shadow: none;
-    cursor: default;
+  &__text {
+    margin: 0 0 20px;
+    text-align: center;
   }
 }

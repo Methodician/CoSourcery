@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommentService } from 'app/services/comment.service';
 import { Subscription } from 'rxjs';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { Comment, CommentMap, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
+import { MatDialog } from '@angular/material';
+import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-comment-list',
@@ -13,7 +14,7 @@ import { Comment, CommentMap, ParentTypes, KeyMap, VoteDirections } from 'app/sh
 export class CommentListComponent implements OnInit, OnDestroy {
   @Input() isUnderComment = true;
   @Input() parentKey: string;
-  @Input() loggedInUser: UserInfoOpen
+  @Input() loggedInUser: UserInfoOpen;
   @Input() userMap: UserMap = {};
   @Input() userKeys: string[];
   @Input() userVotesMap: KeyMap<VoteDirections>;
@@ -31,8 +32,8 @@ export class CommentListComponent implements OnInit, OnDestroy {
   commentListUnfurlMap: KeyMap<boolean> = {};
 
   constructor(
-    private router: Router,
-    private commentSvc: CommentService
+    private commentSvc: CommentService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -53,7 +54,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   hasUserVoted(commentKey: string, voteDirection: VoteDirections) {
     if (!this.userVotesMap[commentKey]) {
-      return false
+      return false;
     }
     return this.userVotesMap[commentKey] as number === VoteDirections[voteDirection] as any as number;
   }
@@ -65,18 +66,16 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   enterNewCommentMode(replyParentKey) {
     this.commentEditInfo.commentKey = null;
-    this.commentListUnfurlMap[replyParentKey] = true
+    this.commentListUnfurlMap[replyParentKey] = true;
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, replyParentKey, ParentTypes.comment);
     this.commentReplyInfo.replyParentKey = replyParentKey;
   }
 
-  commentAuthCheck() {
+  authCheck() {
     if (this.loggedInUser.uid) {
       return true;
     } else {
-      if (confirm("Login Required: Would you like to login now?")) {
-        this.router.navigate(['/login']);
-      }
+      this.dialog.open(LoginDialogComponent);
       return false;
     }
   }
@@ -112,7 +111,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   unfurlCommentObservables(): Subscription {
     return this.commentSvc.watchCommentsByParent(this.parentKey)
       .subscribe(comments => {
-        for (let comment$ of comments) {
+        for (const comment$ of comments) {
           comment$.subscribe(commentSnap => {
             this.mapCommentSnapshot(commentSnap);
           });

@@ -1,16 +1,20 @@
 import { Component, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatChipInputEvent, MatDialog, MatDialogConfig } from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '../../../services/article.service';
 import { UserService } from '../../../services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
 import { CommentService } from 'app/services/comment.service';
 import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
+import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edit-timeout-dialog.component';
+import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
+import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
 
 @Component({
   selector: 'cos-article-edit',
@@ -26,18 +30,43 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       $event.returnValue = true;
     }
   }
+  @HostListener('window:keydown', ['$event'])
+  onkeydown($event: any) {
+    if (this.userIsEditingArticle()) {
+      if ($event.ctrlKey && $event.code === 'KeyS') {
+        $event.preventDefault();
+        this.saveChanges();
+      }
+    }
+  }
 
   loggedInUser: UserInfoOpen = null;
+
+  // Dialog Tracker for Overriding UnsavedChangesGuard
+  dialogIsOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  // Article State
   articleId: any;
   articleIsNew: boolean;
-  formIsReady = false;
-  tagsEdited = false
-  currentArticleSubscription: Subscription;
-  readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
+  articleIsBookmarked: boolean;
+  articleSubscription: Subscription;
+  articleEditorSubscription: Subscription;
+  currentArticleEditors = {};
 
-  newCommentStub: Comment;
-  commentReplyInfo = { replyParentKey: null };
-  commentEditInfo = { commentKey: null };
+  // Article Form State
+  formIsInCreateView: boolean;
+  articleEditFormSubscription: Subscription;
+  editSessionTimeout;
+
+  CtrlNames = CtrlNames; // Enum Availablility in HTML Template
+  editCoverImage: boolean = false;
+  editTitle: boolean = false;
+  editIntro: boolean = false;
+  editBody: boolean = false;
+  editTags: boolean = false;
+
+  tagsEdited: boolean = false;
+  readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
   coverImageFile: File;
   tempCoverImageUploadPath: string;
@@ -45,40 +74,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
 
-  userMap: UserMap = {};
-  userKeys: string[];
-
-  userVotesMap: KeyMap<VoteDirections> = {};
-
-  ckeditorButtonOffset: number = 0;
-  ckeditor = InlineEditor;
-  ckeditorConfig = {
-    toolbar: {
-      items: [
-        'heading',
-        'bold',
-        'italic',
-        'link',
-        'bulletedList',
-        'numberedList',
-        'blockQuote',
-        'imageUpload',
-        'mediaEmbed',
-        'insertTable'
-      ],
-      viewportTopOffset: 70
-    },
-    // fbImageStorage is declared here but set after articleId is set.
-    fbImageStorage: {}
-  };
-
-  editCoverImage: boolean = false;
-  editTitle: boolean = false;
-  editIntro: boolean = false;
-  editBody: boolean = false;
-  editTags: boolean = false;
-
-  articleEditForm = this.fb.group({
+  articleEditForm: FormGroup = this.fb.group({
     articleId: '',
     authorId: '',
     title: ['', [
@@ -89,7 +85,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.maxLength(300)
     ]],
-    body: '',
+    body: 'This article is empty.',
     imageUrl: '',
     imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',
@@ -104,6 +100,40 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     editors: {},
   });
 
+  ckeditor = {
+    build: InlineEditor,
+    config: {
+      toolbar: {
+        items: [
+          'heading',
+          'bold',
+          'italic',
+          'link',
+          'bulletedList',
+          'numberedList',
+          'blockQuote',
+          'imageUpload',
+          'mediaEmbed',
+          'insertTable'
+        ],
+        viewportTopOffset: 70
+      },
+      // fbImageStorage is declared here but set after articleId is set.
+      fbImageStorage: {}
+    },
+    placeholder: '<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you\'re done.</li></ol>',
+    content: null,
+    toggleBtnOffset: 0,
+  }
+
+  // Top-Level Comments State
+  newCommentStub: Comment;
+  commentReplyInfo = { replyParentKey: null };
+  commentEditInfo = { commentKey: null };
+  userMap: UserMap = {};
+  userKeys: string[];
+  userVotesMap: KeyMap<VoteDirections> = {};
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -111,36 +141,25 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private articleSvc: ArticleService,
     private userSvc: UserService,
     private commentSvc: CommentService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
-    //  May abstract userInfo out to an ID now that we have user map...
-    this.userSvc.userInfo$.subscribe(user => {
-      this.loggedInUser = user;
-      this.mapUserVotes();
-    });
     this.setArticleId();
-    this.subscribeToArticle();
-    this.userMap = this.userSvc.userMap;
-    this.userKeys = Object.keys(this.userMap);
+    this.watchFormChanges();
+    this.watchArticle();
+    this.watchUserInfo();
+    this.watchCurrentEditors();
   }
 
   ngOnDestroy() {
+    this.articleSubscription.unsubscribe();
+    this.articleEditorSubscription.unsubscribe();
+    this.articleEditFormSubscription.unsubscribe();
     this.abortChanges();
-    this.currentArticleSubscription.unsubscribe();
   }
 
-  mapUserVotes() {
-    this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
-      .snapshotChanges().subscribe(snaps => {
-        this.userVotesMap = {};
-        for (let snap of snaps) {
-          this.userVotesMap[snap.key] = snap.payload.val() as any;
-        }
-      });
-  }
-
-  // Form Setup & Breakdown Functions
+  // Form Setup & Breakdown
   setArticleId() {
     this.route.params.subscribe(params => {
       if (params['key']) {
@@ -149,115 +168,60 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       } else {
         this.articleId = this.articleSvc.createArticleId();
         this.articleIsNew = true;
+        this.formIsInCreateView = true;
       }
-      this.ckeditorConfig.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
+      this.ckeditor.config.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
     });
   }
 
-  subscribeToArticle() {
-    if (this.currentArticleSubscription) {
-      this.currentArticleSubscription.unsubscribe();
+  watchArticle() {
+    if (this.articleSubscription) {
+      this.articleSubscription.unsubscribe();
     }
-    this.currentArticleSubscription = this.articleSvc
+    this.articleSubscription = this.articleSvc
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
-        if (!this.formIsReady) {
-          this.setDefaultFormData(articleData);
-          this.formIsReady = true;
-        } else {
-          this.updateCoverImageUrl(articleData.imageUrl);
-          this.articleEditForm.patchValue({ lastUpdated: articleData.lastUpdated });
-        }
+        this.ckeditor.content = articleData ? articleData.body : this.ckeditor.placeholder;
+        this.setFormData(articleData);
       });
   }
 
-  setDefaultFormData(data) {
+  setFormData(data) {
     if (!this.articleIsNew) {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
     }
-    this.articleEditForm.markAsPristine();
   }
 
-  async saveChanges() {
-    if (this.coverImageFile) {
-      await this.saveCoverImage();
-      this.deleteTempCoverImage();
-      this.coverImageFile = null;
-    }
-    if (!this.articleEditForm.value.articleId) {
-      try {
-        await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
-        this.articleIsNew = false;
-        this.router.navigate([`article/${this.articleId}`]);
-      } catch (error) {
-        alert('There was a problem saving the article' + error);
+  watchFormChanges() {
+    this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe(() => {
+      if (this.articleEditForm.dirty) {
+        this.setEditSessionTimeout();
+        if (!this.userIsEditingArticle()) {
+          this.addUserEditingStatus();
+        }
       }
-    } else {
-      this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
-    }
-    this.resetEditStates();
-  }
-
-  resetEditStates() {
-    this.articleEditForm.markAsPristine();
-    this.tagsEdited = false;
-    this.coverImageFile = null;
-    this.editCoverImage = false;
-    this.editTitle = false;
-    this.editIntro = false;
-    this.editBody = false;
-    this.editTags = false;
+    });
   }
 
   abortChanges() {
-    this.currentArticleSubscription.unsubscribe();
     this.cancelUpload(this.coverImageUploadTask);
-    this.deleteTempCoverImage
+    if (this.tempCoverImageUploadPath) {
+      this.deleteTempCoverImage();
+    }
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
-  }
-
-  // Form Edit Mode Controls
-  toggleEditCoverImage() {
-    this.editBody = false;
-    this.editCoverImage = !this.editCoverImage;
-  }
-
-  toggleEditTitle() {
-    this.editBody = false;
-    this.editTitle = !this.editTitle;
-  }
-
-  toggleEditIntro() {
-    this.editBody = false;
-    this.editIntro = !this.editIntro;
-  }
-
-  toggleEditBody() {
-    this.editBody = !this.editBody;
-  }
-
-  toggleEditTags() {
-    this.editBody = false;
-    this.editTags = !this.editTags;
-  }
-
-  editorAuthCheck() {
-    if (this.loggedInUser.uid) {
-      return true;
-    } else {
-      if (confirm("Login Required: Would you like to login now?")) {
-        this.router.navigate(['/login']);
-      }
-      return false;
+    if (this.articleHasUnsavedChanges()) {
+      this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
+      clearTimeout(this.editSessionTimeout);
     }
   }
 
-  // Cover Image Upload Functions
+  // Cover Image Upload
   async onSelectCoverImage(e: HtmlInputEvent) {
+    this.setEditSessionTimeout();
     this.coverImageFile = e.target.files.item(0);
     const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
     this.coverImageUploadTask = tracker.task;
@@ -266,6 +230,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const url = await tracker.ref.getDownloadURL().toPromise();
     this.coverImageUrl$.next(url);
     this.tempCoverImageUploadPath = snap.metadata.fullPath;
+    this.addUserEditingStatus();
   }
 
   async saveCoverImage() {
@@ -284,8 +249,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   cancelUpload(task: AngularFireUploadTask) {
-    if (task)
+    if (task) {
       task.cancel();
+    }
   }
 
   updateCoverImageUrl(url) {
@@ -293,18 +259,24 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.coverImageUrl$.next(url);
   }
 
-  // Article Tagging Functions
+  // Article Tagging
   addTag(event: MatChipInputEvent): void {
     const tag = event.value.toUpperCase();
-    const isDuplicate = this.checkForDuplicateTag(tag);
+    const isDuplicate = this.isTagDuplicate(tag);
     if (tag.trim() && !isDuplicate) {
       this.articleEditForm.value.tags.push(tag.trim());
       event.input.value = '';
+      this.addUserEditingStatus();
       this.tagsEdited = true;
     }
   }
 
-  checkForDuplicateTag(value) {
+  isInvalidTagInput(value): boolean {
+    const nonLetterNumberSpace = new RegExp('[^a-zA-Z0-9 ]');
+    return nonLetterNumberSpace.test(value) ? true : false;
+  }
+
+  isTagDuplicate(value): boolean {
     const tagIndex = this.articleEditForm.value.tags.indexOf(value);
     return (tagIndex >= 0) ? true : false;
   }
@@ -313,37 +285,233 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const tagIndex = this.articleEditForm.value.tags.indexOf(selectedTag);
     if (tagIndex >= 0) {
       this.articleEditForm.value.tags.splice(tagIndex, 1);
+      this.addUserEditingStatus();
       this.tagsEdited = true;
     }
   }
 
-  // Manual Input Validation
-  isInvalidTagInput(value) {
-    const nonLetterNumberSpace = new RegExp('[^a-zA-Z0-9 ]');
-    return nonLetterNumberSpace.test(value) ? true : false;
+  // Form Data Handling
+  onCKEditorChanged({ event, editor }: ChangeEvent) {
+    // We're not using CKEditor as a normal FormControl because its scripts would mark the form as "dirty" even when the data was coming from DB.
+    // This approach allows us to manually mark it as dirty only when the changes are coming from locally...
+    const contents = editor.getData();
+    this.articleEditForm.markAsDirty();
+    this.articleEditForm.patchValue({ body: contents });
+  }
+
+  async saveChanges() {
+    if (this.coverImageFile) {
+      await this.saveCoverImage();
+      this.deleteTempCoverImage();
+      this.coverImageFile = null;
+    }
+    // Create New Article
+    if (!this.articleEditForm.value.articleId) {
+      try {
+        await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
+        this.articleIsNew = false;
+        clearTimeout(this.editSessionTimeout);
+        this.resetEditStates(); // Unsaved changes checked upon route change
+        this.router.navigate([`article/${this.articleId}`]);
+      } catch (error) {
+        this.openMessageDialog('Save Error', 'Oops! There was a problem saving your article.', `Error: ${error}`);
+      }
+      // Update Existing Article
+    } else {
+      this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
+      clearTimeout(this.editSessionTimeout);
+      this.resetEditStates();
+    }
+  }
+
+  resetEditStates() {
+    this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
+    this.currentArticleEditors[this.loggedInUser.uid] = false;
+    this.articleEditForm.markAsPristine();
+    this.tagsEdited = false;
+    this.coverImageFile = null;
+    this.editCoverImage = false;
+    this.editTitle = false;
+    this.editIntro = false;
+    this.editBody = false;
+    this.editTags = false;
   }
 
   articleHasUnsavedChanges(): boolean {
-    return this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty;
+    return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)
   }
 
-  // CKEditor Button Scroll to Float
+  // Editor and User Info Tracking
+  watchUserInfo() {
+    //  May abstract userInfo out to an ID now that we have user map...
+    this.userSvc.userInfo$.subscribe(user => {
+      this.loggedInUser = user;
+      this.checkIfBookmarked();
+      this.mapUserVotes();
+    });
+    this.userMap = this.userSvc.userMap;
+    this.userKeys = Object.keys(this.userMap);
+  }
+
+  watchCurrentEditors() {
+    this.articleEditorSubscription = this.articleSvc
+      .getEditorsByArticleRef(this.articleId)
+      .snapshotChanges()
+      .subscribe(snapList => {
+        this.currentArticleEditors = {};
+        for (let snap of snapList) {
+          this.currentArticleEditors[snap.key] = true;
+        }
+      });
+  }
+
+  addUserEditingStatus() {
+    this.articleSvc.setArticleEditStatus(this.articleId, this.loggedInUser.uid);
+    this.currentArticleEditors[this.loggedInUser.uid] = true;
+  }
+
+  articleHasEditors(): boolean {
+    return Object.keys(this.currentArticleEditors).length > 0;
+  }
+
+  userIsEditingArticle(): boolean {
+    return !!this.currentArticleEditors[this.loggedInUser.uid];
+  }
+
+  // Editor Session Management
+  setEditSessionTimeout() {
+    clearTimeout(this.editSessionTimeout);
+    this.editSessionTimeout = setTimeout(() => {
+      this.openTimeoutDialog();
+    }, 300000);
+  }
+
+  openTimeoutDialog() {
+    this.dialogIsOpen.next(true);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+
+    const dialogRef = this.dialog.open(EditTimeoutDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(res => {
+      this.dialogIsOpen.next(false);
+      const editorIsActive = res ? res : false;
+      if (editorIsActive) {
+        this.setEditSessionTimeout();
+      } else {
+        this.endEditSession();
+      }
+    });
+  }
+
+  endEditSession() {
+    this.dialogIsOpen.next(true);
+    const dialogRef = this.openMessageDialog('Session Timeout', 'Your changes have been discarded.');
+    dialogRef.afterClosed().subscribe(() => {
+      this.dialogIsOpen.next(false);
+      this.resetEditStates();
+      this.router.navigate(['home']);
+    });
+  }
+
+  // UI Display
+  async toggleEditControl(ctrlName: CtrlNames) {
+    // For now doesn't allow multiple editors. Will change later...
+    if (!this.userIsEditingArticle() && this.articleHasEditors()) {
+      const uid = Object.keys(this.currentArticleEditors)[0];
+      // Editors is an array so that we can later allow multilple collaborative editors.
+      if (!this.userMap[uid]) {
+        await this.userSvc.addUserToMap(uid);
+      }
+      this.openMessageDialog('Edit Locked', `The user "${this.userMap[uid].displayName()}" is currently editing this article.`, 'Please try again later.');
+    } else if (this.authCheck()) {
+      if (ctrlName !== CtrlNames.body) {
+        this.editBody = false;
+      }
+      switch (ctrlName) {
+        case CtrlNames.coverImage:
+          this.editCoverImage = !this.editCoverImage;
+          break;
+        case CtrlNames.title:
+          this.editTitle = !this.editTitle;
+          break;
+        case CtrlNames.intro:
+          this.editIntro = !this.editIntro;
+          break;
+        case CtrlNames.tags:
+          this.editTags = !this.editTags;
+          break;
+        case CtrlNames.body:
+          this.editBody = !this.editBody;
+        default:
+          break;
+      }
+    }
+  }
+
+  authCheck(): boolean {
+    if (this.loggedInUser.uid) {
+      return true;
+    } else {
+      this.dialog.open(LoginDialogComponent);
+      return false;
+    }
+  }
+
   setCkeditorButtonOffset() {
-    const viewportTopOffset = this.ckeditorConfig.toolbar.viewportTopOffset;
+    const viewportTopOffset = this.ckeditor.config.toolbar.viewportTopOffset;
     const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
     const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
-    this.ckeditorButtonOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+    this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
-  // Top-Level Commenting Functions
+  openMessageDialog(title: string, msg1: string, msg2: string = null) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      dialogTitle: title ? title : null,
+      dialogLine1: msg1 ? msg1 : null,
+      dialogLine2: msg2 ? msg2 : null
+    }
+    return this.dialog.open(MessageDialogComponent, dialogConfig);
+  }
+
+  // Bookmarking
+  checkIfBookmarked() {
+    const ref = this.articleSvc.bookmarkedRef(this.loggedInUser.uid, this.articleId);
+    ref.valueChanges().subscribe(snapshot => {
+      if (snapshot && snapshot.toString().length === 13) {
+        this.articleIsBookmarked = true;
+      } else {
+        this.articleIsBookmarked = false;
+      }
+    });
+  }
+
+  bookmarkToggle() {
+    if (this.authCheck()) {
+      if (this.articleIsBookmarked) {
+        this.articleSvc.unBookmarkArticle(this.loggedInUser.uid, this.articleId);
+      } else {
+        this.articleSvc.bookmarkArticle(this.loggedInUser.uid, this.articleId);
+      }
+    }
+  }
+
+  // Top-Level Commenting
+  mapUserVotes() {
+    this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
+      .snapshotChanges().subscribe(snaps => {
+        this.userVotesMap = {};
+        for (const snap of snaps) {
+          this.userVotesMap[snap.key] = snap.payload.val() as any;
+        }
+      });
+  }
+
   enterNewCommentMode() {
     this.commentEditInfo.commentKey = null;
     this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId, ParentTypes.article);
     this.commentReplyInfo.replyParentKey = this.articleId;
-  }
-
-  onCancelNewComment() {
-    this.commentReplyInfo.replyParentKey = null;
   }
 
   onAddComment() {
@@ -351,8 +519,20 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.commentReplyInfo.replyParentKey = null;
   }
 
+  onCancelNewComment() {
+    this.commentReplyInfo.replyParentKey = null;
+  }
+
 }
 
 export interface HtmlInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
+}
+
+export enum CtrlNames {
+  coverImage = 'coverImage',
+  title = 'title',
+  intro = 'intro',
+  body = 'body',
+  tags = 'tags'
 }
