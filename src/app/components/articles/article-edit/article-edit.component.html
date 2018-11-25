@@ -200,13 +200,18 @@
     </button>
   </section>
 
-  <section *ngIf="articleHasUnsavedChanges() || articleIsNew"
-           class="flex-center-justify">
-    <button class="cos-btn article-save-btn"
+  <section class="article-save-control"
+           [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew}">
+    <button class="mat-icon-btn mat-icon-btn_no-shadow"
             type="button"
-            [disabled]="!articleEditForm.valid"
+            [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
             (click)="authCheck() ? saveChanges() : null">
-      Save Article
+      <mat-icon>save</mat-icon>
+      <span *ngIf="articleHasUnsavedChanges() || articleIsNew"
+            class="mat-icon-btn__tooltip mat-icon-btn__tooltip_right"
+            style="right: -20px;">
+        Save Article
+      </span>
     </button>
   </section>
 </form>
