@@ -33,6 +33,12 @@ export class UnsavedChangesGuard implements CanDeactivate<ArticleEditComponent> 
           observer.next(false);
           observer.complete();
         });
+        // Give precedence to component modals
+        component.dialogIsOpen.subscribe(res => {
+          if (res) {
+            dialogRef.close(false);
+          }
+        });
       });
     } else {
       return true;

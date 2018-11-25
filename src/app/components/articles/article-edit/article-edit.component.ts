@@ -42,6 +42,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   loggedInUser: UserInfoOpen = null;
 
+  // Dialog Tracker for Overriding UnsavedChangesGuard
+  dialogIsOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   // Article State
   articleId: any;
   articleIsNew: boolean;
@@ -384,11 +387,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   openTimeoutDialog() {
+    this.dialogIsOpen.next(true);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
 
     const dialogRef = this.dialog.open(EditTimeoutDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(res => {
+      this.dialogIsOpen.next(false);
       const editorIsActive = res ? res : false;
       if (editorIsActive) {
         this.setEditSessionTimeout();
@@ -399,8 +404,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   endEditSession() {
+    this.dialogIsOpen.next(true);
     const dialogRef = this.openMessageDialog('Session Timeout', 'Your changes have been discarded.');
     dialogRef.afterClosed().subscribe(() => {
+      this.dialogIsOpen.next(false);
       this.resetEditStates();
       this.router.navigate(['home']);
     });
