@@ -7,21 +7,21 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
   styleUrls: ['./message-dialog.component.scss']
 })
 export class MessageDialogComponent {
-  messageTitle: string;
-  messageLine1: string;
-  messageLine2: string;
+  dialogTitle: string;
+  dialogLine1: string;
+  dialogLine2: string;
 
   constructor(
     private dialogRef: MatDialogRef<MessageDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: {
-      messageTitle: string,
-      messageLine1: string,
-      messageLine2: string
+      dialogTitle: string,
+      dialogLine1: string,
+      dialogLine2: string
     }
   ) {
-    this.messageTitle = data.messageTitle ? data.messageTitle : 'Message Title';
-    this.messageLine1 = data.messageLine1 ? data.messageLine1 : 'Message Line 1';
-    this.messageLine2 = data.messageLine2 ? data.messageLine2 : null;
+    this.dialogTitle = data.dialogTitle ? data.dialogTitle : 'Message Title';
+    this.dialogLine1 = data.dialogLine1 ? data.dialogLine1 : 'Message Line 1';
+    this.dialogLine2 = data.dialogLine2 ? data.dialogLine2 : null;
   }
 
   onConfirm() {

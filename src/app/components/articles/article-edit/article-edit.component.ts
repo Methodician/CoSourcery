@@ -463,9 +463,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.data = {
-      messageTitle: title ? title : null,
-      messageLine1: msg1 ? msg1 : null,
-      messageLine2: msg2 ? msg2 : null
+      dialogTitle: title ? title : null,
+      dialogLine1: msg1 ? msg1 : null,
+      dialogLine2: msg2 ? msg2 : null
     }
     return this.dialog.open(MessageDialogComponent, dialogConfig);
   }
