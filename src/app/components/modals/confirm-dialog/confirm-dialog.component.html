@@ -4,8 +4,12 @@
     <p *ngIf="dialogLine2">{{dialogLine2}}</p>
   <div class="dialog-box__btn-group">
     <button class="cos-btn"
-            (click)="onConfirm()">
-      OK
+            (click)="onSelectYes()">
+      Yes
+    </button>
+    <button class="cos-btn"
+            (click)="onSelectNo()">
+      No
     </button>
   </div>
 </section>

@@ -2,17 +2,17 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 @Component({
-  selector: 'cos-message-dialog',
-  templateUrl: './message-dialog.component.html',
-  styleUrls: ['./message-dialog.component.scss']
+  selector: 'cos-confirm-dialog',
+  templateUrl: './confirm-dialog.component.html',
+  styleUrls: ['./confirm-dialog.component.scss']
 })
-export class MessageDialogComponent {
+export class ConfirmDialogComponent {
   dialogTitle: string;
   dialogLine1: string;
   dialogLine2: string;
 
   constructor(
-    private dialogRef: MatDialogRef<MessageDialogComponent>,
+    private dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: {
       dialogTitle: string,
       dialogLine1: string,
@@ -24,8 +24,12 @@ export class MessageDialogComponent {
     this.dialogLine2 = data.dialogLine2 ? data.dialogLine2 : null;
   }
 
-  onConfirm() {
-    this.dialogRef.close();
+  onSelectNo(): void {
+    this.dialogRef.close(false);
+  }
+
+  onSelectYes(): void {
+    this.dialogRef.close(true);
   }
 
 }
