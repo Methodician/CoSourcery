@@ -25,8 +25,8 @@ import * as fs from 'fs';
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
 import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
 // WATCH OUT - Currently, can't figure out way to build for prod, so need to swap these when deploying to production server...
-import { environment } from '../../src/environments/environment';
-// import { environment } from '../../src/environments/environment.prod';
+// import { environment } from '../../src/environments/environment';
+import { environment } from '../../src/environments/environment.prod';
 
 
 //  Should we consolodate any simple ArticleDetail OnUpdate responses under this trigger?
