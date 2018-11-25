@@ -1,22 +1,42 @@
 import { Injectable } from '@angular/core';
+import { Observable, Observer } from 'rxjs';
 import { CanDeactivate } from '@angular/router';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
+import { ConfirmDialogComponent } from '../../components/modals/confirm-dialog/confirm-dialog.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnsavedChangesGuard implements CanDeactivate<ArticleEditComponent> {
-  canDeactivate(
-    component: ArticleEditComponent): boolean {
 
+  constructor(
+    private dialog: MatDialog
+  ) { }
 
+  canDeactivate(component: ArticleEditComponent): Observable<boolean> | boolean {
     if (component.articleHasUnsavedChanges()) {
-      if (confirm('You have some unsaved changes! To save them, scroll to the bottom and click "Save Article". Want to leave anyway?')) {
-        return true;
-      } else {
-        return false;
-      }
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.data = {
+        dialogTitle: 'Unsaved Changes',
+        dialogLine1: 'Are you sure you want to leave without saving?',
+        dialogLine2: null
+      };
+
+      return Observable.create((observer: Observer<boolean>) => {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(res => {
+          observer.next(res);
+          observer.complete();
+        }, (err) => {
+          observer.next(false);
+          observer.complete();
+        });
+      });
+    } else {
+      return true;
     }
-    return true;
   }
+
 }
