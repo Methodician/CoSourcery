@@ -58,8 +58,6 @@ import { TruncateStringPipe } from './shared/pipes/truncate-string.pipe';
 import { AppComponent } from 'app/app.component';
 import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
 import { ArticlePreviewCardComponent } from 'app/components/articles/article-preview-card/article-preview-card.component';
-import { ArticlePreviewListComponent } from 'app/components/articles/article-preview-list/article-preview-list.component';
-import { ArticleRelatedComponent } from 'app/components/articles/article-related/article-related.component';
 import { CommentComponent } from './components/comments/comment/comment.component';
 import { CommentListComponent } from './components/comments/comment-list/comment-list.component';
 import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
@@ -79,10 +77,8 @@ import { MessageDialogComponent } from './components/modals/message-dialog/messa
     HomeComponent,
     ProfileComponent,
     RegisterComponent,
-    ArticleRelatedComponent,
     ArticleEditComponent,
     ArticlePreviewCardComponent,
-    ArticlePreviewListComponent,
     RelatedArticlePipe,
     ArticleSearchPipe,
     ReverseArrayPipe,
