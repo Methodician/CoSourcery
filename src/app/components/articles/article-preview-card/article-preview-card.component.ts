@@ -27,9 +27,6 @@ export class ArticlePreviewCardComponent implements OnInit {
     if (url === "unset") {
       this.articleSvc.setThumbnailImageUrl(this.articleData.articleId);
     }
-    if (url === "empty") {
-      this.articleData.imageUrl = '';
-    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
