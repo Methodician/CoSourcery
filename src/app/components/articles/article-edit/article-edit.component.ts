@@ -414,10 +414,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   // UI Display
-  toggleEditControl(ctrlName: CtrlNames) {
+  async toggleEditControl(ctrlName: CtrlNames) {
     // For now doesn't allow multiple editors. Will change later...
     if (!this.userIsEditingArticle() && this.articleHasEditors()) {
-      this.openMessageDialog('Edit Locked', 'Someone is currently editing this article.', 'Please try again later.');
+      const uid = Object.keys(this.currentArticleEditors)[0];
+      // Editors is an array so that we can later allow multilple collaborative editors.
+      if (!this.userMap[uid]) {
+        await this.userSvc.addUserToMap(uid);
+      }
+      this.openMessageDialog('Edit Locked', `The user "${this.userMap[uid].displayName()}" is currently editing this article.`, 'Please try again later.');
     } else if (this.authCheck()) {
       if (ctrlName !== CtrlNames.body) {
         this.editBody = false;
