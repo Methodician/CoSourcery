@@ -69,6 +69,7 @@ import { UnauthorizedComponent } from './components/general/unauthorized/unautho
 import { EditTimeoutDialogComponent } from './components/modals/edit-timeout-dialog/edit-timeout-dialog.component';
 import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
 import { MessageDialogComponent } from './components/modals/message-dialog/message-dialog.component';
+import { ConfirmDialogComponent } from './components/modals/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { MessageDialogComponent } from './components/modals/message-dialog/messa
     UnauthorizedComponent,
     EditTimeoutDialogComponent,
     LoginDialogComponent,
-    MessageDialogComponent
+    MessageDialogComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -120,12 +122,13 @@ import { MessageDialogComponent } from './components/modals/message-dialog/messa
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
   ],
   entryComponents: [
     EditTimeoutDialogComponent,
     LoginDialogComponent,
-    MessageDialogComponent
+    MessageDialogComponent,
+    ConfirmDialogComponent,
   ],
   providers: [
     AuthService,
@@ -134,7 +137,7 @@ import { MessageDialogComponent } from './components/modals/message-dialog/messa
     NotificationService,
     ArticleService,
     UserService,
-    CommentService
+    CommentService,
   ],
   bootstrap: [AppComponent]
 })
