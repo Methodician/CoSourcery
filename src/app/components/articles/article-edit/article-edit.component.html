@@ -206,7 +206,7 @@
             type="button"
             [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
             (click)="authCheck() ? saveChanges() : null">
-      <mat-icon>save</mat-icon>
+      <mat-icon>done</mat-icon>
       <span *ngIf="articleHasUnsavedChanges() || articleIsNew"
             class="mat-icon-btn__tooltip mat-icon-btn__tooltip_right"
             style="right: -20px;">
