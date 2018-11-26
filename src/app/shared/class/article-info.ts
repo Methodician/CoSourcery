@@ -8,7 +8,7 @@ export class ArticlePreview {
         public imageUrl: string,
         public imageAlt: string,
         public lastUpdated: any,
-        public timeStamp: any,
+        public timestamp: any,
         public version: number,
         public editors: KeyMap<number>,
         public commentCount?: number,
