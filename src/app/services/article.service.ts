@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ArticleDetailFirestore, ArticleDetailPreview } from 'app/shared/class/article-info';
+import { ArticleDetail, ArticlePreview } from 'app/shared/class/article-info';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -14,7 +14,7 @@ import { environment } from 'environments/environment';
   providedIn: 'root'
 })
 export class ArticleService {
-  searchedArticles$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
+  searchedArticles$ = new BehaviorSubject<ArticlePreview[]>([]);
   fsServerTimestamp = firebase.firestore.FieldValue.serverTimestamp();
   dbServerTimestamp = firebase.database.ServerValue.TIMESTAMP;
   algoliaClient = algoliasearch('7EELIYF04C', 'bb88a22504c5bc1a1f0ca58c7763a2b2');
@@ -29,16 +29,16 @@ export class ArticleService {
     return firebase.storage().ref(path);
   }
 
-  latestArticlesRef(): AngularFirestoreCollection<ArticleDetailPreview> {
+  latestArticlesRef(): AngularFirestoreCollection<ArticlePreview> {
     return this.fsdb.collection('articleData/articles/previews', ref => ref.orderBy('timestamp', 'desc').limit(12));
   }
 
-  allArticlesRef(): AngularFirestoreCollection<ArticleDetailPreview> {
+  allArticlesRef(): AngularFirestoreCollection<ArticlePreview> {
     return this.fsdb.collection('articleData/articles/previews', ref => ref.orderBy('lastUpdated', 'desc'));
   }
 
   watchBookmarkedArticles(userKey) {
-    const articleList$ = new BehaviorSubject<ArticleDetailPreview[]>([]);
+    const articleList$ = new BehaviorSubject<ArticlePreview[]>([]);
     const bookmarksRef = this.rtdb.list(`userInfo/articleBookmarksPerUser/${userKey}`);
     bookmarksRef.snapshotChanges().pipe(map(keySnaps => {
       return keySnaps.map(snap => {
@@ -63,11 +63,11 @@ export class ArticleService {
     return articleList$;
   }
 
-  getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetailFirestore> {
+  getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetail> {
     return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
   }
 
-  getPreviewRefById(articleId: string): AngularFirestoreDocument<ArticleDetailPreview> {
+  getPreviewRefById(articleId: string): AngularFirestoreDocument<ArticlePreview> {
     return this.fsdb.doc(`articleData/articles/previews/${articleId}`);
   }
 
@@ -111,7 +111,7 @@ export class ArticleService {
   }
 
 
-  createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
+  createArticle(author: UserInfoOpen, article: ArticleDetail, articleId) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     article.editors = {};
     article.editors[author.uid] = 1;
