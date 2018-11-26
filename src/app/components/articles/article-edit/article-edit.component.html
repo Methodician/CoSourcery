@@ -71,9 +71,9 @@
       </button>
     </section>
 
-    <p *ngIf="!formIsInCreateView"
-       class="article-date">
-      Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}
+    <p class="article-date">
+      <span *ngIf="formIsInCreateView">Current Date: {{articleSvc.tempTimestamp().toDate() | date }}</span>
+      <span *ngIf="!formIsInCreateView">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</span>
     </p>
 
     <section class="article-intro"
@@ -81,8 +81,7 @@
       <p *ngIf="!editIntro"
          class="static-display">
         {{articleEditForm.value.introduction}}
-        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
-          about.</span>
+        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is about.</span>
       </p>
       <mat-form-field *ngIf="editIntro">
         <p><textarea #introduction
