@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ArticleDetailFirestore, ArticlePreview } from 'app/shared/class/article-info';
+import { ArticleDetail, ArticlePreview } from 'app/shared/class/article-info';
 import { UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -63,7 +63,7 @@ export class ArticleService {
     return articleList$;
   }
 
-  getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetailFirestore> {
+  getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetail> {
     return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
   }
 
@@ -111,7 +111,7 @@ export class ArticleService {
   }
 
 
-  createArticle(author: UserInfoOpen, article: ArticleDetailFirestore, articleId) {
+  createArticle(author: UserInfoOpen, article: ArticleDetail, articleId) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     article.editors = {};
     article.editors[author.uid] = 1;

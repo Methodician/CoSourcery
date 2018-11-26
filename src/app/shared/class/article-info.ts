@@ -17,7 +17,7 @@ export class ArticlePreview {
 }
 
 
-export class ArticleDetailFirestore {
+export class ArticleDetail {
     constructor(
         public articleId: string,
         public authorId: string,

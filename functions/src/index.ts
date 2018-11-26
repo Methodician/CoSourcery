@@ -23,7 +23,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
-import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
+import { ArticleDetail } from '../../src/app/shared/class/article-info';
 // WATCH OUT - Currently, can't figure out way to build for prod, so need to swap these when deploying to production server...
 import { environment } from '../../src/environments/environment';
 // import { environment } from '../../src/environments/environment.prod';
@@ -140,7 +140,7 @@ exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{com
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
         return adminFS.runTransaction(async t => {
             const snapshot = await t.get(articleDocRef);
-            const article: ArticleDetailFirestore = snapshot.data() as any;
+            const article: ArticleDetail = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
             commentCount = commentCount + 1;
             t.update(articleDocRef, { commentCount: commentCount });
@@ -188,7 +188,7 @@ exports.countNewComment = functions.database.ref('commentData/comments/{commentK
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
         return adminFS.runTransaction(async t => {
             const snapshot = await t.get(articleDocRef);
-            const article: ArticleDetailFirestore = snapshot.data() as any;
+            const article: ArticleDetail = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
             commentCount = commentCount + 1;
             t.update(articleDocRef, { commentCount: commentCount });
