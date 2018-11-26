@@ -250,4 +250,8 @@ export class ArticleService {
   //   return array;
   // }
 
+  tempTimestamp() {
+    return firebase.firestore.Timestamp.now();
+  }
+
 }
