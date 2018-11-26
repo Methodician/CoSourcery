@@ -1,5 +1,5 @@
 // import * as firebase from 'firebase/app';
-export class ArticleDetailPreview {
+export class ArticlePreview {
     constructor(
         public articleId: string,
         public authorId: string,

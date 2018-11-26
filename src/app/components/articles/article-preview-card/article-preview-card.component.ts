@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
-import { ArticleDetailPreview } from 'app/shared/class/article-info';
+import { ArticlePreview } from 'app/shared/class/article-info';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 
@@ -11,7 +11,7 @@ import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.com
 })
 
 export class ArticlePreviewCardComponent implements OnInit {
-  @Input() articleData: ArticleDetailPreview;
+  @Input() articleData: ArticlePreview;
   @Input() userId: string;
   isArticleBookmarked: boolean;
   constructor(
