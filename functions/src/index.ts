@@ -302,7 +302,8 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
     const id = context.params.articleId;
     const previewRef = adminFS.doc(`articleData/articles/previews/${id}`);
     if (context.eventType !== 'google.firestore.document.delete') {
-        const previewObject = previewFromArticle(articleObject);
+        // destructuring because Firebase doesn't like custom Object types.
+        const previewObject = { ...previewFromArticle(articleObject) };
         return previewRef.set(previewObject).catch(error => {
             console.log(error);
         })
@@ -311,7 +312,7 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
     }
 });
 
-function previewFromArticle(articleObject) {
+function previewFromArticle(articleObject): ArticlePreview {
     const { articleId, authorId, title, introduction, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags, imageUrl, imageAlt } = articleObject;
     const url = imageUrl && imageUrl.length > 0 ? 'unset' : '';
     return new ArticlePreview(articleId, authorId, title, introduction, url, imageAlt, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags);
