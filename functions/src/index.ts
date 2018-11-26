@@ -23,7 +23,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
-import { ArticleDetail } from '../../src/app/shared/class/article-info';
+import { ArticleDetail, ArticlePreview } from '../../src/app/shared/class/article-info';
 // WATCH OUT - Currently, can't figure out way to build for prod, so need to swap these when deploying to production server...
 import { environment } from '../../src/environments/environment';
 // import { environment } from '../../src/environments/environment.prod';
@@ -312,8 +312,8 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
 });
 
 function previewFromArticle(articleObject) {
-    const { articleId, authorId, title, introduction, lastUpdated, timestamp, version, commentCount, viewCount, tags, imageUrl, imageAlt } = articleObject;
-    const url = imageUrl && imageUrl.length > 0 ? 'unset' : 'empty';
-    return { articleId, authorId, title, introduction, lastUpdated, timestamp, version, commentCount, viewCount, tags, imageUrl: url, imageAlt };
+    const { articleId, authorId, title, introduction, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags, imageUrl, imageAlt } = articleObject;
+    const url = imageUrl && imageUrl.length > 0 ? 'unset' : '';
+    return new ArticlePreview(articleId, authorId, title, introduction, url, imageAlt, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags);
 }
 
