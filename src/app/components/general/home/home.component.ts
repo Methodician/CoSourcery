@@ -54,14 +54,19 @@ export class HomeComponent implements OnInit {
       this.userId = authInfo.uid;
       if (this.userId) {
         this.watchBookmarkedArticles();
+      } else {
+        this.setFilterContainerHeight();
       }
-      const delay = true;
-      this.setFilterContainerHeight(delay);
     });
   }
 
   watchBookmarkedArticles() {
     this.articleSvc.watchBookmarkedArticles(this.userId).subscribe(articles => {
+      if (articles.length === 0) {
+        setTimeout(() => {
+          this.setFilterContainerHeight();
+        }, 100);
+      }
       this.bookmarkedArticles = articles;
     });
   }
@@ -105,14 +110,8 @@ export class HomeComponent implements OnInit {
     this.setFilterContainerHeight();
   }
 
-  setFilterContainerHeight(delay = false) {
-    if (!delay) {
-      this.filterContainerHeight = this.filterMenu.nativeElement.clientHeight;
-    } else {
-      setTimeout(() => {
-        this.filterContainerHeight = this.filterMenu.nativeElement.clientHeight;
-      }, 100);
-    }
+  setFilterContainerHeight() {
+    this.filterContainerHeight = this.filterMenu.nativeElement.clientHeight;
   }
 
 }
