@@ -12,5 +12,7 @@
                     [imageUploadPercent$]="imageUploadPercent$"
                     [tempImageUploadPath]="tempImageUploadPath"
                     (trimInputEmitter)="trimInput($event)"
+                    (selectProfileImageEmitter)="onSelectProfileImage($event)"
+                    (profileChangesEmitter)="onSaveProfileChanges()"
   ></cos-profile-form>
 </section>
