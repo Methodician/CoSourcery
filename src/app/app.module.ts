@@ -70,6 +70,7 @@ import { EditTimeoutDialogComponent } from './components/modals/edit-timeout-dia
 import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
 import { MessageDialogComponent } from './components/modals/message-dialog/message-dialog.component';
 import { ConfirmDialogComponent } from './components/modals/confirm-dialog/confirm-dialog.component';
+import { ProfileFormComponent } from './components/account/profile-form/profile-form.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +98,7 @@ import { ConfirmDialogComponent } from './components/modals/confirm-dialog/confi
     LoginDialogComponent,
     MessageDialogComponent,
     ConfirmDialogComponent,
+    ProfileFormComponent,
   ],
   imports: [
     BrowserModule,
