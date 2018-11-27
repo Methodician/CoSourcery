@@ -3,5 +3,14 @@
   <h2 class="profile__title">Profile</h2>
 
   <!-- Editable Profile Form -->
-  <cos-profile-form></cos-profile-form>
+  <cos-profile-form [profileForm]="profileForm"
+                    [userMap]="userMap"
+                    [loggedInUserId]="loggedInUserId"
+                    [dbUser]="dbUser"
+                    [profileImageFile]="profileImageFile"
+                    [imageUploadTask]="imageUploadTask"
+                    [imageUploadPercent$]="imageUploadPercent$"
+                    [tempImageUploadPath]="tempImageUploadPath"
+                    (trimInputEmitter)="trimInput($event)"
+  ></cos-profile-form>
 </section>
