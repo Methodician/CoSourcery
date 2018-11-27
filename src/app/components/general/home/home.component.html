@@ -6,36 +6,43 @@
 </section>
 
 <!-- ARTICLE FILTERS -->
-<ul class="filter-menu">
-  <li class="filter-menu__item"
-      (click)="selectLatest()"
-      [class.activeArticleState]="currentSelectedTab === 1">
-    Latest
-  </li>
-  <li class="filter-menu__item"
-      (click)="selectAll()"
-      [class.activeArticleState]="currentSelectedTab === 2">
-    All
-  </li>
-  <li *ngIf="UserId"
-      class="filter-menu__item"
-      (click)="selectBookmark()"
-      [class.activeArticleState]="currentSelectedTab === 3">
-    Bookmarked
-  </li>
-  <li *ngIf="query"
-      class="filter-menu__item"
-      (click)="selectSearch()"
-      [class.activeArticleState]="currentSelectedTab === 4">
-    Search Results
-  </li>
-</ul>
+<section class="filter-menu-container"
+         [ngStyle]="{'height': filterContainerHeight ? filterContainerHeight + 'px' : 'auto'}"
+         (window:scroll)="checkScrollPosition()"
+         (window:resize)="adjustFilterContainerOnResize()">
+  <ul #filterMenu
+      class="filter-menu"
+      [ngClass]="{'filter-menu_sticky': filterMenuIsSticky}">
+    <li class="filter-menu__item"
+        (click)="selectLatest()"
+        [class.activeArticleState]="currentSelectedTab === 1">
+      Latest
+    </li>
+    <li class="filter-menu__item"
+        (click)="selectAll()"
+        [class.activeArticleState]="currentSelectedTab === 2">
+      All
+    </li>
+    <li *ngIf="userId"
+        class="filter-menu__item"
+        (click)="selectBookmark()"
+        [class.activeArticleState]="currentSelectedTab === 3">
+      Bookmarked
+    </li>
+    <li *ngIf="query"
+        class="filter-menu__item"
+        (click)="selectSearch()"
+        [class.activeArticleState]="currentSelectedTab === 4">
+      Search Results
+    </li>
+  </ul>
+</section>
 
 <!-- ARTICLE COLLECTIONS -->
 <section id="latest-articles"
          *ngIf="currentSelectedTab === 1">
   <div class="article-grid">
-    <cos-article-preview-card [userId]="UserId"
+    <cos-article-preview-card [userId]="userId"
                               [articleData]="article"
                               *ngFor="let article of latestArticles | async">
     </cos-article-preview-card>
@@ -45,7 +52,7 @@
 <section id="all-articles"
          *ngIf="currentSelectedTab === 2">
   <div class="article-grid">
-    <cos-article-preview-card [userId]="UserId"
+    <cos-article-preview-card [userId]="userId"
                               [articleData]="article"
                               *ngFor="let article of allArticles | async">
     </cos-article-preview-card>
@@ -59,7 +66,7 @@
     {{bookmarkedArticles.length === 1 ? 'bookmark' : 'bookmarks'}}.
   </h3>
   <div class="article-grid">
-    <cos-article-preview-card [userId]="UserId"
+    <cos-article-preview-card [userId]="userId"
                               [articleData]="article"
                               *ngFor="let article of bookmarkedArticles | reverseArray ">
     </cos-article-preview-card>
@@ -73,7 +80,7 @@
     <span class="collection-text_underline">{{query}}</span>.
   </h3>
   <div class="article-grid">
-    <cos-article-preview-card [userId]="UserId"
+    <cos-article-preview-card [userId]="userId"
                               [articleData]="article"
                               *ngFor="let article of searchedArticles">
     </cos-article-preview-card>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
 import { ArticlePreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
@@ -12,33 +12,29 @@ import { ActivatedRoute } from '@angular/router';
   providers: [ArticleService]
 })
 export class HomeComponent implements OnInit {
-  query: string;
-  UserId;
+  @ViewChild('filterMenu') filterMenu;
+  userId;
+
   featuredArticles;
   latestArticles: Observable<ArticlePreview[]>;
   allArticles: Observable<ArticlePreview[]>;
   bookmarkedArticles;
   searchedArticles;
-  currentSelectedTab: SelectedTab = SelectedTab.latest;
+  query: string;
 
+  filterMenuIsSticky: boolean;
+  filterContainerHeight: number;
+  currentSelectedTab: SelectedTab = SelectedTab.latest;
 
   constructor(
     private articleSvc: ArticleService,
     private authSvc: AuthService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit() {
     this.initializeArticles();
-
-    this.authSvc.authInfo$.subscribe(authInfo => {
-      if (authInfo) {
-        this.UserId = authInfo.uid;
-        if (this.UserId) {
-          this.watchBookmarkedArticles();
-        }
-      }
-    });
-
+    this.watchAuthInfo();
     this.route.params.subscribe(params => {
       if (params['query']) {
         this.query = params['query'];
@@ -53,13 +49,31 @@ export class HomeComponent implements OnInit {
     this.allArticles = this.articleSvc.allArticlesRef().valueChanges();
   }
 
+  watchAuthInfo() {
+    this.authSvc.authInfo$.subscribe(authInfo => {
+      this.userId = authInfo.uid;
+      if (this.userId) {
+        this.watchBookmarkedArticles();
+      }
+      const delay = true;
+      this.setFilterContainerHeight(delay);
+    });
+  }
+
   watchBookmarkedArticles() {
-    this.articleSvc.watchBookmarkedArticles(this.UserId).subscribe(articles => {
+    this.articleSvc.watchBookmarkedArticles(this.userId).subscribe(articles => {
       this.bookmarkedArticles = articles;
     });
   }
 
-  // Methods for toggling between Latest and All Previews
+  searchArticles(query) {
+    this.articleSvc.searchArticles(query);
+    this.articleSvc.searchedArticles$.subscribe(articles => {
+      this.searchedArticles = articles;
+    });
+  }
+
+  // UI Data Display
   selectLatest() {
     this.currentSelectedTab = SelectedTab.latest;
   }
@@ -76,11 +90,29 @@ export class HomeComponent implements OnInit {
     this.currentSelectedTab = SelectedTab.search;
   }
 
-  searchArticles(query) {
-    this.articleSvc.searchArticles(query);
-    this.articleSvc.searchedArticles$.subscribe(articles => {
-      this.searchedArticles = articles;
-    });
+  // UI Sticky Filter Menu
+  checkScrollPosition() {
+    const yCoordinate = window.scrollY;
+    if (document.body.clientWidth >= 482) {
+      this.filterMenuIsSticky = yCoordinate >= 200 ? true : false;
+    } else {
+      this.filterMenuIsSticky = true;
+    }
+  }
+
+  adjustFilterContainerOnResize() {
+    this.checkScrollPosition();
+    this.setFilterContainerHeight();
+  }
+
+  setFilterContainerHeight(delay = false) {
+    if (!delay) {
+      this.filterContainerHeight = this.filterMenu.nativeElement.clientHeight;
+    } else {
+      setTimeout(() => {
+        this.filterContainerHeight = this.filterMenu.nativeElement.clientHeight;
+      }, 100);
+    }
   }
 
 }
