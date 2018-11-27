@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
-import { ArticleDetailPreview } from '../../../shared/class/article-info';
+import { ArticlePreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -15,8 +15,8 @@ export class HomeComponent implements OnInit {
   query: string;
   UserId;
   featuredArticles;
-  latestArticles: Observable<ArticleDetailPreview[]>;
-  allArticles: Observable<ArticleDetailPreview[]>;
+  latestArticles: Observable<ArticlePreview[]>;
+  allArticles: Observable<ArticlePreview[]>;
   bookmarkedArticles;
   searchedArticles;
   currentSelectedTab: SelectedTab = SelectedTab.latest;

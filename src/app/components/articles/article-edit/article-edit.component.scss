@@ -316,8 +316,26 @@
   }
 }
 
-.article-save-btn {
-  margin-bottom: 20px;
+.article-save-control {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  padding: 4px 4px 4px 10px;
+  border-top-right-radius: 100%;
+  border-bottom-right-radius: 100%;
+  box-shadow: 0 1px 5px $light-gray-50;
+  background-color: #fff;
+  transition: transform 0.25s;
+  transform: translateX(-100%);
+  z-index: 20;
+
+  &.extended {
+    transform: translateX(0);
+  }
+
+  @media screen and (min-width: 500px) {
+    top: 90px;
+  }
 }
 
 .article-comments {

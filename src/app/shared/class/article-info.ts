@@ -1,15 +1,16 @@
 // import * as firebase from 'firebase/app';
-export class ArticleDetailPreview {
+export class ArticlePreview {
     constructor(
         public articleId: string,
         public authorId: string,
         public title: string,
         public introduction: string,
-        public lastUpdated: any,
-        public timeStamp: any,
         public imageUrl: string,
         public imageAlt: string,
+        public lastUpdated: any,
+        public timestamp: any,
         public version: number,
+        public editors: KeyMap<number>,
         public commentCount?: number,
         public viewCount?: number,
         public tags?: string[],
@@ -17,7 +18,7 @@ export class ArticleDetailPreview {
 }
 
 
-export class ArticleDetailFirestore {
+export class ArticleDetail {
     constructor(
         public articleId: string,
         public authorId: string,

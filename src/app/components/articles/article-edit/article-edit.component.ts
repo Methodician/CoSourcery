@@ -175,9 +175,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   watchArticle() {
-    if (this.articleSubscription) {
-      this.articleSubscription.unsubscribe();
-    }
     this.articleSubscription = this.articleSvc
       .getArticleRefById(this.articleId)
       .valueChanges()
@@ -188,7 +185,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   setFormData(data) {
-    if (!this.articleIsNew) {
+    if (data) {
       this.articleEditForm.patchValue(data);
       this.coverImageUrl$.next(data.imageUrl);
     }

@@ -6,8 +6,7 @@ button {
   z-index: 10;
 
   &:disabled, &:disabled:hover {
-    background-color: $medium-gray;
-    opacity: 0.5;
+    background-color: $light-gray;
     cursor: default;
   }
 }
@@ -72,6 +71,10 @@ button {
       }
 
     }
+  }
+
+  &_no-shadow {
+    box-shadow: none;
   }
 
   &_transparent, &_transparent:hover {

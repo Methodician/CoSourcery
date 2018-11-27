@@ -23,10 +23,15 @@ import * as os from 'os';
 import * as fs from 'fs';
 
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
-import { ArticleDetailFirestore } from '../../src/app/shared/class/article-info';
-// WATCH OUT - Currently, can't figure out way to build for prod, so need to swap these when deploying to production server...
-// import { environment } from '../../src/environments/environment';
-import { environment } from '../../src/environments/environment.prod';
+import { ArticleDetail, ArticlePreview } from '../../src/app/shared/class/article-info';
+
+// This was the only way I found to make things environment dependent... See Algolia Indexing function for usage example.
+import { environment as devEnv } from '../../src/environments/environment';
+import { environment as prodEnv } from '../../src/environments/environment.prod';
+enum Projects {
+    cosourcerytest = 'cosourcerytest',
+    cosourcery = 'cosourcery',
+}
 
 //  Should we consolodate any simple ArticleDetail OnUpdate responses under this trigger?
 const trackArticleEditors = (article) => {
@@ -72,8 +77,18 @@ exports.onCreateArticleDetail = functions.firestore.document('articleData/articl
 
 exports.updateAlgoliaIndex =
     functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
+        const project = process.env.GCP_PROJECT;
+        let currentEnv;
+        if (project === Projects.cosourcerytest) {
+            currentEnv = devEnv;
+        } else if (project === Projects.cosourcery) {
+            currentEnv = prodEnv;
+        } else {
+            console.error('No valid environment for algolia indexing');
+            return null;
+        }
         const articleObject = change.after.data();
-        const index = client.initIndex(environment.algoliaIndex);
+        const index = client.initIndex(currentEnv.algoliaIndex);
         if (context.eventType !== 'google.firestore.document.delete') {
             const previewObject = {
                 objectID: articleObject.articleId,
@@ -139,7 +154,7 @@ exports.bubbleUpCommentCount = functions.database.ref('commentData/comments/{com
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
         return adminFS.runTransaction(async t => {
             const snapshot = await t.get(articleDocRef);
-            const article: ArticleDetailFirestore = snapshot.data() as any;
+            const article: ArticleDetail = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
             commentCount = commentCount + 1;
             t.update(articleDocRef, { commentCount: commentCount });
@@ -187,7 +202,7 @@ exports.countNewComment = functions.database.ref('commentData/comments/{commentK
     const incrementCommentCount = (articleDocRef: admin.firestore.DocumentReference) => {
         return adminFS.runTransaction(async t => {
             const snapshot = await t.get(articleDocRef);
-            const article: ArticleDetailFirestore = snapshot.data() as any;
+            const article: ArticleDetail = snapshot.data() as any;
             let commentCount = article.commentCount || 0;
             commentCount = commentCount + 1;
             t.update(articleDocRef, { commentCount: commentCount });
@@ -301,7 +316,8 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
     const id = context.params.articleId;
     const previewRef = adminFS.doc(`articleData/articles/previews/${id}`);
     if (context.eventType !== 'google.firestore.document.delete') {
-        const previewObject = previewFromArticle(articleObject);
+        // destructuring because Firebase doesn't like custom Object types.
+        const previewObject = { ...previewFromArticle(articleObject) };
         return previewRef.set(previewObject).catch(error => {
             console.log(error);
         })
@@ -310,9 +326,8 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
     }
 });
 
-function previewFromArticle(articleObject) {
-    const { articleId, authorId, title, introduction, lastUpdated, timestamp, version, commentCount, viewCount, tags, imageUrl, imageAlt } = articleObject;
-    const url = imageUrl && imageUrl.length > 0 ? 'unset' : 'empty';
-    return { articleId, authorId, title, introduction, lastUpdated, timestamp, version, commentCount, viewCount, tags, imageUrl: url, imageAlt };
+function previewFromArticle(articleObject): ArticlePreview {
+    const { articleId, authorId, title, introduction, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags, imageUrl, imageAlt } = articleObject;
+    const url = imageUrl && imageUrl.length > 0 ? 'unset' : '';
+    return new ArticlePreview(articleId, authorId, title, introduction, url, imageAlt, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags);
 }
-

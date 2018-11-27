@@ -16,8 +16,9 @@ html, body {
 }
 
 /* Typography */
-body, h1, h2, h3, h4, h5, h6, p, button {
+body, h1, h2, h3, h4, h5, h6, p, li, input, button {
   font-family: $primary-typeface;
+	word-wrap: break-word;
 }
 
 body {
