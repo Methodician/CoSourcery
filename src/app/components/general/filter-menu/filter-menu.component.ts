@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { EventEmitter } from 'protractor';
 
 @Component({
@@ -7,6 +7,7 @@ import { EventEmitter } from 'protractor';
   styleUrls: ['./filter-menu.component.scss']
 })
 export class FilterMenuComponent implements OnInit {
+  @ViewChild('filterMenu') filterMenu;
   @Input() tabList = [
     { name: 'Tab 1', selected: true },
     { name: 'Tab 2', selected: false },
