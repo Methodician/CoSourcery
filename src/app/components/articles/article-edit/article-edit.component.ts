@@ -24,6 +24,7 @@ import { MessageDialogComponent } from '../../modals/message-dialog/message-dial
 
 export class ArticleEditComponent implements OnInit, OnDestroy {
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
+  @ViewChild('formBoundingBox') formBoundingBox;
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     if (this.articleHasUnsavedChanges()) {
@@ -459,6 +460,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
     const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
     this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+  }
+
+  saveButtonIsSticky() {
+    const formBottomOffset = this.formBoundingBox.nativeElement.getBoundingClientRect().bottom;
+    const verticalOverflow = formBottomOffset - window.innerHeight;
+    return (verticalOverflow > 0) ? true : false;
   }
 
   openMessageDialog(title: string, msg1: string, msg2: string = null) {
