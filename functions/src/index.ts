@@ -24,10 +24,14 @@ import * as fs from 'fs';
 
 import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
 import { ArticleDetail, ArticlePreview } from '../../src/app/shared/class/article-info';
-// WATCH OUT - Currently, can't figure out way to build for prod, so need to swap these when deploying to production server...
-// import { environment } from '../../src/environments/environment';
-import { environment } from '../../src/environments/environment.prod';
 
+// This was the only way I found to make things environment dependent... See Algolia Indexing function for usage example.
+import { environment as devEnv } from '../../src/environments/environment';
+import { environment as prodEnv } from '../../src/environments/environment.prod';
+enum Projects {
+    cosourcerytest = 'cosourcerytest',
+    cosourcery = 'cosourcery',
+}
 
 //  Should we consolodate any simple ArticleDetail OnUpdate responses under this trigger?
 const trackArticleEditors = (article) => {
@@ -73,8 +77,18 @@ exports.onCreateArticleDetail = functions.firestore.document('articleData/articl
 
 exports.updateAlgoliaIndex =
     functions.firestore.document('articleData/articles/articles/{articleId}').onWrite((change, context) => {
+        const project = process.env.GCP_PROJECT;
+        let currentEnv;
+        if (project === Projects.cosourcerytest) {
+            currentEnv = devEnv;
+        } else if (project === Projects.cosourcery) {
+            currentEnv = prodEnv;
+        } else {
+            console.error('No valid environment for algolia indexing');
+            return null;
+        }
         const articleObject = change.after.data();
-        const index = client.initIndex(environment.algoliaIndex);
+        const index = client.initIndex(currentEnv.algoliaIndex);
         if (context.eventType !== 'google.firestore.document.delete') {
             const previewObject = {
                 objectID: articleObject.articleId,
@@ -317,4 +331,3 @@ function previewFromArticle(articleObject): ArticlePreview {
     const url = imageUrl && imageUrl.length > 0 ? 'unset' : '';
     return new ArticlePreview(articleId, authorId, title, introduction, url, imageAlt, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags);
 }
-

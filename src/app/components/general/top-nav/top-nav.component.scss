@@ -2,11 +2,7 @@
 @import "../../../sass-variables-mixins/vars.scss";
 
 .navbar-wrapper, .navbar {
-  height: 60px;
-
-  @media screen and (min-width: 500px) {
-    height: 70px;
-  }
+  height: 70px;
 }
 
 .navbar {
@@ -18,7 +14,7 @@
   top: 0;
   left: 0;
   padding: 0 20px;
-  box-shadow: 0 2px 5px 0 $light-gray-50;
+  box-shadow: 0 2px 5px $light-gray-50;
   background-color: #fff;
   z-index: 1000;
 
@@ -94,7 +90,7 @@
   bottom: -5px;
   right: 5px;
   padding: 5px 5px 2px;
-  box-shadow: 0 2px 5px 0 $light-gray-50;
+  box-shadow: 0 2px 5px $light-gray-50;
   background-color: #fff;
   transform: translateY(100%);
 
