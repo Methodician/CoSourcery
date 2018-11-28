@@ -4,6 +4,7 @@ import { ArticlePreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { FilterMenuComponent } from '../filter-menu/filter-menu.component';
 
 @Component({
   selector: 'cos-home',
@@ -13,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   @ViewChild('filterMenu') filterMenu;
+  @ViewChild(FilterMenuComponent) cosfilterMenu;
   userId;
 
   featuredArticles;
@@ -22,6 +24,14 @@ export class HomeComponent implements OnInit {
   searchedArticles;
   query: string;
 
+  // filterTabMap: TabMap = {
+  //   'Latest': true,
+  //   'All': false,
+  // }
+  filterTabs = [
+    { name: 'Latest', selected: true },
+    { name: 'All', selected: false },
+  ];
   filterMenuIsSticky: boolean;
   filterContainerHeight: number;
   currentSelectedTab: SelectedTab = SelectedTab.latest;
@@ -38,6 +48,8 @@ export class HomeComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params['query']) {
         this.query = params['query'];
+        this.filterTabs.push({ name: 'Search Results', selected: false });
+        this.cosfilterMenu.selectTab(this.filterTabs.length - 1);
         this.currentSelectedTab = SelectedTab.search;
         this.searchArticles(this.query);
       }
