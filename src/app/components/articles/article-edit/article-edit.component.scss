@@ -8,9 +8,11 @@
 .article-form {
   width: 100%;
   max-width: 768px;
+  position: relative;
   margin: 24px auto;
-  padding: 20px;
+  padding: 20px 20px 40px;
   box-shadow: 0 2px 5px $light-gray-50;
+  overflow: hidden;
 
   label, input, textarea, mat-form-field, mat-error {
     font-family: $primary-typeface;
@@ -176,7 +178,7 @@
   margin-top: 20px;
   padding: 0 15px;
   border-radius: 4px;
-  background-color: lighten($accent-color-1-dark, 25%);
+  background-color: lighten($accent-color-1-dark, 30%);
 
   @media screen and (min-width: 500px) {
     padding: 0 20px;
@@ -316,25 +318,45 @@
   }
 }
 
-.article-save-control {
-  position: fixed;
-  top: 80px;
-  left: 0;
-  padding: 4px 4px 4px 10px;
-  border-top-right-radius: 100%;
-  border-bottom-right-radius: 100%;
-  box-shadow: 0 1px 5px $light-gray-50;
-  background-color: #fff;
-  transition: transform 0.25s;
-  transform: translateX(-100%);
+.save-control-abs-position {
+  height: 58px;
+  width: 58px;
+  position: absolute;
+  bottom: 0;
+  right: 20px;
   z-index: 20;
+}
 
-  &.extended {
-    transform: translateX(0);
+.save-control {
+  position: relative;
+  padding: 4px;
+  border-top-right-radius: 100%;
+  border-top-left-radius: 100%;
+  box-shadow: 0 1px 5px $light-gray-50;
+  background-color: lighten($accent-color-1-dark, 15%);
+  transform: translateY(100%);
+  transition: transform 0.3s;
+
+  button {
+    transform: scale(0);
+    transition: transform cubic-bezier(.5,-0.35,.5,1.35) 0.5s;
   }
 
-  @media screen and (min-width: 500px) {
-    top: 90px;
+  &.disabled {
+    background-color: $medium-gray;
+  }
+
+  &.extended {
+    transform: translateY(0);
+
+    button {
+      transform: scale(1);
+    }
+  }
+
+  &.sticky {
+    position: fixed;
+    bottom: 0;
   }
 }
 

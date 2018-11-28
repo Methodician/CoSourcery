@@ -1,4 +1,5 @@
-<form [formGroup]="articleEditForm"
+<form #formBoundingBox
+      [formGroup]="articleEditForm"
       class="article-form">
 
   <section class="article-cover-image"
@@ -186,7 +187,7 @@
                (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
       </mat-chip-list>
       <mat-hint [ngClass]="{'error': isInvalidTagInput(tagInput.value)}">
-        Add new tags using alphanumeric characters and spaces only.<br>Press ENTER to add tag.
+        Alphanumeric characters and spaces only.
       </mat-hint>
       <mat-hint align="end">{{tagInput.value.length}} / 25</mat-hint>
     </mat-form-field>
@@ -199,19 +200,21 @@
     </button>
   </section>
 
-  <section class="article-save-control"
-           [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew}">
-    <button class="mat-icon-btn mat-icon-btn_no-shadow"
-            type="button"
-            [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
-            (click)="authCheck() ? saveChanges() : null">
-      <mat-icon>done</mat-icon>
-      <span *ngIf="articleHasUnsavedChanges() || articleIsNew"
-            class="mat-icon-btn__tooltip mat-icon-btn__tooltip_right"
-            style="right: -20px;">
-        Save Article
-      </span>
-    </button>
+  <section class="save-control-abs-position">
+    <div class="save-control"
+         [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew, 'sticky': saveButtonIsSticky(), 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
+      <button class="mat-icon-btn mat-icon-btn_no-shadow"
+              type="button"
+              [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
+              (click)="authCheck() ? saveChanges() : null">
+        <mat-icon>done</mat-icon>
+        <span *ngIf="articleHasUnsavedChanges() || articleIsNew"
+              class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left"
+              style="left: -20px;">
+          Save Article
+        </span>
+      </button>
+    </div>
   </section>
 </form>
 
