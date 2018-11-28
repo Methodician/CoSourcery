@@ -24,10 +24,6 @@ export class HomeComponent implements OnInit {
   searchedArticles;
   query: string;
 
-  // filterTabMap: TabMap = {
-  //   'Latest': true,
-  //   'All': false,
-  // }
   filterTabs = [
     { name: 'Latest', selected: true },
     { name: 'All', selected: false },
@@ -49,7 +45,7 @@ export class HomeComponent implements OnInit {
       if (params['query']) {
         this.query = params['query'];
         this.filterTabs.push({ name: 'Search Results', selected: false });
-        this.cosfilterMenu.selectTab(this.filterTabs.length - 1);
+        this.cosfilterMenu.onTabSelected(this.filterTabs.length - 1);
         this.currentSelectedTab = SelectedTab.search;
         this.searchArticles(this.query);
       }

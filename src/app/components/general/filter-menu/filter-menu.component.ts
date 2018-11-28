@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, SimpleChanges } from '@angular/core';
+import { EventEmitter } from 'protractor';
 
 @Component({
   selector: 'cos-filter-menu',
@@ -6,11 +7,12 @@ import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
   styleUrls: ['./filter-menu.component.scss']
 })
 export class FilterMenuComponent implements OnInit {
-  // tabMap should be a keymap with names as keys and default tab = true
-  @Input() tabMap = [
+  @Input() tabList = [
     { name: 'Tab 1', selected: true },
     { name: 'Tab 2', selected: false },
   ];
+
+  @Output() tabSelected = new EventEmitter();
 
   filterContainerHeight: number;
   filterMenuIsSticky: boolean;
@@ -20,15 +22,34 @@ export class FilterMenuComponent implements OnInit {
 
   ngOnInit() {
   }
+
   ngOnChanges(changes: SimpleChanges) {
     console.log('changes in filter menu', changes);
   }
 
-  selectTab(tabIndex: number) {
-    for (let tab of this.tabMap) {
+  onTabSelected(tabIndex: number) {
+    for (let tab of this.tabList) {
       tab.selected = false;
     }
-    this.tabMap[tabIndex].selected = true;
+    this.tabList[tabIndex].selected = true;
+  }
+
+  checkScrollPosition() {
+    const yCoordinate = window.scrollY;
+    if (document.body.clientWidth >= 482) {
+      this.filterMenuIsSticky = yCoordinate >= 200 ? true : false;
+    } else {
+      this.filterMenuIsSticky = true;
+    }
+  }
+
+  adjustFilterContainerOnResize() {
+    this.checkScrollPosition();
+    this.setFilterContainerHeight();
+  }
+
+  setFilterContainerHeight() {
+    this.filterContainerHeight = this.filterMenu.nativeElement.clientHeight;
   }
 
 }

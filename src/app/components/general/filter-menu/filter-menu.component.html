@@ -2,35 +2,14 @@
          [ngStyle]="{'height': filterContainerHeight ? filterContainerHeight + 'px' : 'auto'}"
          (window:scroll)="checkScrollPosition()"
          (window:resize)="adjustFilterContainerOnResize()">
-  <ul class="filter-menu"
+  <ul #filterMenu
+      class="filter-menu"
       [ngClass]="{'filter-menu_sticky': filterMenuIsSticky}">
-    <li *ngFor="let tab of tabMap; let i = index"
+    <li *ngFor="let tab of tabList; let i = index"
         class="filter-menu__item"
         [class.activeArticleState]="tab.selected"
-        (click)="selectTab(i)">
+        (click)="onTabSelected(i)">
       {{ tab.name }}
     </li>
-    <!-- <li class="filter-menu__item"
-        (click)="selectLatest()"
-        [class.activeArticleState]="currentSelectedTab === 1">
-      Latest
-    </li>
-    <li class="filter-menu__item"
-        (click)="selectAll()"
-        [class.activeArticleState]="currentSelectedTab === 2">
-      All
-    </li>
-    <li *ngIf="userId"
-        class="filter-menu__item"
-        (click)="selectBookmark()"
-        [class.activeArticleState]="currentSelectedTab === 3">
-      Bookmarked
-    </li>
-    <li *ngIf="query"
-        class="filter-menu__item"
-        (click)="selectSearch()"
-        [class.activeArticleState]="currentSelectedTab === 4">
-      Search Results
-    </li> -->
   </ul>
 </section>
