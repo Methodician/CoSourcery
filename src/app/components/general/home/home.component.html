@@ -6,44 +6,15 @@
 </section>
 
 <!-- ARTICLE FILTERS -->
-<cos-filter-menu [tabList]="filterTabs">
-
+<cos-filter-menu #filterMenu
+                 [tabList]="filterTabs"
+                 (tabAdded)="onFilterTabAdded($event)"
+                 (tabSelected)="onFilterTabSelected($event)">
 </cos-filter-menu>
-<section class="filter-menu-container"
-         [ngStyle]="{'height': filterContainerHeight ? filterContainerHeight + 'px' : 'auto'}"
-         (window:scroll)="checkScrollPosition()"
-         (window:resize)="adjustFilterContainerOnResize()">
-  <ul #filterMenu
-      class="filter-menu"
-      [ngClass]="{'filter-menu_sticky': filterMenuIsSticky}">
-    <li class="filter-menu__item"
-        (click)="selectLatest()"
-        [class.activeArticleState]="currentSelectedTab === 1">
-      Latest
-    </li>
-    <li class="filter-menu__item"
-        (click)="selectAll()"
-        [class.activeArticleState]="currentSelectedTab === 2">
-      All
-    </li>
-    <li *ngIf="userId"
-        class="filter-menu__item"
-        (click)="selectBookmark()"
-        [class.activeArticleState]="currentSelectedTab === 3">
-      Bookmarked
-    </li>
-    <li *ngIf="query"
-        class="filter-menu__item"
-        (click)="selectSearch()"
-        [class.activeArticleState]="currentSelectedTab === 4">
-      Search Results
-    </li>
-  </ul>
-</section>
 
 <!-- ARTICLE COLLECTIONS -->
 <section id="latest-articles"
-         *ngIf="currentSelectedTab === 1">
+         *ngIf="filterMenu.isTabSelected('Latest')">
   <div class="article-grid">
     <cos-article-preview-card [userId]="userId"
                               [articleData]="article"
@@ -53,7 +24,7 @@
 </section>
 
 <section id="all-articles"
-         *ngIf="currentSelectedTab === 2">
+         *ngIf="filterMenu.isTabSelected('All')">
   <div class="article-grid">
     <cos-article-preview-card [userId]="userId"
                               [articleData]="article"
@@ -63,7 +34,7 @@
 </section>
 
 <section id="bookmarked-articles"
-         *ngIf="currentSelectedTab === 3">
+         *ngIf="filterMenu.isTabSelected('Bookmarked')">
   <h3 class="collection-text">You have
     <span class="collection-text_accent">{{bookmarkedArticles.length}}</span>
     {{bookmarkedArticles.length === 1 ? 'bookmark' : 'bookmarks'}}.
@@ -77,7 +48,7 @@
 </section>
 
 <section id="searched-articles"
-         *ngIf="currentSelectedTab === 4">
+         *ngIf="filterMenu.isTabSelected('Search Results')">
   <h3 class="collection-text">Found
     <span class="collection-text_accent">{{searchedArticles.length}}</span> {{searchedArticles.length === 1 ? 'result'
     : 'results'}} for

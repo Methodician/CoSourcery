@@ -1,38 +1,57 @@
-import { Component, OnInit, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { EventEmitter } from 'protractor';
+import { Component, Input, Output, SimpleChanges, ViewChild, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'cos-filter-menu',
   templateUrl: './filter-menu.component.html',
   styleUrls: ['./filter-menu.component.scss']
 })
-export class FilterMenuComponent implements OnInit {
+export class FilterMenuComponent {
+  // ViewChild may not be needed if we go with accordion
   @ViewChild('filterMenu') filterMenu;
-  @Input() tabList = [
+  @Input() tabList: TabList = [
     { name: 'Tab 1', selected: true },
     { name: 'Tab 2', selected: false },
   ];
 
-  @Output() tabSelected = new EventEmitter();
+  @Output() tabSelected = new EventEmitter<number>();
+  @Output() tabAdded = new EventEmitter<TabList>();
 
   filterContainerHeight: number;
   filterMenuIsSticky: boolean;
 
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-    console.log('changes in filter menu', changes);
+    if (changes.tabList && changes.tabList.currentValue) {
+      this.tabAdded.emit(changes.tabList.currentValue);
+    }
   }
 
-  onTabSelected(tabIndex: number) {
+  selectTab(tabIndex: number) {
     for (let tab of this.tabList) {
       tab.selected = false;
     }
     this.tabList[tabIndex].selected = true;
+    this.tabSelected.emit(tabIndex);
+  }
+
+  getSelectedTab(): TabItem {
+    const matchignTabs = this.tabList.filter(item => {
+      return item.selected;
+    });
+    // Not expecting duplicate tabs anyway, so returning 1st element.
+    return matchignTabs[0]
+  }
+
+  getTabByName(name: string): TabItem {
+    const matchignTabs = this.tabList.filter(item => {
+      return item.name === name;
+    });
+    // Not expecting duplicate tabs anyway, so returning 1st element.
+    return matchignTabs[0];
+  }
+
+  isTabSelected(tabName: string): boolean {
+    const tab: TabItem = this.getTabByName(tabName);
+    return tab && tab.selected;
   }
 
   checkScrollPosition() {
@@ -50,7 +69,15 @@ export class FilterMenuComponent implements OnInit {
   }
 
   setFilterContainerHeight() {
+    // May not be needed if we go with accordion
     this.filterContainerHeight = this.filterMenu.nativeElement.clientHeight;
   }
 
 }
+
+export interface TabItem {
+  name: string;
+  selected: boolean;
+}
+
+export interface TabList extends Array<TabItem> { }

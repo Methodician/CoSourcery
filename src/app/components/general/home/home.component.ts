@@ -4,7 +4,7 @@ import { ArticlePreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { FilterMenuComponent } from '../filter-menu/filter-menu.component';
+import { TabList, TabItem } from '../filter-menu/filter-menu.component';
 
 @Component({
   selector: 'cos-home',
@@ -14,7 +14,6 @@ import { FilterMenuComponent } from '../filter-menu/filter-menu.component';
 })
 export class HomeComponent implements OnInit {
   @ViewChild('filterMenu') filterMenu;
-  @ViewChild(FilterMenuComponent) cosfilterMenu;
   userId;
 
   featuredArticles;
@@ -28,9 +27,6 @@ export class HomeComponent implements OnInit {
     { name: 'Latest', selected: true },
     { name: 'All', selected: false },
   ];
-  filterMenuIsSticky: boolean;
-  filterContainerHeight: number;
-  currentSelectedTab: SelectedTab = SelectedTab.latest;
 
   constructor(
     private articleSvc: ArticleService,
@@ -41,15 +37,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.initializeArticles();
     this.watchAuthInfo();
-    this.route.params.subscribe(params => {
-      if (params['query']) {
-        this.query = params['query'];
-        this.filterTabs.push({ name: 'Search Results', selected: false });
-        this.cosfilterMenu.onTabSelected(this.filterTabs.length - 1);
-        this.currentSelectedTab = SelectedTab.search;
-        this.searchArticles(this.query);
-      }
-    });
+    this.watchRoutePrams();
   }
 
   initializeArticles() {
@@ -57,24 +45,28 @@ export class HomeComponent implements OnInit {
     this.allArticles = this.articleSvc.allArticlesRef().valueChanges();
   }
 
+  watchRoutePrams() {
+    this.route.params.subscribe(params => {
+      if (params['query']) {
+        this.query = params['query'];
+        this.addFilterTab({ name: 'Search Results', selected: false });
+        this.searchArticles(this.query);
+      }
+    });
+  }
+
   watchAuthInfo() {
     this.authSvc.authInfo$.subscribe(authInfo => {
       this.userId = authInfo.uid;
       if (this.userId) {
         this.watchBookmarkedArticles();
-      } else {
-        this.setFilterContainerHeight();
+        this.addFilterTab({ name: 'Bookmarked', selected: false });
       }
     });
   }
 
   watchBookmarkedArticles() {
     this.articleSvc.watchBookmarkedArticles(this.userId).subscribe(articles => {
-      if (articles.length === 0) {
-        setTimeout(() => {
-          this.setFilterContainerHeight();
-        }, 100);
-      }
       this.bookmarkedArticles = articles;
     });
   }
@@ -87,46 +79,26 @@ export class HomeComponent implements OnInit {
   }
 
   // UI Data Display
-  selectLatest() {
-    this.currentSelectedTab = SelectedTab.latest;
-  }
-
-  selectAll() {
-    this.currentSelectedTab = SelectedTab.all;
-  }
-
-  selectBookmark() {
-    this.currentSelectedTab = SelectedTab.bookmark;
-  }
-
-  selectSearch() {
-    this.currentSelectedTab = SelectedTab.search;
-  }
-
-  // UI Sticky Filter Menu
-  checkScrollPosition() {
-    const yCoordinate = window.scrollY;
-    if (document.body.clientWidth >= 482) {
-      this.filterMenuIsSticky = yCoordinate >= 200 ? true : false;
-    } else {
-      this.filterMenuIsSticky = true;
+  addFilterTab(tab: TabItem) {
+    // Wanted to implemnt this inside filter menu component but chagne detection was wonky
+    if (!this.filterMenu.getTabByName(tab.name)) {
+      this.filterTabs.push(tab);
     }
   }
 
-  adjustFilterContainerOnResize() {
-    this.checkScrollPosition();
-    this.setFilterContainerHeight();
+  onFilterTabAdded($event: TabList) {
+    // Attempting to select the tab immediately after addFilterTab in watchRouteParams
+    // failed because it didn't quite exist yet.
+    const lastTabIndex = $event.length - 1;
+    const newestTabName = $event[lastTabIndex].name;
+    if (newestTabName === 'Search Results') {
+      this.filterMenu.selectTab(lastTabIndex);
+    }
   }
 
-  setFilterContainerHeight() {
-    this.filterContainerHeight = this.filterMenu.nativeElement.clientHeight;
+  // didn't end up using this (yet)
+  onFilterTabSelected($event: number) {
+    console.log('filterTabSelected', $event);
   }
-
 }
 
-export enum SelectedTab {
-  'latest' = 1,
-  'all',
-  'bookmark',
-  'search'
-}
