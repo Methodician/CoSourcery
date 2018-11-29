@@ -208,12 +208,18 @@
               [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
               (click)="authCheck() ? saveChanges() : null">
         <mat-icon>done</mat-icon>
-        <span *ngIf="articleHasUnsavedChanges() || articleIsNew"
-              class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left"
-              style="left: -20px;">
-          Save Article
-        </span>
       </button>
+      <div class="flag flag-wheel"
+           [ngClass]="{'active': articleHasUnsavedChanges() || articleIsNew}">
+        <div class="flag flag-axle">
+          <div class="flag flag-pole">
+            <div class="flag flag-tooltip">
+              <span class="flag__static">Unsaved Changes</span>
+              <span class="flag__hover">Save Article</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </form>
