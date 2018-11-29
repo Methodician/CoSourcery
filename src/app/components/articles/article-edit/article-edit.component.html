@@ -82,7 +82,8 @@
       <p *ngIf="!editIntro"
          class="static-display">
         {{articleEditForm.value.introduction}}
-        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is about.</span>
+        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
+          about.</span>
       </p>
       <mat-form-field *ngIf="editIntro">
         <p><textarea #introduction
@@ -220,6 +221,18 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="restore-control-abs-position">
+    <div class="restore-control"
+         [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew, 'sticky': saveButtonIsSticky(), 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
+      <button class="mat-icon-btn mat-icon-btn_no-shadow"
+              type="button"
+              [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
+              (click)="cancelChanges()">
+        <mat-icon>cancel</mat-icon>
+      </button>
     </div>
   </section>
 </form>

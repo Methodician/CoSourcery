@@ -15,6 +15,7 @@ import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/c
 import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edit-timeout-dialog.component';
 import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
+import { ConfirmDialogComponent } from '../../modals/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'cos-article-edit',
@@ -297,6 +298,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.articleEditForm.patchValue({ body: contents });
   }
 
+  cancelChanges() {
+    const response$ = this.openConfirmDialog('Undo Edits', 'Any unsaved changes will be discarded.', 'Are you sure?');
+    response$.subscribe(shouldReload => {
+      if (shouldReload) {
+        location.reload();
+      }
+    });
+  }
+
   async saveChanges() {
     if (this.coverImageFile) {
       await this.saveCoverImage();
@@ -468,17 +478,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return (verticalOverflow > 0) ? true : false;
   }
 
-  openMessageDialog(title: string, msg1: string, msg2: string = null) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.data = {
-      dialogTitle: title ? title : null,
-      dialogLine1: msg1 ? msg1 : null,
-      dialogLine2: msg2 ? msg2 : null
-    }
-    return this.dialog.open(MessageDialogComponent, dialogConfig);
-  }
-
   // Bookmarking
   checkIfBookmarked() {
     const ref = this.articleSvc.bookmarkedRef(this.loggedInUser.uid, this.articleId);
@@ -525,6 +524,31 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   onCancelNewComment() {
     this.commentReplyInfo.replyParentKey = null;
+  }
+
+
+  // Dialog Helpers
+  openMessageDialog(title: string, msg1: string, msg2: string = null) {
+    const dialogConfig = this.genericDialogConfig(title, msg1, msg2);
+    return this.dialog.open(MessageDialogComponent, dialogConfig);
+  }
+
+  openConfirmDialog(title: string, msg1: string, msg2: string = null): Observable<boolean> {
+    const dialogConfig = this.genericDialogConfig(title, msg1, msg2);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    return dialogRef.afterClosed();
+  }
+
+  genericDialogConfig(title: string, msg1: string, msg2: string = null): MatDialogConfig {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      dialogTitle: title ? title : null,
+      dialogLine1: msg1 ? msg1 : null,
+      dialogLine2: msg2 ? msg2 : null
+    }
+
+    return dialogConfig;
   }
 
 }

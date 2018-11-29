@@ -327,6 +327,15 @@
   z-index: 20;
 }
 
+.restore-control-abs-position {
+  height: 58px;
+  width: 58px;
+  position: absolute;
+  bottom: 0;
+  right: 320px;
+  z-index: 20;
+}
+
 .save-control {
   position: relative;
   display: flex;
