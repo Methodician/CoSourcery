@@ -329,6 +329,9 @@
 
 .save-control {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px;
   border-top-right-radius: 100%;
   border-top-left-radius: 100%;
@@ -340,6 +343,17 @@
   button {
     transform: scale(0);
     transition: transform cubic-bezier(.5,-0.35,.5,1.35) 0.5s;
+
+    &:hover + .flag {
+
+      .flag__static {
+        display: none;
+      }
+
+      .flag__hover {
+        display: block;
+      }
+    }
   }
 
   &.disabled {
@@ -357,6 +371,57 @@
   &.sticky {
     position: fixed;
     bottom: 0;
+  }
+}
+
+.flag {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: lighten($accent-color-1-dark, 15%);;
+
+  &-wheel {
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+    transform: rotate(-90deg);
+    transition: transform 0.3s;
+
+    &.active {
+      transform: rotate(-360deg);
+      transition: transform cubic-bezier(.4,-0.2,.4,1.2) 0.6s;
+    }
+  }
+
+  &-axle {
+    height: 0;
+    width: 0;
+  }
+
+  &-pole {
+    height: 2px;
+    width: 40px;
+    right: 0;
+  }
+
+  &-tooltip {
+    left: 0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: $dark-gray;
+    color: #fff;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    transform: translateX(-100%);
+  }
+
+  &__static {
+    display: block;
+  }
+
+  &__hover {
+    display: none;
   }
 }
 
