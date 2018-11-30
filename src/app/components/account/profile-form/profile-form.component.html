@@ -8,7 +8,7 @@
       <input class="profile-image__input"
              accept="image/*"
              type="file"
-             (change)="emitProfileImageSelect($event)">
+             (change)="onSelectProfileImage($event)">
       <div *ngIf="imageUploadPercent$">upload%: {{ imageUploadPercent$ | async }}</div>
     </section>
 

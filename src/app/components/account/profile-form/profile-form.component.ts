@@ -12,7 +12,7 @@ export class ProfileFormComponent implements OnInit {
   profileForm: FormGroup;
   @Input() formUser;
   @Input() imageUploadPercent$: Observable<number>;
-  @Output() selectProfileImageEmitter = new EventEmitter<string>();
+  @Output() profileImageSelected = new EventEmitter<string>();
 
   constructor(
     private formBuilder: FormBuilder
@@ -51,8 +51,8 @@ export class ProfileFormComponent implements OnInit {
     );
   }
 
-  emitProfileImageSelect($event) {
-    this.selectProfileImageEmitter.emit($event);
+  onSelectProfileImage($event) {
+    this.profileImageSelected.emit($event);
   }
 
   get valid() {

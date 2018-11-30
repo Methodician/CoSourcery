@@ -9,7 +9,7 @@
     <cos-profile-form #formComponent
                       [formUser]="userMap[profileId]"
                       [imageUploadPercent$]="imageUploadPercent$"
-                      (selectProfileImageEmitter)="onSelectProfileImage($event)"></cos-profile-form>
+                      (profileImageSelected)="onSelectProfileImage($event)"></cos-profile-form>
 
     <button *ngIf="loggedInUserId"
             class="cos-btn"
