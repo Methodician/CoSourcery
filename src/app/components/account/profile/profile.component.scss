@@ -1,6 +1,13 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  box-shadow: 0 2px 5px $light-gray-50;
 
+}
 .profile {
   max-width: 768px;
   margin: auto;
@@ -9,67 +16,5 @@
   &__title {
     color: $primary-color;
     text-align: center;
-  }
-}
-
-.profile-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px;
-  box-shadow: 0 2px 5px $light-gray-50;
-
-  &__input {
-    width: 100%;
-    min-width: 0;
-    margin-bottom: 20px;
-
-    input:read-only {
-      color: $medium-gray;
-    }
-  }
-
-  &__input-group {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
-
-    @media screen and (min-width: 500px) {
-      grid-template-columns: 1fr 1fr;
-      grid-gap: 20px;
-    }
-  }
-}
-
-.profile-image {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  margin-bottom: 24px;
-
-  &__src {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-  }
-
-  &__input {
-    width: 100%;
-    min-width: 0;
-    max-width: 250px;
-    visibility: hidden;
-    position: absolute;
-    bottom: 20px;
-    padding: 6px;
-    border: 1px solid $light-gray-50;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    cursor: pointer;
-  }
-
-  &:hover &__input {
-    visibility: visible;
   }
 }
