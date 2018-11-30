@@ -71,6 +71,7 @@ import { LoginDialogComponent } from './components/modals/login-dialog/login-dia
 import { MessageDialogComponent } from './components/modals/message-dialog/message-dialog.component';
 import { ConfirmDialogComponent } from './components/modals/confirm-dialog/confirm-dialog.component';
 import { ProfileFormComponent } from './components/account/profile-form/profile-form.component';
+import { FilterMenuComponent } from './components/general/filter-menu/filter-menu.component';
 
 @NgModule({
   declarations: [
@@ -99,6 +100,7 @@ import { ProfileFormComponent } from './components/account/profile-form/profile-
     MessageDialogComponent,
     ConfirmDialogComponent,
     ProfileFormComponent,
+    FilterMenuComponent,
   ],
   imports: [
     BrowserModule,
