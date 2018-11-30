@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { UserService, UploadTracker } from 'app/services/user.service';
 import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
-import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'cos-profile',
@@ -11,6 +10,7 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+  @ViewChild('formComponent') formComponent;
   userMap: UserMap;
   dbUser: UserInfoOpen;
   profileId: string;
@@ -56,16 +56,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   }
 
-  async onSaveProfileChanges(formComponent) {
+  async onSaveProfileChanges() {
     if (this.profileImageFile) {
-      await this.saveProfileImage(formComponent.profileForm);
+      await this.saveProfileImage();
     }
-    await this.userSvc.updateUser(formComponent.user);
-    formComponent.profileForm.markAsPristine();
+    await this.userSvc.updateUser(this.formComponent.user);
+    this.formComponent.profileForm.markAsPristine();
   }
 
   // Cover Image Upload Functions
-  async onSelectProfileImage(e: HtmlInputEvent, profileForm: FormGroup) {
+  async onSelectProfileImage(e: HtmlInputEvent) {
+    const profileForm = this.formComponent.profileForm;
     if (this.profileImageFile) {
       this.userSvc.deleteFile(this.tempImageUploadPath);
     }
@@ -81,13 +82,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return;
   }
 
-  async saveProfileImage(profileForm: FormGroup) {
+  async saveProfileImage() {
     const tracker = this.userSvc.uploadProfileImage(this.loggedInUserId, this.profileImageFile);
     this.imageUploadTask = tracker.task;
     this.imageUploadPercent$ = tracker.task.percentageChanges();
     const snap = await tracker.task.then();
     const url = await tracker.ref.getDownloadURL().toPromise();
-    profileForm.patchValue({ imageUrl: url });
+    this.formComponent.profileForm.patchValue({ imageUrl: url });
     // this.dbUser.imageUrl = url;
     this.userSvc.trackUploadedProfileImages(this.loggedInUserId, snap.metadata.fullPath, url);
     this.userSvc.deleteFile(this.tempImageUploadPath);

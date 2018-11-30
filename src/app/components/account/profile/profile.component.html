@@ -10,13 +10,13 @@
                       [formUser]="userMap[profileId]"
                       [loggedInUserId]="loggedInUserId"
                       [imageUploadPercent$]="imageUploadPercent$"
-                      (selectProfileImageEmitter)="onSelectProfileImage($event, formComponent.profileForm)"></cos-profile-form>
+                      (selectProfileImageEmitter)="onSelectProfileImage($event)"></cos-profile-form>
 
     <button *ngIf="loggedInUserId"
             class="cos-btn"
             type="button"
             [disabled]="!formComponent.valid || formComponent.pristine"
-            (click)="onSaveProfileChanges(formComponent)">
+            (click)="onSaveProfileChanges()">
       Update
     </button>
   </div>
