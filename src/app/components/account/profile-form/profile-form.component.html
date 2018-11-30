@@ -10,7 +10,7 @@
     <div>
       <mat-form-field class="profile-card__input" [floatLabel]="'always'">
         <mat-label>First Name</mat-label>
-        <input #firstName matInput type="text" formControlName="fName" maxlength="30" (blur)="emitTrimInput('fName')"
+        <input #firstName matInput type="text" formControlName="fName" maxlength="30" (blur)="trimInput('fName')"
           [readonly]="!loggedInUserId" required />
         <mat-error>Please provide your first name.</mat-error>
         <mat-hint align="end">{{firstName.value.length}} / 30</mat-hint>
@@ -18,7 +18,7 @@
 
       <mat-form-field class="profile-card__input" [floatLabel]="'always'">
         <mat-label>Last Name</mat-label>
-        <input #lastName matInput type="text" formControlName="lName" maxlength="30" (blur)="emitTrimInput('lName')"
+        <input #lastName matInput type="text" formControlName="lName" maxlength="30" (blur)="trimInput('lName')"
           [readonly]="!loggedInUserId" required />
         <mat-error>Please provide your last name.</mat-error>
         <mat-hint align="end">{{lastName.value.length}} / 30</mat-hint>
@@ -26,7 +26,7 @@
 
        <mat-form-field class="profile-card__input" [floatLabel]="'always'">
         <mat-label>Alias</mat-label>
-        <input #alias matInput type="text" formControlName="alias" maxlength="30" (blur)="emitTrimInput('alias')"
+        <input #alias matInput type="text" formControlName="alias" maxlength="30" (blur)="trimInput('alias')"
           [readonly]="!loggedInUserId" />
         <mat-hint>Alternate display name.</mat-hint>
         <mat-hint align="end">{{alias?.value.length}} / 30</mat-hint>
@@ -37,7 +37,7 @@
   <mat-form-field class="profile-card__input" [floatLabel]="'always'">
     <mat-label>Bio</mat-label>
     <textarea #bio matInput type="text" formControlName="bio" placeholder="Say something about yourself ..." rows="5"
-      maxlength="500" (blur)="emitTrimInput('bio')" [readonly]="!loggedInUserId">
+      maxlength="500" (blur)="trimInput('bio')" [readonly]="!loggedInUserId">
   </textarea>
     <mat-hint align="end">{{bio?.value.length}} / 500</mat-hint>
   </mat-form-field>
@@ -46,30 +46,26 @@
     <mat-form-field class="profile-card__input" [floatLabel]="'always'">
       <mat-label>Email</mat-label>
       <!-- Not allowing email updates yet -->
-      <input matInput type="email" formControlName="email" maxlength="50" (blur)="emitTrimInput('email')" readonly required />
+      <input matInput type="email" formControlName="email" maxlength="50" (blur)="trimInput('email')" readonly required />
       <mat-error>Please provide a valid email address.</mat-error>
     </mat-form-field>
 
     <mat-form-field class="profile-card__input" [floatLabel]="'always'">
       <mat-label>City</mat-label>
-      <input matInput type="text" formControlName="city" maxlength="30" (blur)="emitTrimInput('city')" [readonly]="!loggedInUserId" />
+      <input matInput type="text" formControlName="city" maxlength="30" (blur)="trimInput('city')" [readonly]="!loggedInUserId" />
     </mat-form-field>
   </div>
 
   <div class="profile-card__input-group">
     <mat-form-field class="profile-card__input" [floatLabel]="'always'">
       <mat-label>State</mat-label>
-      <input matInput type="text" formControlName="state" maxlength="2" (blur)="emitTrimInput('state')" [readonly]="!loggedInUserId" />
+      <input matInput type="text" formControlName="state" maxlength="2" (blur)="trimInput('state')" [readonly]="!loggedInUserId" />
     </mat-form-field>
 
     <mat-form-field class="profile-card__input" [floatLabel]="'always'">
       <mat-label>Zip Code</mat-label>
-      <input matInput type="text" formControlName="zipCode" maxlength="5" (blur)="emitTrimInput('zipCode')" [readonly]="!loggedInUserId" />
+      <input matInput type="text" formControlName="zipCode" maxlength="5" (blur)="trimInput('zipCode')" [readonly]="!loggedInUserId" />
     </mat-form-field>
   </div>
 
-  <button *ngIf="loggedInUserId" class="cos-btn" type="button" [disabled]="!profileForm.valid || profileForm.pristine"
-    (click)="emitProfileChanges()">
-    Update
-  </button>
 </form>
