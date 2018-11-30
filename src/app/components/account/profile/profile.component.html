@@ -4,7 +4,7 @@
 
   <!-- Editable Profile Form -->
   <!-- ngIf div wrapper needed to ensure buttons aren't rendered before the profileForm is loaded -->
-  <div *ngIf="profileId">
+  <div *ngIf="profileId" class="form-wrapper">
     <cos-profile-form #formComponent
                       [formUser]="userMap[profileId]" 
                       [loggedInUserId]="loggedInUserId"
