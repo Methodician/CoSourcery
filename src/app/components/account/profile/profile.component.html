@@ -4,17 +4,20 @@
 
   <!-- Editable Profile Form -->
   <!-- ngIf div wrapper needed to ensure buttons aren't rendered before the profileForm is loaded -->
-  <div *ngIf="profileId" class="form-wrapper">
+  <div *ngIf="profileId"
+       class="form-wrapper">
     <cos-profile-form #formComponent
-                      [formUser]="userMap[profileId]" 
+                      [formUser]="userMap[profileId]"
                       [loggedInUserId]="loggedInUserId"
                       [imageUploadPercent$]="imageUploadPercent$"
                       (selectProfileImageEmitter)="onSelectProfileImage($event, formComponent.profileForm)"
-                      (profileChangesEmitter)="onSaveProfileChanges()"
-    ></cos-profile-form>
+                      (profileChangesEmitter)="onSaveProfileChanges()"></cos-profile-form>
 
-    <button *ngIf="loggedInUserId" class="cos-btn" type="button" [disabled]="!formComponent.profileForm.valid || formComponent.profileForm.pristine"
-      (click)="onSaveProfileChanges(formComponent)">
+    <button *ngIf="loggedInUserId"
+            class="cos-btn"
+            type="button"
+            [disabled]="!formComponent.valid || formComponent.pristine"
+            (click)="onSaveProfileChanges(formComponent)">
       Update
     </button>
   </div>

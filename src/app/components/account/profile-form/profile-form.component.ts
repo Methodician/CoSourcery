@@ -19,7 +19,7 @@ export class ProfileFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder
-    ) { }
+  ) { }
 
   ngOnInit() {
     if (this.formUser) {
@@ -62,8 +62,12 @@ export class ProfileFormComponent implements OnInit {
     this.profileChangesEmitter.next();
   }
 
-  get validForm() {
+  get valid() {
     return this.profileForm.valid;
+  }
+
+  get pristine() {
+    return this.profileForm.pristine;
   }
 
   get user(): UserInfoOpen {
