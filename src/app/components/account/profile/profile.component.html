@@ -8,7 +8,6 @@
        class="form-wrapper">
     <cos-profile-form #formComponent
                       [formUser]="userMap[profileId]"
-                      [loggedInUserId]="loggedInUserId"
                       [imageUploadPercent$]="imageUploadPercent$"
                       (selectProfileImageEmitter)="onSelectProfileImage($event)"></cos-profile-form>
 
