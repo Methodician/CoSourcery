@@ -15,7 +15,6 @@ export class ProfileFormComponent implements OnInit {
   @Input() loggedInUserId: boolean;
 
   @Output() selectProfileImageEmitter = new EventEmitter<string>();
-  @Output() profileChangesEmitter = new EventEmitter<string>();
 
   constructor(
     private formBuilder: FormBuilder
@@ -55,11 +54,7 @@ export class ProfileFormComponent implements OnInit {
   }
 
   emitProfileImageSelect($event) {
-    this.selectProfileImageEmitter.next($event);
-  }
-
-  emitProfileChanges() {
-    this.profileChangesEmitter.next();
+    this.selectProfileImageEmitter.emit($event);
   }
 
   get valid() {
