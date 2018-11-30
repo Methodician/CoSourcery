@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
 import { ArticlePreview } from '../../../shared/class/article-info';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { TabList, TabItem } from '../filter-menu/filter-menu.component';
 
 @Component({
   selector: 'cos-home',
@@ -12,40 +13,31 @@ import { ActivatedRoute } from '@angular/router';
   providers: [ArticleService]
 })
 export class HomeComponent implements OnInit {
-  query: string;
-  UserId;
+  @ViewChild('filterMenu') filterMenu;
+  userId;
+
   featuredArticles;
   latestArticles: Observable<ArticlePreview[]>;
   allArticles: Observable<ArticlePreview[]>;
   bookmarkedArticles;
   searchedArticles;
-  currentSelectedTab: SelectedTab = SelectedTab.latest;
+  query: string;
 
+  filterTabs = [
+    { name: 'Latest', selected: true },
+    { name: 'All', selected: false },
+  ];
 
   constructor(
     private articleSvc: ArticleService,
     private authSvc: AuthService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit() {
     this.initializeArticles();
-
-    this.authSvc.authInfo$.subscribe(authInfo => {
-      if (authInfo) {
-        this.UserId = authInfo.uid;
-        if (this.UserId) {
-          this.watchBookmarkedArticles();
-        }
-      }
-    });
-
-    this.route.params.subscribe(params => {
-      if (params['query']) {
-        this.query = params['query'];
-        this.currentSelectedTab = SelectedTab.search;
-        this.searchArticles(this.query);
-      }
-    });
+    this.watchAuthInfo();
+    this.watchRoutePrams();
   }
 
   initializeArticles() {
@@ -53,27 +45,30 @@ export class HomeComponent implements OnInit {
     this.allArticles = this.articleSvc.allArticlesRef().valueChanges();
   }
 
-  watchBookmarkedArticles() {
-    this.articleSvc.watchBookmarkedArticles(this.UserId).subscribe(articles => {
-      this.bookmarkedArticles = articles;
+  watchRoutePrams() {
+    this.route.params.subscribe(params => {
+      if (params['query']) {
+        this.query = params['query'];
+        this.addFilterTab({ name: 'Search Results', selected: false });
+        this.searchArticles(this.query);
+      }
     });
   }
 
-  // Methods for toggling between Latest and All Previews
-  selectLatest() {
-    this.currentSelectedTab = SelectedTab.latest;
+  watchAuthInfo() {
+    this.authSvc.authInfo$.subscribe(authInfo => {
+      this.userId = authInfo.uid;
+      if (this.userId) {
+        this.watchBookmarkedArticles();
+        this.addFilterTab({ name: 'Bookmarked', selected: false });
+      }
+    });
   }
 
-  selectAll() {
-    this.currentSelectedTab = SelectedTab.all;
-  }
-
-  selectBookmark() {
-    this.currentSelectedTab = SelectedTab.bookmark;
-  }
-
-  selectSearch() {
-    this.currentSelectedTab = SelectedTab.search;
+  watchBookmarkedArticles() {
+    this.articleSvc.watchBookmarkedArticles(this.userId).subscribe(articles => {
+      this.bookmarkedArticles = articles;
+    });
   }
 
   searchArticles(query) {
@@ -83,11 +78,27 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  // UI Data Display
+  addFilterTab(tab: TabItem) {
+    // Wanted to implemnt this inside filter menu component but chagne detection was wonky
+    if (!this.filterMenu.getTabByName(tab.name)) {
+      this.filterTabs.push(tab);
+    }
+  }
+
+  onFilterTabAdded($event: TabList) {
+    // Attempting to select the tab immediately after addFilterTab in watchRouteParams
+    // failed because it didn't quite exist yet.
+    const lastTabIndex = $event.length - 1;
+    const newestTabName = $event[lastTabIndex].name;
+    if (newestTabName === 'Search Results') {
+      this.filterMenu.selectTab(lastTabIndex);
+    }
+  }
+
+  // didn't end up using this (yet)
+  onFilterTabSelected($event: number) {
+    console.log('filterTabSelected', $event);
+  }
 }
 
-export enum SelectedTab {
-  'latest' = 1,
-  'all',
-  'bookmark',
-  'search'
-}
