@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 export class ProfileFormComponent implements OnInit {
   profileForm: FormGroup;
   @Input() formUser;
+  @Input() imageUploadPercent$: Observable<number>;
   @Input() loggedInUserId: boolean;
 
   @Output() selectProfileImageEmitter = new EventEmitter<string>();
