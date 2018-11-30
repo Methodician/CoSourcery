@@ -51,14 +51,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  // not using this just staging for the future.
+  // not using this yet. just staging for the future implemention of the read only component.
   editButton() {
     const user = this.userMap[this.loggedInUserId];
     this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
 
   }
-
-  // all instances of profileForm used to be a reference of the FormGroup, fyi.
+  
   async onSaveProfileChanges(formComponent) {
     if (this.profileImageFile) {
       await this.saveProfileImage(formComponent.profileForm);

@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
-import { AngularFireUploadTask } from '@angular/fire/storage';
+import { UserInfoOpen } from 'app/shared/class/user-info';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -59,7 +58,6 @@ export class ProfileFormComponent implements OnInit {
     this.selectProfileImageEmitter.next($event);
   }
 
-  // this will become function that save button utilizes when click in the parent compoenent.
   emitProfileChanges() {
     this.profileChangesEmitter.next();
   }
