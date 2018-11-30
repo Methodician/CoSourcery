@@ -14,7 +14,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userMap: UserMap;
   dbUser: UserInfoOpen;
   profileId: string;
-  profileUser = null;
   loggedInUserId = null;
   profileImageFile: File;
   imageUploadTask: AngularFireUploadTask;
@@ -23,7 +22,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private userSvc: UserService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.userSvc.userInfo$.subscribe(user => {
@@ -32,7 +31,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.userMap = this.userSvc.userMap;
         this.loggedInUserId = user.uid;
         this.profileId = this.loggedInUserId; // work around until readonly profile is implemented
-        this.profileUser = this.userMap[this.loggedInUserId];
       } else {
         this.loggedInUserId = null;
       }
@@ -57,7 +55,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
 
   }
-  
+
   async onSaveProfileChanges(formComponent) {
     if (this.profileImageFile) {
       await this.saveProfileImage(formComponent.profileForm);
