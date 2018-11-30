@@ -60,8 +60,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   // all instances of profileForm used to be a reference of the FormGroup, fyi.
   async onSaveProfileChanges(formComponent) {
-    console.log('on save profile this is the profile form', formComponent);
-
     if (this.profileImageFile) {
       await this.saveProfileImage(formComponent.profileForm);
     }

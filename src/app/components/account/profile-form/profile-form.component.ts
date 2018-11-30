@@ -55,8 +55,6 @@ export class ProfileFormComponent implements OnInit {
   }
 
   emitProfileImageSelect($event) {
-    console.log('this is that image upload $event', $event);
-
     this.selectProfileImageEmitter.next($event);
   }
 
