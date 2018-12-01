@@ -3,6 +3,7 @@ import { UserService, UploadTracker } from 'app/services/user.service';
 import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
+import { Params, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'cos-profile',
@@ -19,21 +20,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
   imageUploadTask: AngularFireUploadTask;
   imageUploadPercent$: Observable<number>;
   tempImageUploadPath: string;
+  editMode: boolean;
 
   constructor(
     private userSvc: UserService,
+    private _route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
-    this.userSvc.userInfo$.subscribe(user => {
-      if (user.uid) {
-        // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
-        this.userMap = this.userSvc.userMap;
-        this.loggedInUserId = user.uid;
-        this.profileId = this.loggedInUserId; // work around until readonly profile is implemented
-      } else {
-        this.loggedInUserId = null;
-      }
+    this._route.params.subscribe((params: Params) => {
+      this.userSvc.userInfo$.subscribe(user => {
+        if (user.uid) {
+          // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
+          this.userMap = this.userSvc.userMap;
+          this.loggedInUserId = user.uid;
+          if (!params['key']) { // is this the best way to achieve this? Is there some way to do this in routing where it seems more appropriate.
+            this.editMode = true;
+            this.profileId = this.loggedInUserId;
+          } else {
+            this.editMode = false;
+            this.profileId = params['key'];
+            if (!this.userMap[this.profileId]) {
+              this.userSvc.addUserToMap(this.profileId);
+            }
+          }
+        } else {
+          this.loggedInUserId = null;
+        }
+      });
     });
   }
 

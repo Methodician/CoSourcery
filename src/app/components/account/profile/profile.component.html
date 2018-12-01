@@ -2,11 +2,14 @@
 
   <h2 class="profile__title">Profile</h2>
 
-  <cos-profile-view></cos-profile-view>
+  <!-- View only Profile -->
+  <div *ngIf="profileId && !editMode">
+    <cos-profile-view [user]="userMap[profileId]"></cos-profile-view>
+  </div>
 
   <!-- Editable Profile Form -->
   <!-- ngIf div wrapper needed to ensure buttons aren't rendered before the profileForm is loaded -->
-  <div *ngIf="profileId"
+  <div *ngIf="profileId && editMode"
        class="form-wrapper">
     <cos-profile-form #formComponent
                       [formUser]="userMap[profileId]"
