@@ -7,7 +7,7 @@
         class="form-wrapper">
     <div class="top-btn-wrapper">
       <button *ngIf="loggedInUserId === profileId"
-              class="cos-btn top-btn"
+              class="cos-btn"
               type="button"
               (click)="edit()">
         Edit
@@ -17,12 +17,11 @@
   </div>
 
   <!-- Editable Profile Form -->
-  <!-- ngIf div wrapper needed to ensure buttons aren't rendered before the profileForm is loaded -->
   <div *ngIf="profileId && editMode"
        class="form-wrapper">
     <div class="top-btn-wrapper">
       <button *ngIf="loggedInUserId"
-            class="cos-btn top-btn"
+            class="cos-btn"
             type="button"
             [disabled]="!formComponent.valid || formComponent.pristine"
             (click)="onSaveProfileChanges()">
