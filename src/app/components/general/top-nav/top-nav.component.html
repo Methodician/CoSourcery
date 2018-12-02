@@ -38,7 +38,7 @@
       <li *ngIf="authInfo.uid"
           class="menu__item menu__item_collapse">
         <button class="mat-icon-btn"
-                routerLink="profile">
+                [routerLink]="['/profile', authInfo.uid]">
           <mat-icon>person</mat-icon>
           <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_below">Profile</span>
         </button>
