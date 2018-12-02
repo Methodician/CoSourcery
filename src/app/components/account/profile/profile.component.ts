@@ -3,7 +3,7 @@ import { UserService, UploadTracker } from 'app/services/user.service';
 import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
-import { Params, ActivatedRoute } from '@angular/router';
+import { Params, ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cos-profile',
@@ -25,6 +25,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private userSvc: UserService,
     private _route: ActivatedRoute,
+    private _router: Router,
   ) { }
 
   ngOnInit() {
@@ -36,6 +37,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.loggedInUserId = user.uid;
           if (!params['key']) { // is this the best way to achieve this? Is there some way to do this in routing where it seems more appropriate.
             this.editMode = true;
+            this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
             this.profileId = this.loggedInUserId;
           } else {
             this.editMode = false;
@@ -63,11 +65,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  // not using this yet. just staging for the future implemention of the read only component.
-  editButton() {
-    const user = this.userMap[this.loggedInUserId];
-    this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
-
+  edit() {
+    this._router.navigate(['profile']);
   }
 
   async onSaveProfileChanges() {
