@@ -73,6 +73,7 @@ import { ConfirmDialogComponent } from './components/modals/confirm-dialog/confi
 import { ProfileFormComponent } from './components/account/profile-form/profile-form.component';
 import { FilterMenuComponent } from './components/general/filter-menu/filter-menu.component';
 import { ProfileViewComponent } from './components/account/profile-view/profile-view.component';
+import { ProfileContributionsComponent } from './components/account/profile-contributions/profile-contributions.component';
 
 @NgModule({
   declarations: [
@@ -103,6 +104,7 @@ import { ProfileViewComponent } from './components/account/profile-view/profile-
     ProfileFormComponent,
     FilterMenuComponent,
     ProfileViewComponent,
+    ProfileContributionsComponent,
   ],
   imports: [
     BrowserModule,
