@@ -16,7 +16,8 @@
     <cos-profile-view [user]="userMap[profileId]"></cos-profile-view>
     
     <!-- Profile Contributions -->
-    <cos-profile-contributions></cos-profile-contributions>
+    <cos-profile-contributions [authoredArticles]="authoredArticles"
+                               [editedArticles]="editedArticles"></cos-profile-contributions>
   </div>
 
   <!-- Editable Profile Form -->

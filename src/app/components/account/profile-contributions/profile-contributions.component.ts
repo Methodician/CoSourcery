@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'cos-profile-contributions',
@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile-contributions.component.scss']
 })
 export class ProfileContributionsComponent implements OnInit {
+  @Input() editedArticles;
+  @Input() authoredArticles;
 
   constructor() { }
 
   ngOnInit() {
+    console.log('edit arts:', this.editedArticles);
+    console.log('authed arts:', this.authoredArticles);
   }
 
 }

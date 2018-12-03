@@ -4,6 +4,8 @@ import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { Params, ActivatedRoute, Router } from '@angular/router';
+import { ArticleService } from 'app/services/article.service';
+import { ArticlePreview } from 'app/shared/class/article-info';
 
 @Component({
   selector: 'cos-profile',
@@ -21,9 +23,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   imageUploadPercent$: Observable<number>;
   tempImageUploadPath: string;
   editMode: boolean;
+  authoredArticles: ArticlePreview[];
+  editedArticles: ArticlePreview[];
 
   constructor(
     private userSvc: UserService,
+    private articleSvc: ArticleService,
     private _route: ActivatedRoute,
     private _router: Router,
   ) { }
@@ -45,6 +50,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             if (!this.userMap[this.profileId]) {
               this.userSvc.addUserToMap(this.profileId);
             }
+            this.setDisplayInfo(this.profileId);
           }
         } else {
           this.loggedInUserId = null;
@@ -64,6 +70,43 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.userSvc.deleteFile(this.tempImageUploadPath);
     }
   }
+
+  // +_+++++++++++++++++++++++++++
+
+  getAuthoredArticlesById(authorId: string) {
+    this.authoredArticles = [];
+
+    this.articleSvc.getArticleRefsByAuthor(authorId).get().subscribe(articles => {
+      console.log('authored articles count: ', articles.docs.length);
+      articles.docs.forEach(art => {
+        const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
+        preview$.subscribe(artPrev => {
+          this.authoredArticles.push(artPrev);
+        });
+      });
+    });
+  }
+
+  getEditedArticlesById(editorId: string) {
+    this.editedArticles = [];
+
+    this.articleSvc.getArticlesRefsByEditor(editorId).get().subscribe(articles => {
+      console.log('authored articles count: ', articles.docs.length);
+      articles.docs.forEach(art => {
+        const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
+        preview$.subscribe(artPrev => {
+          this.editedArticles.push(artPrev);
+        });
+      });
+    });
+  }
+
+  setDisplayInfo(profileId) {
+    this.getAuthoredArticlesById(profileId);
+    this.getEditedArticlesById(profileId);
+  }
+
+  // +_+++++++++++++++++++++++++++
 
   edit() {
     this._router.navigate(['profile']);
