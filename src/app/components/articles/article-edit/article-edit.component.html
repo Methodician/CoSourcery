@@ -82,7 +82,8 @@
       <p *ngIf="!editIntro"
          class="static-display">
         {{articleEditForm.value.introduction}}
-        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is about.</span>
+        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
+          about.</span>
       </p>
       <mat-form-field *ngIf="editIntro">
         <p><textarea #introduction
@@ -155,6 +156,7 @@
       </button>
       <ckeditor *ngIf="ckeditor.content"
                 (change)="onCKEditorChanged($event)"
+                (ready)="onCKEditorReady($event)"
                 [data]="ckeditor.content"
                 [editor]="ckeditor.build"
                 [config]="ckeditor.config"
