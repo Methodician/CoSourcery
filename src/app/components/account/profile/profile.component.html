@@ -2,10 +2,32 @@
 
   <h2 class="profile__title">Profile</h2>
 
-  <!-- Editable Profile Form -->
-  <!-- ngIf div wrapper needed to ensure buttons aren't rendered before the profileForm is loaded -->
-  <div *ngIf="profileId"
+  <!-- View only Profile -->
+  <div *ngIf="userMap && userMap[profileId] && !editMode"
        class="form-wrapper">
+    <div class="top-btn-wrapper">
+      <button *ngIf="loggedInUserId === profileId"
+              class="cos-btn"
+              type="button"
+              (click)="edit()">
+        Edit
+      </button>
+    </div>
+    <cos-profile-view [user]="userMap[profileId]"></cos-profile-view>
+  </div>
+
+  <!-- Editable Profile Form -->
+  <div *ngIf="profileId && editMode"
+       class="form-wrapper">
+    <div class="top-btn-wrapper">
+      <button *ngIf="loggedInUserId"
+              class="cos-btn"
+              type="button"
+              [disabled]="!formComponent.valid || formComponent.pristine"
+              (click)="onSaveProfileChanges()">
+        Update
+      </button>
+    </div>
     <cos-profile-form #formComponent
                       [formUser]="userMap[profileId]"
                       [imageUploadPercent$]="imageUploadPercent$"
