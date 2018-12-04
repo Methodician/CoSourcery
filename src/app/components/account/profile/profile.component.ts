@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   imageUploadTask: AngularFireUploadTask;
   imageUploadPercent$: Observable<number>;
   tempImageUploadPath: string;
-  editMode: boolean;
+  editMode = false;
 
   constructor(
     private userSvc: UserService,
@@ -29,25 +29,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this._route.params.subscribe((params: Params) => {
-      this.userSvc.userInfo$.subscribe(user => {
-        if (user.uid) {
-          // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
-          this.userMap = this.userSvc.userMap;
-          this.loggedInUserId = user.uid;
-          if (!params['key']) { // is this the best way to achieve this? Is there some way to do this in routing where it seems more appropriate.
-            this.editMode = true;
-            this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
-            this.profileId = this.loggedInUserId;
-          } else {
-            this.editMode = false;
-            this.profileId = params['key'];
-            if (!this.userMap[this.profileId]) {
-              this.userSvc.addUserToMap(this.profileId);
-            }
+    this.userMap = this.userSvc.userMap;
+    this.userSvc.userInfo$.subscribe(user => {
+      if (user.uid) {
+        // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
+        this.loggedInUserId = user.uid;
+      } else {
+        this.loggedInUserId = null;
+      }
+      this._route.params.subscribe((params: Params) => {
+        if (params['key']) {
+          if (!this.userMap[params['key']]) {
+            this.userSvc.addUserToMap(params['key']);
           }
+          this.editMode = false;
+          this.profileId = params['key'];
         } else {
-          this.loggedInUserId = null;
+          this.editMode = true;
+          this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
+          this.profileId = this.loggedInUserId;
         }
       });
     });
