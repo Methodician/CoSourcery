@@ -74,7 +74,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       await this.saveProfileImage();
     }
     await this.userSvc.updateUser(this.formComponent.user);
-    this.formComponent.profileForm.markAsPristine();
+    this._router.navigate(['profile', this.loggedInUserId]);
   }
 
   // Cover Image Upload Functions
