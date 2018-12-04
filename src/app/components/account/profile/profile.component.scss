@@ -6,8 +6,8 @@
   align-items: center;
   padding: 30px;
   box-shadow: 0 2px 5px $light-gray-50;
-
 }
+
 .profile {
   max-width: 768px;
   margin: auto;
@@ -17,4 +17,9 @@
     color: $primary-color;
     text-align: center;
   }
+}
+
+.top-btn-wrapper {  
+  text-align: right;
+  width: 100%;
 }

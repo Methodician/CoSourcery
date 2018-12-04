@@ -3,6 +3,7 @@ import { UserService, UploadTracker } from 'app/services/user.service';
 import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
+import { Params, ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cos-profile',
@@ -19,21 +20,36 @@ export class ProfileComponent implements OnInit, OnDestroy {
   imageUploadTask: AngularFireUploadTask;
   imageUploadPercent$: Observable<number>;
   tempImageUploadPath: string;
+  editMode = false;
 
   constructor(
     private userSvc: UserService,
+    private _route: ActivatedRoute,
+    private _router: Router,
   ) { }
 
   ngOnInit() {
+    this.userMap = this.userSvc.userMap;
     this.userSvc.userInfo$.subscribe(user => {
       if (user.uid) {
         // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
-        this.userMap = this.userSvc.userMap;
         this.loggedInUserId = user.uid;
-        this.profileId = this.loggedInUserId; // work around until readonly profile is implemented
       } else {
         this.loggedInUserId = null;
       }
+      this._route.params.subscribe((params: Params) => {
+        if (params['key']) {
+          if (!this.userMap[params['key']]) {
+            this.userSvc.addUserToMap(params['key']);
+          }
+          this.editMode = false;
+          this.profileId = params['key'];
+        } else {
+          this.editMode = true;
+          this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
+          this.profileId = this.loggedInUserId;
+        }
+      });
     });
   }
 
@@ -49,11 +65,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  // not using this yet. just staging for the future implemention of the read only component.
-  editButton() {
-    const user = this.userMap[this.loggedInUserId];
-    this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
-
+  edit() {
+    this._router.navigate(['profile']);
   }
 
   async onSaveProfileChanges() {
@@ -61,7 +74,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       await this.saveProfileImage();
     }
     await this.userSvc.updateUser(this.formComponent.user);
-    this.formComponent.profileForm.markAsPristine();
+    this._router.navigate(['profile', this.loggedInUserId]);
   }
 
   // Cover Image Upload Functions
