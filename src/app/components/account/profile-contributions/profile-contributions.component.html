@@ -1,19 +1,31 @@
-<p>
-  profile-contributions works!
-</p>
-
-<p>authored</p>
+<h3>
+    Recent Authored Articles
+    <a *ngIf="displayedAuthoredArticles.length <= minDisplayNum && authoredArticles.length > minDisplayNum"
+       (click)="toggleAllAuthored()"
+        target="_blank">(show all)</a>
+    <a *ngIf="displayedAuthoredArticles.length > minDisplayNum"
+       (click)="toggleAllAuthored()"
+        target="_blank">(collapse)</a>
+  </h3>
 <div class="article-grid">
   <cos-article-preview-card [userId]="loggedInUserId"
                             [articleData]="article"
-                            *ngFor="let article of authoredArticles ">
+                            *ngFor="let article of displayedAuthoredArticles ">
   </cos-article-preview-card>
 </div>
-<br><br>
-<p>edited</p>
+
+<h3>
+  Recent Edited Articles
+  <a *ngIf="displayedEditedArticles.length <= minDisplayNum && editedArticles.length > minDisplayNum"
+     (click)="toggleAllEdited()"
+      target="_blank">(show all)</a>
+  <a *ngIf="displayedEditedArticles.length > minDisplayNum"
+     (click)="toggleAllEdited()"
+      target="_blank">(collapse)</a>
+</h3>
 <div class="article-grid">
   <cos-article-preview-card [userId]="loggedInUserId"
                             [articleData]="article"
-                            *ngFor="let article of editedArticles ">
+                            *ngFor="let article of displayedEditedArticles ">
   </cos-article-preview-card>
 </div>

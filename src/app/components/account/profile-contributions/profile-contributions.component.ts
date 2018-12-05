@@ -11,9 +11,12 @@ export class ProfileContributionsComponent implements OnInit {
   @Input() loggedInUserId;
   @Input() profileId;
   editedArticles: ArticlePreview[];
+  displayedEditedArticles: ArticlePreview[];
   authoredArticles: ArticlePreview[];
+  displayedAuthoredArticles: ArticlePreview[];
   editedArticlesMap = {};
   authoredArticlesMap = {};
+  minDisplayNum = 3; // varible make it super easy to change the amount of articles we display. can remove once we're set if we like.
 
   constructor(private articleSvc: ArticleService) { }
 
@@ -21,45 +24,69 @@ export class ProfileContributionsComponent implements OnInit {
     this.setContributionInfo(this.profileId);
   }
 
-    // +_+++++++++++++++++++++++++++
+  // +_+++++++++++++++++++++++++++
 
-    getAuthoredArticlesById(authorId: string) {
-      this.authoredArticles = [];
+  getAuthoredArticlesById(authorId: string) {
+    this.authoredArticles = [];
+    this.displayedAuthoredArticles = [];
 
-      this.articleSvc.getArticleRefsByAuthor(authorId).get().subscribe(articles => {
-        articles.docs.forEach(art => {
-          const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
-          preview$.subscribe(artPrev => {
-            if (!this.authoredArticlesMap[artPrev.articleId]) {
-              this.authoredArticlesMap[artPrev.articleId] = true;
-              this.authoredArticles.push(artPrev);
+    this.articleSvc.getArticleRefsByAuthor(authorId).get().subscribe(articles => {
+      articles.docs.forEach(art => {
+        const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
+        preview$.subscribe(artPrev => {
+          if (!this.authoredArticlesMap[artPrev.articleId]) {
+            this.authoredArticlesMap[artPrev.articleId] = true;
+            this.authoredArticles.push(artPrev);
+            if (this.displayedAuthoredArticles.length < 3) {
+              this.displayedAuthoredArticles.push(artPrev);
             }
-          });
+          }
         });
       });
-    }
+    });
+  }
 
-    getEditedArticlesById(editorId: string) {
-      this.editedArticles = [];
+  getEditedArticlesById(editorId: string) {
+    this.editedArticles = [];
+    this.displayedEditedArticles = [];
 
-      this.articleSvc.getArticlesRefsByEditor(editorId).get().subscribe(articles => {
-        articles.docs.forEach(art => {
-          const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
-          preview$.subscribe(artPrev => {
-            if (!this.editedArticlesMap[artPrev.articleId]) {
-              this.editedArticlesMap[artPrev.articleId] = true;
-              this.editedArticles.push(artPrev);
+    this.articleSvc.getArticlesRefsByEditor(editorId).get().subscribe(articles => {
+      articles.docs.forEach(art => {
+        const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
+        preview$.subscribe(artPrev => {
+          if (!this.editedArticlesMap[artPrev.articleId]) {
+            this.editedArticlesMap[artPrev.articleId] = true;
+            this.editedArticles.push(artPrev);
+            if (this.displayedEditedArticles.length < 3) {
+              this.displayedEditedArticles.push(artPrev);
             }
-          });
+          }
         });
       });
-    }
+    });
+  }
 
-    setContributionInfo(profileId) {
-      this.getAuthoredArticlesById(profileId);
-      this.getEditedArticlesById(profileId);
-    }
+  setContributionInfo(profileId) {
+    this.getAuthoredArticlesById(profileId);
+    this.getEditedArticlesById(profileId);
+  }
 
-    // +_+++++++++++++++++++++++++++
+  toggleAllAuthored() {
+    if (this.displayedAuthoredArticles.length > 3) {
+      this.displayedAuthoredArticles = this.displayedAuthoredArticles.slice(0, 3);
+    } else {
+      this.displayedAuthoredArticles = this.authoredArticles;
+    }
+  }
+
+  toggleAllEdited() {
+    if (this.displayedEditedArticles.length > 3) {
+      this.displayedEditedArticles = this.displayedEditedArticles.slice(0, 3);
+    } else {
+      this.displayedEditedArticles = this.editedArticles;
+    }
+  }
+
+  // +_+++++++++++++++++++++++++++
 
 }
