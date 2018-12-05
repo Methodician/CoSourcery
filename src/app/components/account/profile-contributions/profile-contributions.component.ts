@@ -12,6 +12,8 @@ export class ProfileContributionsComponent implements OnInit {
   @Input() profileId;
   editedArticles: ArticlePreview[];
   authoredArticles: ArticlePreview[];
+  editedArticlesMap = {};
+  authoredArticlesMap = {};
 
   constructor(private articleSvc: ArticleService) { }
 
@@ -28,8 +30,10 @@ export class ProfileContributionsComponent implements OnInit {
         articles.docs.forEach(art => {
           const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
           preview$.subscribe(artPrev => {
-            this.authoredArticles.push(artPrev);
-            console.log('push article:', artPrev);
+            if (!this.authoredArticlesMap[artPrev.articleId]) {
+              this.authoredArticlesMap[artPrev.articleId] = true;
+              this.authoredArticles.push(artPrev);
+            }
           });
         });
       });
@@ -42,8 +46,10 @@ export class ProfileContributionsComponent implements OnInit {
         articles.docs.forEach(art => {
           const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
           preview$.subscribe(artPrev => {
-            this.editedArticles.push(artPrev);
-            console.log('push article:', artPrev);
+            if (!this.editedArticlesMap[artPrev.articleId]) {
+              this.editedArticlesMap[artPrev.articleId] = true;
+              this.editedArticles.push(artPrev);
+            }
           });
         });
       });
