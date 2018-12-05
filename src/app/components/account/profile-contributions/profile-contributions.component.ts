@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ArticlePreview } from 'app/shared/class/article-info';
 import { ArticleService } from 'app/services/article.service';
 
@@ -7,7 +7,7 @@ import { ArticleService } from 'app/services/article.service';
   templateUrl: './profile-contributions.component.html',
   styleUrls: ['./profile-contributions.component.scss']
 })
-export class ProfileContributionsComponent implements OnInit {
+export class ProfileContributionsComponent implements OnInit, OnChanges {
   @Input() loggedInUserId;
   @Input() profileId;
   editedArticles: ArticlePreview[];
@@ -24,6 +24,12 @@ export class ProfileContributionsComponent implements OnInit {
     this.setContributionInfo(this.profileId);
   }
 
+  ngOnChanges() {
+    this.editedArticlesMap = {};
+    this.authoredArticlesMap = {};
+    this.setContributionInfo(this.profileId);
+
+  }
   // +_+++++++++++++++++++++++++++
 
   getAuthoredArticlesById(authorId: string) {
