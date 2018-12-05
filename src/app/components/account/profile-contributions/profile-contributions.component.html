@@ -3,7 +3,12 @@
 </p>
 
 <p>authored</p>
-{{ authoredArticles | json }}
+<div class="article-grid">
+  <cos-article-preview-card [userId]="loggedInUserId"
+                            [articleData]="article"
+                            *ngFor="let article of editedArticles ">
+  </cos-article-preview-card>
+</div>
 <br><br>
 <p>edited</p>
 <div class="article-grid">
