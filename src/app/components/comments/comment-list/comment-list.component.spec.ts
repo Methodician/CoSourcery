@@ -443,14 +443,14 @@ describe('CommentListComponent - ', () => {
       });
 
       it('should call commentAuthCheck() on click', () => {
-        spyOn(component, 'commentAuthCheck');
+        spyOn(component, 'authCheck');
         const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
         const upButton: HTMLElement = de.nativeElement.children[1];
 
         upButton.click();
         fixture.detectChanges();
 
-        expect(component.commentAuthCheck).toHaveBeenCalled();
+        expect(component.authCheck).toHaveBeenCalled();
       });
 
       it('should call onUpvoteComment() on click', () => {
@@ -498,15 +498,15 @@ describe('CommentListComponent - ', () => {
         expect(downButton.children[1].textContent).toBe('Remove Vote');
       });
 
-      it('should call commentAuthCheck() on click', () => {
-        spyOn(component, 'commentAuthCheck');
+      it('should call authCheck() on click', () => {
+        spyOn(component, 'authCheck');
         const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
         const upButton: HTMLElement = de.nativeElement.children[2];
 
         upButton.click();
         fixture.detectChanges();
 
-        expect(component.commentAuthCheck).toHaveBeenCalled();
+        expect(component.authCheck).toHaveBeenCalled();
       });
 
       it('should call onDownvoteComment() on click', () => {
