@@ -156,7 +156,7 @@ export class ArticleService {
   async setThumbnailImageUrl(articleId: string) {
     const storagePath = `articleCoverThumbnails/${articleId}`;
     const storageRef = this.storage.ref(storagePath);
-    const url = await storageRef.getDownloadURL().toPromise()
+    const url = await storageRef.getDownloadURL().toPromise();
     if (!url) {
       return;
     }
@@ -212,7 +212,7 @@ export class ArticleService {
     // Also allowing for one person to have multiple tabs open and be editing multiple articles
     const editorsByArticlePath = `articleData/editStatus/editorsByArticle/${articleId}/${editorId}`;
     const articlesByEditorPath = `articleData/editStatus/articlesByEditor/${editorId}/${articleId}`;
-    const updates = {}
+    const updates = {};
     const editorsRef = this.rtdb.database.ref(editorsByArticlePath);
     const articlesRef = this.rtdb.database.ref(articlesByEditorPath);
     updates[editorsByArticlePath] = true;
@@ -227,7 +227,7 @@ export class ArticleService {
   removeArticleEditStatus(articleId: string, editorId: string) {
     const editorByArticlePath = `articleData/editStatus/editorsByArticle/${articleId}/${editorId}`;
     const articleByEditorPath = `articleData/editStatus/articlesByEditor/${editorId}/${articleId}`;
-    const updates = {}
+    const updates = {};
     updates[editorByArticlePath] = null;
     updates[articleByEditorPath] = null;
     this.rtdb.database.ref().update(updates);

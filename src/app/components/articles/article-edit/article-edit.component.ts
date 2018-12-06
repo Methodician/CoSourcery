@@ -336,7 +336,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)
+    return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty);
   }
 
   // Editor and User Info Tracking
@@ -357,7 +357,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .snapshotChanges()
       .subscribe(snapList => {
         this.currentArticleEditors = {};
-        for (let snap of snapList) {
+        for (const snap of snapList) {
           this.currentArticleEditors[snap.key] = true;
         }
       });
@@ -440,6 +440,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           break;
         case CtrlNames.body:
           this.editBody = !this.editBody;
+          break;
         default:
           break;
       }
@@ -475,7 +476,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       dialogTitle: title ? title : null,
       dialogLine1: msg1 ? msg1 : null,
       dialogLine2: msg2 ? msg2 : null
-    }
+    };
     return this.dialog.open(MessageDialogComponent, dialogConfig);
   }
 
