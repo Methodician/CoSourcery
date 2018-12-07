@@ -1,5 +1,5 @@
 import { UserInfoOpen, UserMap } from '@class/user-info';
-import { AuthService } from './auth.service';
+import { AuthService } from '@services/auth.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';

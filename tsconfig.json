@@ -6,6 +6,9 @@
       "@modals/*": [
         "app/components/modals/*"
       ],
+      "@directives/*": [
+        "app/directives/*"
+      ],
       "@components/*": [
         "app/components/*"
       ],

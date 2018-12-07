@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { CanDeactivate } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { ArticleEditComponent } from 'app/components/articles/article-edit/article-edit.component';
+import { ArticleEditComponent } from '@components/articles/article-edit/article-edit.component';
 import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
 
 @Injectable({
