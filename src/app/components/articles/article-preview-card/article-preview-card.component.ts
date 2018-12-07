@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { ArticleService } from '@services/article.service';
-import { ArticlePreview } from 'app/shared/class/article-info';
+import { ArticlePreview } from '@class/article-info';
 import { MatDialog } from '@angular/material';
-import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
+import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-article-preview-card',

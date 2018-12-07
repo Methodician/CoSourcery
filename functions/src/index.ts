@@ -22,8 +22,8 @@ import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
-import { ArticleDetail, ArticlePreview } from '../../src/app/shared/class/article-info';
+import { Comment, ParentTypes } from '@class/comment';
+import { ArticleDetail, ArticlePreview } from '@class/article-info';
 
 // This was the only way I found to make things environment dependent... See Algolia Indexing function for usage example.
 import { environment as devEnv } from '../../src/environments/environment';

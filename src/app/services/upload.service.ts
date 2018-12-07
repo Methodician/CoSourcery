@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { Upload } from '../shared/class/upload';
+import { Upload } from '@class/upload';
 
 @Injectable()
 export class UploadService {

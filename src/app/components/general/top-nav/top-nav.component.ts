@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthInfo } from '../../../shared/class/auth-info';
+import { AuthInfo } from '@class/auth-info';
 import { AuthService } from '@services/auth.service';
 import { MatDialog } from '@angular/material';
-import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
+import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-top-nav',

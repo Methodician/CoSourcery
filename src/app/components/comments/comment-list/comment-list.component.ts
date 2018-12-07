@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommentService } from '@services/comment.service';
 import { Subscription } from 'rxjs';
-import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
-import { Comment, CommentMap, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
+import { UserInfoOpen, UserMap } from '@class/user-info';
+import { Comment, CommentMap, ParentTypes, KeyMap, VoteDirections } from '@class/comment';
 import { MatDialog } from '@angular/material';
-import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
+import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
 
 @Component({
   selector: 'cos-comment-list',

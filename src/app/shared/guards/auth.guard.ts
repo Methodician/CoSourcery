@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { ConfirmDialogComponent } from '../../components/modals/confirm-dialog/confirm-dialog.component';
-import { LoginDialogComponent } from '../../components/modals/login-dialog/login-dialog.component';
+import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
+import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
 
 @Injectable({
   providedIn: 'root'

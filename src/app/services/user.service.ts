@@ -1,4 +1,4 @@
-import { UserInfoOpen, UserMap } from '../shared/class/user-info';
+import { UserInfoOpen, UserMap } from '@class/user-info';
 import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';

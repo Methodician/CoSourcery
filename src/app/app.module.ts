@@ -66,10 +66,10 @@ import { ProfileComponent } from 'app/components/account/profile/profile.compone
 import { RegisterComponent } from 'app/components/account/register/register.component';
 import { TopNavComponent } from 'app/components/general/top-nav/top-nav.component';
 import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
-import { EditTimeoutDialogComponent } from './components/modals/edit-timeout-dialog/edit-timeout-dialog.component';
-import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
-import { MessageDialogComponent } from './components/modals/message-dialog/message-dialog.component';
-import { ConfirmDialogComponent } from './components/modals/confirm-dialog/confirm-dialog.component';
+import { EditTimeoutDialogComponent } from '@modals/edit-timeout-dialog/edit-timeout-dialog.component';
+import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
+import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.component';
+import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
 import { ProfileFormComponent } from './components/account/profile-form/profile-form.component';
 import { FilterMenuComponent } from './components/general/filter-menu/filter-menu.component';
 import { ProfileViewComponent } from './components/account/profile-view/profile-view.component';

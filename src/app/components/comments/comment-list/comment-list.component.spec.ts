@@ -7,12 +7,12 @@ import { of } from 'rxjs/internal/observable/of';
 import { } from 'jasmine';
 import { CommentListComponent } from './comment-list.component';
 import { CommentComponent } from '../comment/comment.component';
-import { Comment, ParentTypes } from 'app/shared/class/comment';
+import { Comment, ParentTypes } from '@class/comment';
 import { CommentService } from '@services/comment.service';
 import { By } from '@angular/platform-browser';
 import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { UserInfoOpen } from 'app/shared/class/user-info';
+import { UserInfoOpen } from '@class/user-info';
 
 
 describe('CommentListComponent - ', () => {

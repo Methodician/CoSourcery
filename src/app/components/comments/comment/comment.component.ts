@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { UserInfoOpen } from 'app/shared/class/user-info';
-import { Comment } from 'app/shared/class/comment';
+import { UserInfoOpen } from '@class/user-info';
+import { Comment } from '@class/comment';
 
 @Component({
   selector: 'cos-comment',
