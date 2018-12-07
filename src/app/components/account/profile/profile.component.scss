@@ -1,11 +1,20 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
-.form-wrapper {
-  display: flex;
-  flex-direction: column;
+.form-wrapper, .contributions-wrapper {
   align-items: center;
   padding: 30px;
   box-shadow: 0 2px 5px $light-gray-50;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.contributions-wrapper {
+  width: max-content;
+  margin: auto;
+  margin-top: 20px;
 }
 
 .profile {

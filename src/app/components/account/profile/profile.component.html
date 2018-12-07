@@ -1,28 +1,31 @@
-<section class="profile">
+<section>
 
   <h2 class="profile__title">Profile</h2>
 
   <!-- View only Profile -->
-  <div *ngIf="userMap && userMap[profileId] && !editMode"
-       class="form-wrapper">
-    <div class="top-btn-wrapper">
-      <button *ngIf="loggedInUserId === profileId"
-              class="cos-btn"
-              type="button"
-              (click)="edit()">
-        Edit
-      </button>
+  <div *ngIf="userMap && userMap[profileId] && !editMode">
+    <div class="form-wrapper profile">
+      <div class="top-btn-wrapper">
+        <button *ngIf="loggedInUserId === profileId"
+                class="cos-btn"
+                type="button"
+                (click)="edit()">
+          Edit
+        </button>
+      </div>
+      <cos-profile-view [user]="userMap[profileId]"></cos-profile-view>
+      
+      <!-- Profile Contributions -->
     </div>
-    <cos-profile-view [user]="userMap[profileId]"></cos-profile-view>
-    
-    <!-- Profile Contributions -->
-    <cos-profile-contributions [loggedInUserId]="loggedInUserId"
-                               [profileId]="profileId"></cos-profile-contributions>
+    <div class="contributions-wrapper">
+      <cos-profile-contributions [loggedInUserId]="loggedInUserId"
+                                 [profileId]="profileId"></cos-profile-contributions>
+    </div>
   </div>
 
   <!-- Editable Profile Form -->
   <div *ngIf="profileId && editMode"
-       class="form-wrapper">
+       class="form-wrapper profile">
     <div class="top-btn-wrapper">
       <button *ngIf="loggedInUserId"
               class="cos-btn"
