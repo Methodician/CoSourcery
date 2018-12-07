@@ -16,7 +16,9 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
   displayedAuthoredArticles: ArticlePreview[];
   editedArticlesMap = {};
   authoredArticlesMap = {};
-  minDisplayNum = 3; // varible make it super easy to change the amount of articles we display. can remove once we're set if we like.
+  // varible make it super easy to change the amount of articles we display. can remove once we're set if we like.
+  // This variable does not apply to the styling though. That will also have to be changed.
+  minDisplayNum = 3;
 
   constructor(private articleSvc: ArticleService) { }
 
@@ -30,7 +32,6 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
     this.setContributionInfo(this.profileId);
 
   }
-  // +_+++++++++++++++++++++++++++
 
   getAuthoredArticlesById(authorId: string) {
     this.authoredArticles = [];
@@ -92,7 +93,5 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
       this.displayedEditedArticles = this.editedArticles;
     }
   }
-
-  // +_+++++++++++++++++++++++++++
 
 }
