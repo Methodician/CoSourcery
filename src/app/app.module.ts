@@ -33,12 +33,12 @@ import {
 } from '@angular/material';
 
 // Services
-import { ArticleService } from './services/article.service';
-import { AuthService } from './services/auth.service';
-import { NotificationService } from './services/notification.service';
-import { UploadService } from './services/upload.service';
-import { UserService } from './services/user.service';
-import { CommentService } from './services/comment.service';
+import { ArticleService } from '@services/article.service';
+import { AuthService } from '@services/auth.service';
+import { NotificationService } from '@services/notification.service';
+import { UploadService } from '@services/upload.service';
+import { UserService } from '@services/user.service';
+import { CommentService } from '@services/comment.service';
 import { DataCleanupService } from './admin/services/data-cleanup.service';
 
 // Directives

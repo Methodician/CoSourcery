@@ -4,11 +4,11 @@ import { ReverseArrayPipe } from '../../../shared/pipes/reverse-array.pipe';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs/internal/observable/of';
 
-import {} from 'jasmine';
+import { } from 'jasmine';
 import { CommentListComponent } from './comment-list.component';
 import { CommentComponent } from '../comment/comment.component';
 import { Comment, ParentTypes } from 'app/shared/class/comment';
-import { CommentService } from '../../../services/comment.service';
+import { CommentService } from '@services/comment.service';
 import { By } from '@angular/platform-browser';
 import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -83,7 +83,7 @@ describe('CommentListComponent - ', () => {
         if (userId === 'userKey1') {
           return {
             val: () => {
-              return new UserInfoOpen( 'J-Boi', 'Jeff', 'Goldblume', 'GoldKey', 'http://8.media.bustedtees.cvcdn.com/1/-/bustedtees.7252ae81-33f1-47fc-af07-52f9127c.gif');
+              return new UserInfoOpen('J-Boi', 'Jeff', 'Goldblume', 'GoldKey', 'http://8.media.bustedtees.cvcdn.com/1/-/bustedtees.7252ae81-33f1-47fc-af07-52f9127c.gif');
             },
             key: 'userKey1'
           };
@@ -424,7 +424,7 @@ describe('CommentListComponent - ', () => {
 
     describe('Upvote Button - ', () => {
       beforeEach(() => {
-        component.userVotesMap = {testCommentKey5: 1};
+        component.userVotesMap = { testCommentKey5: 1 };
         fixture.detectChanges();
       });
 
@@ -480,7 +480,7 @@ describe('CommentListComponent - ', () => {
 
     describe('Downvote Button - ', () => {
       beforeEach(() => {
-        component.userVotesMap = {testCommentKey5: -1};
+        component.userVotesMap = { testCommentKey5: -1 };
         fixture.detectChanges();
       });
 
