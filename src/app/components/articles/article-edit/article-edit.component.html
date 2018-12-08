@@ -203,7 +203,7 @@
 
   <section class="save-control-abs-position">
     <div class="save-control"
-         [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew, 'sticky': saveButtonIsSticky(), 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
+         [ngClass]="{'extended': articleHasUnsavedChanges(), 'sticky': saveButtonIsSticky(), 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
       <button class="mat-icon-btn mat-icon-btn_no-shadow"
               type="button"
               [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
@@ -211,7 +211,7 @@
         <mat-icon>done</mat-icon>
       </button>
       <div class="flag flag-wheel"
-           [ngClass]="{'active': articleHasUnsavedChanges() || articleIsNew}">
+           [ngClass]="{'active': articleHasUnsavedChanges()}">
         <div class="flag flag-axle">
           <div class="flag flag-pole">
             <div class="flag flag-tooltip">

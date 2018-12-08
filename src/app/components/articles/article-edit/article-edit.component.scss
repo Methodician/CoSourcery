@@ -367,6 +367,10 @@
 
   &.disabled {
     background-color: $medium-gray;
+
+    .flag-pole {
+      background-color: $medium-gray;
+    }
   }
 
   &.extended {
