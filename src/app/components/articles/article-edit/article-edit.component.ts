@@ -302,6 +302,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const response$ = this.openConfirmDialog('Undo Edits', 'Any unsaved changes will be discarded.', 'Are you sure?');
     response$.subscribe(shouldReload => {
       if (shouldReload) {
+        this.resetEditStates(); 
         location.reload();
       }
     });
