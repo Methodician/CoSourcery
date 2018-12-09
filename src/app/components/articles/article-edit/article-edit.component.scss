@@ -372,10 +372,10 @@
   &-axle {
     height: 0;
     width: 0;
-    transition: transform 0.3s;
 
     &-270 {
       transform: rotate(-90deg);
+      transition: transform 0.4s;
 
       &_active {
         transform: rotate(-360deg);
@@ -385,6 +385,7 @@
 
     &-90 {
       transform: rotate(90deg);
+      transition: transform 0.8s;
 
       &_active {
         transform: rotate(0deg);
