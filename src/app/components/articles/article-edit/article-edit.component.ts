@@ -15,6 +15,7 @@ import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/c
 import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edit-timeout-dialog.component';
 import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
+import { ConfirmDialogComponent } from '../../modals/confirm-dialog/confirm-dialog.component';
 import * as exif from 'exif-js';
 
 @Component({
@@ -41,6 +42,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
     }
   }
+  @HostListener('window:scroll')
+  onScroll() {
+    this.setCkeditorButtonOffset();
+    this.setStickySaveButton();
+  }
 
   loggedInUser: UserInfoOpen = null;
 
@@ -59,6 +65,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   formIsInCreateView: boolean;
   articleEditFormSubscription: Subscription;
   editSessionTimeout;
+  saveButtonIsSticky = true;
 
   CtrlNames = CtrlNames; // Enum Availablility in HTML Template
   editCoverImage: boolean = false;
@@ -66,8 +73,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   editIntro: boolean = false;
   editBody: boolean = false;
   editTags: boolean = false;
-
-  tagsEdited: boolean = false;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
   coverImageFile: File;
@@ -344,13 +349,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Article Tagging
   addTag(event: MatChipInputEvent): void {
+    const articleTags = this.articleEditForm.value.tags;
     const tag = event.value.toUpperCase();
     const isDuplicate = this.isTagDuplicate(tag);
     if (tag.trim() && !isDuplicate) {
-      this.articleEditForm.value.tags.push(tag.trim());
+      articleTags.push(tag.trim());
+      this.articleEditForm.markAsDirty();
+      this.articleEditForm.patchValue({'tags': articleTags});
       event.input.value = '';
-      this.addUserEditingStatus();
-      this.tagsEdited = true;
     }
   }
 
@@ -365,15 +371,26 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   removeTag(selectedTag): void {
-    const tagIndex = this.articleEditForm.value.tags.indexOf(selectedTag);
+    const articleTags = this.articleEditForm.value.tags;
+    const tagIndex = articleTags.indexOf(selectedTag);
     if (tagIndex >= 0) {
-      this.articleEditForm.value.tags.splice(tagIndex, 1);
-      this.addUserEditingStatus();
-      this.tagsEdited = true;
+      articleTags.splice(tagIndex, 1);
+      this.articleEditForm.markAsDirty();
+      this.articleEditForm.patchValue({'tags': articleTags});
     }
   }
 
   // Form Data Handling
+  cancelChanges() {
+    const response$ = this.openConfirmDialog('Undo Edits', 'Any unsaved changes will be discarded.', 'Are you sure?');
+    response$.subscribe(shouldReload => {
+      if (shouldReload) {
+        this.resetEditStates();
+        location.reload();
+      }
+    });
+  }
+
   async saveChanges() {
     if (this.coverImageFile) {
       await this.saveCoverImage();
@@ -403,7 +420,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
     this.currentArticleEditors[this.loggedInUser.uid] = false;
     this.articleEditForm.markAsPristine();
-    this.tagsEdited = false;
     this.coverImageFile = null;
     this.editCoverImage = false;
     this.editTitle = false;
@@ -413,7 +429,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty);
+    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty)
   }
 
   // Editor and User Info Tracking
@@ -540,21 +556,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
-  saveButtonIsSticky() {
+  setStickySaveButton() {
     const formBottomOffset = this.formBoundingBox.nativeElement.getBoundingClientRect().bottom;
     const verticalOverflow = formBottomOffset - window.innerHeight;
-    return (verticalOverflow > 0) ? true : false;
-  }
-
-  openMessageDialog(title: string, msg1: string, msg2: string = null) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.data = {
-      dialogTitle: title ? title : null,
-      dialogLine1: msg1 ? msg1 : null,
-      dialogLine2: msg2 ? msg2 : null
-    };
-    return this.dialog.open(MessageDialogComponent, dialogConfig);
+    this.saveButtonIsSticky = (verticalOverflow > 0) ? true : false;
   }
 
   // Bookmarking
@@ -603,6 +608,30 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   onCancelNewComment() {
     this.commentReplyInfo.replyParentKey = null;
+  }
+
+  // Dialog Helpers
+  openMessageDialog(title: string, msg1: string, msg2: string = null) {
+    const dialogConfig = this.genericDialogConfig(title, msg1, msg2);
+    return this.dialog.open(MessageDialogComponent, dialogConfig);
+  }
+
+  openConfirmDialog(title: string, msg1: string, msg2: string = null): Observable<boolean> {
+    const dialogConfig = this.genericDialogConfig(title, msg1, msg2);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    return dialogRef.afterClosed();
+  }
+
+  genericDialogConfig(title: string, msg1: string, msg2: string = null): MatDialogConfig {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      dialogTitle: title ? title : null,
+      dialogLine1: msg1 ? msg1 : null,
+      dialogLine2: msg2 ? msg2 : null
+    }
+
+    return dialogConfig;
   }
 
 }
