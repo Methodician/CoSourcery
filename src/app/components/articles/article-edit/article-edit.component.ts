@@ -64,7 +64,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   formIsInCreateView: boolean;
   articleEditFormSubscription: Subscription;
   editSessionTimeout;
-  saveButtonIsSticky = false;
+  saveButtonIsSticky = true;
 
   CtrlNames = CtrlNames; // Enum Availablility in HTML Template
   editCoverImage: boolean = false;
