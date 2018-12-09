@@ -70,7 +70,9 @@ import { EditTimeoutDialogComponent } from './components/modals/edit-timeout-dia
 import { LoginDialogComponent } from './components/modals/login-dialog/login-dialog.component';
 import { MessageDialogComponent } from './components/modals/message-dialog/message-dialog.component';
 import { ConfirmDialogComponent } from './components/modals/confirm-dialog/confirm-dialog.component';
+import { ProfileFormComponent } from './components/account/profile-form/profile-form.component';
 import { FilterMenuComponent } from './components/general/filter-menu/filter-menu.component';
+import { ProfileViewComponent } from './components/account/profile-view/profile-view.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +100,9 @@ import { FilterMenuComponent } from './components/general/filter-menu/filter-men
     LoginDialogComponent,
     MessageDialogComponent,
     ConfirmDialogComponent,
+    ProfileFormComponent,
     FilterMenuComponent,
+    ProfileViewComponent,
   ],
   imports: [
     BrowserModule,

@@ -155,6 +155,7 @@
       </button>
       <ckeditor *ngIf="ckeditor.content"
                 (change)="onCKEditorChanged($event)"
+                (ready)="onCKEditorReady($event)"
                 [data]="ckeditor.content"
                 [editor]="ckeditor.build"
                 [config]="ckeditor.config"

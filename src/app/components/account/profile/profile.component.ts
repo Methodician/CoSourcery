@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { UserService, UploadTracker } from 'app/services/user.service';
 import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
+import { Params, ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cos-profile',
@@ -11,55 +11,45 @@ import { Observable } from 'rxjs';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  profileForm: FormGroup;
+  @ViewChild('formComponent') formComponent;
   userMap: UserMap;
+  dbUser: UserInfoOpen;
+  profileId: string;
   loggedInUserId = null;
-
   profileImageFile: File;
   imageUploadTask: AngularFireUploadTask;
   imageUploadPercent$: Observable<number>;
   tempImageUploadPath: string;
-  dbUser: UserInfoOpen;
+  editMode = false;
 
   constructor(
     private userSvc: UserService,
-    private fb: FormBuilder,
-  ) {
-    this.profileForm = this.fb.group({
-      alias: ['', Validators.maxLength(30)],
-      fName: ['', [
-        Validators.required,
-        Validators.maxLength(30)
-      ]],
-      lName: ['', [
-        Validators.required,
-        Validators.maxLength(30)
-      ]],
-      uid: ['', Validators.required],
-      imageUrl: '',
-      email: ['', [
-        Validators.required,
-        Validators.email,
-        Validators.maxLength(50)
-      ]],
-      zipCode: ['', Validators.maxLength(5)],
-      bio:  ['', Validators.maxLength(500)],
-      city:  ['', Validators.maxLength(30)],
-      state:  ['', Validators.maxLength(2)],
-    });
-  }
+    private _route: ActivatedRoute,
+    private _router: Router,
+  ) { }
 
   ngOnInit() {
+    this.userMap = this.userSvc.userMap;
     this.userSvc.userInfo$.subscribe(user => {
       if (user.uid) {
         // explanation: intending to refactor userService to emit a userId observable, but use the userMap wherever possible instead of the userInfo.
-        this.userMap = this.userSvc.userMap;
         this.loggedInUserId = user.uid;
-        this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
-        this.profileForm.patchValue(this.userMap[user.uid]);
       } else {
         this.loggedInUserId = null;
       }
+      this._route.params.subscribe((params: Params) => {
+        if (params['key']) {
+          if (!this.userMap[params['key']]) {
+            this.userSvc.addUserToMap(params['key']);
+          }
+          this.editMode = false;
+          this.profileId = params['key'];
+        } else {
+          this.editMode = true;
+          this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
+          this.profileId = this.loggedInUserId;
+        }
+      });
     });
   }
 
@@ -75,15 +65,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  edit() {
+    this._router.navigate(['profile']);
+  }
+
   async onSaveProfileChanges() {
     if (this.profileImageFile) {
       await this.saveProfileImage();
     }
-    await this.userSvc.updateUser(this.profileForm.value);
-    this.profileForm.markAsPristine();
+    await this.userSvc.updateUser(this.formComponent.user);
+    this._router.navigate(['profile', this.loggedInUserId]);
   }
+
   // Cover Image Upload Functions
   async onSelectProfileImage(e: HtmlInputEvent) {
+    const profileForm = this.formComponent.profileForm;
     if (this.profileImageFile) {
       this.userSvc.deleteFile(this.tempImageUploadPath);
     }
@@ -93,8 +89,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.imageUploadPercent$ = tracker.task.percentageChanges();
     const snap = await tracker.task.then();
     const url = await tracker.ref.getDownloadURL().toPromise();
-    this.profileForm.patchValue({ imageUrl: url });
-    this.profileForm.markAsDirty();
+    profileForm.patchValue({ imageUrl: url });
+    profileForm.markAsDirty();
     this.tempImageUploadPath = snap.metadata.fullPath;
     return;
   }
@@ -105,7 +101,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.imageUploadPercent$ = tracker.task.percentageChanges();
     const snap = await tracker.task.then();
     const url = await tracker.ref.getDownloadURL().toPromise();
-    this.profileForm.patchValue({ imageUrl: url });
+    this.formComponent.profileForm.patchValue({ imageUrl: url });
     // this.dbUser.imageUrl = url;
     this.userSvc.trackUploadedProfileImages(this.loggedInUserId, snap.metadata.fullPath, url);
     this.userSvc.deleteFile(this.tempImageUploadPath);
@@ -117,13 +113,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       task.cancel();
     }
   }
-
-  trimInput(formControlName) {
-    this.profileForm.patchValue(
-      { [formControlName]: this.profileForm.value[formControlName].trim() }
-    );
-  }
-
 }
 
 export interface HtmlInputEvent extends Event {

@@ -16,6 +16,7 @@ import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edi
 import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
 import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
 import { ConfirmDialogComponent } from '../../modals/confirm-dialog/confirm-dialog.component';
+import * as exif from 'exif-js';
 
 @Component({
   selector: 'cos-article-edit',
@@ -106,6 +107,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     editors: {},
   });
 
+  // CKEditor setup
+  ckEditorReady = false;
   ckeditor = {
     build: InlineEditor,
     config: {
@@ -190,13 +193,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  setFormData(data) {
-    if (data) {
-      this.articleEditForm.patchValue(data);
-      this.coverImageUrl$.next(data.imageUrl);
-    }
-  }
-
   watchFormChanges() {
     this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe(() => {
       if (this.articleEditForm.dirty) {
@@ -206,6 +202,95 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  setFormData(data) {
+    if (data) {
+      this.articleEditForm.patchValue(data);
+      this.coverImageUrl$.next(data.imageUrl);
+    }
+  }
+
+  onCKEditorChanged({ event, editor }: ChangeEvent) {
+    // We're not using CKEditor as a normal FormControl because its scripts would mark the form as "dirty" even when the data was coming from DB.
+    // This approach allows us to manually mark it as dirty only when the changes are local.
+    const contents = editor.getData();
+    // If onCKEditorReady hasn't run, this will still run with no images to process.
+    if (this.ckEditorReady) {
+      // setTimeout with 0 delay still pushes this down the stack so we get the updated body.
+      // Otherwise when deleting an image, we'll still process the deleted image.
+      setTimeout(() => {
+        this.processCKEditorImages();
+      }, 0);
+    }
+    this.articleEditForm.markAsDirty();
+    this.articleEditForm.patchValue({ body: contents });
+  }
+
+  onCKEditorReady($event) {
+    this.ckEditorReady = true;
+    this.processCKEditorImages();
+  }
+
+  // CKEditor image processing (would like to move some of this out side the component)
+  processCKEditorImages() {
+    const figures = document.getElementsByClassName('image');
+    for (let i = 0; i < figures.length; i++) {
+      const fig = figures[i];
+      const img = fig.firstChild as HTMLImageElement;
+      if (img.complete) {
+        // Processes images when form being edited
+        this.rotateImage(img);
+      } else {
+        img.onload = (ev$) => {
+          // Processes images when form first loaded
+          this.rotateImage(img);
+        }
+      }
+    }
+  }
+
+  async rotateImage(img) {
+    if (img.style.transform && img.style.transform.includes('rotate')) {
+      return;
+    }
+    const orientation = await this.getExifOrientation(img);
+    const rotation = this.exifOrientationToDegrees(orientation);
+    img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
+  }
+
+  getExifOrientation(img): Promise<number> {
+    const promise = new Promise<number>((resolve, reject) => {
+      try {
+        exif.getData(img as any, function () {
+          const orientation = exif.getTag(this, 'Orientation');
+          return resolve(orientation);
+        });
+      } catch (error) {
+        console.log('Can\'t get EXIF', error);
+        return reject(error);
+      }
+    });
+    return promise;
+  }
+
+  exifOrientationToDegrees(orientation): orientationDegrees {
+    switch (orientation) {
+      case 1:
+      case 2:
+        return 0;
+      case 3:
+      case 4:
+        return 180;
+      case 5:
+      case 6:
+        return 90;
+      case 7:
+      case 8:
+        return 270;
+      default:
+        return 0;
+    }
   }
 
   abortChanges() {
@@ -296,14 +381,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   // Form Data Handling
-  onCKEditorChanged({ event, editor }: ChangeEvent) {
-    // We're not using CKEditor as a normal FormControl because its scripts would mark the form as "dirty" even when the data was coming from DB.
-    // This approach allows us to manually mark it as dirty only when the changes are coming from locally...
-    const contents = editor.getData();
-    this.articleEditForm.markAsDirty();
-    this.articleEditForm.patchValue({ body: contents });
-  }
-
   cancelChanges() {
     const response$ = this.openConfirmDialog('Undo Edits', 'Any unsaved changes will be discarded.', 'Are you sure?');
     response$.subscribe(shouldReload => {
@@ -373,7 +450,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .snapshotChanges()
       .subscribe(snapList => {
         this.currentArticleEditors = {};
-        for (let snap of snapList) {
+        for (const snap of snapList) {
           this.currentArticleEditors[snap.key] = true;
         }
       });
@@ -456,6 +533,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           break;
         case CtrlNames.body:
           this.editBody = !this.editBody;
+          break;
         default:
           break;
       }
@@ -532,7 +610,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.commentReplyInfo.replyParentKey = null;
   }
 
-
   // Dialog Helpers
   openMessageDialog(title: string, msg1: string, msg2: string = null) {
     const dialogConfig = this.genericDialogConfig(title, msg1, msg2);
@@ -570,3 +647,5 @@ export enum CtrlNames {
   body = 'body',
   tags = 'tags'
 }
+
+export type orientationDegrees = 0 | 90 | 180 | 270;
