@@ -41,6 +41,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
     }
   }
+  @HostListener('window:scroll')
+  onScroll() {
+    this.setCkeditorButtonOffset();
+    this.setStickySaveButton();
+  }
 
   loggedInUser: UserInfoOpen = null;
 
@@ -59,6 +64,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   formIsInCreateView: boolean;
   articleEditFormSubscription: Subscription;
   editSessionTimeout;
+  saveButtonIsSticky = false;
 
   CtrlNames = CtrlNames; // Enum Availablility in HTML Template
   editCoverImage: boolean = false;
@@ -66,8 +72,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   editIntro: boolean = false;
   editBody: boolean = false;
   editTags: boolean = false;
-
-  tagsEdited: boolean = false;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
   coverImageFile: File;
@@ -474,10 +478,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
-  saveButtonIsSticky() {
+  setStickySaveButton() {
     const formBottomOffset = this.formBoundingBox.nativeElement.getBoundingClientRect().bottom;
     const verticalOverflow = formBottomOffset - window.innerHeight;
-    return (verticalOverflow > 0) ? true : false;
+    this.saveButtonIsSticky = (verticalOverflow > 0) ? true : false;
   }
 
   // Bookmarking

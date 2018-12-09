@@ -141,8 +141,7 @@
 
   <section #ckeditorBoundingBox
            class="article-body"
-           [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}"
-           (window:scroll)="setCkeditorButtonOffset()">
+           [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}">
     <div class="article-body__interior"
          [ngClass]="{'border': loggedInUser.uid && editBody}">
       <button class="mat-icon-btn"
@@ -203,7 +202,7 @@
 
   <section class="save-control-abs-position">
     <div class="save-control"
-         [ngClass]="{'extended': articleHasUnsavedChanges(), 'sticky': saveButtonIsSticky(), 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
+         [ngClass]="{'extended': articleHasUnsavedChanges(), 'sticky': saveButtonIsSticky, 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
       <button class="mat-icon-btn mat-icon-btn_no-shadow"
               type="button"
               [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
@@ -226,7 +225,7 @@
 
   <section class="restore-control-abs-position">
     <div class="restore-control"
-         [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew, 'sticky': saveButtonIsSticky(), 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
+         [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew, 'sticky': saveButtonIsSticky, 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
       <button class="mat-icon-btn mat-icon-btn_no-shadow"
               type="button"
               [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
