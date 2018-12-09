@@ -260,13 +260,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Article Tagging
   addTag(event: MatChipInputEvent): void {
+    const articleTags = this.articleEditForm.value.tags;
     const tag = event.value.toUpperCase();
     const isDuplicate = this.isTagDuplicate(tag);
     if (tag.trim() && !isDuplicate) {
-      this.articleEditForm.value.tags.push(tag.trim());
+      articleTags.push(tag.trim());
+      this.articleEditForm.markAsDirty();
+      this.articleEditForm.patchValue({'tags': articleTags});
       event.input.value = '';
-      this.addUserEditingStatus();
-      this.tagsEdited = true;
     }
   }
 
@@ -281,11 +282,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   removeTag(selectedTag): void {
-    const tagIndex = this.articleEditForm.value.tags.indexOf(selectedTag);
+    const articleTags = this.articleEditForm.value.tags;
+    const tagIndex = articleTags.indexOf(selectedTag);
     if (tagIndex >= 0) {
-      this.articleEditForm.value.tags.splice(tagIndex, 1);
-      this.addUserEditingStatus();
-      this.tagsEdited = true;
+      articleTags.splice(tagIndex, 1);
+      this.articleEditForm.markAsDirty();
+      this.articleEditForm.patchValue({'tags': articleTags});
     }
   }
 
@@ -302,7 +304,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const response$ = this.openConfirmDialog('Undo Edits', 'Any unsaved changes will be discarded.', 'Are you sure?');
     response$.subscribe(shouldReload => {
       if (shouldReload) {
-        this.resetEditStates(); 
+        this.resetEditStates();
         location.reload();
       }
     });
@@ -337,7 +339,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
     this.currentArticleEditors[this.loggedInUser.uid] = false;
     this.articleEditForm.markAsPristine();
-    this.tagsEdited = false;
     this.coverImageFile = null;
     this.editCoverImage = false;
     this.editTitle = false;
@@ -347,7 +348,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)
+    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty)
   }
 
   // Editor and User Info Tracking
