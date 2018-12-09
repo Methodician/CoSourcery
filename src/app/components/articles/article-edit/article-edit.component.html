@@ -200,38 +200,40 @@
     </button>
   </section>
 
-  <section class="save-control-abs-position">
-    <div class="save-control"
+  <section class="save-undo-abs-position">
+    <div class="save-undo-sticky-position"
          [ngClass]="{'extended': articleHasUnsavedChanges(), 'sticky': saveButtonIsSticky, 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
-      <button class="mat-icon-btn mat-icon-btn_no-shadow"
+
+      <button class="save-control save-button mat-icon-btn mat-icon-btn_no-shadow"
               type="button"
               [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
               (click)="authCheck() ? saveChanges() : null">
         <mat-icon>done</mat-icon>
       </button>
-      <div class="flag flag-wheel"
-           [ngClass]="{'active': articleHasUnsavedChanges()}">
-        <div class="flag flag-axle">
-          <div class="flag flag-pole">
-            <div class="flag flag-tooltip">
-              <span class="flag__static">Unsaved Changes</span>
-              <span class="flag__hover">Save Article</span>
-            </div>
+
+      <div *ngIf="!articleIsNew"
+           class="restore-control flag flag-axle flag-axle-90"
+           [ngClass]="{'flag-axle-90_active': articleHasUnsavedChanges()}">
+        <div class="flag flag-pole flag-pole_right">
+         <button class="restore-button mat-icon-btn mat-icon-btn_no-shadow"
+                 type="button"
+                 [disabled]="!articleHasUnsavedChanges()"
+                 (click)="cancelChanges()">
+           <mat-icon>replay</mat-icon>
+         </button>
+        </div>
+      </div>
+
+      <div class="flag flag-axle flag-axle-270"
+           [ngClass]="{'flag-axle-270_active': articleHasUnsavedChanges()}">
+        <div class="flag flag-pole flag-pole_left">
+          <div class="flag flag-tooltip">
+            <span class="flag-tooltip_changes">Unsaved</span>
+            <span class="flag-tooltip_save">Save Article</span>
+            <span class="flag-tooltip_restore">Undo Changes</span>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section class="restore-control-abs-position">
-    <div class="restore-control"
-         [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew, 'sticky': saveButtonIsSticky, 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
-      <button class="mat-icon-btn mat-icon-btn_no-shadow"
-              type="button"
-              [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
-              (click)="cancelChanges()">
-        <mat-icon>cancel</mat-icon>
-      </button>
     </div>
   </section>
 </form>

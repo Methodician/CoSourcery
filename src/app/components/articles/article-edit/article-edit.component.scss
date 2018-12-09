@@ -318,25 +318,16 @@
   }
 }
 
-.save-control-abs-position {
+.save-undo-abs-position {
   height: 58px;
   width: 58px;
   position: absolute;
   bottom: 0;
-  right: 30px;
+  right: 80px;
   z-index: 20;
 }
 
-.restore-control-abs-position {
-  height: 58px;
-  width: 58px;
-  position: absolute;
-  bottom: 0;
-  right: 320px;
-  z-index: 20;
-}
-
-.save-control {
+.save-undo-sticky-position {
   position: relative;
   display: flex;
   align-items: center;
@@ -349,22 +340,6 @@
   transform: translateY(100%);
   transition: transform 0.3s;
 
-  button {
-    transform: scale(0);
-    transition: transform cubic-bezier(.5,-0.35,.5,1.35) 0.5s;
-
-    &:hover + .flag {
-
-      .flag__static {
-        display: none;
-      }
-
-      .flag__hover {
-        display: block;
-      }
-    }
-  }
-
   &.disabled {
     background-color: $medium-gray;
 
@@ -376,7 +351,7 @@
   &.extended {
     transform: translateY(0);
 
-    button {
+    .save-button {
       transform: scale(1);
     }
   }
@@ -394,28 +369,41 @@
   justify-content: center;
   background-color: lighten($accent-color-1-dark, 15%);;
 
-  &-wheel {
-    height: 40px;
-    width: 40px;
-    border-radius: 100%;
-    transform: rotate(-90deg);
-    transition: transform 0.3s;
-
-    &.active {
-      transform: rotate(-360deg);
-      transition: transform cubic-bezier(.4,-0.2,.4,1.2) 0.6s;
-    }
-  }
-
   &-axle {
     height: 0;
     width: 0;
+    transition: transform 0.3s;
+
+    &-270 {
+      transform: rotate(-90deg);
+
+      &_active {
+        transform: rotate(-360deg);
+        transition: transform cubic-bezier(.4,-0.2,.4,1.2) 0.6s;
+      }
+    }
+
+    &-90 {
+      transform: rotate(90deg);
+
+      &_active {
+        transform: rotate(0deg);
+        transition: transform cubic-bezier(.4,-0.2,.4,1.2) 0.6s;
+      }
+    }
   }
 
   &-pole {
     height: 2px;
     width: 40px;
-    right: 0;
+
+    &_left {
+      right: 0;
+    }
+
+    &_right {
+      left: 0;
+    }
   }
 
   &-tooltip {
@@ -427,15 +415,47 @@
     font-size: 0.9rem;
     white-space: nowrap;
     transform: translateX(-100%);
-  }
 
-  &__static {
-    display: block;
-  }
+    &_changes {
+      display: block;
+    }
 
-  &__hover {
+    &_save, &_restore {
+      display: none;
+    }
+  }
+}
+
+.save-control:hover ~ .flag {
+
+  .flag-tooltip_changes {
     display: none;
   }
+
+  .flag-tooltip_save {
+    display: block;
+  }
+}
+
+.restore-control:hover ~ .flag {
+
+  .flag-tooltip_changes {
+    display: none;
+  }
+
+  .flag-tooltip_restore {
+    display: block;
+  }
+}
+
+.save-button {
+  transform: scale(0);
+  transition: transform cubic-bezier(.5,-0.35,.5,1.35) 0.5s;
+}
+
+.restore-button {
+  position: absolute;
+  right: -45px;
 }
 
 .article-comments {
