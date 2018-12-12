@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './shared/guards/auth.guard';
+import { AuthGuard } from '@guards/auth.guard';
 
-import { HomeComponent } from 'app/components/general/home/home.component';
-import { RegisterComponent } from 'app/components/account/register/register.component';
-import { ArticleEditComponent } from './components/articles/article-edit/article-edit.component';
-import { DataCleanupComponent } from './admin/components/data-cleanup/data-cleanup.component';
-import { ProfileComponent } from './components/account/profile/profile.component';
-import { UnsavedChangesGuard } from './shared/guards/unsaved-changes.guard';
-import { UnauthorizedComponent } from './components/general/unauthorized/unauthorized.component';
+import { HomeComponent } from '@components/general/home/home.component';
+import { RegisterComponent } from '@components/account/register/register.component';
+import { ArticleEditComponent } from '@components/articles/article-edit/article-edit.component';
+import { DataCleanupComponent } from '@admin/components/data-cleanup/data-cleanup.component';
+import { ProfileComponent } from '@components/account/profile/profile.component';
+import { UnsavedChangesGuard } from '@guards/unsaved-changes.guard';
+import { UnauthorizedComponent } from '@components/general/unauthorized/unauthorized.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -42,7 +42,7 @@ const routes: Routes = [
   },
   { path: 'admin/data-cleanup', component: DataCleanupComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: '**', redirectTo: ''},
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

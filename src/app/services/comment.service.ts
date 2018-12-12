@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 import { combineLatest } from 'rxjs/operators';
-import { Comment, ParentTypes, VoteDirections } from 'app/shared/class/comment';
+import { Comment, ParentTypes, VoteDirections } from '@class/comment';
 
 const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
 

@@ -4,18 +4,17 @@ import { MatChipInputEvent, MatDialog, MatDialogConfig } from '@angular/material
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
-import { ArticleService } from '../../../services/article.service';
-import { UserService } from '../../../services/user.service';
+import { ArticleService } from '@services/article.service';
+import { UserService } from '@services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import { AngularFireUploadTask } from '@angular/fire/storage';
-import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
-import { CommentService } from 'app/services/comment.service';
-import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
-import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edit-timeout-dialog.component';
-import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
-import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
-import { ConfirmDialogComponent } from '../../modals/confirm-dialog/confirm-dialog.component';
+import { UserInfoOpen, UserMap } from '@class/user-info';
+import { CommentService } from '@services/comment.service';
+import { Comment, ParentTypes, KeyMap, VoteDirections } from '@class/comment';
+import { EditTimeoutDialogComponent } from '@modals/edit-timeout-dialog/edit-timeout-dialog.component';
+import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
+import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.component';
 import * as exif from 'exif-js';
 
 @Component({
