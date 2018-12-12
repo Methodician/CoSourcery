@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   imageUploadPercent$: Observable<number>;
   tempImageUploadPath: string;
   editMode = false;
+  minArticleDisplayNum = 3;
 
   constructor(
     private userSvc: UserService,

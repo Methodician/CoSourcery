@@ -10,15 +10,13 @@ import { ArticleService } from 'app/services/article.service';
 export class ProfileContributionsComponent implements OnInit, OnChanges {
   @Input() loggedInUserId;
   @Input() profileId;
+  @Input() minDisplayNum;
   editedArticles: ArticlePreview[];
   displayedEditedArticles: ArticlePreview[];
   authoredArticles: ArticlePreview[];
   displayedAuthoredArticles: ArticlePreview[];
   editedArticlesMap = {};
   authoredArticlesMap = {};
-  // varible make it super easy to change the amount of articles we display. can remove once we're set if we like.
-  // This variable does not apply to the styling though. That will also have to be changed.
-  minDisplayNum = 3;
 
   constructor(private articleSvc: ArticleService) { }
 
@@ -33,62 +31,66 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
 
   }
 
-  getAuthoredArticlesById(authorId: string) {
+  watchAuthoredArticles(authorId: string) {
     this.authoredArticles = [];
     this.displayedAuthoredArticles = [];
 
-    this.articleSvc.getArticleRefsByAuthor(authorId).get().subscribe(articles => {
-      articles.docs.forEach(art => {
-        const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
-        preview$.subscribe(artPrev => {
-          if (!this.authoredArticlesMap[artPrev.articleId]) {
-            this.authoredArticlesMap[artPrev.articleId] = true;
-            this.authoredArticles.push(artPrev);
-            if (this.displayedAuthoredArticles.length < 3) {
-              this.displayedAuthoredArticles.push(artPrev);
-            }
-          }
-        });
+    this.articleSvc.getPreviewRefsByAuthor(authorId).valueChanges().subscribe(previews => {
+      previews.forEach(preview => {
+        this.authoredArticlesMap[preview.articleId] = preview;
       });
+
+      for (const key in this.authoredArticlesMap) {
+        if (this.authoredArticlesMap.hasOwnProperty(key)) {
+
+          this.authoredArticles.push(this.authoredArticlesMap[key]);
+          if (this.displayedAuthoredArticles.length < this.minDisplayNum) {
+            this.displayedAuthoredArticles.push(this.authoredArticlesMap[key]);
+          }
+
+        }
+      }
     });
   }
 
-  getEditedArticlesById(editorId: string) {
+  watchEditedArticles(editorId: string) {
     this.editedArticles = [];
     this.displayedEditedArticles = [];
 
-    this.articleSvc.getArticlesRefsByEditor(editorId).get().subscribe(articles => {
-      articles.docs.forEach(art => {
-        const preview$ = this.articleSvc.getPreviewRefById(art.id).valueChanges();
-        preview$.subscribe(artPrev => {
-          if (!this.editedArticlesMap[artPrev.articleId]) {
-            this.editedArticlesMap[artPrev.articleId] = true;
-            this.editedArticles.push(artPrev);
-            if (this.displayedEditedArticles.length < 3) {
-              this.displayedEditedArticles.push(artPrev);
-            }
-          }
-        });
+    this.articleSvc.getPreviewRefsByEditor(editorId).valueChanges().subscribe(previews => {
+      previews.forEach(preview => {
+        this.editedArticlesMap[preview.articleId] = preview;
       });
+
+      for (const key in this.editedArticlesMap) {
+        if (this.editedArticlesMap.hasOwnProperty(key)) {
+
+          this.editedArticles.push(this.editedArticlesMap[key]);
+          if (this.displayedEditedArticles.length < this.minDisplayNum) {
+            this.displayedEditedArticles.push(this.editedArticlesMap[key]);
+          }
+
+        }
+      }
     });
   }
 
   setContributionInfo(profileId) {
-    this.getAuthoredArticlesById(profileId);
-    this.getEditedArticlesById(profileId);
+    this.watchAuthoredArticles(profileId);
+    this.watchEditedArticles(profileId);
   }
 
   toggleAllAuthored() {
-    if (this.displayedAuthoredArticles.length > 3) {
-      this.displayedAuthoredArticles = this.displayedAuthoredArticles.slice(0, 3);
+    if (this.displayedAuthoredArticles.length > this.minDisplayNum) {
+      this.displayedAuthoredArticles = this.displayedAuthoredArticles.slice(0, this.minDisplayNum);
     } else {
       this.displayedAuthoredArticles = this.authoredArticles;
     }
   }
 
   toggleAllEdited() {
-    if (this.displayedEditedArticles.length > 3) {
-      this.displayedEditedArticles = this.displayedEditedArticles.slice(0, 3);
+    if (this.displayedEditedArticles.length > this.minDisplayNum) {
+      this.displayedEditedArticles = this.displayedEditedArticles.slice(0, this.minDisplayNum);
     } else {
       this.displayedEditedArticles = this.editedArticles;
     }
