@@ -1,30 +1,30 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
-.form-wrapper, .contributions-wrapper {
-  align-items: center;
-  padding: 30px;
-  box-shadow: 0 2px 5px $light-gray-50;
-}
-
-.form-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.contributions-wrapper {
-  width: max-content;
-  margin: auto;
-  margin-top: 20px;
-}
 
 .profile {
-  max-width: 768px;
-  margin: auto;
   padding: 24px 24px 48px;
 
   &__title {
     color: $primary-color;
     text-align: center;
+  }
+
+  &__info-wrapper, &__form-wrapper, &__contributions-wrapper {
+    align-items: center;
+    padding: 30px;
+    box-shadow: 0 2px 5px $light-gray-50;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__info-wrapper, &__form-wrapper{
+    max-width: 768px;
+  }
+  
+  &__contributions-wrapper {
+    max-width: 1008px;
+    margin-top: 20px;
   }
 }
 
