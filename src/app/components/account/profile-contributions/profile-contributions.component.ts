@@ -35,7 +35,7 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
     this.authoredArticles = [];
     this.displayedAuthoredArticles = [];
 
-    this.articleSvc.getArticleRefsByAuthor(this.profileId).valueChanges().subscribe(previews => {
+    this.articleSvc.getPreviewRefsByAuthor(this.profileId).valueChanges().subscribe(previews => {
       previews.forEach(preview => {
         this.authoredArticlesMap[preview.articleId] = preview;
       });
@@ -52,7 +52,7 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
     this.editedArticles = [];
     this.displayedEditedArticles = [];
 
-    this.articleSvc.getArticleRefsByEditor(this.profileId).valueChanges().subscribe(previews => {
+    this.articleSvc.getPreviewRefsByEditor(this.profileId).valueChanges().subscribe(previews => {
       previews.forEach(preview => {
         this.editedArticlesMap[preview.articleId] = preview;
       });
