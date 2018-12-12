@@ -52,7 +52,7 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
     this.editedArticles = [];
     this.displayedEditedArticles = [];
 
-    this.articleSvc.getArticlesRefsByEditor(this.profileId).valueChanges().subscribe(previews => {
+    this.articleSvc.getArticleRefsByEditor(this.profileId).valueChanges().subscribe(previews => {
       previews.forEach(preview => {
         this.editedArticlesMap[preview.articleId] = preview;
       });

@@ -63,7 +63,7 @@ export class ArticleService {
     return articleList$;
   }
 
-  getArticlesRefsByEditor(editorId: string): AngularFirestoreCollection<ArticlePreview> {
+  getArticleRefsByEditor(editorId: string): AngularFirestoreCollection<ArticlePreview> {
     return this.fsdb.collection('articleData/articles/previews', ref => ref.where(`editors.${editorId}`, '>', 0));
   }
 
