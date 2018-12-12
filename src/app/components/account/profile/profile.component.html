@@ -14,12 +14,13 @@
         </button>
       </div>
       <cos-profile-view [user]="userMap[profileId]"></cos-profile-view>
-      
+
       <!-- Profile Contributions -->
     </div>
     <div class="contributions-wrapper">
       <cos-profile-contributions [loggedInUserId]="loggedInUserId"
-                                 [profileId]="profileId"></cos-profile-contributions>
+                                 [profileId]="profileId"
+                                 [minDisplayNum]="3"></cos-profile-contributions>
     </div>
   </div>
 
