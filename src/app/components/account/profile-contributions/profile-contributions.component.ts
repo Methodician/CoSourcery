@@ -21,21 +21,20 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
   constructor(private articleSvc: ArticleService) { }
 
   ngOnInit() {
-    this.setContributionInfo(this.profileId);
+    this.setContributionInfo();
   }
 
   ngOnChanges() {
     this.editedArticlesMap = {};
     this.authoredArticlesMap = {};
-    this.setContributionInfo(this.profileId);
-
+    this.setContributionInfo();
   }
 
-  watchAuthoredArticles(authorId: string) {
+  watchAuthoredArticles() {
     this.authoredArticles = [];
     this.displayedAuthoredArticles = [];
 
-    this.articleSvc.getPreviewRefsByAuthor(authorId).valueChanges().subscribe(previews => {
+    this.articleSvc.getPreviewRefsByAuthor(this.profileId).valueChanges().subscribe(previews => {
       previews.forEach(preview => {
         this.authoredArticlesMap[preview.articleId] = preview;
       });
@@ -53,11 +52,11 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
     });
   }
 
-  watchEditedArticles(editorId: string) {
+  watchEditedArticles() {
     this.editedArticles = [];
     this.displayedEditedArticles = [];
 
-    this.articleSvc.getPreviewRefsByEditor(editorId).valueChanges().subscribe(previews => {
+    this.articleSvc.getPreviewRefsByEditor(this.profileId).valueChanges().subscribe(previews => {
       previews.forEach(preview => {
         this.editedArticlesMap[preview.articleId] = preview;
       });
@@ -75,9 +74,9 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
     });
   }
 
-  setContributionInfo(profileId) {
-    this.watchAuthoredArticles(profileId);
-    this.watchEditedArticles(profileId);
+  setContributionInfo() {
+    this.watchAuthoredArticles();
+    this.watchEditedArticles();
   }
 
   toggleAllAuthored() {
