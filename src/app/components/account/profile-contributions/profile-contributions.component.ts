@@ -21,6 +21,8 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
   constructor(private articleSvc: ArticleService) { }
 
   ngOnInit() {
+    this.displayedEditedArticles = [];
+    this.displayedAuthoredArticles = [];
     this.setContributionInfo();
   }
 
@@ -31,10 +33,9 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
   }
 
   watchAuthoredArticles() {
-    this.authoredArticles = [];
-    this.displayedAuthoredArticles = [];
-
     this.articleSvc.getPreviewRefsByAuthor(this.profileId).valueChanges().subscribe(previews => {
+      this.authoredArticles = [];
+      this.displayedAuthoredArticles = [];
       previews.forEach(preview => {
         this.authoredArticlesMap[preview.articleId] = preview;
       });
@@ -53,10 +54,9 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
   }
 
   watchEditedArticles() {
-    this.editedArticles = [];
-    this.displayedEditedArticles = [];
-
     this.articleSvc.getPreviewRefsByEditor(this.profileId).valueChanges().subscribe(previews => {
+      this.editedArticles = [];
+      this.displayedEditedArticles = [];
       previews.forEach(preview => {
         this.editedArticlesMap[preview.articleId] = preview;
       });
@@ -68,7 +68,7 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
           if (this.displayedEditedArticles.length < this.minDisplayNum) {
             this.displayedEditedArticles.push(this.editedArticlesMap[key]);
           }
-
+ 
         }
       }
     });
