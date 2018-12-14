@@ -4,17 +4,18 @@ import { MatChipInputEvent, MatDialog, MatDialogConfig } from '@angular/material
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
-import { ArticleService } from '../../../services/article.service';
-import { UserService } from '../../../services/user.service';
+import { ArticleService } from '@services/article.service';
+import { UserService } from '@services/user.service';
 import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import { AngularFireUploadTask } from '@angular/fire/storage';
-import { UserInfoOpen, UserMap } from 'app/shared/class/user-info';
-import { CommentService } from 'app/services/comment.service';
-import { Comment, ParentTypes, KeyMap, VoteDirections } from 'app/shared/class/comment';
-import { EditTimeoutDialogComponent } from '../../modals/edit-timeout-dialog/edit-timeout-dialog.component';
-import { LoginDialogComponent } from '../../modals/login-dialog/login-dialog.component';
-import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
+import { UserInfoOpen, UserMap } from '@class/user-info';
+import { CommentService } from '@services/comment.service';
+import { Comment, ParentTypes, KeyMap, VoteDirections } from '@class/comment';
+import { EditTimeoutDialogComponent } from '@modals/edit-timeout-dialog/edit-timeout-dialog.component';
+import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
+import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.component';
+import * as exif from 'exif-js';
 
 @Component({
   selector: 'cos-article-edit',
@@ -40,6 +41,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
     }
   }
+  @HostListener('window:scroll')
+  onScroll() {
+    this.setCkeditorButtonOffset();
+    this.setStickySaveButton();
+  }
 
   loggedInUser: UserInfoOpen = null;
 
@@ -58,6 +64,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   formIsInCreateView: boolean;
   articleEditFormSubscription: Subscription;
   editSessionTimeout;
+  saveButtonIsSticky = true;
 
   CtrlNames = CtrlNames; // Enum Availablility in HTML Template
   editCoverImage: boolean = false;
@@ -65,8 +72,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   editIntro: boolean = false;
   editBody: boolean = false;
   editTags: boolean = false;
-
-  tagsEdited: boolean = false;
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
   coverImageFile: File;
@@ -101,6 +106,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     editors: {},
   });
 
+  // CKEditor setup
+  ckEditorReady = false;
   ckeditor = {
     build: InlineEditor,
     config: {
@@ -185,13 +192,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  setFormData(data) {
-    if (data) {
-      this.articleEditForm.patchValue(data);
-      this.coverImageUrl$.next(data.imageUrl);
-    }
-  }
-
   watchFormChanges() {
     this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe(() => {
       if (this.articleEditForm.dirty) {
@@ -201,6 +201,95 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  setFormData(data) {
+    if (data) {
+      this.articleEditForm.patchValue(data);
+      this.coverImageUrl$.next(data.imageUrl);
+    }
+  }
+
+  onCKEditorChanged({ event, editor }: ChangeEvent) {
+    // We're not using CKEditor as a normal FormControl because its scripts would mark the form as "dirty" even when the data was coming from DB.
+    // This approach allows us to manually mark it as dirty only when the changes are local.
+    const contents = editor.getData();
+    // If onCKEditorReady hasn't run, this will still run with no images to process.
+    if (this.ckEditorReady) {
+      // setTimeout with 0 delay still pushes this down the stack so we get the updated body.
+      // Otherwise when deleting an image, we'll still process the deleted image.
+      setTimeout(() => {
+        this.processCKEditorImages();
+      }, 0);
+    }
+    this.articleEditForm.markAsDirty();
+    this.articleEditForm.patchValue({ body: contents });
+  }
+
+  onCKEditorReady($event) {
+    this.ckEditorReady = true;
+    this.processCKEditorImages();
+  }
+
+  // CKEditor image processing (would like to move some of this out side the component)
+  processCKEditorImages() {
+    const figures = document.getElementsByClassName('image');
+    for (let i = 0; i < figures.length; i++) {
+      const fig = figures[i];
+      const img = fig.firstChild as HTMLImageElement;
+      if (img.complete) {
+        // Processes images when form being edited
+        this.rotateImage(img);
+      } else {
+        img.onload = (ev$) => {
+          // Processes images when form first loaded
+          this.rotateImage(img);
+        }
+      }
+    }
+  }
+
+  async rotateImage(img) {
+    if (img.style.transform && img.style.transform.includes('rotate')) {
+      return;
+    }
+    const orientation = await this.getExifOrientation(img);
+    const rotation = this.exifOrientationToDegrees(orientation);
+    img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
+  }
+
+  getExifOrientation(img): Promise<number> {
+    const promise = new Promise<number>((resolve, reject) => {
+      try {
+        exif.getData(img as any, function () {
+          const orientation = exif.getTag(this, 'Orientation');
+          return resolve(orientation);
+        });
+      } catch (error) {
+        console.log('Can\'t get EXIF', error);
+        return reject(error);
+      }
+    });
+    return promise;
+  }
+
+  exifOrientationToDegrees(orientation): orientationDegrees {
+    switch (orientation) {
+      case 1:
+      case 2:
+        return 0;
+      case 3:
+      case 4:
+        return 180;
+      case 5:
+      case 6:
+        return 90;
+      case 7:
+      case 8:
+        return 270;
+      default:
+        return 0;
+    }
   }
 
   abortChanges() {
@@ -259,13 +348,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Article Tagging
   addTag(event: MatChipInputEvent): void {
+    const articleTags = this.articleEditForm.value.tags;
     const tag = event.value.toUpperCase();
     const isDuplicate = this.isTagDuplicate(tag);
     if (tag.trim() && !isDuplicate) {
-      this.articleEditForm.value.tags.push(tag.trim());
+      articleTags.push(tag.trim());
+      this.articleEditForm.markAsDirty();
+      this.articleEditForm.patchValue({'tags': articleTags});
       event.input.value = '';
-      this.addUserEditingStatus();
-      this.tagsEdited = true;
     }
   }
 
@@ -280,21 +370,24 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   removeTag(selectedTag): void {
-    const tagIndex = this.articleEditForm.value.tags.indexOf(selectedTag);
+    const articleTags = this.articleEditForm.value.tags;
+    const tagIndex = articleTags.indexOf(selectedTag);
     if (tagIndex >= 0) {
-      this.articleEditForm.value.tags.splice(tagIndex, 1);
-      this.addUserEditingStatus();
-      this.tagsEdited = true;
+      articleTags.splice(tagIndex, 1);
+      this.articleEditForm.markAsDirty();
+      this.articleEditForm.patchValue({'tags': articleTags});
     }
   }
 
   // Form Data Handling
-  onCKEditorChanged({ event, editor }: ChangeEvent) {
-    // We're not using CKEditor as a normal FormControl because its scripts would mark the form as "dirty" even when the data was coming from DB.
-    // This approach allows us to manually mark it as dirty only when the changes are coming from locally...
-    const contents = editor.getData();
-    this.articleEditForm.markAsDirty();
-    this.articleEditForm.patchValue({ body: contents });
+  cancelChanges() {
+    const response$ = this.openConfirmDialog('Undo Edits', 'Any unsaved changes will be discarded.', 'Are you sure?');
+    response$.subscribe(shouldReload => {
+      if (shouldReload) {
+        this.resetEditStates();
+        location.reload();
+      }
+    });
   }
 
   async saveChanges() {
@@ -326,7 +419,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
     this.currentArticleEditors[this.loggedInUser.uid] = false;
     this.articleEditForm.markAsPristine();
-    this.tagsEdited = false;
     this.coverImageFile = null;
     this.editCoverImage = false;
     this.editTitle = false;
@@ -336,7 +428,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return (this.userIsEditingArticle() || this.tagsEdited || !!this.coverImageFile || this.articleEditForm.dirty)
+    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty)
   }
 
   // Editor and User Info Tracking
@@ -357,7 +449,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .snapshotChanges()
       .subscribe(snapList => {
         this.currentArticleEditors = {};
-        for (let snap of snapList) {
+        for (const snap of snapList) {
           this.currentArticleEditors[snap.key] = true;
         }
       });
@@ -440,6 +532,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           break;
         case CtrlNames.body:
           this.editBody = !this.editBody;
+          break;
         default:
           break;
       }
@@ -462,21 +555,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
   }
 
-  saveButtonIsSticky() {
+  setStickySaveButton() {
     const formBottomOffset = this.formBoundingBox.nativeElement.getBoundingClientRect().bottom;
     const verticalOverflow = formBottomOffset - window.innerHeight;
-    return (verticalOverflow > 0) ? true : false;
-  }
-
-  openMessageDialog(title: string, msg1: string, msg2: string = null) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.data = {
-      dialogTitle: title ? title : null,
-      dialogLine1: msg1 ? msg1 : null,
-      dialogLine2: msg2 ? msg2 : null
-    }
-    return this.dialog.open(MessageDialogComponent, dialogConfig);
+    this.saveButtonIsSticky = (verticalOverflow > 0) ? true : false;
   }
 
   // Bookmarking
@@ -527,6 +609,30 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.commentReplyInfo.replyParentKey = null;
   }
 
+  // Dialog Helpers
+  openMessageDialog(title: string, msg1: string, msg2: string = null) {
+    const dialogConfig = this.genericDialogConfig(title, msg1, msg2);
+    return this.dialog.open(MessageDialogComponent, dialogConfig);
+  }
+
+  openConfirmDialog(title: string, msg1: string, msg2: string = null): Observable<boolean> {
+    const dialogConfig = this.genericDialogConfig(title, msg1, msg2);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    return dialogRef.afterClosed();
+  }
+
+  genericDialogConfig(title: string, msg1: string, msg2: string = null): MatDialogConfig {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      dialogTitle: title ? title : null,
+      dialogLine1: msg1 ? msg1 : null,
+      dialogLine2: msg2 ? msg2 : null
+    }
+
+    return dialogConfig;
+  }
+
 }
 
 export interface HtmlInputEvent extends Event {
@@ -540,3 +646,5 @@ export enum CtrlNames {
   body = 'body',
   tags = 'tags'
 }
+
+export type orientationDegrees = 0 | 90 | 180 | 270;

@@ -9,8 +9,8 @@ import { MatDialogRef } from '@angular/material';
 export class EditTimeoutDialogComponent implements OnInit {
 
   responseTimer;
-  responseWaitTime: number = 60;
-  editorIsActive: boolean = false;
+  responseWaitTime = 60;
+  editorIsActive = false;
 
   constructor(
     private dialogRef: MatDialogRef<EditTimeoutDialogComponent>

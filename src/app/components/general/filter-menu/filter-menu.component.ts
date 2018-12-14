@@ -1,11 +1,11 @@
-import { Component, Input, Output, SimpleChanges, ViewChild, EventEmitter } from '@angular/core';
+import { Component, Input, Output, SimpleChanges, ViewChild, EventEmitter, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'cos-filter-menu',
   templateUrl: './filter-menu.component.html',
   styleUrls: ['./filter-menu.component.scss']
 })
-export class FilterMenuComponent {
+export class FilterMenuComponent implements OnChanges {
   // ViewChild may not be needed if we go with accordion
   @ViewChild('filterMenu') filterMenu;
   @Input() tabList: TabList = [
@@ -26,7 +26,7 @@ export class FilterMenuComponent {
   }
 
   selectTab(tabIndex: number) {
-    for (let tab of this.tabList) {
+    for (const tab of this.tabList) {
       tab.selected = false;
     }
     this.tabList[tabIndex].selected = true;
@@ -38,7 +38,7 @@ export class FilterMenuComponent {
       return item.selected;
     });
     // Not expecting duplicate tabs anyway, so returning 1st element.
-    return matchignTabs[0]
+    return matchignTabs[0];
   }
 
   getTabByName(name: string): TabItem {

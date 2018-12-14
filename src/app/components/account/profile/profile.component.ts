@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { UserService, UploadTracker } from 'app/services/user.service';
-import { UserMap, UserInfoOpen } from 'app/shared/class/user-info';
+import { UserService, UploadTracker } from '@services/user.service';
+import { UserMap, UserInfoOpen } from '@class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { Params, ActivatedRoute, Router } from '@angular/router';

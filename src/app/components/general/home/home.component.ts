@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ArticleService } from '../../../services/article.service';
-import { ArticlePreview } from '../../../shared/class/article-info';
-import { AuthService } from '../../../services/auth.service';
+import { ArticleService } from '@services/article.service';
+import { ArticlePreview } from '@class/article-info';
+import { AuthService } from '@services/auth.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TabList, TabItem } from '../filter-menu/filter-menu.component';
