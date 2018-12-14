@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { UserService } from '../../../services/user.service';
+import { AuthService } from '@services/auth.service';
+import { UserService } from '@services/user.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { MessageDialogComponent } from '../../modals/message-dialog/message-dialog.component';
+import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.component';
 
 @Component({
   selector: 'cos-register',
@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
       state: '',
       zipCode: ''
     },
-    { validator: passwordMismatch });
+      { validator: passwordMismatch });
   }
 
   ngOnInit() {

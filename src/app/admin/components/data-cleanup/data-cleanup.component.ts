@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataCleanupService } from 'app/admin/services/data-cleanup.service';
+import { DataCleanupService } from '@admin/services/data-cleanup.service';
 
 @Component({
   selector: 'cos-data-cleanup',

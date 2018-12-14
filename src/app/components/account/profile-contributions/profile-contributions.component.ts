@@ -9,7 +9,7 @@ import { ArticleService } from 'app/services/article.service';
 })
 export class ProfileContributionsComponent implements OnInit {
   @Input() loggedInUserId;
-  @Input() minDisplayNum;
+  @Input() minDisplayNum = 3;
 
   _profileId;
   @Input() set profileId(profileId: string) {
@@ -71,7 +71,7 @@ export class ProfileContributionsComponent implements OnInit {
           if (this.displayedEditedArticles.length < this.minDisplayNum) {
             this.displayedEditedArticles.push(this.editedArticlesMap[key]);
           }
- 
+
         }
       }
     });

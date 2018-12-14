@@ -82,7 +82,8 @@
       <p *ngIf="!editIntro"
          class="static-display">
         {{articleEditForm.value.introduction}}
-        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is about.</span>
+        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
+          about.</span>
       </p>
       <mat-form-field *ngIf="editIntro">
         <p><textarea #introduction
@@ -140,8 +141,7 @@
 
   <section #ckeditorBoundingBox
            class="article-body"
-           [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}"
-           (window:scroll)="setCkeditorButtonOffset()">
+           [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}">
     <div class="article-body__interior"
          [ngClass]="{'border': loggedInUser.uid && editBody}">
       <button class="mat-icon-btn"
@@ -155,6 +155,7 @@
       </button>
       <ckeditor *ngIf="ckeditor.content"
                 (change)="onCKEditorChanged($event)"
+                (ready)="onCKEditorReady($event)"
                 [data]="ckeditor.content"
                 [editor]="ckeditor.build"
                 [config]="ckeditor.config"
@@ -200,23 +201,37 @@
     </button>
   </section>
 
-  <section class="save-control-abs-position">
-    <div class="save-control"
-         [ngClass]="{'extended': articleHasUnsavedChanges() || articleIsNew, 'sticky': saveButtonIsSticky(), 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
-      <button class="mat-icon-btn mat-icon-btn_no-shadow"
+  <section class="save-undo-abs-position">
+    <div class="save-undo-sticky-position"
+         [ngClass]="{'extended': articleHasUnsavedChanges(), 'sticky': saveButtonIsSticky, 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
+
+      <button class="save-control save-button mat-icon-btn mat-icon-btn_no-shadow"
               type="button"
               [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
               (click)="authCheck() ? saveChanges() : null">
         <mat-icon>done</mat-icon>
       </button>
-      <div class="flag flag-wheel"
-           [ngClass]="{'active': articleHasUnsavedChanges() || articleIsNew}">
-        <div class="flag flag-axle">
-          <div class="flag flag-pole">
-            <div class="flag flag-tooltip">
-              <span class="flag__static">Unsaved Changes</span>
-              <span class="flag__hover">Save Article</span>
-            </div>
+
+      <div *ngIf="!articleIsNew"
+           class="restore-control flag flag-axle flag-axle-90"
+           [ngClass]="{'flag-axle-90_active': articleHasUnsavedChanges()}">
+        <div class="flag flag-pole flag-pole_right">
+         <button class="restore-button mat-icon-btn mat-icon-btn_no-shadow"
+                 type="button"
+                 [disabled]="!articleHasUnsavedChanges()"
+                 (click)="cancelChanges()">
+           <mat-icon>replay</mat-icon>
+         </button>
+        </div>
+      </div>
+
+      <div class="flag flag-axle flag-axle-270"
+           [ngClass]="{'flag-axle-270_active': articleHasUnsavedChanges()}">
+        <div class="flag flag-pole flag-pole_left">
+          <div class="flag flag-tooltip">
+            <span class="flag-tooltip_changes">Unsaved</span>
+            <span class="flag-tooltip_save">Save Article</span>
+            <span class="flag-tooltip_restore">Undo Changes</span>
           </div>
         </div>
       </div>

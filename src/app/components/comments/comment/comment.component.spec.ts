@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { Comment } from 'app/shared/class/comment';
+import { Comment } from '@class/comment';
 
 import { CommentComponent } from './comment.component';
 
-import { UserInfoOpen } from '../../../shared/class/user-info';
+import { UserInfoOpen } from '@class/user-info';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -21,9 +21,9 @@ describe('CommentComponent - ', () => {
         MatInputModule,
         BrowserAnimationsModule
       ],
-      declarations: [ CommentComponent ]
+      declarations: [CommentComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
