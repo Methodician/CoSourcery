@@ -7,10 +7,10 @@ import { ArticleService } from 'app/services/article.service';
   templateUrl: './profile-contributions.component.html',
   styleUrls: ['./profile-contributions.component.scss']
 })
-export class ProfileContributionsComponent implements OnInit, OnChanges {
+export class ProfileContributionsComponent implements OnInit {
   @Input() loggedInUserId;
   @Input() profileId;
-  @Input() minDisplayNum;
+  @Input() minDisplayNum = 3;
   editedArticles: ArticlePreview[];
   displayedEditedArticles: ArticlePreview[];
   authoredArticles: ArticlePreview[];
@@ -23,12 +23,6 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.displayedEditedArticles = [];
     this.displayedAuthoredArticles = [];
-    this.setContributionInfo();
-  }
-
-  ngOnChanges() {
-    this.editedArticlesMap = {};
-    this.authoredArticlesMap = {};
     this.setContributionInfo();
   }
 
@@ -68,7 +62,7 @@ export class ProfileContributionsComponent implements OnInit, OnChanges {
           if (this.displayedEditedArticles.length < this.minDisplayNum) {
             this.displayedEditedArticles.push(this.editedArticlesMap[key]);
           }
- 
+
         }
       }
     });
