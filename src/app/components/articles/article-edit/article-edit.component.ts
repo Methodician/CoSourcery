@@ -16,6 +16,7 @@ import { EditTimeoutDialogComponent } from '@modals/edit-timeout-dialog/edit-tim
 import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
 import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.component';
 import * as exif from 'exif-js';
+import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'cos-article-edit',
@@ -354,7 +355,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (tag.trim() && !isDuplicate) {
       articleTags.push(tag.trim());
       this.articleEditForm.markAsDirty();
-      this.articleEditForm.patchValue({'tags': articleTags});
+      this.articleEditForm.patchValue({ 'tags': articleTags });
       event.input.value = '';
     }
   }
@@ -375,7 +376,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (tagIndex >= 0) {
       articleTags.splice(tagIndex, 1);
       this.articleEditForm.markAsDirty();
-      this.articleEditForm.patchValue({'tags': articleTags});
+      this.articleEditForm.patchValue({ 'tags': articleTags });
     }
   }
 
