@@ -98,7 +98,7 @@ export class HomeComponent implements OnInit {
 
   // didn't end up using this (yet)
   onFilterTabSelected($event: number) {
-    console.log('filterTabSelected', $event);
+    // console.log('filterTabSelected', $event);
   }
 }
 

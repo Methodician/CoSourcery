@@ -31,7 +31,7 @@ export class UploadService {
       console.error(error);
       alert('trouble uploading the image ' + error.message);
     }, () => {
-      console.log('article image upload success');
+      // console.log('article image upload success');
     });
   }
 

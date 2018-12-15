@@ -59,7 +59,7 @@ export class UserService {
   deleteFile(path: string) {
     const storageRef = this.storage.ref(path);
     storageRef.delete().subscribe(res => {
-      console.log('DELETED TEMP IMAGE (maybe), result: ', res);
+      // console.log('DELETED TEMP IMAGE (maybe), result: ', res);
     });
   }
 
