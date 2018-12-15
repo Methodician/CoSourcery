@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { ReverseArrayPipe } from '../../../shared/pipes/reverse-array.pipe';
+import { ReverseArrayPipe } from '@pipes/reverse-array.pipe';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs/internal/observable/of';
 
@@ -13,7 +13,7 @@ import { By } from '@angular/platform-browser';
 import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatDialog, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserInfoOpen } from '@class/user-info';
-import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import { Overlay } from '@angular/cdk/overlay';
 
 
 describe('CommentListComponent - ', () => {
