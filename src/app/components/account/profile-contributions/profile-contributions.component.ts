@@ -43,16 +43,9 @@ export class ProfileContributionsComponent implements OnInit {
         this.authoredArticlesMap[preview.articleId] = preview;
       });
 
-      for (const key in this.authoredArticlesMap) {
-        if (this.authoredArticlesMap.hasOwnProperty(key)) {
+      this.authoredArticles = Object.values(this.authoredArticlesMap);
+      this.displayedAuthoredArticles = this.authoredArticles.slice(0, this.minDisplayNum);
 
-          this.authoredArticles.push(this.authoredArticlesMap[key]);
-          if (this.displayedAuthoredArticles.length < this.minDisplayNum) {
-            this.displayedAuthoredArticles.push(this.authoredArticlesMap[key]);
-          }
-
-        }
-      }
     });
   }
 
@@ -64,16 +57,9 @@ export class ProfileContributionsComponent implements OnInit {
         this.editedArticlesMap[preview.articleId] = preview;
       });
 
-      for (const key in this.editedArticlesMap) {
-        if (this.editedArticlesMap.hasOwnProperty(key)) {
+      this.editedArticles = Object.values(this.editedArticlesMap);
+      this.displayedEditedArticles = this.editedArticles.slice(0, this.minDisplayNum);
 
-          this.editedArticles.push(this.editedArticlesMap[key]);
-          if (this.displayedEditedArticles.length < this.minDisplayNum) {
-            this.displayedEditedArticles.push(this.editedArticlesMap[key]);
-          }
-
-        }
-      }
     });
   }
 
@@ -84,7 +70,7 @@ export class ProfileContributionsComponent implements OnInit {
 
   toggleAllAuthored() {
     if (this.displayedAuthoredArticles.length > this.minDisplayNum) {
-      this.displayedAuthoredArticles = this.displayedAuthoredArticles.slice(0, this.minDisplayNum);
+      this.displayedAuthoredArticles = this.authoredArticles.slice(0, this.minDisplayNum);
     } else {
       this.displayedAuthoredArticles = this.authoredArticles;
     }
@@ -92,7 +78,7 @@ export class ProfileContributionsComponent implements OnInit {
 
   toggleAllEdited() {
     if (this.displayedEditedArticles.length > this.minDisplayNum) {
-      this.displayedEditedArticles = this.displayedEditedArticles.slice(0, this.minDisplayNum);
+      this.displayedEditedArticles = this.editedArticles.slice(0, this.minDisplayNum);
     } else {
       this.displayedEditedArticles = this.editedArticles;
     }
