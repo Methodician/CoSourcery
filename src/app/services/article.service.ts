@@ -142,9 +142,7 @@ export class ArticleService {
 
   deleteFile(path: string) {
     const storageRef = this.storage.ref(path);
-    storageRef.delete().subscribe(res => {
-      console.log('DELETED TEMP IMAGE (maybe), result: ', res);
-    });
+    storageRef.delete().subscribe(res => { });
   }
 
   uploadCoverImage(articleId: string, file: File, isNew = false): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {

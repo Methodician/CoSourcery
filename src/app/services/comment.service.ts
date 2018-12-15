@@ -41,10 +41,8 @@ export class CommentService {
   }
 
   async upvoteComment(voterId: string, commentKey: string, voteDirection: VoteDirections) {
-    console.log('voter', voterId, 'comment', commentKey, 'voteDirection', voteDirection, 'voteType', VoteDirections[voteDirection]);
     const voteRef = this.getVoteRef(voterId, commentKey);
     const oldVote = await this.getExistingVote(voteRef);
-    console.log('old vote', oldVote);
     if (oldVote && oldVote === VoteDirections.up) {
       return voteRef.set(null);
     }
@@ -52,10 +50,8 @@ export class CommentService {
   }
 
   async downvoteComment(voterId: string, commentKey: string, voteDirection: VoteDirections) {
-    console.log('voter', voterId, 'comment', commentKey, 'voteDirection', voteDirection, 'voteType', VoteDirections[voteDirection]);
     const voteRef = this.getVoteRef(voterId, commentKey);
     const oldVote = await this.getExistingVote(voteRef);
-    console.log('old vote', oldVote);
     if (oldVote && oldVote === VoteDirections.down) {
       return voteRef.set(null);
     }

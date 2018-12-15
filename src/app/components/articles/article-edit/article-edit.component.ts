@@ -267,7 +267,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           return resolve(orientation);
         });
       } catch (error) {
-        console.log('Can\'t get EXIF', error);
+        // console.log('Can\'t get EXIF', error);
         return reject(error);
       }
     });
