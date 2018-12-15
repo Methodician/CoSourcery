@@ -10,9 +10,10 @@ import { CommentComponent } from '../comment/comment.component';
 import { Comment, ParentTypes } from '@class/comment';
 import { CommentService } from '@services/comment.service';
 import { By } from '@angular/platform-browser';
-import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatDialog, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserInfoOpen } from '@class/user-info';
+import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 
 
 describe('CommentListComponent - ', () => {
@@ -118,6 +119,7 @@ describe('CommentListComponent - ', () => {
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
+        MatDialogModule,
         BrowserAnimationsModule,
         FormsModule,
         RouterTestingModule
@@ -128,7 +130,9 @@ describe('CommentListComponent - ', () => {
         ReverseArrayPipe,
       ],
       providers: [
-        { provide: CommentService, useValue: CommentServiceStub }
+        { provide: CommentService, useValue: CommentServiceStub },
+        MatDialog,
+        Overlay
       ]
     })
       .compileComponents();
@@ -535,37 +539,40 @@ describe('CommentListComponent - ', () => {
     });
 
     describe('when not logged in', () => {
+      let dialog: MatDialog;
+
       beforeEach(() => {
         component.parentKey = 'testParentKey';
         component.loggedInUser = new UserInfoOpen('', '', '');
         component.userMap = {};
         component.userKeys = [];
         fixture.detectChanges();
+        dialog = TestBed.get(MatDialog);
       });
 
       it('should NOT call onUpvoteComment() on click when not logged in', () => {
         const upvoteSpy = spyOn(component, 'onUpvoteComment');
-        spyOn(window, 'confirm').and.returnValue(false);
+        spyOn(dialog, 'open').and.returnValue(false);
         const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
         const upButton: HTMLElement = de.nativeElement.children[1];
 
         upButton.click();
         fixture.detectChanges();
 
-        expect(window.confirm).toHaveBeenCalled();
+        expect(dialog.open).toHaveBeenCalled();
         expect(upvoteSpy).not.toHaveBeenCalled();
       });
 
       it('should NOT call onDownvoteComment() on click when not logged in', () => {
         const downvoteSpy = spyOn(component, 'onDownvoteComment');
-        spyOn(window, 'confirm').and.returnValue(false);
+        spyOn(dialog, 'open').and.returnValue(false);
         const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
         const downButton: HTMLElement = de.nativeElement.children[2];
 
         downButton.click();
         fixture.detectChanges();
 
-        expect(window.confirm).toHaveBeenCalled();
+        expect(dialog.open).toHaveBeenCalled();
         expect(downvoteSpy).not.toHaveBeenCalled();
       });
     });

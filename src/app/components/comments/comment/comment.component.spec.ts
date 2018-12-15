@@ -81,7 +81,7 @@ describe('CommentComponent - ', () => {
       const el: HTMLImageElement = de.nativeElement;
 
 
-      expect(el.src).toContain('assets/images/logo.png');
+      expect(el.src).toContain('assets/images/logo.svg');
     });
 
     it('should render custom img if  set in authorInfo', () => {
