@@ -104,6 +104,9 @@ export class ArticleService {
   }
 
   updateArticle(editor: UserInfoOpen, article, articleId: string) {
+    if (!articleId) {
+      return;
+    }
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
     const editors = article.editors || {};
@@ -120,6 +123,9 @@ export class ArticleService {
 
 
   createArticle(author: UserInfoOpen, article: ArticleDetail, articleId) {
+    if (!articleId) {
+      return;
+    }
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
     article.editors = {};
     article.editors[author.uid] = 1;
