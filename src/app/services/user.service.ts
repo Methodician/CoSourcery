@@ -1,5 +1,5 @@
-import { UserInfoOpen, UserMap } from '../shared/class/user-info';
-import { AuthService } from './auth.service';
+import { UserInfoOpen, UserMap } from '@class/user-info';
+import { AuthService } from '@services/auth.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
@@ -109,7 +109,7 @@ export class UserService {
     const userData = await this.getUserInfo(userId);
     const { alias, fName, lName, uid, imageUrl, email, zipCode, bio, city, state } = userData;
     const userInfo = new UserInfoOpen(alias, fName, lName, uid, imageUrl, email, zipCode, bio, city, state);
-    this.userMap[uid] = userInfo;
+    this.userMap[userId] = userInfo;
   }
 
 }

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditTimeoutDialogComponent } from './edit-timeout-dialog.component';
+import { ProfileViewComponent } from './profile-view.component';
 
-xdescribe('EditTimeoutDialogComponent', () => {
-  let component: EditTimeoutDialogComponent;
-  let fixture: ComponentFixture<EditTimeoutDialogComponent>;
+xdescribe('ProfileViewComponent', () => {
+  let component: ProfileViewComponent;
+  let fixture: ComponentFixture<ProfileViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditTimeoutDialogComponent ]
+      declarations: [ ProfileViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditTimeoutDialogComponent);
+    fixture = TestBed.createComponent(ProfileViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

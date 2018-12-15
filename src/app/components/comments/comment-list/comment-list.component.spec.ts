@@ -1,18 +1,19 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { ReverseArrayPipe } from '../../../shared/pipes/reverse-array.pipe';
+import { ReverseArrayPipe } from '@pipes/reverse-array.pipe';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs/internal/observable/of';
 
-import {} from 'jasmine';
+import { } from 'jasmine';
 import { CommentListComponent } from './comment-list.component';
 import { CommentComponent } from '../comment/comment.component';
-import { Comment, ParentTypes } from 'app/shared/class/comment';
-import { CommentService } from '../../../services/comment.service';
+import { Comment, ParentTypes } from '@class/comment';
+import { CommentService } from '@services/comment.service';
 import { By } from '@angular/platform-browser';
-import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatDialog, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { UserInfoOpen } from 'app/shared/class/user-info';
+import { UserInfoOpen } from '@class/user-info';
+import { Overlay } from '@angular/cdk/overlay';
 
 
 describe('CommentListComponent - ', () => {
@@ -83,7 +84,7 @@ describe('CommentListComponent - ', () => {
         if (userId === 'userKey1') {
           return {
             val: () => {
-              return new UserInfoOpen( 'J-Boi', 'Jeff', 'Goldblume', 'GoldKey', 'http://8.media.bustedtees.cvcdn.com/1/-/bustedtees.7252ae81-33f1-47fc-af07-52f9127c.gif');
+              return new UserInfoOpen('J-Boi', 'Jeff', 'Goldblume', 'GoldKey', 'http://8.media.bustedtees.cvcdn.com/1/-/bustedtees.7252ae81-33f1-47fc-af07-52f9127c.gif');
             },
             key: 'userKey1'
           };
@@ -118,6 +119,7 @@ describe('CommentListComponent - ', () => {
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
+        MatDialogModule,
         BrowserAnimationsModule,
         FormsModule,
         RouterTestingModule
@@ -128,7 +130,9 @@ describe('CommentListComponent - ', () => {
         ReverseArrayPipe,
       ],
       providers: [
-        { provide: CommentService, useValue: CommentServiceStub }
+        { provide: CommentService, useValue: CommentServiceStub },
+        MatDialog,
+        Overlay
       ]
     })
       .compileComponents();
@@ -424,7 +428,7 @@ describe('CommentListComponent - ', () => {
 
     describe('Upvote Button - ', () => {
       beforeEach(() => {
-        component.userVotesMap = {testCommentKey5: 1};
+        component.userVotesMap = { testCommentKey5: 1 };
         fixture.detectChanges();
       });
 
@@ -443,14 +447,14 @@ describe('CommentListComponent - ', () => {
       });
 
       it('should call commentAuthCheck() on click', () => {
-        spyOn(component, 'commentAuthCheck');
+        spyOn(component, 'authCheck');
         const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
         const upButton: HTMLElement = de.nativeElement.children[1];
 
         upButton.click();
         fixture.detectChanges();
 
-        expect(component.commentAuthCheck).toHaveBeenCalled();
+        expect(component.authCheck).toHaveBeenCalled();
       });
 
       it('should call onUpvoteComment() on click', () => {
@@ -480,7 +484,7 @@ describe('CommentListComponent - ', () => {
 
     describe('Downvote Button - ', () => {
       beforeEach(() => {
-        component.userVotesMap = {testCommentKey5: -1};
+        component.userVotesMap = { testCommentKey5: -1 };
         fixture.detectChanges();
       });
 
@@ -498,15 +502,15 @@ describe('CommentListComponent - ', () => {
         expect(downButton.children[1].textContent).toBe('Remove Vote');
       });
 
-      it('should call commentAuthCheck() on click', () => {
-        spyOn(component, 'commentAuthCheck');
+      it('should call authCheck() on click', () => {
+        spyOn(component, 'authCheck');
         const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
         const upButton: HTMLElement = de.nativeElement.children[2];
 
         upButton.click();
         fixture.detectChanges();
 
-        expect(component.commentAuthCheck).toHaveBeenCalled();
+        expect(component.authCheck).toHaveBeenCalled();
       });
 
       it('should call onDownvoteComment() on click', () => {
@@ -535,37 +539,40 @@ describe('CommentListComponent - ', () => {
     });
 
     describe('when not logged in', () => {
+      let dialog: MatDialog;
+
       beforeEach(() => {
         component.parentKey = 'testParentKey';
         component.loggedInUser = new UserInfoOpen('', '', '');
         component.userMap = {};
         component.userKeys = [];
         fixture.detectChanges();
+        dialog = TestBed.get(MatDialog);
       });
 
       it('should NOT call onUpvoteComment() on click when not logged in', () => {
         const upvoteSpy = spyOn(component, 'onUpvoteComment');
-        spyOn(window, 'confirm').and.returnValue(false);
+        spyOn(dialog, 'open').and.returnValue(false);
         const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
         const upButton: HTMLElement = de.nativeElement.children[1];
 
         upButton.click();
         fixture.detectChanges();
 
-        expect(window.confirm).toHaveBeenCalled();
+        expect(dialog.open).toHaveBeenCalled();
         expect(upvoteSpy).not.toHaveBeenCalled();
       });
 
       it('should NOT call onDownvoteComment() on click when not logged in', () => {
         const downvoteSpy = spyOn(component, 'onDownvoteComment');
-        spyOn(window, 'confirm').and.returnValue(false);
+        spyOn(dialog, 'open').and.returnValue(false);
         const de = fixture.debugElement.query(By.css('#testCommentKey1 .comment-rating'));
         const downButton: HTMLElement = de.nativeElement.children[2];
 
         downButton.click();
         fixture.detectChanges();
 
-        expect(window.confirm).toHaveBeenCalled();
+        expect(dialog.open).toHaveBeenCalled();
         expect(downvoteSpy).not.toHaveBeenCalled();
       });
     });

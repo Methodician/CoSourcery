@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ArticleDetail, ArticlePreview } from 'app/shared/class/article-info';
-import { UserInfoOpen } from 'app/shared/class/user-info';
+import { ArticleDetail, ArticlePreview } from '@class/article-info';
+import { UserInfoOpen } from '@class/user-info';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from '@angular/fire/storage';
@@ -61,6 +61,14 @@ export class ArticleService {
 
     });
     return articleList$;
+  }
+
+  getPreviewRefsByEditor(editorId: string): AngularFirestoreCollection<ArticlePreview> {
+    return this.fsdb.collection('articleData/articles/previews', ref => ref.where(`editors.${editorId}`, '>', 0));
+  }
+
+  getPreviewRefsByAuthor(authorId: string): AngularFirestoreCollection<ArticlePreview> {
+    return this.fsdb.collection('articleData/articles/previews', ref => ref.where('authorId', '==', authorId));
   }
 
   getArticleRefById(articleId: string): AngularFirestoreDocument<ArticleDetail> {
@@ -134,9 +142,7 @@ export class ArticleService {
 
   deleteFile(path: string) {
     const storageRef = this.storage.ref(path);
-    storageRef.delete().subscribe(res => {
-      console.log('DELETED TEMP IMAGE (maybe), result: ', res);
-    });
+    storageRef.delete().subscribe(res => { });
   }
 
   uploadCoverImage(articleId: string, file: File, isNew = false): { task: AngularFireUploadTask, ref: AngularFireStorageReference } {
@@ -156,7 +162,7 @@ export class ArticleService {
   async setThumbnailImageUrl(articleId: string) {
     const storagePath = `articleCoverThumbnails/${articleId}`;
     const storageRef = this.storage.ref(storagePath);
-    const url = await storageRef.getDownloadURL().toPromise()
+    const url = await storageRef.getDownloadURL().toPromise();
     if (!url) {
       return;
     }
@@ -212,7 +218,7 @@ export class ArticleService {
     // Also allowing for one person to have multiple tabs open and be editing multiple articles
     const editorsByArticlePath = `articleData/editStatus/editorsByArticle/${articleId}/${editorId}`;
     const articlesByEditorPath = `articleData/editStatus/articlesByEditor/${editorId}/${articleId}`;
-    const updates = {}
+    const updates = {};
     const editorsRef = this.rtdb.database.ref(editorsByArticlePath);
     const articlesRef = this.rtdb.database.ref(articlesByEditorPath);
     updates[editorsByArticlePath] = true;
@@ -227,7 +233,7 @@ export class ArticleService {
   removeArticleEditStatus(articleId: string, editorId: string) {
     const editorByArticlePath = `articleData/editStatus/editorsByArticle/${articleId}/${editorId}`;
     const articleByEditorPath = `articleData/editStatus/articlesByEditor/${editorId}/${articleId}`;
-    const updates = {}
+    const updates = {};
     updates[editorByArticlePath] = null;
     updates[articleByEditorPath] = null;
     this.rtdb.database.ref().update(updates);
