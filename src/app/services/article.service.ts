@@ -105,6 +105,20 @@ export class ArticleService {
 
   updateArticle(editor: UserInfoOpen, article, articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+    console.log('saveing...');
+    // ================================================================================
+    // clean image data => export to helper function
+    const newBodyImages = {};
+    for (const imgCode in article.bodyImages) {
+      if (article.bodyImages.hasOwnProperty(imgCode)) {
+        if (article.body.includes(`%2F${imgCode}`)) {
+          console.log('the body included', imgCode);
+          newBodyImages[imgCode] = article.bodyImages[imgCode];
+        }
+      }
+    }
+    article.bodyImages = newBodyImages;
+    // ================================================================================
 
     const editors = article.editors || {};
     const editCount = editors[editor.uid] || 0;
