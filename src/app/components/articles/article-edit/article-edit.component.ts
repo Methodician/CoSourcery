@@ -17,6 +17,7 @@ import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.componen
 import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.component';
 import * as exif from 'exif-js';
 import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'cos-article-edit',
@@ -93,6 +94,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       Validators.maxLength(300)
     ]],
     body: 'This article is empty.',
+    bodyImages: {},
     imageUrl: '',
     imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',
@@ -238,24 +240,57 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     for (let i = 0; i < figures.length; i++) {
       const fig = figures[i];
       const img = fig.firstChild as HTMLImageElement;
+
       if (img.complete) {
         // Processes images when form being edited
-        this.rotateImage(img);
+        // There are a lot of errors when trying to handle exif data not from firebase (or a url). is this first rotate neccessary?
+        // this.rotateImage(img);
       } else {
         img.onload = (ev$) => {
           // Processes images when form first loaded
           this.rotateImage(img);
-        }
+        };
       }
     }
+    console.log('processCKE complete', this.articleEditForm.value);
+    console.log('full body value', this.articleEditForm.value.body);
   }
 
   async rotateImage(img) {
+    const storage = firebase.storage();
+    console.log('img.', img);
+    const imgPath = storage.refFromURL(img.src).fullPath;
+    //  // can't use substring method because imgCodes range from 4 to 6 chars. see articleBodyImages/8EmVI0uvKQasRXlOTk5k.
+    // const imgCode = imgPath.substring(imgPath.length - 5, imgPath.length);
+    const imgCode = imgPath.split('/')[imgPath.split('/').length - 1];
+
+    let rotation = 0;
+    // check if it's been rotated, if so, don't do any of this extra stuff
     if (img.style.transform && img.style.transform.includes('rotate')) {
+      console.log('already rotated', imgCode);
       return;
+    // check if it's in the map, if so, set rotation via it's orientation
+    } else if (this.articleEditForm.value.bodyImages[imgCode]) {
+      rotation = this.exifOrientationToDegrees(this.articleEditForm.value.bodyImages[imgCode].orientation);
+      console.log('already got', imgCode);
+    // else add it to the map with it's correct orientation
+    } else {
+      const orientation = await this.getExifOrientation(img);
+      rotation = this.exifOrientationToDegrees(orientation);
+      console.log('orientation', imgCode, orientation);
+      console.log('rotation', imgCode, rotation);
+
+      const imageObject = {
+        path: imgPath,
+        orientation: orientation,
+      };
+      this.articleEditForm.value.bodyImages[imgCode] = imageObject;
+      console.log('set Ori in map for', imgCode);
     }
-    const orientation = await this.getExifOrientation(img);
-    const rotation = this.exifOrientationToDegrees(orientation);
+
+    // Also create a simple service method that adds it to the map in the database which we can call here as well
+    // ^^^pretty sure we don't need this cause we're already saving the articleEditForm^^^
+
     img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
   }
 
@@ -410,6 +445,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
       // Update Existing Article
     } else {
+      console.log('saving with this', this.articleEditForm.value);
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
       clearTimeout(this.editSessionTimeout);
       this.resetEditStates();
@@ -648,4 +684,5 @@ export enum CtrlNames {
   tags = 'tags'
 }
 
+// possible remove
 export type orientationDegrees = 0 | 90 | 180 | 270;
