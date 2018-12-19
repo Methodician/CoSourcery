@@ -244,7 +244,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (img.complete) {
         // Processes images when form being edited
         // There are a lot of errors when trying to handle exif data not from firebase (or a url). is this first rotate neccessary?
-        // this.rotateImage(img);
+        // Yes thre are a lot of situations where (perhaps counterintuitively) an image will be already loaded but not processed.
+        // Try commenting this out and then opening an article then navigating back to home then back to the article. For some reason they are not rotated...
+        this.rotateImage(img);
       } else {
         img.onload = (ev$) => {
           // Processes images when form first loaded
@@ -262,6 +264,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const imgPath = storage.refFromURL(img.src).fullPath;
     //  // can't use substring method because imgCodes range from 4 to 6 chars. see articleBodyImages/8EmVI0uvKQasRXlOTk5k.
     // const imgCode = imgPath.substring(imgPath.length - 5, imgPath.length);
+    // I updated the custom plugin to produce image ID's of consistnet length now.
+    // I can't believe it took me all day after creating the change in a few minutes. Another rant against CKEditor and it's bloat.
     const imgCode = imgPath.split('/')[imgPath.split('/').length - 1];
 
     let rotation = 0;
@@ -269,13 +273,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (img.style.transform && img.style.transform.includes('rotate')) {
       console.log('already rotated', imgCode);
       return;
-    // check if it's in the map, if so, set rotation via it's orientation
+      // check if it's in the map, if so, set rotation via its orientation
     } else if (this.articleEditForm.value.bodyImages[imgCode]) {
       rotation = this.exifOrientationToDegrees(this.articleEditForm.value.bodyImages[imgCode].orientation);
       console.log('already got', imgCode);
-    // else add it to the map with it's correct orientation
+      // else add it to the map with it's correct orientation
     } else {
-      const orientation = await this.getExifOrientation(img);
+      let orientation = await this.getExifOrientation(img);
+      if (isNaN(orientation)) {
+        alert('caught a non-number orientation');
+        orientation = 0;
+      }
       rotation = this.exifOrientationToDegrees(orientation);
       console.log('orientation', imgCode, orientation);
       console.log('rotation', imgCode, rotation);
@@ -290,6 +298,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
     // Also create a simple service method that adds it to the map in the database which we can call here as well
     // ^^^pretty sure we don't need this cause we're already saving the articleEditForm^^^
+    // I suppose that's true. The next time it's edited this should update...
 
     img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
   }
