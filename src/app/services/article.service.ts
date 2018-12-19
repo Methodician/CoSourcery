@@ -106,31 +106,28 @@ export class ArticleService {
   cleanArticleImages(article) {
     const newBodyImages = {};
     for (const imgCode in article.bodyImages) {
-      if (article.bodyImages.hasOwnProperty(imgCode)) {
-        if (article.body.includes(`%2F${imgCode}`)) {
-          newBodyImages[imgCode] = article.bodyImages[imgCode];
-        }
+      if (article.bodyImages.hasOwnProperty(imgCode) && article.body.includes(`%2F${imgCode}`)) {
+        newBodyImages[imgCode] = article.bodyImages[imgCode];
       }
     }
-    article.bodyImages = newBodyImages;
-    return article;
+    console.log(newBodyImages);
+    return newBodyImages;
   }
 
   updateArticle(editor: UserInfoOpen, article, articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
-    article = this.cleanArticleImages(article);
-
-    const editors = article.editors || {};
+    // Avoids mutating original object
+    const articleToSave = { ...article };
+    const editors = articleToSave.editors || {};
     const editCount = editors[editor.uid] || 0;
     editors[editor.uid] = editCount + 1;
-
-    const changedArticle = { ...article };
-    changedArticle.lastUpdated = this.fsServerTimestamp;
-    changedArticle.version++;
-    changedArticle.lastEditorId = editor.uid;
-    changedArticle.editors = editors;
-    return articleRef.update(changedArticle);
+    articleToSave.lastUpdated = this.fsServerTimestamp;
+    articleToSave.version++;
+    articleToSave.lastEditorId = editor.uid;
+    articleToSave.editors = editors;
+    articleToSave.bodyImages = this.cleanArticleImages(articleToSave);
+    return articleRef.update(articleToSave);
   }
 
 
