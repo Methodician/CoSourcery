@@ -17,6 +17,8 @@ import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.componen
 import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.component';
 import * as exif from 'exif-js';
 import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
+import * as firebase from 'firebase';
+import { BodyImageMeta } from '@class/article-info';
 
 @Component({
   selector: 'cos-article-edit',
@@ -93,6 +95,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       Validators.maxLength(300)
     ]],
     body: 'This article is empty.',
+    bodyImages: {},
     imageUrl: '',
     imageAlt: ['', Validators.maxLength(100)],
     authorImageUrl: '',
@@ -239,23 +242,46 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       const fig = figures[i];
       const img = fig.firstChild as HTMLImageElement;
       if (img.complete) {
-        // Processes images when form being edited
+        // Processes images when for one reason or another they are already loaded but may not be rotated.
         this.rotateImage(img);
       } else {
         img.onload = (ev$) => {
           // Processes images when form first loaded
           this.rotateImage(img);
-        }
+        };
       }
     }
   }
 
   async rotateImage(img) {
-    if (img.style.transform && img.style.transform.includes('rotate')) {
+    if (img.src.includes('data:image')) {
       return;
     }
-    const orientation = await this.getExifOrientation(img);
-    const rotation = this.exifOrientationToDegrees(orientation);
+    const storage = firebase.storage();
+    const imgPath = storage.refFromURL(img.src).fullPath;
+    const imgCode = imgPath.split('/')[imgPath.split('/').length - 1];
+
+    let rotation: orientationDegrees = 0;
+    // check if it's been rotated, if so, don't do any extra stuff
+    if (img.style.transform && img.style.transform.includes('rotate')) {
+      return;
+      // check if it's in the map, if so, set rotation via its orientation
+    } else if (this.articleEditForm.value.bodyImages[imgCode]) {
+      rotation = this.exifOrientationToDegrees(this.articleEditForm.value.bodyImages[imgCode].orientation);
+      // else add it to the map with it's correct orientation
+    } else {
+      let orientation = await this.getExifOrientation(img);
+      orientation = orientation ? orientation : 0;
+      rotation = this.exifOrientationToDegrees(orientation);
+
+      const imageObject: BodyImageMeta = {
+        path: imgPath,
+        orientation: orientation,
+      };
+
+      this.articleEditForm.value.bodyImages[imgCode] = imageObject;
+    }
+
     img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
   }
 
@@ -648,4 +674,5 @@ export enum CtrlNames {
   tags = 'tags'
 }
 
+// possible remove
 export type orientationDegrees = 0 | 90 | 180 | 270;

@@ -245,7 +245,6 @@ exports.trackFileUploads = functions.storage.object().onFinalize(async object =>
         //  An image was uploaded.
         if (filePath.startsWith('articleBodyImages/')) {
             //  It was a body image.
-            await trackArticleBodyImages(filePath);
         }
         if (filePath.startsWith('articleCoverImages/')) {
             //  It was a cover image.
@@ -255,17 +254,6 @@ exports.trackFileUploads = functions.storage.object().onFinalize(async object =>
     //  Whether or not we did something, exit funciton
     return null;
 });
-
-// Subroutines of trackFileUploads:
-async function trackArticleBodyImages(filePath: string) {
-    //  The string 'articleCoverImages/' contains 18 characters.
-    //  Firestore push IDs contain 20 characters.
-    const articleId = filePath.substr(18, 20);
-    const articleDocRef = adminFS.doc(`articleData/articles/articles/${articleId}`);
-    await articleDocRef.update({
-        bodyImagePaths: admin.firestore.FieldValue.arrayUnion(filePath)
-    });
-}
 
 async function createCoverImageThumbnail(object: functions.storage.ObjectMetadata) {
     console.log('creating cover image thumbnail');
