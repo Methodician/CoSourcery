@@ -253,12 +253,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
     }
     console.log('processCKE complete', this.articleEditForm.value);
-    console.log('full body value', this.articleEditForm.value.body);
   }
 
   async rotateImage(img) {
     const storage = firebase.storage();
-    console.log('img.', img);
+    console.log('rotateImg', img);
     const imgPath = storage.refFromURL(img.src).fullPath;
     //  // can't use substring method because imgCodes range from 4 to 6 chars. see articleBodyImages/8EmVI0uvKQasRXlOTk5k.
     // const imgCode = imgPath.substring(imgPath.length - 5, imgPath.length);
@@ -272,26 +271,26 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     // check if it's in the map, if so, set rotation via it's orientation
     } else if (this.articleEditForm.value.bodyImages[imgCode]) {
       rotation = this.exifOrientationToDegrees(this.articleEditForm.value.bodyImages[imgCode].orientation);
-      console.log('already got', imgCode);
+      console.log('already got', imgCode, 'in map');
     // else add it to the map with it's correct orientation
     } else {
       const orientation = await this.getExifOrientation(img);
       rotation = this.exifOrientationToDegrees(orientation);
-      console.log('orientation', imgCode, orientation);
-      console.log('rotation', imgCode, rotation);
 
       const imageObject = {
         path: imgPath,
         orientation: orientation,
       };
       this.articleEditForm.value.bodyImages[imgCode] = imageObject;
-      console.log('set Ori in map for', imgCode);
+      console.log('set orientation in map for', imgCode);
     }
 
     // Also create a simple service method that adds it to the map in the database which we can call here as well
     // ^^^pretty sure we don't need this cause we're already saving the articleEditForm^^^
 
-    img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
+    if (rotation !== 0) {
+      img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
+    }
   }
 
   getExifOrientation(img): Promise<number> {
