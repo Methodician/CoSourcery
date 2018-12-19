@@ -42,10 +42,10 @@ export class ArticleDetail {
 }
 
 export interface BodyImageMeta {
-    orientation: number,
-    path: string
+    orientation: number;
+    path: string;
 }
 
 export interface KeyMap<T> { [key: string]: T; }
 
-export interface BodyImageMap extends KeyMap<BodyImageMeta> { } 
+export interface BodyImageMap extends KeyMap<BodyImageMeta> { }
