@@ -108,7 +108,6 @@ export class ArticleService {
     for (const imgCode in article.bodyImages) {
       if (article.bodyImages.hasOwnProperty(imgCode)) {
         if (article.body.includes(`%2F${imgCode}`)) {
-          console.log('the body included', imgCode);
           newBodyImages[imgCode] = article.bodyImages[imgCode];
         }
       }
@@ -119,7 +118,6 @@ export class ArticleService {
 
   updateArticle(editor: UserInfoOpen, article, articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    console.log('saveing...');
 
     article = this.cleanArticleImages(article);
 
