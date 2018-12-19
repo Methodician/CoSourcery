@@ -254,6 +254,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   async rotateImage(img) {
+    if (img.src.includes('data:image')) {
+      return;
+    }
     const storage = firebase.storage();
     const imgPath = storage.refFromURL(img.src).fullPath;
     const imgCode = imgPath.split('/')[imgPath.split('/').length - 1];
