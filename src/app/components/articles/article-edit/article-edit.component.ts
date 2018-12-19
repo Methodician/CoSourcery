@@ -240,12 +240,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     for (let i = 0; i < figures.length; i++) {
       const fig = figures[i];
       const img = fig.firstChild as HTMLImageElement;
-
       if (img.complete) {
-        // Processes images when form being edited
-        // There are a lot of errors when trying to handle exif data not from firebase (or a url). is this first rotate neccessary?
-        // Yes thre are a lot of situations where (perhaps counterintuitively) an image will be already loaded but not processed.
-        // Try commenting this out and then opening an article then navigating back to home then back to the article. For some reason they are not rotated...
+        // Processes images when for one reason or another they are already loaded but may not be rotated.
         this.rotateImage(img);
       } else {
         img.onload = (ev$) => {
@@ -261,7 +257,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const imgPath = storage.refFromURL(img.src).fullPath;
     const imgCode = imgPath.split('/')[imgPath.split('/').length - 1];
 
-    let rotation = 0;
+    let rotation: orientationDegrees = 0;
     // check if it's been rotated, if so, don't do any extra stuff
     if (img.style.transform && img.style.transform.includes('rotate')) {
       return;
@@ -271,13 +267,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       // else add it to the map with it's correct orientation
     } else {
       let orientation = await this.getExifOrientation(img);
-      orientation = orientation ? orientation : 1;
+      orientation = orientation ? orientation : 0;
       rotation = this.exifOrientationToDegrees(orientation);
 
       const imageObject = {
         path: imgPath,
         orientation: orientation,
       };
+
       this.articleEditForm.value.bodyImages[imgCode] = imageObject;
     }
 
