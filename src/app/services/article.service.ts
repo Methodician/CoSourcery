@@ -103,25 +103,23 @@ export class ArticleService {
       .set(this.dbServerTimestamp);
   }
 
-  updateArticle(editor: UserInfoOpen, article, articleId: string) {
-    if (!articleId) {
-      return;
-    }
-    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
-    console.log('saveing...');
-    // ================================================================================
-    // clean image data => export to helper function
+  cleanArticleImages(article) {
     const newBodyImages = {};
     for (const imgCode in article.bodyImages) {
       if (article.bodyImages.hasOwnProperty(imgCode)) {
         if (article.body.includes(`%2F${imgCode}`)) {
-          console.log('the body included', imgCode);
           newBodyImages[imgCode] = article.bodyImages[imgCode];
         }
       }
     }
     article.bodyImages = newBodyImages;
-    // ================================================================================
+    return article;
+  }
+
+  updateArticle(editor: UserInfoOpen, article, articleId: string) {
+    const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
+
+    article = this.cleanArticleImages(article);
 
     const editors = article.editors || {};
     const editCount = editors[editor.uid] || 0;

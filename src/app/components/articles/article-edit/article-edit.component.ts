@@ -254,51 +254,32 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         };
       }
     }
-    console.log('processCKE complete', this.articleEditForm.value);
-    console.log('full body value', this.articleEditForm.value.body);
   }
 
   async rotateImage(img) {
     const storage = firebase.storage();
-    console.log('img.', img);
     const imgPath = storage.refFromURL(img.src).fullPath;
-    //  // can't use substring method because imgCodes range from 4 to 6 chars. see articleBodyImages/8EmVI0uvKQasRXlOTk5k.
-    // const imgCode = imgPath.substring(imgPath.length - 5, imgPath.length);
-    // I updated the custom plugin to produce image ID's of consistnet length now.
-    // I can't believe it took me all day after creating the change in a few minutes. Another rant against CKEditor and it's bloat.
     const imgCode = imgPath.split('/')[imgPath.split('/').length - 1];
 
     let rotation = 0;
-    // check if it's been rotated, if so, don't do any of this extra stuff
+    // check if it's been rotated, if so, don't do any extra stuff
     if (img.style.transform && img.style.transform.includes('rotate')) {
-      console.log('already rotated', imgCode);
       return;
       // check if it's in the map, if so, set rotation via its orientation
     } else if (this.articleEditForm.value.bodyImages[imgCode]) {
       rotation = this.exifOrientationToDegrees(this.articleEditForm.value.bodyImages[imgCode].orientation);
-      console.log('already got', imgCode);
       // else add it to the map with it's correct orientation
     } else {
       let orientation = await this.getExifOrientation(img);
-      if (isNaN(orientation)) {
-        alert('caught a non-number orientation');
-        orientation = 0;
-      }
+      orientation = orientation ? orientation : 1;
       rotation = this.exifOrientationToDegrees(orientation);
-      console.log('orientation', imgCode, orientation);
-      console.log('rotation', imgCode, rotation);
 
       const imageObject = {
         path: imgPath,
         orientation: orientation,
       };
       this.articleEditForm.value.bodyImages[imgCode] = imageObject;
-      console.log('set Ori in map for', imgCode);
     }
-
-    // Also create a simple service method that adds it to the map in the database which we can call here as well
-    // ^^^pretty sure we don't need this cause we're already saving the articleEditForm^^^
-    // I suppose that's true. The next time it's edited this should update...
 
     img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
   }
@@ -454,7 +435,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
       // Update Existing Article
     } else {
-      console.log('saving with this', this.articleEditForm.value);
       this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
       clearTimeout(this.editSessionTimeout);
       this.resetEditStates();
