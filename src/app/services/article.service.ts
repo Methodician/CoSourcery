@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ArticleDetail, ArticlePreview } from '@class/article-info';
+import { ArticleDetail, ArticlePreview, BodyImageMap } from '@class/article-info';
 import { UserInfoOpen } from '@class/user-info';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -103,18 +103,17 @@ export class ArticleService {
       .set(this.dbServerTimestamp);
   }
 
-  cleanArticleImages(article) {
-    const newBodyImages = {};
+  cleanArticleImages(article): BodyImageMap {
+    const newBodyImages: BodyImageMap = {};
     for (const imgCode in article.bodyImages) {
       if (article.bodyImages.hasOwnProperty(imgCode) && article.body.includes(`%2F${imgCode}`)) {
         newBodyImages[imgCode] = article.bodyImages[imgCode];
       }
     }
-    console.log(newBodyImages);
     return newBodyImages;
   }
 
-  updateArticle(editor: UserInfoOpen, article, articleId: string) {
+  updateArticle(editor: UserInfoOpen, article: ArticleDetail, articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
     // Avoids mutating original object

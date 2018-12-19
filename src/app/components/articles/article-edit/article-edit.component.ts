@@ -18,6 +18,7 @@ import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.co
 import * as exif from 'exif-js';
 import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
 import * as firebase from 'firebase';
+import { BodyImageMeta } from '@class/article-info';
 
 @Component({
   selector: 'cos-article-edit',
@@ -270,7 +271,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       orientation = orientation ? orientation : 0;
       rotation = this.exifOrientationToDegrees(orientation);
 
-      const imageObject = {
+      const imageObject: BodyImageMeta = {
         path: imgPath,
         orientation: orientation,
       };
