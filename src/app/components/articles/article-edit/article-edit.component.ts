@@ -268,7 +268,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     // else add it to the map with it's correct orientation
     } else {
       let orientation = await this.getExifOrientation(img);
-      orientation = orientation ? orientation : 1; // orientaion was coming back as undefined from getExifOrientation for some imgs
+      orientation = orientation ? orientation : 1;
       rotation = this.exifOrientationToDegrees(orientation);
 
       const imageObject = {
@@ -278,9 +278,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleEditForm.value.bodyImages[imgCode] = imageObject;
     }
 
-    if (rotation !== 0) {
-      img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
-    }
+    img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
   }
 
   getExifOrientation(img): Promise<number> {
