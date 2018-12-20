@@ -37,7 +37,15 @@ export class ArticleDetail {
         public viewCount?: number,
         public tags?: string[],
         public isFeatured?: boolean,
+        public bodyImages?: BodyImageMap,
     ) { }
 }
 
+export interface BodyImageMeta {
+    orientation: number;
+    path: string;
+}
+
 export interface KeyMap<T> { [key: string]: T; }
+
+export interface BodyImageMap extends KeyMap<BodyImageMeta> { }

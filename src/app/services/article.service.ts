@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ArticleDetail, ArticlePreview } from '@class/article-info';
+import { ArticleDetail, ArticlePreview, BodyImageMap } from '@class/article-info';
 import { UserInfoOpen } from '@class/user-info';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -103,22 +103,30 @@ export class ArticleService {
       .set(this.dbServerTimestamp);
   }
 
-  updateArticle(editor: UserInfoOpen, article, articleId: string) {
-    if (!articleId) {
-      return;
+  cleanArticleImages(article): BodyImageMap {
+    const newBodyImages: BodyImageMap = {};
+    for (const imgCode in article.bodyImages) {
+      if (article.bodyImages.hasOwnProperty(imgCode) && article.body.includes(`%2F${imgCode}`)) {
+        newBodyImages[imgCode] = article.bodyImages[imgCode];
+      }
     }
+    return newBodyImages;
+  }
+
+  updateArticle(editor: UserInfoOpen, article: ArticleDetail, articleId: string) {
     const articleRef = this.fsdb.doc(`articleData/articles/articles/${articleId}`);
 
-    const editors = article.editors || {};
+    // Avoids mutating original object
+    const articleToSave = { ...article };
+    const editors = articleToSave.editors || {};
     const editCount = editors[editor.uid] || 0;
     editors[editor.uid] = editCount + 1;
-
-    const changedArticle = { ...article };
-    changedArticle.lastUpdated = this.fsServerTimestamp;
-    changedArticle.version++;
-    changedArticle.lastEditorId = editor.uid;
-    changedArticle.editors = editors;
-    return articleRef.update(changedArticle);
+    articleToSave.lastUpdated = this.fsServerTimestamp;
+    articleToSave.version++;
+    articleToSave.lastEditorId = editor.uid;
+    articleToSave.editors = editors;
+    articleToSave.bodyImages = this.cleanArticleImages(articleToSave);
+    return articleRef.update(articleToSave);
   }
 
 
