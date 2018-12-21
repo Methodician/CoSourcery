@@ -18,7 +18,7 @@ import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.co
 import * as exif from 'exif-js';
 import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
 import * as firebase from 'firebase';
-import { BodyImageMeta, ArticleDetail } from '@class/article-info';
+import { BodyImageMeta } from '@class/article-info';
 
 @Component({
   selector: 'cos-article-edit',
@@ -62,7 +62,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleSubscription: Subscription;
   articleEditorSubscription: Subscription;
   currentArticleEditors = {};
-  previousArticleEditors: Array<string>;
 
   // Article Form State
   formIsInCreateView: boolean;
@@ -194,31 +193,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .subscribe(articleData => {
         this.ckeditor.content = articleData ? articleData.body : this.ckeditor.placeholder;
         this.setFormData(articleData);
-        this.mapContributors(articleData);
       });
-  }
-
-  mapContributors(articleData: ArticleDetail) {
-    this.userSvc.addUserToMap(articleData.authorId);
-    const editors = articleData.editors;
-    const editorArray = [];
-    for (const key in editors) {
-      if (articleData.authorId === key) {
-        continue;
-      }
-      this.userSvc.addUserToMap(key);
-      editorArray.push({ id: key, editCount: editors[key] });
-    }
-    editorArray.sort((a, b) => {
-      if (a.editCount < b.editCount) {
-        return 1;
-      }
-      if (a.editCount > b.editCount) {
-        return -1;
-      }
-      return 0;
-    })
-    this.previousArticleEditors = editorArray;
   }
 
   watchFormChanges() {
