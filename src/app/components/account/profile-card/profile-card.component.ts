@@ -9,6 +9,7 @@ import { UserInfoOpen } from '@class/user-info';
 export class ProfileCardComponent implements OnInit {
 
   @Input() user: UserInfoOpen;
+  @Input() displayText: string;
   @Input() shouldHighlight = false;
 
   constructor() { }

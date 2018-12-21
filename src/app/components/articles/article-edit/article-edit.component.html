@@ -1,7 +1,7 @@
 <section style="position: fixed; margin: 20px 0px 0px 5%;">
-  <cos-contributors></cos-contributors>
-  <!-- [contributors]="articleEditForm.value.editors"
-                    [authorId]="articleEditForm.value.authorId" -->
+  <cos-contributors [creatorId]="articleEditForm.value.authorId"
+                    [editorMap]="articleEditForm.value.editors">
+  </cos-contributors>
 </section>
 
 <form #formBoundingBox
@@ -144,13 +144,9 @@
       </div>
     </section>
     <section class="article-attributions">
-      <div>
-        <cos-profile-card [user]="userMap[articleEditForm.value.authorId]"
-                          [shouldHighlight]="true"></cos-profile-card>
-      </div>
-      <div *ngFor="let editor of previousArticleEditors">
-        <cos-profile-card [user]="userMap[editor.id]"></cos-profile-card>
-      </div>
+      <cos-contributors [creatorId]="articleEditForm.value.authorId"
+                        [editorMap]="articleEditForm.value.editors">
+      </cos-contributors>
     </section>
   </section>
 

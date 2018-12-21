@@ -1,7 +1,20 @@
-<div *ngIf="user"
+<!-- <div *ngIf="user"
      [routerLink]="['/profile', user.uid]"
      [class.highlight]="shouldHighlight">
   <img [src]="user.displayImageUrl()"
        style="width: 60px; height: 60px; border-radius: 100%">
   <p>{{ user.displayName() }}</p>
-</div>
+</div> -->
+<section *ngIf="user"
+         class="contributors__header">
+  <div class="contributors__author-image-wrapper">
+    <img class="contributors__author-image"
+         [src]="user.displayImageUrl()"
+         alt="Author Image">
+  </div>
+  <div class="contributors__author">
+    <p class="contributors__author-detail"
+       [class.contributors__author-detail--highlight]="shouldHighlight"><strong>{{ user.displayName() }}</strong></p>
+    <em class="contributors__author-detail contributors__author-detail_light">{{ displayText }}</em>
+  </div>
+</section>

@@ -1,3 +1,40 @@
-.highlight {
-    border: 4px solid red;
-}
+@import "../../../sass-variables-mixins/vars.scss";
+
+.contributors__header {
+    display: block;
+  
+    @media screen and (min-width: 500px) {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      grid-gap: 20px;
+    }
+  }
+  
+  .contributors__author-image-wrapper {
+    width: 50px;
+  }
+  
+  .contributors__author-image {
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    object-fit: cover;
+  
+    @media screen and (min-width: 500px) {
+      display: block;
+    }
+  }
+  
+  .contributors__author-detail {
+    margin: 0;
+    color: lighten($accent-color-1-dark, 30%);
+  
+    &_light {
+      color: $medium-gray;
+      font-size: 0.8rem;
+    }    
+  }
+  
+  .contributors__author-detail--highlight {
+    color: $accent-color-2-dark;
+  }

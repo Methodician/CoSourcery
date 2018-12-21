@@ -1,3 +1,7 @@
-<p>
-  contributors works!
-</p>
+<h5>Attributions</h5>
+<section *ngFor="let editor of _editors"
+         class="contributors">
+  <cos-profile-card [user]="userMap[editor.id]"
+                    [shouldHighlight]="editor.id === _creatorId"
+                    [displayText]="displayText(editor.id)"></cos-profile-card>
+</section>
