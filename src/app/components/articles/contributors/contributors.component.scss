@@ -26,7 +26,22 @@
 }
 
 .transition-btn {
+  opacity: 0.3;
+  outline: none;
   background-color: transparent;
+  transition: 2s;
+}
+
+.transition-btn.hidden {
+  opacity: 0;
+}
+
+.transition-btn.hidden:hover {
+  opacity: 0;
+}
+
+.transition-btn:hover {
+  opacity: 1;
 }
 
 .transition-img {

@@ -18,6 +18,7 @@ export class ContributorsComponent {
   displayEditorsPos: number;
   transitionLeft = false;
   transitionRight = false;
+  notTransitioned = true;
   @Input() set creatorId(creatorId: string) {
     if (creatorId && creatorId !== '') {
       this.mapCreator(creatorId);
@@ -49,6 +50,7 @@ export class ContributorsComponent {
 
   nextEditorPanel() {
     this.transitionLeft = true;
+    this.notTransitioned = false;
     // wait for profile cards to transition
     setTimeout(() => {
       this.transitionLeft = false;

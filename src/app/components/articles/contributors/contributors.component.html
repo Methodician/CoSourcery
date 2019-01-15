@@ -1,5 +1,5 @@
 <h5>Attributions</h5>
-<button class="transition-btn" (click)="prevEditorPanel()">
+<button [class.hidden]="notTransitioned" [disabled]="notTransitioned" class="transition-btn" (click)="prevEditorPanel()">
     <img class="transition-img" 
          src="../../../../assets/images/chevron_left-24px.svg" 
          alt="Next">
@@ -21,7 +21,7 @@
     </div>
   </div>
 </section>
-<button class="transition-btn" (click)="nextEditorPanel()">
+<button *ngIf="_editors.length > 3" class="transition-btn" (click)="nextEditorPanel()">
   <img class="transition-img" 
        src="../../../../assets/images/chevron_right-24px.svg" 
        alt="Next">
