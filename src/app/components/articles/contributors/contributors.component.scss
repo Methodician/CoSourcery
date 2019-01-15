@@ -63,11 +63,11 @@
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveRight {
   from {left: 0px;}
-  to {left: 615px;}
+  to {left: 651px;} // why do I neeed this. where is that 'snap' coming from?
 }
 
 /* Standard syntax */
 @keyframes moveRight {
   from {left: 0px;}
-  to {left: 615px;}
+  to {left: 651px;} // why do I neeed this. where is that 'snap' coming from?
 }
