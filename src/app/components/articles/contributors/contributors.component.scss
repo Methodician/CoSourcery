@@ -1,6 +1,62 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
+
 .contributors {
-  min-height: 60px;
+  width: 615px;
+  overflow: hidden;
+  display: inline-flex;
+}
+
+.contributors__set {
+  min-width: 615px;
+  display: inline-flex;
+}
+
+.contributors__elem {  
+  display: inline-grid;
+  grid-template-columns: 50px 150px;
+  grid-gap: 5px;
+}
+
+.prev {
+  // I don't like this but am not sure how else to get the prev block to the left of the article.
+  position: absolute;
+  right: 728px;
+}
+
+.transition-left {
+  position :relative;
+  -webkit-animation: moveLeft 5s infinite; /* Safari 4.0 - 8.0 */
+  animation: moveLeft 2s infinite ease;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes moveLeft {
+  from {right: 0px;}
+  to {right: 615px;}
+}
+
+/* Standard syntax */
+@keyframes moveLeft {
+  from {right: 0px;}
+  to {right: 615px;}
+}
+
+.transition-right {
+  position :relative;
+  -webkit-animation: moveRight 5s infinite; /* Safari 4.0 - 8.0 */
+  animation: moveRight 2s infinite ease;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes moveRight {
+  from {left: 0px;}
+  to {left: 615px;}
+}
+
+/* Standard syntax */
+@keyframes moveRight {
+  from {left: 0px;}
+  to {left: 615px;}
 }

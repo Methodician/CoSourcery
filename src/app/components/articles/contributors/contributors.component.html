@@ -1,7 +1,20 @@
 <h5>Attributions</h5>
-<section *ngFor="let editor of _editors"
-         class="contributors">
-  <cos-profile-card [user]="userMap[editor.id]"
-                    [shouldHighlight]="editor.id === _creatorId"
-                    [displayText]="displayText(editor.id)"></cos-profile-card>
+<section class="contributors">
+  <div class="prev contributors__set">
+    <div *ngFor="let editor of _prevDisplayEditors" class="contributors__elem" [class.transition-left]="transitionLeft" [class.transition-right]="transitionRight">
+      <cos-profile-card [user]="userMap[editor.id]" [shouldHighlight]="editor.id === _creatorId" [displayText]="displayText(editor.id)"></cos-profile-card>
+    </div>
+  </div>
+  <div class="contributors__set">
+    <div *ngFor="let editor of _displayEditors" class="contributors__elem" [class.transition-left]="transitionLeft" [class.transition-right]="transitionRight">
+      <cos-profile-card [user]="userMap[editor.id]" [shouldHighlight]="editor.id === _creatorId" [displayText]="displayText(editor.id)"></cos-profile-card>
+    </div>
+  </div>
+  <div class="contributors__set">
+    <div *ngFor="let editor of _nextDisplayEditors" class="contributors__elem" [class.transition-left]="transitionLeft" [class.transition-right]="transitionRight">
+      <cos-profile-card [user]="userMap[editor.id]" [shouldHighlight]="editor.id === _creatorId" [displayText]="displayText(editor.id)"></cos-profile-card>
+    </div>
+  </div>
 </section>
+<button (click)="prevEditorPanel()">Prev</button>
+<button (click)="nextEditorPanel()">Next</button>
