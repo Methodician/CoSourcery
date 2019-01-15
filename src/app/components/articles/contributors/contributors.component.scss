@@ -25,9 +25,20 @@
   right: 728px;
 }
 
+.transition-btn {
+  background-color: transparent;
+}
+
+.transition-img {
+  height: 60px;
+  margin: -12px;
+  position: relative;
+  bottom: 7px;
+}
+
 .transition-left {
-  position :relative;
-  -webkit-animation: moveLeft 5s infinite; /* Safari 4.0 - 8.0 */
+  position: relative;
+  -webkit-animation: moveLeft 2s infinite; /* Safari 4.0 - 8.0 */
   animation: moveLeft 2s infinite ease;
 }
 
@@ -44,8 +55,8 @@
 }
 
 .transition-right {
-  position :relative;
-  -webkit-animation: moveRight 5s infinite; /* Safari 4.0 - 8.0 */
+  position: relative;
+  -webkit-animation: moveRight 2s infinite; /* Safari 4.0 - 8.0 */
   animation: moveRight 2s infinite ease;
 }
 
