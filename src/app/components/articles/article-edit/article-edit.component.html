@@ -1,8 +1,8 @@
-<section style="position: fixed; margin: 20px 0px 0px 5%;">
+<!-- <section style="position: fixed; margin: 20px 0px 0px 5%;">
   <cos-contributors [creatorId]="articleEditForm.value.authorId"
                     [editorMap]="articleEditForm.value.editors">
   </cos-contributors>
-</section>
+</section> -->
 
 <form #formBoundingBox
       [formGroup]="articleEditForm"
@@ -149,7 +149,6 @@
       </cos-contributors>
     </section>
   </section>
-
   <section #ckeditorBoundingBox
            class="article-body"
            [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}">
