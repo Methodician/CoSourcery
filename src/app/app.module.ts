@@ -74,6 +74,7 @@ import { ProfileFormComponent } from '@components/account/profile-form/profile-f
 import { FilterMenuComponent } from '@components/general/filter-menu/filter-menu.component';
 import { ProfileViewComponent } from '@components/account/profile-view/profile-view.component';
 import { ProfileContributionsComponent } from '@components/account/profile-contributions/profile-contributions.component';
+import { ArticleHistoryComponent } from './components/articles/article-history/article-history.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +106,7 @@ import { ProfileContributionsComponent } from '@components/account/profile-contr
     FilterMenuComponent,
     ProfileViewComponent,
     ProfileContributionsComponent,
+    ArticleHistoryComponent,
   ],
   imports: [
     BrowserModule,
