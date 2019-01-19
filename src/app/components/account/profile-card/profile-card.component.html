@@ -6,6 +6,7 @@
   <p>{{ user.displayName() }}</p>
 </div> -->
 <section *ngIf="user"
+         [routerLink]="['/profile', user.uid]"
          class="contributors__header">
   <div class="contributors__author-image-wrapper">
     <img class="contributors__author-image"
