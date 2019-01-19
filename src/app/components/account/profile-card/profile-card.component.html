@@ -14,7 +14,7 @@
   </div>
   <div class="contributors__author">
     <p class="contributors__author-detail"
-       [class.contributors__author-detail--highlight]="shouldHighlight"><strong>{{ user.displayName() }}</strong></p>
+       [class.contributors__author-detail--highlight]="shouldHighlight"><strong>{{ user.displayName() | truncateString: 10 }}</strong></p>
     <em class="contributors__author-detail contributors__author-detail_light">{{ displayText }}</em>
   </div>
 </section>

@@ -1,11 +1,18 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
+.wrapper {
+  position: relative;
+}
 
 .contributors {
+  height:60px;
   width: 615px;
   overflow: hidden;
-  display: inline-flex;
+  display: flex;
+  margin:0 auto;
+  justify-content:center;
+  align-items:center;
 }
 
 .contributors__set {
@@ -19,17 +26,23 @@
   grid-gap: 5px;
 }
 
-.prev {
-  // I don't like this but am not sure how else to get the prev block to the left of the article.
-  position: absolute;
-  right: 728px;
-}
-
 .transition-btn {
   opacity: 0.3;
   outline: none;
-  background-color: transparent;
+  background-color: transparent !important;
   transition: 2s;
+}
+
+.left-btn {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.right-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 .transition-btn.hidden {
@@ -78,11 +91,11 @@
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveRight {
   from {left: 0px;}
-  to {left: 651px;} // why do I neeed this. where is that 'snap' coming from?
+  to {left: 615px;} // why do I neeed this. where is that 'snap' coming from?
 }
 
 /* Standard syntax */
 @keyframes moveRight {
   from {left: 0px;}
-  to {left: 651px;} // why do I neeed this. where is that 'snap' coming from?
+  to {left: 615px;} // why do I neeed this. where is that 'snap' coming from?
 }
