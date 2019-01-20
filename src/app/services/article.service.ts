@@ -75,6 +75,14 @@ export class ArticleService {
     return this.fsdb.doc(`articleData/articles/articles/${articleId}`);
   }
 
+  getArticleHistoryRefById(articleId: string): AngularFirestoreCollection<ArticleDetail> {
+    return this.fsdb.collection(`articleData/articles/articles/${articleId}/history`);
+  }
+
+  getArticleVersionRef(articleId: string, articleVersion: string): AngularFirestoreDocument<ArticleDetail> {
+    return this.fsdb.doc(`articleData/articles/articles/${articleId}/history/${articleVersion}`);
+  }
+
   getPreviewRefById(articleId: string): AngularFirestoreDocument<ArticlePreview> {
     return this.fsdb.doc(`articleData/articles/previews/${articleId}`);
   }
