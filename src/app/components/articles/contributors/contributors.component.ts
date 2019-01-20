@@ -16,22 +16,26 @@ export class ContributorsComponent {
   _nextDisplayEditors: Array<Object>;
   _prevDisplayEditors: Array<Object>;
   displayEditorsPos: number;
+  editorPanelCount: number;
   transitionLeft = false;
   transitionRight = false;
   notTransitioned = true;
+  windowMaxWidth = 420;
   @Input() set creatorId(creatorId: string) {
     if (creatorId && creatorId !== '') {
+      this.checkWindowSize();
       this.mapCreator(creatorId);
       this._creatorId = creatorId;
     }
   }
   @Input() set editorMap(editorMap: Object) {
     if (editorMap && editorMap !== {}) {
+      this.checkWindowSize();
       const editors = this.mapContributors(editorMap);
       this._editors = editors;
       this._prevDisplayEditors = [];
-      this._displayEditors = this._editors.slice(this.displayEditorsPos, 3);
-      this._nextDisplayEditors = this._editors.slice(this.displayEditorsPos + 3, 6);
+      this._displayEditors = this._editors.slice(this.displayEditorsPos, this.editorPanelCount);
+      this._nextDisplayEditors = this._editors.slice(this.displayEditorsPos + this.editorPanelCount, this.editorPanelCount * 2);
       this._editorMap = editorMap;
     }
   }
@@ -48,55 +52,63 @@ export class ContributorsComponent {
     return text;
   }
 
+  checkWindowSize() {
+    window.innerWidth < this.windowMaxWidth ? this.editorPanelCount = 2 : this.editorPanelCount = 3;
+  }
+
   nextEditorPanel() {
-    this.transitionLeft = true;
-    this.notTransitioned = false;
-    // wait for profile cards to transition
-    setTimeout(() => {
-      this.transitionLeft = false;
+  this.transitionLeft = true;
+  this.notTransitioned = false;
+  // wait for profile cards to transition
+  this.checkWindowSize();
+  setTimeout(() => {
+    this.transitionLeft = false;
+    // move displayed profile card position up three or reset if at the end
+    this.displayEditorsPos += this.editorPanelCount;
+    if (this.displayEditorsPos >= this._editors.length) {
+      this.displayEditorsPos = 0;
+    }
+    // set and slice editors to get the prev, display and next segments of the _editors
+    this._prevDisplayEditors = this._displayEditors;
+    this._displayEditors = this._nextDisplayEditors;
+    this._nextDisplayEditors = this._editors.slice(this.displayEditorsPos + this.editorPanelCount, this.displayEditorsPos + this.editorPanelCount * 2);
+    // if next is empty set it to the beginning of _editors
+    if (this._nextDisplayEditors.length <= 0) {
+      this._nextDisplayEditors = this._editors.slice(0, this.editorPanelCount);
+    }
+  }, 2000);
+}
 
-      // move displayed profile card position up three or reset if at the end
-      this.displayEditorsPos += 3;
-      if (this.displayEditorsPos >= this._editors.length) {
-        this.displayEditorsPos = 0;
-      }
-
-      // set and slice editors to get the prev, display and next segments of the _editors
-      this._prevDisplayEditors = this._displayEditors;
-      this._displayEditors = this._nextDisplayEditors;
-      this._nextDisplayEditors = this._editors.slice(this.displayEditorsPos + 3, this.displayEditorsPos + 6);
-
-      // if next is empty set it to the beginning of _editors
-      if (this._nextDisplayEditors.length <= 0) {
-        this._nextDisplayEditors = this._editors.slice(0, 3);
-      }
-    }, 2000);
-  }
-
-  prevEditorPanel() {
-    this.transitionRight = true;
-    // wait for profile cards to transition
-    setTimeout(() => {
-      this.transitionRight = false;
-
-      // move displayed profile card position up three or reset if at the end
-      this.displayEditorsPos -= 3;
-      if (this.displayEditorsPos < 0) {
-        this.displayEditorsPos = this._editors.length - 1;
-      }
-
-      // set and slice editors to get the prev, display and next segments of the _editors
-      this._nextDisplayEditors = this._displayEditors;
-      this._displayEditors = this._prevDisplayEditors;
-
-      // if prev is empty set it to the end of _editors
-      if (this.displayEditorsPos < 3) {
-        this._prevDisplayEditors = this._editors.slice(this._editors.length - (this._editors.length % 3), this._editors.length);
+prevEditorPanel() {
+  this.transitionRight = true;
+  // wait for profile cards to transition
+  this.checkWindowSize();
+  setTimeout(() => {
+    this.transitionRight = false;
+    // move displayed profile card position up three or reset if at the end
+    this.displayEditorsPos -= this.editorPanelCount;
+    if (this.displayEditorsPos < 0) {
+      this.displayEditorsPos = this._editors.length - 2;
+    }
+    // set and slice editors to get the prev, display and next segments of the _editors
+    this._nextDisplayEditors = this._displayEditors;
+    this._displayEditors = this._prevDisplayEditors;
+    console.log(this.displayEditorsPos);
+    // if prev is empty set it to the end of _editors
+    if (this.displayEditorsPos < 1) {
+      console.log('ran');
+      const remainder = this._editors.length % this.editorPanelCount;
+      if (remainder > 0) {
+        this._prevDisplayEditors = this._editors.slice(this._editors.length - (this._editors.length % this.editorPanelCount), this._editors.length);
       } else {
-        this._prevDisplayEditors = this._editors.slice(this.displayEditorsPos - 3, this.displayEditorsPos);
+        this._prevDisplayEditors = this._editors.slice(this._editors.length - this.editorPanelCount, this._editors.length);
       }
-    }, 2000);
-  }
+    } else {
+      this._prevDisplayEditors = this._editors.slice(this.displayEditorsPos - this.editorPanelCount, this.displayEditorsPos);
+    }
+
+  }, 2000);
+}
 
   mapCreator(creatorId: string) {
     this.userSvc.addUserToMap(creatorId);
@@ -125,3 +137,58 @@ export class ContributorsComponent {
   }
 
 }
+
+
+
+
+
+// =============================ORGINAL FUNCTION==============================================
+// nextEditorPanel() {
+//   this.transitionLeft = true;
+//   this.notTransitioned = false;
+//   // wait for profile cards to transition
+//   setTimeout(() => {
+//     this.transitionLeft = false;
+
+//     // move displayed profile card position up three or reset if at the end
+//     this.displayEditorsPos += 3;
+//     if (this.displayEditorsPos >= this._editors.length) {
+//       this.displayEditorsPos = 0;
+//     }
+
+//     // set and slice editors to get the prev, display and next segments of the _editors
+//     this._prevDisplayEditors = this._displayEditors;
+//     this._displayEditors = this._nextDisplayEditors;
+//     this._nextDisplayEditors = this._editors.slice(this.displayEditorsPos + 3, this.displayEditorsPos + 6);
+
+//     // if next is empty set it to the beginning of _editors
+//     if (this._nextDisplayEditors.length <= 0) {
+//       this._nextDisplayEditors = this._editors.slice(0, 3);
+//     }
+//   }, 2000);
+// }
+
+// prevEditorPanel() {
+//   this.transitionRight = true;
+//   // wait for profile cards to transition
+//   setTimeout(() => {
+//     this.transitionRight = false;
+
+//     // move displayed profile card position up three or reset if at the end
+//     this.displayEditorsPos -= 3;
+//     if (this.displayEditorsPos < 0) {
+//       this.displayEditorsPos = this._editors.length - 1;
+//     }
+
+//     // set and slice editors to get the prev, display and next segments of the _editors
+//     this._nextDisplayEditors = this._displayEditors;
+//     this._displayEditors = this._prevDisplayEditors;
+
+//     // if prev is empty set it to the end of _editors
+//     if (this.displayEditorsPos < 3) {
+//       this._prevDisplayEditors = this._editors.slice(this._editors.length - (this._editors.length % 3), this._editors.length);
+//     } else {
+//       this._prevDisplayEditors = this._editors.slice(this.displayEditorsPos - 3, this.displayEditorsPos);
+//     }
+//   }, 2000);
+// }

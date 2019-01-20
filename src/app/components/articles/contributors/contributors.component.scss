@@ -1,5 +1,6 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
 
 .wrapper {
   position: relative;
@@ -7,23 +8,30 @@
 
 .contributors {
   height:60px;
-  width: 615px;
   overflow: hidden;
   display: flex;
   margin:0 auto;
-  justify-content:center;
-  align-items:center;
+  justify-content: center;
+  align-items: center;
+  width: 220px;
+  border: $tb-red;
+  // YO JACOB HERE IS YOUR MEDIA QUIERY EXAMPLES 
+  @include respond-to(420) {
+    border: $tb-lime;
+  }
+  @include respond-to(700) {
+    border: $tb-cyan;
+  }
 }
 
 .contributors__set {
-  min-width: 615px;
+  min-width: 220px;
+  width: 220px;
   display: inline-flex;
 }
 
 .contributors__elem {  
-  display: inline-grid;
-  grid-template-columns: 50px 150px;
-  grid-gap: 5px;
+  padding: 0 5px;
 }
 
 .contributors__elem:hover {
@@ -36,18 +44,20 @@
   outline: none;
   background-color: transparent !important;
   transition: 2s;
+  height: 30px;
+  width: 30px;
 }
 
 .left-btn {
   position: absolute;
-  left: 0;
-  bottom: 0;
+  left: -10px;
+  bottom: 15px;
 }
 
 .right-btn {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: -10px;
+  bottom: 15px;
 }
 
 .transition-btn.hidden {
@@ -63,10 +73,8 @@
 }
 
 .transition-img {
-  height: 60px;
-  margin: -12px;
-  position: relative;
-  bottom: 7px;
+  height: 30px;
+  width: 30px;
 }
 
 .transition-left {
@@ -78,13 +86,13 @@
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveLeft {
   from {right: 0px;}
-  to {right: 615px;}
+  to {right: 220px;}
 }
 
 /* Standard syntax */
 @keyframes moveLeft {
   from {right: 0px;}
-  to {right: 615px;}
+  to {right: 220px;}
 }
 
 .transition-right {
@@ -96,11 +104,11 @@
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveRight {
   from {left: 0px;}
-  to {left: 615px;} // why do I neeed this. where is that 'snap' coming from?
+  to {left: 220px;} // why do I neeed this. where is that 'snap' coming from?
 }
 
 /* Standard syntax */
 @keyframes moveRight {
   from {left: 0px;}
-  to {left: 615px;} // why do I neeed this. where is that 'snap' coming from?
+  to {left: 220px;} // why do I neeed this. where is that 'snap' coming from?
 }
