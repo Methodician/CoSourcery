@@ -1,0 +1,50 @@
+@import "../../../sass-variables-mixins/vars.scss";
+
+.contributors__header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  border: $tb-red;
+  width: 100px;
+}
+
+.contributors__header:hover {
+  transition: 1s;
+}
+
+.contributors__author {
+  margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+}
+
+.contributors__author-image-wrapper {
+  
+}
+
+.contributors__author-image {
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  object-fit: cover;
+  @media screen and (min-width: 500px) {
+    display: block;
+  }
+}
+
+.contributors__author-detail {
+  font-size: 10px;
+  line-height:12px;
+  margin: 0;
+  color: lighten($accent-color-1-dark, 30%);
+  &_light {
+    color: $medium-gray;
+    font-size: 6px;
+  }
+}
+
+.contributors__author-detail--highlight {
+  color: $accent-color-2-dark;
+}
