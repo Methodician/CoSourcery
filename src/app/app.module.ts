@@ -29,7 +29,8 @@ import {
   MatSidenavModule,
   MatTooltipModule,
   MatTabsModule,
-  MatDialogModule
+  MatDialogModule,
+  MatTableModule,
 } from '@angular/material';
 
 // Services
@@ -128,6 +129,7 @@ import { ContributorsComponent } from './components/articles/contributors/contri
     MatSidenavModule,
     MatTooltipModule,
     MatTabsModule,
+    MatTableModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
