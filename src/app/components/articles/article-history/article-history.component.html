@@ -1,7 +1,85 @@
-<pre>
-  {{ articleHistory[articleVersion] | json }}
-</pre>
-<mat-table #table [dataSource]="articleHistoryKeys" class="mat-elevation-z8">
+
+<div class="article-frame">
+  <section class="article-cover-image">
+    <section class="article-cover-image__display">
+      <img *ngIf="!articleHistory[articleVersion]?.imageUrl" class="article-cover-image__image" src="../../assets/images/logo.svg" alt="Cover Image">
+      <img *ngIf="articleHistory[articleVersion]?.imageUrl" class="article-cover-image__image" [src]="articleHistory[articleVersion]?.imageUrl" [alt]="articleHistory[articleVersion]?.imageAlt">
+    </section>
+  </section>
+
+  <section class="article-header">
+    <section class="article-title">
+      <h2 *ngIf="!editTitle" class="static-display">
+        {{articleHistory[articleVersion]?.title}}
+        <span class="version">
+          (version: {{articleHistory[articleVersion]?.version}})
+        </span>
+      </h2>
+    </section>
+    <p class="article-date">Version Created: {{articleHistory[articleVersion]?.lastUpdated.seconds * 1000 | date }}</p>
+
+    <section class="article-intro">
+      <p class="static-display">{{articleHistory[articleVersion]?.introduction}}</p>
+    </section>
+
+    <section class="article-utils">
+      <div class="counters">
+
+        <div class="counters__item">
+          <mat-icon class="counters__icon">comment</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above" style="left: 0;">
+            {{articleHistory[articleVersion]?.commentCount}} Comment(s)
+          </span>
+          <span class="counters__item-stat">{{articleHistory[articleVersion]?.commentCount}}</span>
+        </div>
+
+        <div class="counters__item">
+          <mat-icon class="counters__icon">border_color</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleHistory[articleVersion]?.version}} Edit(s)</span>
+          <span class="counters__item-stat">{{articleHistory[articleVersion]?.version}}</span>
+        </div>
+
+        <div class="counters__item">
+          <mat-icon class="counters__icon">loyalty</mat-icon>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleHistory[articleVersion]?.tags.length}} Tag(s)</span>
+          <span class="counters__item-stat">{{articleHistory[articleVersion]?.tags.length}}</span>
+        </div>
+
+      </div>
+
+      <div *ngIf="!articleIsNew" class="counters__item counters__item_clickable" (click)="authCheck() ? bookmarkToggle() : null">
+        <mat-icon class="counters__icon">{{articleIsBookmarked && loggedInUser.uid ? 'bookmark' : 'bookmark_border'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above" style="right: 0;">
+          {{articleIsBookmarked && loggedInUser.uid ? 'Remove Bookmark' : 'Bookmark'}}
+        </span>
+      </div>
+    </section>
+
+    <section class="article-attributions">
+      <cos-contributors [creatorId]="articleHistory[articleVersion]?.authorId" [editorMap]="articleHistory[articleVersion]?.editors">
+      </cos-contributors>
+    </section>
+  </section>
+  
+  <section class="article-body">
+    <div [innerHTML]="articleHistory[articleVersion]?.body" class="article-body__interior">
+    </div>
+  </section>
+
+  <section class="article-tags">
+    <h3>Tags</h3>
+    <p *ngIf="articleHistory[articleVersion]?.tags.length === 0">This article has no tags.</p>
+    <mat-chip-list>
+      <mat-chip *ngFor="let articleTag of articleHistory[articleVersion]?.tags">{{articleTag}}</mat-chip>
+    </mat-chip-list>
+  </section>
+
+  <pre>
+    {{ articleHistory[articleVersion] | json }}
+  </pre>
+</div>
+
+<mat-table #table [dataSource]="articleHistoryKeys" class="mat-elevation-z8 history-table">
 
   <ng-container matColumnDef="version">
     <th mat-header-cell *matHeaderCellDef>version</th>
@@ -27,4 +105,5 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
 </mat-table>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
@@ -6,7 +6,8 @@ import { UserService } from '@services/user.service';
 @Component({
   selector: 'cos-article-history',
   templateUrl: './article-history.component.html',
-  styleUrls: ['./article-history.component.scss']
+  styleUrls: ['./article-history.component.scss'],
+  encapsulation: ViewEncapsulation.None, // needed to allow styles to work in article-body section generated via the [innerHTML]. See https://stackoverflow.com/questions/44210786/style-not-working-for-innerhtml-in-angular-2-typescript
 })
 export class ArticleHistoryComponent implements OnInit {
 
@@ -58,6 +59,8 @@ export class ArticleHistoryComponent implements OnInit {
           this.userSvc.addUserToMap(id); 
         };
       });
+      
+      console.log(this.articleHistory[this.articleVersion].body)
     });
   }
 }
