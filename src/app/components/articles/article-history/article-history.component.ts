@@ -17,7 +17,7 @@ export class ArticleHistoryComponent implements OnInit {
   articleHistoryKeys = [];
   articleContributorIds: string[];
   
-  displayedColumns: string[] = ['title', 'version', 'lastUpdated', 'lastEditorId'];
+  displayedColumns: string[] = ['version', 'date', 'lastEditorId'];
 
   constructor(
               private route: ActivatedRoute,
@@ -59,8 +59,6 @@ export class ArticleHistoryComponent implements OnInit {
           this.userSvc.addUserToMap(id); 
         };
       });
-      
-      console.log(this.articleHistory[this.articleVersion].body)
     });
   }
 }
