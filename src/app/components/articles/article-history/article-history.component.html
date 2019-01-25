@@ -5,7 +5,7 @@
     <ng-container matColumnDef="version">
       <th mat-header-cell *matHeaderCellDef>Version</th>
       <td mat-cell *matCellDef="let key">
-        <a [routerLink]="['/article', articleHistory[key].articleId, key]">Version {{ key }} {{ articleVersion === key }} </a>
+        <a [routerLink]="['/article', articleHistory[key].articleId, key]">Version {{ key }}</a>
       </td>
     </ng-container>
 
@@ -20,7 +20,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.highlighted]="articleVersion === key"></tr> 
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.highlighted]="this.articleVersion === row" (click)="navigateToVersion(row)"></tr>
     
   </table>
 </div>

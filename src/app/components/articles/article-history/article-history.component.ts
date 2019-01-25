@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
 
@@ -23,6 +23,7 @@ export class ArticleHistoryComponent implements OnInit {
               private route: ActivatedRoute,
               private articleSvc: ArticleService,
               private userSvc: UserService,
+              private router: Router,
             ) { }
 
   ngOnInit() {
@@ -60,5 +61,13 @@ export class ArticleHistoryComponent implements OnInit {
         };
       });
     });
+  }
+
+  isCurrentVersion(key) {
+    return this.articleVersion === key;
+  }
+  
+  navigateToVersion(version) {
+    this.router.navigate([`article/${this.articleId}/${version}`])
   }
 }
