@@ -16,6 +16,7 @@ export class ArticleHistoryComponent implements OnInit {
   articleHistory = {};
   articleHistoryKeys = [];
   articleContributorIds: string[];
+  paused = true;
   
   displayedColumns: string[] = ['version', 'date', 'lastEditorId'];
 
@@ -62,12 +63,40 @@ export class ArticleHistoryComponent implements OnInit {
       });
     });
   }
-
-  isCurrentVersion(key) {
-    return this.articleVersion === key;
-  }
   
   navigateToVersion(version) {
-    this.router.navigate([`article/${this.articleId}/${version}`])
+    this.router.navigate([`article/${this.articleId}/${version}`]);
+  }
+
+  nextVersion() {
+    this.router.navigate([`article/${this.articleId}/${parseInt(this.articleVersion) + 1}`]);
+  }
+  
+  prevVersion() {
+    this.router.navigate([`article/${this.articleId}/${parseInt(this.articleVersion) - 1}`]);
+  }
+  
+  latestVersion() {
+    this.router.navigate([`article/${this.articleId}/${parseInt(this.articleHistoryKeys[0])}`]);
+  }
+  
+  firstVersion() {
+    this.router.navigate([`article/${this.articleId}/${parseInt(this.articleHistoryKeys[this.articleHistoryKeys.length - 1])}`]);
+  }
+  
+  iterateVersions() {
+    setTimeout(() => {
+      if (!this.paused) {
+        if (parseInt(this.articleVersion) >= this.articleHistoryKeys.length) {
+          this.articleVersion = '0';
+        }
+        this.nextVersion();
+        this.iterateVersions();
+      }
+    }, 3000);
+  }
+
+  pauseIteration() {
+    this.paused = true;
   }
 }

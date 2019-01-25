@@ -1,33 +1,48 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
 
-.content-wrapper {
-  width: 300px;
-  height: 600px;
-  overflow: auto;
+.article-history {
   position: fixed;
   top: 100px;
+
+  width: 300px;
   
-  .history-table {
-    width: 100%;
-
+  &__table {
+    height: 600px;
+    overflow: auto;
+    
+    .history-table {
+      width: 100%;
+    }
   }
-}
 
-.mat-header-row {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0;
-  background-color: inherit;
-}
+  &__nav-btn {
+    display: inline-block;
+    .nav-img {
+      transform: rotate(90deg);
+      color: white
+    }
 
-.mat-cell {
-  cursor: pointer;
-}
+    &.playing {
+      background-color: #13c186;
+    }
+  }
+
+  .mat-header-row {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    background-color: inherit;
+  }
+
+  .mat-cell {
+    cursor: pointer;
+  }
 
 
-.highlighted {
-  background-color: $light-grey;
+  .highlighted {
+    background-color: $light-grey;
+  }
 }
 
 .article-frame {
