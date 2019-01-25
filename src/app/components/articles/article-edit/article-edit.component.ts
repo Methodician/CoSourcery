@@ -674,6 +674,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return dialogConfig;
   }
 
+  navigateToVersions() {
+    this.router.navigate([`article/${this.articleId}/${this.articleEditForm.value.version}`])
+  }
+
 }
 
 export interface HtmlInputEvent extends Event {

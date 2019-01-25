@@ -122,7 +122,7 @@
           </span>
           <span class="counters__item-stat">{{articleEditForm.value.commentCount}}</span>
         </div>
-        <div class="counters__item">
+        <div class="counters__item utils-btn" (click)="navigateToVersions()">
           <mat-icon class="counters__icon">border_color</mat-icon>
           <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleEditForm.value.version}} Edit(s)</span>
           <span class="counters__item-stat">{{articleEditForm.value.version}}</span>

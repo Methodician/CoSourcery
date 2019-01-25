@@ -240,6 +240,11 @@
   }
 }
 
+.utils-btn:hover {
+  cursor: pointer;
+  color: $primary-color-light;
+}
+
 .article-body {
   margin-bottom: 24px;
 
