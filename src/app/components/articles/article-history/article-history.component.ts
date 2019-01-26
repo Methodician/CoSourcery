@@ -11,12 +11,15 @@ import { UserService } from '@services/user.service';
 })
 export class ArticleHistoryComponent implements OnInit {
 
-  articleId:string = null;
-  articleVersion:string = null;
+  articleId: string = null;
+  articleVersion: number = null;
   articleHistory = {};
   articleHistoryKeys = [];
   articleContributorIds: string[];
+
+  // History Navigation Logic
   paused = true;
+  historyTicker = null;
   
   displayedColumns: string[] = ['version', 'date', 'lastEditorId'];
 
@@ -32,13 +35,17 @@ export class ArticleHistoryComponent implements OnInit {
     this.getArticleHistory();
   }
 
+  ngOnDestroy() {
+    this.stopIterating();
+  }
+
   // each times params change check key agains current displayed article key and if not the same, update.
   setArticleId() {
     this.route.params.subscribe(params => {
       if (params['key'] && params['version']) {
-        const {key, version} = params;
+        const { key, version } = params;
         this.articleId = key;
-        this.articleVersion = version;
+        this.articleVersion = +version;
       }
     });
   }
@@ -69,34 +76,34 @@ export class ArticleHistoryComponent implements OnInit {
   }
 
   nextVersion() {
-    this.router.navigate([`article/${this.articleId}/${parseInt(this.articleVersion) + 1}`]);
+    this.router.navigate([`article/${this.articleId}/${this.articleVersion + 1}`]);
   }
   
   prevVersion() {
-    this.router.navigate([`article/${this.articleId}/${parseInt(this.articleVersion) - 1}`]);
+    this.router.navigate([`article/${this.articleId}/${this.articleVersion - 1}`]);
   }
   
   latestVersion() {
-    this.router.navigate([`article/${this.articleId}/${parseInt(this.articleHistoryKeys[0])}`]);
+    this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[0]}`]);
   }
   
   firstVersion() {
-    this.router.navigate([`article/${this.articleId}/${parseInt(this.articleHistoryKeys[this.articleHistoryKeys.length - 1])}`]);
-  }
-  
-  iterateVersions() {
-    setTimeout(() => {
-      if (!this.paused) {
-        if (parseInt(this.articleVersion) >= this.articleHistoryKeys.length) {
-          this.articleVersion = '0';
-        }
-        this.nextVersion();
-        this.iterateVersions();
-      }
-    }, 3000);
+    this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.articleHistoryKeys.length - 1]}`]);
   }
 
-  pauseIteration() {
+  iterateVersions = () => {
+    this.historyTicker = setInterval(() => {
+      const { articleVersion, articleHistoryKeys } = this;
+      this.articleVersion = articleVersion >= articleHistoryKeys.length ? 0 : this.articleVersion;
+      this.nextVersion()
+    }, 1800);
+    this.paused = false;
+  };
+
+  stopIterating = () => {
+    clearInterval(this.historyTicker)
+    // @MAYT: The paused property is still useful to keep the UI in sync, etc... but I'd suggest inverting things by making it something like "this.isIterating"
     this.paused = true;
-  }
+  };
+
 }
