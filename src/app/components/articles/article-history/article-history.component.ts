@@ -18,7 +18,7 @@ export class ArticleHistoryComponent implements OnInit {
   articleContributorIds: string[];
 
   // History Navigation Logic
-  paused = true;
+  isIterating = true;
   historyTicker = null;
   
   displayedColumns: string[] = ['version', 'date', 'lastEditorId'];
@@ -97,13 +97,12 @@ export class ArticleHistoryComponent implements OnInit {
       this.articleVersion = articleVersion >= articleHistoryKeys.length ? 0 : this.articleVersion;
       this.nextVersion()
     }, 1800);
-    this.paused = false;
+    this.isIterating = false;
   };
 
   stopIterating = () => {
     clearInterval(this.historyTicker)
-    // @MAYT: The paused property is still useful to keep the UI in sync, etc... but I'd suggest inverting things by making it something like "this.isIterating"
-    this.paused = true;
+    this.isIterating = true;
   };
 
 }
