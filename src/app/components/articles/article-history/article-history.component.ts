@@ -12,7 +12,6 @@ import { UserService } from '@services/user.service';
 export class ArticleHistoryComponent implements OnInit {
 
   articleId: string = null;
-  // @MAYT: Since it turns out we're doing lots of basic math with articleVersion, let's store it as a number.
   articleVersion: number = null;
   articleHistory = {};
   articleHistoryKeys = [];
@@ -46,7 +45,6 @@ export class ArticleHistoryComponent implements OnInit {
       if (params['key'] && params['version']) {
         const { key, version } = params;
         this.articleId = key;
-        // @MAYT: converting it to number here...
         this.articleVersion = +version;
       }
     });
@@ -77,7 +75,6 @@ export class ArticleHistoryComponent implements OnInit {
     this.router.navigate([`article/${this.articleId}/${version}`]);
   }
 
-  // @MAYT and not needing to parseInt here...
   nextVersion() {
     this.router.navigate([`article/${this.articleId}/${this.articleVersion + 1}`]);
   }
@@ -94,40 +91,19 @@ export class ArticleHistoryComponent implements OnInit {
     this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.articleHistoryKeys.length - 1]}`]);
   }
 
-  // @MAYT: using setInterval instead of recursive funciton with setTimeout. Also some syntactic sugar in there...
   iterateVersions = () => {
     this.historyTicker = setInterval(() => {
-      // MAYT Object destructuring is the new cool, even the "this" object can be destructured...
       const { articleVersion, articleHistoryKeys } = this;
       this.articleVersion = articleVersion >= articleHistoryKeys.length ? 0 : this.articleVersion;
       this.nextVersion()
     }, 1800);
     this.paused = false;
   };
-  
-  // iterateVersions() {    
-  //   setTimeout(() => {
-  //     if (!this.paused) {
-  //       if (parseInt(this.articleVersion) >= this.articleHistoryKeys.length) {
-  //         this.articleVersion = '0';
-  //       }
-  //       this.nextVersion();
-  //       this.iterateVersions();
-  //     }
-  //   }, 3000);
-  // }
 
-  // @MAYT: it's a good general practice to use arrow functions unless a good reason for not using them. Helps keep scope of "this" from getting out of hand.
-  // Also, using the interval we can have pretty granular control over its actions.
-  // I noticed that with the old approach I could do things like navigate away from the article while it was running and it would bug out and send me back...
-  // It's really easy now to just create an ngOnDestry method and call stopIterating() to prevent that error.
   stopIterating = () => {
     clearInterval(this.historyTicker)
     // @MAYT: The paused property is still useful to keep the UI in sync, etc... but I'd suggest inverting things by making it something like "this.isIterating"
     this.paused = true;
   };
 
-  // pauseIteration() {
-  //   this.paused = true;
-  // }
 }
