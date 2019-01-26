@@ -11,7 +11,7 @@
         keyboard_tab
       </i>
     </button>
-    <button class="article-history__nav-btn mat-icon-btn" [class.playing]="!paused" (click)="paused = false; iterateVersions();">
+    <button class="article-history__nav-btn mat-icon-btn" [class.playing]="isIterating" (click)="isIterating = true; iterateVersions();">
       <i class="material-icons">
         play_arrow
       </i>

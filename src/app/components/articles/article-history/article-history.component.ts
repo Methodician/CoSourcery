@@ -18,7 +18,7 @@ export class ArticleHistoryComponent implements OnInit {
   articleContributorIds: string[];
 
   // History Navigation Logic
-  isIterating = true;
+  isIterating = false;
   historyTicker = null;
   
   displayedColumns: string[] = ['version', 'date', 'lastEditorId'];
@@ -72,6 +72,7 @@ export class ArticleHistoryComponent implements OnInit {
   }
   
   navigateToVersion(version) {
+    this.stopIterating();
     this.router.navigate([`article/${this.articleId}/${version}`]);
   }
 
@@ -94,15 +95,15 @@ export class ArticleHistoryComponent implements OnInit {
   iterateVersions = () => {
     this.historyTicker = setInterval(() => {
       const { articleVersion, articleHistoryKeys } = this;
-      this.articleVersion = articleVersion >= articleHistoryKeys.length ? 0 : this.articleVersion;
+      this.articleVersion = articleVersion > articleHistoryKeys.length ? 0 : this.articleVersion;
       this.nextVersion()
     }, 1800);
-    this.isIterating = false;
+    this.isIterating = true;
   };
 
   stopIterating = () => {
     clearInterval(this.historyTicker)
-    this.isIterating = true;
+    this.isIterating = false;
   };
 
 }
