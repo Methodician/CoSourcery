@@ -36,7 +36,7 @@ export class ArticleHistoryComponent implements OnInit {
   setArticleId() {
     this.route.params.subscribe(params => {
       if (params['key'] && params['version']) {
-        const {key, version} = params;
+        const { key, version } = params;
         this.articleId = key;
         this.articleVersion = version;
       }
