@@ -19,7 +19,7 @@
   }
   @include respond-to($phone-lg) {
     width: 320px;
-    justify-content: flex-start;
+    // justify-content: flex-start;
   }
   @include respond-to($tablet-sm) {
     width: 460px;
@@ -30,20 +30,21 @@
 }
 
 .contributors__set {
-  width: 220px;
+  min-width: 100%;
+  // min-width: 220px;
   display: inline-flex;
-  @include respond-to($phone-md) {
-    width: 280px;
-  }
-  @include respond-to($phone-lg) {
-    width: 320px;
-  }
-  @include respond-to($tablet-sm) {
-    width: 460px;
-  }
-  @include respond-to($tablet-md) {
-    width: 660px;
-  }
+  // @include respond-to($phone-md) {
+  //   width: 280px;
+  // }
+  // @include respond-to($phone-lg) {
+  //   width: 320px;
+  // }
+  // @include respond-to($tablet-sm) {
+  //   width: 460px;
+  // }
+  // @include respond-to($tablet-md) {
+  //   width: 660px;
+  // }
 }
 
 .contributors__elem {  
@@ -167,5 +168,46 @@
   @keyframes moveLeft {
     from {right: 0px;}
     to {right: 660px;}
+  }
+}
+
+@include respond-to($phone-md) {
+  @-webkit-keyframes moveRight {
+    from {left: 0px;}
+    to {left: 280px;}
+  }
+  @keyframes moveRight {
+    from {left: 0px;}
+    to {left: 280px;}
+  }
+}
+@include respond-to($phone-lg) {
+    @-webkit-keyframes moveRight {
+      from {left: 0px;}
+      to {left: 320px;}
+    }
+    @keyframes moveRight {
+      from {left: 0px;}
+      to {left: 320px;}
+    }
+}
+@include respond-to($tablet-sm) {
+    @-webkit-keyframes moveRight {
+      from {left: 0px;}
+      to {left: 460px;}
+    }
+    @keyframes moveRight {
+      from {left: 0px;}
+      to {left: 460px;}
+    }
+}
+@include respond-to($tablet-md) {
+  @-webkit-keyframes moveRight {
+    from {left: 0px;}
+    to {left: 660px;}
+  }
+  @keyframes moveRight {
+    from {left: 0px;}
+    to {left: 660px;}
   }
 }

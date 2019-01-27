@@ -11,7 +11,7 @@
     width: 120px;
   }
   @include respond-to($phone-lg) {
-    width: 147px;
+    width: 150px;
   }
   @include respond-to($tablet-sm) {
     width: 220px;
