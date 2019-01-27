@@ -1,7 +1,7 @@
 <div class="wrapper">
-    <h5>Attributions</h5>
-    displayEditorsPos:{{displayEditorsPos}}
-    <button [class.hidden]="notTransitioned" [disabled]="notTransitioned || transitionRight || transitionLeft" class="transition-btn left-btn" (click)="prevEditorPanel()">
+    <span style="display: inline-flex;"><h5>Attributions</h5> (creator denoted with "*")</span>
+    displayEditorsPos:{{displayEditorsPosition}}
+    <button [class.hidden]="!hasTransitioned" [disabled]="!hasTransitioned || transitionRight || transitionLeft" class="transition-btn left-btn" (click)="prevEditorPanel()">
       <img class="transition-img" 
             src="../../../../assets/images/chevron_left-24px.svg" 
             alt="Next">
@@ -23,7 +23,7 @@
         </div>
       </div>
   </section>
-  <button *ngIf="_editors.length > 3" class="transition-btn right-btn" [disabled]="transitionRight || transitionLeft" (click)="nextEditorPanel()">
+  <button *ngIf="_editors?.length > 3" class="transition-btn right-btn" [disabled]="transitionRight || transitionLeft" (click)="nextEditorPanel()">
     <img class="transition-img" 
           src="../../../../assets/images/chevron_right-24px.svg" 
           alt="Next">
