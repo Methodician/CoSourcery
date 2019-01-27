@@ -455,7 +455,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty)
+    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty);
   }
 
   // Editor and User Info Tracking
@@ -655,7 +655,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       dialogTitle: title ? title : null,
       dialogLine1: msg1 ? msg1 : null,
       dialogLine2: msg2 ? msg2 : null
-    }
+    };
 
     return dialogConfig;
   }

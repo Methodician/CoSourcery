@@ -1,10 +1,14 @@
 <section class="comment">
-  <section class="comment__header">
-    <img class="comment__author-image" [src]="authorInfo?.displayImageUrl()"
+  <section *ngIf="authorInfo"
+           class="comment__header">
+    <img class="comment__author-image"
+         [src]="authorInfo.displayImageUrl()"
          alt="Author Image">
     <div class="comment__author">
-      <p class="comment__author-detail">Posted by <strong>{{ authorInfo?.displayName() }}</strong></p>
-      <p class="comment__author-detail comment__author-detail_light"><em>Last Updated</em> {{ comment.lastUpdated | date }}</p>
+      <p class="comment__author-detail">Posted by <a [routerLink]="['/profile', authorInfo.uid]"><strong>{{
+            authorInfo.displayName() }}</strong></a></p>
+      <p class="comment__author-detail comment__author-detail_light"><em>Last Updated</em> {{ comment.lastUpdated |
+        date }}</p>
     </div>
   </section>
   <p *ngIf="!isBeingEdited"

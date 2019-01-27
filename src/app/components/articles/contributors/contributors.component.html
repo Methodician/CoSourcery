@@ -1,0 +1,30 @@
+<div class="wrapper">
+    <span style="display: inline-flex;"><h5>Attributions</h5></span>
+    <button [class.hidden]="!hasTransitioned" [disabled]="!hasTransitioned || transitionRight || transitionLeft" class="transition-btn left-btn" (click)="prevEditorPanel()">
+      <img class="transition-img" 
+            src="../../../../assets/images/chevron_left-24px.svg" 
+            alt="Next">
+    </button>
+    <section class="contributors">
+      <div class="contributors__set">
+        <div *ngFor="let editor of _displayEditorsPrev" class="contributors__elem" [class.transition-left]="transitionLeft" [class.transition-right]="transitionRight">
+          <cos-profile-card [user]="userMap[editor.id]" [shouldHighlight]="editor.id === _creatorId" [displayText]="displayText(editor.id)"></cos-profile-card>
+        </div>
+      </div>
+      <div class="contributors__set">
+        <div *ngFor="let editor of _displayEditors" class="contributors__elem" [class.transition-left]="transitionLeft" [class.transition-right]="transitionRight">
+          <cos-profile-card [user]="userMap[editor.id]" [shouldHighlight]="editor.id === _creatorId" [displayText]="displayText(editor.id)"></cos-profile-card>
+        </div>
+      </div>
+      <div class="contributors__set">
+        <div *ngFor="let editor of _displayEditorsNext" class="contributors__elem" [class.transition-left]="transitionLeft" [class.transition-right]="transitionRight">
+          <cos-profile-card [user]="userMap[editor.id]" [shouldHighlight]="editor.id === _creatorId" [displayText]="displayText(editor.id)"></cos-profile-card>
+        </div>
+      </div>
+  </section>
+  <button *ngIf="_editors?.length > 3" class="transition-btn right-btn" [disabled]="transitionRight || transitionLeft" (click)="nextEditorPanel()">
+    <img class="transition-img" 
+          src="../../../../assets/images/chevron_right-24px.svg" 
+          alt="Next">
+  </button>
+</div>
