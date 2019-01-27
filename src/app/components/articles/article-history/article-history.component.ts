@@ -43,7 +43,9 @@ export class ArticleHistoryComponent implements OnInit {
     this.stopIterating();
   }
 
-  // keeps scroll position when navigating between article versions
+  // Keeps scroll position when navigating between article versions
+  // Supposedly there is a more "Angular" way of doing this using the ViewportScroller but it is poorly documented.
+  // Check it out at: https://angular.io/api/router/ExtraOptions#scrollPositionRestoration
   checkYPosition() {
     this.router.events.subscribe((ev:any) => {
       if (ev instanceof NavigationStart) {
