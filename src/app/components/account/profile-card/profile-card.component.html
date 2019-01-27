@@ -1,11 +1,5 @@
-<!-- <div *ngIf="user"
-     [routerLink]="['/profile', user.uid]"
-     [class.highlight]="shouldHighlight">
-  <img [src]="user.displayImageUrl()"
-       style="width: 60px; height: 60px; border-radius: 100%">
-  <p>{{ user.displayName() }}</p>
-</div> -->
-<section *ngIf="user"
+<div *ngIf="user"
+         [routerLink]="['/profile', user.uid]"
          class="contributors__header">
   <div class="contributors__author-image-wrapper">
     <img class="contributors__author-image"
@@ -14,7 +8,7 @@
   </div>
   <div class="contributors__author">
     <p class="contributors__author-detail"
-       [class.contributors__author-detail--highlight]="shouldHighlight"><strong>{{ user.displayName() }}</strong></p>
+       [class.contributors__author-detail--highlight]="shouldHighlight"><strong>{{ user.displayName() | truncateString: 8 }}</strong></p>
     <em class="contributors__author-detail contributors__author-detail_light">{{ displayText }}</em>
   </div>
-</section>
+</div>
