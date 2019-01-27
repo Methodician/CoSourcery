@@ -92,11 +92,15 @@ export class ArticleHistoryComponent implements OnInit {
   }
 
   nextVersion() {
-    this.router.navigate([`article/${this.articleId}/${this.articleVersion + 1}`]);
+    const { articleVersion, articleHistoryKeys } = this;
+    this.articleVersion = articleVersion + 1 > articleHistoryKeys.length ? 1 : this.articleVersion + 1;
+    this.router.navigate([`article/${this.articleId}/${this.articleVersion}`]);
   }
   
   prevVersion() {
-    this.router.navigate([`article/${this.articleId}/${this.articleVersion - 1}`]);
+    const { articleVersion, articleHistoryKeys } = this;
+    this.articleVersion = articleVersion - 1 < 1 ? articleHistoryKeys.length : this.articleVersion - 1;
+    this.router.navigate([`article/${this.articleId}/${this.articleVersion}`]);
   }
   
   latestVersion() {
