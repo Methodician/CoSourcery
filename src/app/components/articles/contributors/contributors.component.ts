@@ -24,7 +24,7 @@ export class ContributorsComponent {
   transitionLeft = false;
   transitionRight = false;
   hasTransitioned = false;
-  windowMaxWidth = 420;
+  windowMaxWidth = 480;
   @Input() set creatorId(creatorId: string) {
     if (creatorId && creatorId !== '') {
       this.mapCreator(creatorId);
