@@ -31,20 +31,7 @@
 
 .contributors__set {
   min-width: 100%;
-  // min-width: 220px;
   display: inline-flex;
-  // @include respond-to($phone-md) {
-  //   width: 280px;
-  // }
-  // @include respond-to($phone-lg) {
-  //   width: 320px;
-  // }
-  // @include respond-to($tablet-sm) {
-  //   width: 460px;
-  // }
-  // @include respond-to($tablet-md) {
-  //   width: 660px;
-  // }
 }
 
 .contributors__elem {  
@@ -121,13 +108,13 @@
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveRight {
   from {left: 0px;}
-  to {left: 220px;} // why do I neeed this. where is that 'snap' coming from?
+  to {left: 220px;}
 }
 
 /* Standard syntax */
 @keyframes moveRight {
   from {left: 0px;}
-  to {left: 220px;} // why do I neeed this. where is that 'snap' coming from?
+  to {left: 220px;}
 }
 
 @include respond-to($phone-md) {
