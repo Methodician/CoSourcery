@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
+import { Location, PopStateEvent } from '@angular/common';
 
 @Component({
   selector: 'cos-article-history',
@@ -17,6 +18,8 @@ export class ArticleHistoryComponent implements OnInit {
   articleHistoryKeys = [];
   articleContributorIds: string[];
 
+  private yScroll: number;
+
   // History Navigation Logic
   isIterating = false;
   historyTicker = null;
@@ -31,12 +34,24 @@ export class ArticleHistoryComponent implements OnInit {
             ) { }
 
   ngOnInit() {
+    this.checkYPosition();
     this.setArticleId();
     this.getArticleHistory();
   }
 
   ngOnDestroy() {
     this.stopIterating();
+  }
+
+  // keeps scroll position when navigating between article versions
+  checkYPosition() {
+    this.router.events.subscribe((ev:any) => {
+      if (ev instanceof NavigationStart) {
+        this.yScroll = window.scrollY;
+      } else if (ev instanceof NavigationEnd && ev.url.includes(this.articleId)) {
+        window.scrollTo(0, this.yScroll);
+      }
+    });
   }
 
   // each times params change check key agains current displayed article key and if not the same, update.
