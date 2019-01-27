@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { formatDate } from '@angular/common';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
-import { Location, PopStateEvent } from '@angular/common';
+import { UserMap } from '@class/user-info';
 
 @Component({
   selector: 'cos-article-history',
@@ -23,6 +24,8 @@ export class ArticleHistoryComponent implements OnInit {
   // History Navigation Logic
   isIterating = false;
   historyTicker = null;
+  userMap: UserMap;
+  
   
   displayedColumns: string[] = ['version', 'date', 'lastEditorId'];
 
@@ -31,7 +34,9 @@ export class ArticleHistoryComponent implements OnInit {
               private articleSvc: ArticleService,
               private userSvc: UserService,
               private router: Router,
-            ) { }
+            ) {
+              this.userMap = userSvc.userMap;
+            }
 
   ngOnInit() {
     this.checkYPosition();
@@ -124,5 +129,18 @@ export class ArticleHistoryComponent implements OnInit {
     clearInterval(this.historyTicker)
     this.isIterating = false;
   };
+
+  editorDisplayText = (articleKey: string) => {
+    const version = this.articleHistory[articleKey].version;
+    const lastUpdated = this.articleHistory[articleKey].lastUpdated.toDate();
+    const displayDate = formatDate(lastUpdated, 'yy-MM-dd', 'en');
+    return `v${version}, updated ${displayDate}`;
+  }
+
+  editorFromArticleKey = (articleKey: string) => {
+    return this.userMap[this.articleHistory[articleKey].lastEditorId];
+  }
+
+
 
 }
