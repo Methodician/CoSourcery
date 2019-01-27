@@ -1,12 +1,21 @@
 @import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
 
 .contributors__header {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
-  border: $tb-red;
   width: 100px;
+  @include respond-to($phone-md) {
+    width: 120px;
+  }
+  @include respond-to($phone-lg) {
+    width: 150px;
+  }
+  @include respond-to($tablet-sm) {
+    width: 220px;
+  }
 }
 
 .contributors__header:hover {
@@ -25,23 +34,27 @@
 }
 
 .contributors__author-image {
-  height: 20px;
-  width: 20px;
+  @include size(20px,20px);
   border-radius: 100%;
   object-fit: cover;
-  @media screen and (min-width: 500px) {
-    display: block;
+  @include respond-to($phone-md) {
+    @include size(50px,50px);
   }
 }
 
 .contributors__author-detail {
-  font-size: 10px;
-  line-height:12px;
+  font: 10px/12px;
   margin: 0;
   color: lighten($accent-color-1-dark, 30%);
   &_light {
     color: $medium-gray;
     font-size: 6px;
+  }
+  @include respond-to($phone-md) {
+    font: 12px/14px;
+    &_light {
+      font-size: 10px;
+    }
   }
 }
 

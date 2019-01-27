@@ -50,20 +50,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.setStickySaveButton();
   }
 
-  testEditors = {
-    'Ak0L1w0estRNrJwGn5fNk2mYpZk2': 19,
-    'T9L1v3LykFYGGX9G4735tHw1V1k2': 1,
-    'fdywLHgnXmQuI2YSWd8hIRHkJ7Q2': 2,
-    'iHDVuMjzpdeFp1XtE45MQw9uCj83': 36,
-    'jJWIJQAwHnecwRjDO4YsjM3nboJ2': 27,
-    'rFYd0wEtxQOYbuVtMu8ZuPROqwl2': 1,
-    '1d6T3HypolZeoUEtRdj92z3VjBc2': 55,
-    '3DS8Apr3c6bmsFBo2aLMbg7vIeC2': 44,
-    'N9wLOGy3P9bS1k7QJ78ItW7lhOg2': 33,
-    'QSqvMLJ99kQbVL33veeZQPEdnR42': 32,
-    'pomfhJt8J6ckrPxHvWWlt8Z1m2u2': 31,
-  };
-
   loggedInUser: UserInfoOpen = null;
 
   // Dialog Tracker for Overriding UnsavedChangesGuard
@@ -469,7 +455,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty)
+    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty);
   }
 
   // Editor and User Info Tracking
@@ -669,7 +655,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       dialogTitle: title ? title : null,
       dialogLine1: msg1 ? msg1 : null,
       dialogLine2: msg2 ? msg2 : null
-    }
+    };
 
     return dialogConfig;
   }
