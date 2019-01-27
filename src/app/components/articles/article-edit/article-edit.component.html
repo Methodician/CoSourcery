@@ -137,8 +137,12 @@
         </span>
       </div>
     </section>
+    <section class="article-attributions">
+      <cos-contributors [creatorId]="articleEditForm.value.authorId"
+                        [editorMap]="articleEditForm.value.editors">
+      </cos-contributors>
+    </section>
   </section>
-
   <section #ckeditorBoundingBox
            class="article-body"
            [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}">
@@ -216,12 +220,12 @@
            class="restore-control flag flag-axle flag-axle-90"
            [ngClass]="{'flag-axle-90_active': articleHasUnsavedChanges()}">
         <div class="flag flag-pole flag-pole_right">
-         <button class="restore-button mat-icon-btn mat-icon-btn_no-shadow"
-                 type="button"
-                 [disabled]="!articleHasUnsavedChanges()"
-                 (click)="cancelChanges()">
-           <mat-icon>replay</mat-icon>
-         </button>
+          <button class="restore-button mat-icon-btn mat-icon-btn_no-shadow"
+                  type="button"
+                  [disabled]="!articleHasUnsavedChanges()"
+                  (click)="cancelChanges()">
+            <mat-icon>replay</mat-icon>
+          </button>
         </div>
       </div>
 
