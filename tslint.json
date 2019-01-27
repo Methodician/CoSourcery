@@ -38,8 +38,7 @@
         "order": [
           "static-field",
           "instance-field",
-          "static-method",
-          // "instance-method"
+          "static-method"
         ]
       }
     ],
