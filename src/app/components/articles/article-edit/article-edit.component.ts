@@ -455,7 +455,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty)
+    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty);
   }
 
   // Editor and User Info Tracking
