@@ -16,6 +16,7 @@ export class ArticleHistoryComponent implements OnInit {
   articleVersion: number = null;
   articleHistory = {};
   articleHistoryKeys = [];
+  keysPosition: number;
   articleContributorIds: string[];
 
   private yScroll: number;
@@ -76,8 +77,9 @@ export class ArticleHistoryComponent implements OnInit {
       
       // create array of version numbers and sort them starting with the latest version
       this.articleHistoryKeys = Object.keys(this.articleHistory);
-      this.articleHistoryKeys.sort((key1, key2) => this.articleHistory[key1].version < this.articleHistory[key2].version ? 1 : -1)
-
+      this.articleHistoryKeys.sort((key1, key2) => this.articleHistory[key1].version < this.articleHistory[key2].version ? 1 : -10)
+      this.keysPosition = this.articleHistoryKeys.indexOf(this.articleVersion.toString());
+      
       // create array of contributor IDs and add them to the userMap in the UserService if they're not already there.
       this.articleContributorIds = Object.keys(this.articleHistory[this.articleHistoryKeys[0]].editors)
       this.articleContributorIds.map(id => {
@@ -93,24 +95,28 @@ export class ArticleHistoryComponent implements OnInit {
     this.router.navigate([`article/${this.articleId}/${version}`]);
   }
 
-  nextVersion() {
-    const { articleVersion, articleHistoryKeys } = this;
-    this.articleVersion = articleVersion + 1 > articleHistoryKeys.length ? 1 : this.articleVersion + 1;
-    this.router.navigate([`article/${this.articleId}/${this.articleVersion}`]);
+  nextVersion = () => {
+    this.stopIterating();
+    this.keysPosition = this.keysPosition - 1 < 0 ? this.articleHistoryKeys.length -1 : this.keysPosition - 1;
+    this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.keysPosition]}`]);
   }
   
-  prevVersion() {
-    const { articleVersion, articleHistoryKeys } = this;
-    this.articleVersion = articleVersion - 1 < 1 ? articleHistoryKeys.length : this.articleVersion - 1;
-    this.router.navigate([`article/${this.articleId}/${this.articleVersion}`]);
+  prevVersion = () => {
+    this.stopIterating();
+    this.keysPosition = this.keysPosition + 1 > this.articleHistoryKeys.length -1 ? 0 : this.keysPosition + 1;
+    this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.keysPosition]}`]);
   }
   
   latestVersion() {
-    this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[0]}`]);
+    this.stopIterating();
+    this.keysPosition = 0;
+    this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.keysPosition]}`]);
   }
   
   firstVersion() {
-    this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.articleHistoryKeys.length - 1]}`]);
+    this.stopIterating();
+    this.keysPosition = this.articleHistoryKeys.length - 1;
+    this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.keysPosition]}`]);
   }
 
   iterateVersions = () => {
