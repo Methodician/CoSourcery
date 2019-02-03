@@ -33,7 +33,11 @@
     </button>
   </div>
   <div class="article-history__table mat-elevation-z8">
-    <table mat-table [dataSource]="articleHistoryKeys" class="history-table">
+    <div *ngFor="let key of articleHistoryKeys">
+        <cos-profile-card [user]="editorFromArticleKey(key)" [displayText]="editorDisplayText(key)" [shouldHighlight]="isEditorCreator(key)"></cos-profile-card>
+      <!-- <cos-profile-card [user]="userMap[key]" [displayText]="displayText('test')"></cos-profile-card> -->
+    </div>
+    <!-- <table mat-table [dataSource]="articleHistoryKeys" class="history-table">
       
       <ng-container matColumnDef="version">
         <th mat-header-cell *matHeaderCellDef>Version</th>
@@ -44,7 +48,7 @@
 
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef>Date Authored</th>
-        <td mat-cell *matCellDef="let key">{{ articleHistory[key].lastUpdated.seconds * 1000 | date }}</td>
+        <td mat-cell *matCellDef="let key">{{ articleHistory[key].lastUpdated.toDate() | date: 'shortDate' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="lastEditorId">
@@ -55,7 +59,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.highlighted]="this.articleVersion == row" (click)="navigateToVersion(row)"></tr>
       
-    </table>
+    </table> -->
   </div>
 </div>
 
