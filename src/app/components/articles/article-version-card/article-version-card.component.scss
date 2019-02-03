@@ -3,19 +3,20 @@
 
 .version-card {
   box-shadow: 3px 2px $light-gray-50;
+  border-radius: 10px;
   margin-left: 5px;
   margin-bottom: 5px;
   display: flex;
   flex-direction: column;
-  width: 100px;
+  width: $sidebar-width-sm;
   @include respond-to($phone-md) {
-    width: 110px;
+    width: $sidebar-width-ph-md;
   }
   @include respond-to($phone-lg) {
-    width: 120px;
+    width: $sidebar-width-ph-lg;
   }
   @include respond-to($tablet-sm) {
-    width: 140px;
+    width: $sidebar-width-tab-sm;
   }
 }
 

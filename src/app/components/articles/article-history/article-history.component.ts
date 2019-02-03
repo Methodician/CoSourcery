@@ -138,13 +138,6 @@ export class ArticleHistoryComponent implements OnInit {
     this.isIterating = false;
   };
 
-  editorDisplayText = (historyKey: string) => {
-    const version = this.articleHistory[historyKey].version;
-    const lastUpdated = this.articleHistory[historyKey].lastUpdated.toDate();
-    const displayDate = formatDate(lastUpdated, 'yy-MM-dd', 'en');
-    return `v${version}, updated ${displayDate}`;
-  }
-
   editorFromArticleKey = (historyKey: string) => {
     return this.userMap[this.articleHistory[historyKey].lastEditorId];
   }

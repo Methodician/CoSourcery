@@ -10,9 +10,8 @@ import { UserInfoOpen } from '@class/user-info';
 export class ArticleVersionCardComponent implements OnInit {
 
   @Input() article: ArticleDetail;
-  @Input() displayText;
-  @Input() shouldHighlight;
   @Input() editor: UserInfoOpen;
+  @Input() shouldHighlight: boolean;
 
   constructor() { 
   }
