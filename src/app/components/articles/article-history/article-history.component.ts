@@ -92,6 +92,7 @@ export class ArticleHistoryComponent implements OnInit {
 
   navigateToVersion(version) {
     this.stopIterating();
+    this.keysPosition = this.articleHistoryKeys.indexOf(version);
     this.router.navigate([`article/${this.articleId}/${version}`]);
   }
 
