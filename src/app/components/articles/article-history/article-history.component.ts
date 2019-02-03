@@ -24,7 +24,7 @@ export class ArticleHistoryComponent implements OnInit {
   // History Navigation Logic
   isIterating = false;
   historyTicker = null;
-  
+
   displayedColumns: string[] = ['version', 'date', 'lastEditorId'];
 
   constructor(
@@ -48,7 +48,7 @@ export class ArticleHistoryComponent implements OnInit {
   // Supposedly there is a more "Angular" way of doing this using the ViewportScroller but it is poorly documented.
   // Check it out at: https://angular.io/api/router/ExtraOptions#scrollPositionRestoration
   checkYPosition() {
-    this.router.events.subscribe((ev:any) => {
+    this.router.events.subscribe((ev: any) => {
       if (ev instanceof NavigationStart) {
         this.yScroll = window.scrollY;
       } else if (ev instanceof NavigationEnd && ev.url.includes(this.articleId)) {
@@ -74,45 +74,44 @@ export class ArticleHistoryComponent implements OnInit {
       history.map(article => {
         this.articleHistory[article.version] = article;
       });
-      
+
       // create array of version numbers and sort them starting with the latest version
       this.articleHistoryKeys = Object.keys(this.articleHistory);
-      this.articleHistoryKeys.sort((key1, key2) => this.articleHistory[key1].version < this.articleHistory[key2].version ? 1 : -10)
+      this.articleHistoryKeys.sort((key1, key2) => this.articleHistory[key1].version < this.articleHistory[key2].version ? 1 : -10);
       this.keysPosition = this.articleHistoryKeys.indexOf(this.articleVersion.toString());
-      
+
       // create array of contributor IDs and add them to the userMap in the UserService if they're not already there.
-      this.articleContributorIds = Object.keys(this.articleHistory[this.articleHistoryKeys[0]].editors)
+      this.articleContributorIds = Object.keys(this.articleHistory[this.articleHistoryKeys[0]].editors);
       this.articleContributorIds.map(id => {
         if (!this.userSvc.userMap[id]) {
-          this.userSvc.addUserToMap(id); 
-        };
+          this.userSvc.addUserToMap(id);
+        }
       });
     });
   }
-  
+
   navigateToVersion(version) {
     this.stopIterating();
     this.router.navigate([`article/${this.articleId}/${version}`]);
   }
 
   nextVersion = () => {
-    this.stopIterating();
-    this.keysPosition = this.keysPosition - 1 < 0 ? this.articleHistoryKeys.length -1 : this.keysPosition - 1;
+    this.keysPosition = this.keysPosition - 1 < 0 ? this.articleHistoryKeys.length - 1 : this.keysPosition - 1;
     this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.keysPosition]}`]);
   }
-  
+
   prevVersion = () => {
     this.stopIterating();
-    this.keysPosition = this.keysPosition + 1 > this.articleHistoryKeys.length -1 ? 0 : this.keysPosition + 1;
+    this.keysPosition = this.keysPosition + 1 > this.articleHistoryKeys.length - 1 ? 0 : this.keysPosition + 1;
     this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.keysPosition]}`]);
   }
-  
+
   latestVersion() {
     this.stopIterating();
     this.keysPosition = 0;
     this.router.navigate([`article/${this.articleId}/${this.articleHistoryKeys[this.keysPosition]}`]);
   }
-  
+
   firstVersion() {
     this.stopIterating();
     this.keysPosition = this.articleHistoryKeys.length - 1;
@@ -123,14 +122,14 @@ export class ArticleHistoryComponent implements OnInit {
     this.historyTicker = setInterval(() => {
       const { articleVersion, articleHistoryKeys } = this;
       this.articleVersion = articleVersion > articleHistoryKeys.length ? 0 : this.articleVersion;
-      this.nextVersion()
+      this.nextVersion();
     }, 1800);
     this.isIterating = true;
-  };
+  }
 
   stopIterating = () => {
-    clearInterval(this.historyTicker)
+    clearInterval(this.historyTicker);
     this.isIterating = false;
-  };
+  }
 
 }
