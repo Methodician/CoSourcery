@@ -34,7 +34,7 @@
   </div>
   <div class="article-history__table mat-elevation-z8">
     <div *ngFor="let key of articleHistoryKeys">
-        <cos-profile-card [user]="editorFromArticleKey(key)" [displayText]="editorDisplayText(key)"></cos-profile-card>
+        <cos-profile-card [user]="editorFromArticleKey(key)" [displayText]="editorDisplayText(key)" [shouldHighlight]="isEditorCreator(key)"></cos-profile-card>
       <!-- <cos-profile-card [user]="userMap[key]" [displayText]="displayText('test')"></cos-profile-card> -->
     </div>
     <!-- <table mat-table [dataSource]="articleHistoryKeys" class="history-table">

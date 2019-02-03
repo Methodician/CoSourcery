@@ -130,15 +130,23 @@ export class ArticleHistoryComponent implements OnInit {
     this.isIterating = false;
   };
 
-  editorDisplayText = (articleKey: string) => {
-    const version = this.articleHistory[articleKey].version;
-    const lastUpdated = this.articleHistory[articleKey].lastUpdated.toDate();
+  editorDisplayText = (historyKey: string) => {
+    const version = this.articleHistory[historyKey].version;
+    const lastUpdated = this.articleHistory[historyKey].lastUpdated.toDate();
     const displayDate = formatDate(lastUpdated, 'yy-MM-dd', 'en');
     return `v${version}, updated ${displayDate}`;
   }
 
-  editorFromArticleKey = (articleKey: string) => {
-    return this.userMap[this.articleHistory[articleKey].lastEditorId];
+  editorFromArticleKey = (historyKey: string) => {
+    return this.userMap[this.articleHistory[historyKey].lastEditorId];
+  }
+
+  isEditorCreator = (historyKey: string) => {
+    const { articleHistory } = this;
+    const editorId = articleHistory[historyKey].lastEditorId;
+    const authorId = articleHistory[historyKey].authorId;
+    // console.log({authorId, editorId});
+    return editorId === authorId;
   }
 
 
