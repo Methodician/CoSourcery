@@ -1,0 +1,19 @@
+<!-- <section>
+  <div>
+    V {{ article?.version }}
+  </div>
+  <div>
+    {{ article?.lastUpdated.toDate() | date:'yy-MM-dd' }}
+  </div>
+  <div>
+    Changed By: {{ editor?.displayName() }}
+  </div>
+</section> -->
+
+<section class="version-card">
+  <div class="version-card__detail"
+      [class.version-card__detail--highlight]="shouldHighlight">
+      <a [routerLink]="['/article', article.articleId, article.version]"><strong>v{{article.version}}</strong></a> - <a *ngIf="editor" [routerLink]="['/profile', editor.uid]">{{ editor.displayName() | truncateString: 10 }}</a>
+  </div>
+  <em class="version-card__detail version-card__detail_light">edited <strong>{{ article.lastUpdated.toDate() | date:'MM/dd/yy' }}</strong></em>
+</section>

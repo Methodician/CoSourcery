@@ -1,0 +1,44 @@
+@import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
+
+.version-card {
+  box-shadow: 3px 2px $light-gray-50;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  @include respond-to($phone-md) {
+    width: 110px;
+  }
+  @include respond-to($phone-lg) {
+    width: 120px;
+  }
+  @include respond-to($tablet-sm) {
+    width: 140px;
+  }
+}
+
+.version-card a {
+   color: inherit;
+}
+
+.version-card__detail {
+  font: 10px/12px;
+  margin: 0;
+  color: lighten($accent-color-1-dark, 30%);
+  &_light {
+    color: $medium-gray;
+    font-size: 10px;
+  }
+  @include respond-to($phone-md) {
+    font: 12px/14px;
+    &_light {
+      font-size: 13px;
+    }
+  }
+}
+
+.version-card__detail--highlight {
+  color: $accent-color-2-dark;
+}

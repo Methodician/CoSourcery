@@ -1,4 +1,4 @@
-<div *ngIf="user"
+<section *ngIf="user"
          [routerLink]="['/profile', user.uid]"
          class="contributors__header">
   <div class="contributors__author-image-wrapper">
@@ -11,4 +11,4 @@
        [class.contributors__author-detail--highlight]="shouldHighlight"><strong>{{ user.displayName() | truncateString: 8 }}</strong></p>
     <em class="contributors__author-detail contributors__author-detail_light">{{ displayText }}</em>
   </div>
-</div>
+</section>
