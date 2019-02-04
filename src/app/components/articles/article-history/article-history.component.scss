@@ -5,12 +5,16 @@
 .history-sidebar {
   position: fixed;
   top: 75px;
-  // width: 300px;
   height: calc(100vh - #{$nav-height});
   &__list {
     height: 100%;
     width: calc(#{$sidebar-width-sm} + 30px);
     overflow-y: scroll;
+    
+    .highlighted {
+      background-color: $light-grey;
+    }
+    
     @include respond-to($phone-md) {
       width: calc(#{$sidebar-width-ph-md} + 30px);
     }
@@ -40,22 +44,6 @@
     &.playing {
       background-color: #13c186;
     }
-  }
-
-  .mat-header-row {
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
-    background-color: inherit;
-  }
-
-  .mat-cell {
-    cursor: pointer;
-  }
-
-
-  .highlighted {
-    background-color: $light-grey;
   }
 }
 
