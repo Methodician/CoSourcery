@@ -3,7 +3,7 @@
       class="article-form">
 
   <section class="article-cover-image"
-           (cosClickOut)="editCoverImage = false">
+           (cosClickOut)="clickoutCtrl(CtrlNames.coverImage)">
     <section class="article-cover-image__display">
       <img *ngIf="!coverImageUrl$.value"
            class="article-cover-image__image"
@@ -14,15 +14,15 @@
            [src]="coverImageUrl$ | async"
            [alt]="articleEditForm.value.imageAlt">
       <button class="mat-icon-btn"
-              [ngClass]="{'active': editCoverImage}"
+              [ngClass]="{'active': isCtrlActive(CtrlNames.coverImage)}"
               type="button"
-              (click)="toggleEditControl(CtrlNames.coverImage)">
-        <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editCoverImage ? 'Close Image' : 'Edit
+              (click)="toggleCtrl(CtrlNames.coverImage)">
+        <mat-icon>{{isCtrlActive(CtrlNames.coverImage) ? 'clear' : 'edit'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{isCtrlActive(CtrlNames.coverImage) ? 'Close Image' : 'Edit
           Image'}}</span>
       </button>
     </section>
-    <section *ngIf="editCoverImage"
+    <section *ngIf="isCtrlActive(CtrlNames.coverImage)"
              class="article-cover-image__editor">
       <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">
         Progress: {{coverImageUploadPercent$ | async}}% Complete
@@ -46,13 +46,13 @@
 
   <section class="article-header">
     <section class="article-title"
-             (cosClickOut)="editTitle = false">
-      <h2 *ngIf="!editTitle"
+             (cosClickOut)="clickoutCtrl(CtrlNames.title)">
+      <h2 *ngIf="!isCtrlActive(CtrlNames.title)"
           class="static-display">
         {{articleEditForm.value.title}}
         <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
       </h2>
-      <mat-form-field *ngIf="editTitle">
+      <mat-form-field *ngIf="isCtrlActive(CtrlNames.title)">
         <h2><input #title
                  matInput
                  type="text"
@@ -64,11 +64,11 @@
         <mat-error>Please give your article a title.</mat-error>
       </mat-form-field>
       <button class="mat-icon-btn"
-              [ngClass]="{'active': editTitle}"
+              [ngClass]="{'active': isCtrlActive(CtrlNames.title)}"
               type="button"
-              (click)="toggleEditControl(CtrlNames.title)">
-        <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
+              (click)="toggleCtrl(CtrlNames.title)">
+        <mat-icon>{{isCtrlActive(CtrlNames.title) ? 'clear' : 'edit'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{isCtrlActive(CtrlNames.title) ? 'Close Title' : 'Edit Title'}}</span>
       </button>
     </section>
 
@@ -78,14 +78,14 @@
     </p>
 
     <section class="article-intro"
-             (cosClickOut)="editIntro = false">
-      <p *ngIf="!editIntro"
+             (cosClickOut)="clickoutCtrl(CtrlNames.intro)">
+      <p *ngIf="!isCtrlActive(CtrlNames.intro)"
          class="static-display">
         {{articleEditForm.value.introduction}}
         <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
           about.</span>
       </p>
-      <mat-form-field *ngIf="editIntro">
+      <mat-form-field *ngIf="isCtrlActive(CtrlNames.intro)">
         <p><textarea #introduction
                     matInput
                     type="text"
@@ -98,11 +98,11 @@
         <mat-error>Please tell us a little something about what this article is about.</mat-error>
       </mat-form-field>
       <button class="mat-icon-btn"
-              [ngClass]="{'active': editIntro}"
+              [ngClass]="{'active': isCtrlActive(CtrlNames.intro)}"
               type="button"
-              (click)="toggleEditControl(CtrlNames.intro)">
-        <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
+              (click)="toggleCtrl(CtrlNames.intro)">
+        <mat-icon>{{isCtrlActive(CtrlNames.intro) ? 'clear' : 'edit'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{isCtrlActive(CtrlNames.intro) ? 'Close Intro' : 'Edit Intro'}}</span>
       </button>
     </section>
 
@@ -145,16 +145,16 @@
   </section>
   <section #ckeditorBoundingBox
            class="article-body"
-           [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}">
+           [ngClass]="{'not-editable': !loggedInUser.uid || !isCtrlActive(CtrlNames.body)}">
     <div class="article-body__interior"
-         [ngClass]="{'border': loggedInUser.uid && editBody}">
+         [ngClass]="{'border': loggedInUser.uid && isCtrlActive(CtrlNames.body)}">
       <button class="mat-icon-btn"
-              [ngClass]="{'active': loggedInUser.uid && editBody}"
+              [ngClass]="{'active': loggedInUser.uid && isCtrlActive(CtrlNames.body)}"
               [ngStyle]="{'transform': 'translateY(' + ckeditor.toggleBtnOffset + 'px)'}"
               type="button"
-              (click)="toggleEditControl(CtrlNames.body)">
-        <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' :
+              (click)="toggleCtrl(CtrlNames.body)">
+        <mat-icon>{{loggedInUser.uid && isCtrlActive(CtrlNames.body) ? 'clear' : 'edit'}}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && isCtrlActive(CtrlNames.body) ? 'Close Body' :
           'Edit Body'}}</span>
       </button>
       <ckeditor *ngIf="ckeditor.content"
@@ -163,20 +163,20 @@
                 [data]="ckeditor.content"
                 [editor]="ckeditor.build"
                 [config]="ckeditor.config"
-                [disabled]="!loggedInUser.uid || !editBody">
+                [disabled]="!loggedInUser.uid || !isCtrlActive(CtrlNames.body)">
       </ckeditor>
     </div>
   </section>
 
   <section class="article-tags"
-           (cosClickOut)="editTags = false">
+           (cosClickOut)="clickoutCtrl(CtrlNames.tags)">
     <h3>Tags</h3>
-    <p *ngIf="articleEditForm.value.tags.length === 0 && !editTags">This article has no tags.</p>
-    <mat-chip-list *ngIf="!editTags">
+    <p *ngIf="articleEditForm.value.tags.length === 0 && !isCtrlActive(CtrlNames.tags)">This article has no tags.</p>
+    <mat-chip-list *ngIf="!isCtrlActive(CtrlNames.tags)">
       <mat-chip *ngFor="let articleTag of articleEditForm.value.tags">{{articleTag}}</mat-chip>
     </mat-chip-list>
 
-    <mat-form-field *ngIf="editTags">
+    <mat-form-field *ngIf="isCtrlActive(CtrlNames.tags)">
       <mat-chip-list #chipList>
         <mat-chip *ngFor="let articleTag of articleEditForm.value.tags"
                   (removed)="removeTag(articleTag)">
@@ -197,11 +197,11 @@
       <mat-hint align="end">{{tagInput.value.length}} / 25</mat-hint>
     </mat-form-field>
     <button class="mat-icon-btn"
-            [ngClass]="{'active': editTags}"
+            [ngClass]="{'active': isCtrlActive(CtrlNames.tags)}"
             type="button"
-            (click)="toggleEditControl(CtrlNames.tags)">
-      <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
-      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
+            (click)="toggleCtrl(CtrlNames.tags)">
+      <mat-icon>{{isCtrlActive(CtrlNames.tags) ? 'clear' : 'edit'}}</mat-icon>
+      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{isCtrlActive(CtrlNames.tags) ? 'Close Tags' : 'Edit Tags'}}</span>
     </button>
   </section>
 
