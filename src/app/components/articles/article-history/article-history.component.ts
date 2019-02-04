@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart, NavigationEnd } from '@angular/router';
-import { formatDate } from '@angular/common';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
 import { UserMap } from '@class/user-info';
