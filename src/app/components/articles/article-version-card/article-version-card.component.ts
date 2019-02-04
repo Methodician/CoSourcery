@@ -12,8 +12,9 @@ export class ArticleVersionCardComponent implements OnInit {
   @Input() article: ArticleDetail;
   @Input() editor: UserInfoOpen;
   @Input() shouldHighlight: boolean;
+  @Input() currentVersion: boolean;
 
-  constructor() { 
+  constructor() {
   }
 
   ngOnInit() {

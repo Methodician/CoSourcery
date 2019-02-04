@@ -33,7 +33,7 @@
     </button>
   </nav>
   <section class="history-sidebar__list mat-elevation-z8">
-      <cos-article-version-card  *ngFor="let key of articleHistoryKeys" [article]="articleHistory[key]" [editor]="editorFromArticleKey(key)" [shouldHighlight]="isEditorCreator(key)"></cos-article-version-card>
+      <cos-article-version-card [currentVersion]="articleVersion == articleHistory[key].version" *ngFor="let key of articleHistoryKeys" [article]="articleHistory[key]" [editor]="editorFromArticleKey(key)" [shouldHighlight]="isEditorCreator(key)"></cos-article-version-card>
   </section>
 </aside>
 
