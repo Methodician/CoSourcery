@@ -1,8 +1,8 @@
 
-<section class="version-card" [class.highlighted]="currentVersion">
+<section [routerLink]="['/article', article.articleId, article.version]" class="version-card" [class.highlighted]="currentVersion">
   <div class="version-card__detail"
       [class.version-card__detail--highlight]="shouldHighlight">
-      <a [routerLink]="['/article', article.articleId, article.version]"><strong>v{{article.version}}</strong></a> - <a *ngIf="editor" [routerLink]="['/profile', editor.uid]">{{ editor.displayName() | truncateString: 10 }}</a>
+      <a><strong>v{{article.version}}</strong></a> - <a *ngIf="editor" [routerLink]="['/profile', editor.uid]">{{ editor.displayName() | truncateString: 10 }}</a>
   </div>
   <em class="version-card__detail version-card__detail_light">edited <strong>{{ article.lastUpdated.toDate() | date:'MM/dd/yy' }}</strong></em>
 </section>
