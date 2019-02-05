@@ -70,11 +70,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   saveButtonIsSticky = true;
 
   CtrlNames = CtrlNames; // Enum Availablility in HTML Template
-  editCoverImage: boolean = false;
-  editTitle: boolean = false;
-  editIntro: boolean = false;
-  editBody: boolean = false;
-  editTags: boolean = false;
+  ctrlBeingEdited: CtrlNames = CtrlNames.none;
+
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
   coverImageFile: File;
@@ -447,11 +444,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.currentArticleEditors[this.loggedInUser.uid] = false;
     this.articleEditForm.markAsPristine();
     this.coverImageFile = null;
-    this.editCoverImage = false;
-    this.editTitle = false;
-    this.editIntro = false;
-    this.editBody = false;
-    this.editTags = false;
+
+    this.ctrlBeingEdited = CtrlNames.none;
   }
 
   articleHasUnsavedChanges(): boolean {
@@ -531,38 +525,40 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   // UI Display
-  async toggleEditControl(ctrlName: CtrlNames) {
+  activateCtrl = async(ctrl: CtrlNames) => {
+    if(ctrl === CtrlNames.none){
+      this.ctrlBeingEdited = ctrl;
+      return;
+    }
     // For now doesn't allow multiple editors. Will change later...
     if (!this.userIsEditingArticle() && this.articleHasEditors()) {
-      const uid = Object.keys(this.currentArticleEditors)[0];
       // Editors is an array so that we can later allow multilple collaborative editors.
+      // For now we'll just check the first (only) element in the array
+      const uid = Object.keys(this.currentArticleEditors)[0];
       if (!this.userMap[uid]) {
         await this.userSvc.addUserToMap(uid);
       }
       this.openMessageDialog('Edit Locked', `The user "${this.userMap[uid].displayName()}" is currently editing this article.`, 'Please try again later.');
     } else if (this.authCheck()) {
-      if (ctrlName !== CtrlNames.body) {
-        this.editBody = false;
-      }
-      switch (ctrlName) {
-        case CtrlNames.coverImage:
-          this.editCoverImage = !this.editCoverImage;
-          break;
-        case CtrlNames.title:
-          this.editTitle = !this.editTitle;
-          break;
-        case CtrlNames.intro:
-          this.editIntro = !this.editIntro;
-          break;
-        case CtrlNames.tags:
-          this.editTags = !this.editTags;
-          break;
-        case CtrlNames.body:
-          this.editBody = !this.editBody;
-          break;
-        default:
-          break;
-      }
+      this.ctrlBeingEdited = ctrl;
+    }
+  }
+
+  toggleCtrl = (ctrl: CtrlNames) => {
+    if(this.isCtrlActive(ctrl)){
+      this.activateCtrl(CtrlNames.none);
+      return;
+    }
+    this.activateCtrl(ctrl);
+  }
+
+  isCtrlActive = (ctrl: CtrlNames): boolean => {
+    return this.ctrlBeingEdited === ctrl;
+  }
+
+  clickoutCtrl = (ctrl: CtrlNames) => {
+    if(ctrl === this.ctrlBeingEdited){
+      this.activateCtrl(CtrlNames.none);
     }
   }
 
@@ -668,15 +664,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
 export interface HtmlInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
-}
+};
 
+// Types and Enums
 export enum CtrlNames {
   coverImage = 'coverImage',
   title = 'title',
   intro = 'intro',
   body = 'body',
-  tags = 'tags'
-}
+  tags = 'tags',
+  none = 'none',
+};
 
-// possible remove
 export type orientationDegrees = 0 | 90 | 180 | 270;
+
