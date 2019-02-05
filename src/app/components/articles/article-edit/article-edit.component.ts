@@ -18,7 +18,7 @@ import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.co
 import * as exif from 'exif-js';
 import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
 import * as firebase from 'firebase';
-import { BodyImageMeta } from '@class/article-info';
+import { BodyImageMeta, ArticleDetail } from '@class/article-info';
 
 @Component({
   selector: 'cos-article-edit',
@@ -80,6 +80,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
 
+  articleState: ArticleDetail;
   articleEditForm: FormGroup = this.fb.group({
     articleId: '',
     authorId: '',
@@ -194,8 +195,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   watchFormChanges() {
-    this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe(() => {
-      if (this.articleEditForm.dirty) {
+    this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe((change) => {
+        this.articleState = change;
+        if (this.articleEditForm.dirty) {
         this.setEditSessionTimeout();
         if (!this.userIsEditingArticle()) {
           this.addUserEditingStatus();
@@ -372,7 +374,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Article Tagging
   addTag(event: MatChipInputEvent): void {
-    const articleTags = this.articleEditForm.value.tags;
+    const articleTags = this.articleState.tags;
     const tag = event.value.toUpperCase();
     const isDuplicate = this.isTagDuplicate(tag);
     if (tag.trim() && !isDuplicate) {
@@ -389,12 +391,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   isTagDuplicate(value): boolean {
-    const tagIndex = this.articleEditForm.value.tags.indexOf(value);
+    const tagIndex = this.articleState.tags.indexOf(value);
     return (tagIndex >= 0) ? true : false;
   }
 
   removeTag(selectedTag): void {
-    const articleTags = this.articleEditForm.value.tags;
+    const articleTags = this.articleState.tags;
     const tagIndex = articleTags.indexOf(selectedTag);
     if (tagIndex >= 0) {
       articleTags.splice(tagIndex, 1);
@@ -421,9 +423,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.coverImageFile = null;
     }
     // Create New Article
-    if (!this.articleEditForm.value.articleId) {
+    if (!this.articleState.articleId) {
       try {
-        await this.articleSvc.createArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
+        await this.articleSvc.createArticle(this.loggedInUser, this.articleState, this.articleId);
         this.articleIsNew = false;
         clearTimeout(this.editSessionTimeout);
         this.resetEditStates(); // Unsaved changes checked upon route change
@@ -433,7 +435,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       }
       // Update Existing Article
     } else {
-      this.articleSvc.updateArticle(this.loggedInUser, this.articleEditForm.value, this.articleId);
+      this.articleSvc.updateArticle(this.loggedInUser, this.articleState, this.articleId);
       clearTimeout(this.editSessionTimeout);
       this.resetEditStates();
     }
