@@ -1,47 +1,49 @@
 // Uses Global Default Styles in src/styles.scss
 @import "../../../sass-variables-mixins/vars.scss";
+@import "../../../sass-variables-mixins/mixins.scss";
 
-.article-history {
+.history-sidebar {
   position: fixed;
-  top: 100px;
-
-  width: 300px;
-  
-  &__table {
-    height: 600px;
-    overflow: auto;
+  top: 75px;
+  height: calc(100vh - #{$nav-height});
+  &__list {
+    height: 100%;
+    width: calc(#{$sidebar-width-sm} + 30px);
+    overflow-y: scroll;
     
-    .history-table {
-      width: 100%;
+    .highlighted {
+      background-color: $light-grey;
+    }
+    
+    @include respond-to($phone-md) {
+      width: calc(#{$sidebar-width-ph-md} + 30px);
+    }
+    @include respond-to($phone-lg) {
+      width: calc(#{$sidebar-width-ph-lg} + 30px);
+    }
+    @include respond-to($tablet-sm) {
+      width: calc(#{$sidebar-width-tab-sm} + 30px);
+    }
+  }
+
+  &__btn-frame {
+    position: fixed;
+    left: calc(#{$sidebar-width-sm} + 30px);
+    @include respond-to($phone-md) {
+      left: calc(#{$sidebar-width-ph-md} + 30px);
+    }
+    @include respond-to($phone-lg) {
+      left: calc(#{$sidebar-width-ph-lg} + 30px);
+    }
+    @include respond-to($tablet-sm) {
+      left: calc(#{$sidebar-width-tab-sm} + 30px);
     }
   }
 
   &__nav-btn {
-    display: inline-block;
-    .nav-img {
-      transform: rotate(90deg);
-      color: white
-    }
-
     &.playing {
       background-color: #13c186;
     }
-  }
-
-  .mat-header-row {
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
-    background-color: inherit;
-  }
-
-  .mat-cell {
-    cursor: pointer;
-  }
-
-
-  .highlighted {
-    background-color: $light-grey;
   }
 }
 

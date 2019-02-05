@@ -78,6 +78,7 @@ import { ProfileContributionsComponent } from '@components/account/profile-contr
 import { ArticleHistoryComponent } from './components/articles/article-history/article-history.component';
 import { ProfileCardComponent } from '@components/account/profile-card/profile-card.component';
 import { ContributorsComponent } from './components/articles/contributors/contributors.component';
+import { ArticleVersionCardComponent } from './components/articles/article-version-card/article-version-card.component';
 
 @NgModule({
   declarations: [
@@ -112,6 +113,7 @@ import { ContributorsComponent } from './components/articles/contributors/contri
     ArticleHistoryComponent,
     ProfileCardComponent,
     ContributorsComponent,
+    ArticleVersionCardComponent,
   ],
   imports: [
     BrowserModule,

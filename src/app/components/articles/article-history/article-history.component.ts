@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
-import { Location, PopStateEvent } from '@angular/common';
+import { UserMap } from '@class/user-info';
 
 @Component({
   selector: 'cos-article-history',
@@ -24,15 +24,16 @@ export class ArticleHistoryComponent implements OnInit {
   // History Navigation Logic
   isIterating = false;
   historyTicker = null;
-
-  displayedColumns: string[] = ['version', 'date', 'lastEditorId'];
+  userMap: UserMap;
 
   constructor(
               private route: ActivatedRoute,
               private articleSvc: ArticleService,
               private userSvc: UserService,
               private router: Router,
-            ) { }
+            ) {
+              this.userMap = userSvc.userMap;
+            }
 
   ngOnInit() {
     this.checkYPosition();
@@ -132,5 +133,19 @@ export class ArticleHistoryComponent implements OnInit {
     clearInterval(this.historyTicker);
     this.isIterating = false;
   }
+
+  editorFromArticleKey = (historyKey: string) => {
+    return this.userMap[this.articleHistory[historyKey].lastEditorId];
+  }
+
+  isEditorCreator = (historyKey: string) => {
+    const { articleHistory } = this;
+    const editorId = articleHistory[historyKey].lastEditorId;
+    const authorId = articleHistory[historyKey].authorId;
+    // console.log({authorId, editorId});
+    return editorId === authorId;
+  }
+
+
 
 }
