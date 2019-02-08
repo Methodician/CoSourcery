@@ -76,6 +76,9 @@ import { ProfileViewComponent } from '@components/account/profile-view/profile-v
 import { ProfileContributionsComponent } from '@components/account/profile-contributions/profile-contributions.component';
 import { ProfileCardComponent } from '@components/account/profile-card/profile-card.component';
 import { ContributorsComponent } from './components/articles/contributors/contributors.component';
+import { CoverImageComponent } from './components/articles/article-edit/cover-image/cover-image.component';
+import { CoverImageEditComponent } from './components/articles/article-edit/cover-image-edit/cover-image-edit.component';
+import { CoverImageDisplayComponent } from './components/articles/article-edit/cover-image-display/cover-image-display.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +112,9 @@ import { ContributorsComponent } from './components/articles/contributors/contri
     ProfileContributionsComponent,
     ProfileCardComponent,
     ContributorsComponent,
+    CoverImageComponent,
+    CoverImageEditComponent,
+    CoverImageDisplayComponent,
   ],
   imports: [
     BrowserModule,
