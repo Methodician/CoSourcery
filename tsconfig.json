@@ -3,33 +3,15 @@
   "compilerOptions": {
     "baseUrl": "src",
     "paths": {
-      "@modals/*": [
-        "app/components/modals/*"
-      ],
-      "@directives/*": [
-        "app/directives/*"
-      ],
-      "@components/*": [
-        "app/components/*"
-      ],
-      "@admin/*": [
-        "app/admin/*"
-      ],
-      "@services/*": [
-        "app/services/*"
-      ],
-      "@class/*": [
-        "app/shared/class/*"
-      ],
-      "@guards/*": [
-        "app/shared/guards/*"
-      ],
-      "@pipes/*": [
-        "app/shared/pipes/*"
-      ],
-      "@env/*": [
-        "environments/*"
-      ],
+      "@modals/*": ["app/components/modals/*"],
+      "@directives/*": ["app/directives/*"],
+      "@components/*": ["app/components/*"],
+      "@admin/*": ["app/admin/*"],
+      "@services/*": ["app/services/*"],
+      "@class/*": ["app/shared/class/*"],
+      "@guards/*": ["app/shared/guards/*"],
+      "@pipes/*": ["app/shared/pipes/*"],
+      "@env/*": ["environments/*"]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
@@ -37,16 +19,10 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "noUnusedLocals": true,
     "target": "es5",
-    "types": [
-      "node"
-    ],
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ]
+    "types": ["node"],
+    "typeRoots": ["../node_modules/@types"],
+    "lib": ["es2017", "dom"]
   }
 }
