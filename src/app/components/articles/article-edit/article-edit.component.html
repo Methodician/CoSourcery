@@ -9,63 +9,12 @@
       [isCtrlActive]="isCtrlActive(CtrlNames.coverImage)"
       (onCtrlToggle)="toggleCtrl(CtrlNames.coverImage)"
     ></cos-cover-image-display>
-
-    <!-- <section class="article-cover-image__display">
-      <img
-        *ngIf="!coverImageUrl$.value"
-        class="article-cover-image__image"
-        src="../../assets/images/logo.svg"
-        alt="Cover Image"
-      />
-      <img
-        *ngIf="coverImageUrl$.value"
-        class="article-cover-image__image"
-        [src]="coverImageUrl$ | async"
-        [alt]="articleState?.imageAlt"
-      />
-      <button
-        class="mat-icon-btn"
-        [ngClass]="{ active: isCtrlActive(CtrlNames.coverImage) }"
-        type="button"
-        (click)="toggleCtrl(CtrlNames.coverImage)"
-      >
-        <mat-icon>{{
-          isCtrlActive(CtrlNames.coverImage) ? 'clear' : 'edit'
-        }}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{
-          isCtrlActive(CtrlNames.coverImage)
-            ? 'Close Image'
-            : 'Edit
-          Image'
-        }}</span>
-      </button>
-    </section> -->
-    <section
-      *ngIf="isCtrlActive(CtrlNames.coverImage)"
-      class="article-cover-image__editor"
-    >
-      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">
-        Progress: {{ coverImageUploadPercent$ | async }}% Complete
-      </p>
-      <mat-form-field>
-        <label>Image Alt Description</label>
-        <input
-          #imageAlt
-          matInput
-          type="text"
-          formControlName="imageAlt"
-          maxlength="100"
-        />
-        <mat-hint align="end">{{ imageAlt.value.length }} / 100</mat-hint>
-      </mat-form-field>
-      <div class="file-input flex-center-align">
-        <input
-          accept="image/*"
-          type="file"
-          (change)="onSelectCoverImage($event)"
-        />
-      </div>
-    </section>
+    <cos-cover-image-edit
+      [isCtrlActive]="isCtrlActive(CtrlNames.coverImage)"
+      [shouldAbort]="shouldAbortCoverImage"
+      [parentForm]="articleEditForm"
+      (onCoverImageSelected)="onSelectCoverImage($event)"
+    ></cos-cover-image-edit>
   </section>
 
   <section class="article-header">

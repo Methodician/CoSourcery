@@ -83,8 +83,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
+  // Cover Image State
   coverImageFile: File;
-  tempCoverImageUploadPath: string;
+  shouldAbortTempCoverImage = false;
   coverImageUploadTask: AngularFireUploadTask;
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
@@ -171,12 +172,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.articleEditorSubscription.unsubscribe();
     this.articleEditFormSubscription.unsubscribe();
     this.abortChanges();
-  }
-
-  // testing
-  toggleTest(e) {
-    console.log('toggled');
-    console.log(e);
   }
 
   // Form Setup & Breakdown
@@ -342,10 +337,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   abortChanges() {
+    this.shouldAbortTempCoverImage = true;
     this.cancelUpload(this.coverImageUploadTask);
-    if (this.tempCoverImageUploadPath) {
-      this.deleteTempCoverImage();
-    }
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
@@ -356,23 +349,19 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       );
       clearTimeout(this.editSessionTimeout);
     }
+    this.shouldAbortTempCoverImage = false;
   }
 
   // Cover Image Upload
-  async onSelectCoverImage(e: HtmlInputEvent) {
+  async onSelectCoverImage({ url, coverImageFile }) {
     this.setEditSessionTimeout();
-    this.coverImageFile = e.target.files.item(0);
-    const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
-    this.coverImageUploadTask = tracker.task;
-    this.coverImageUploadPercent$ = tracker.task.percentageChanges();
-    const snap = await tracker.task.then();
-    const url = await tracker.ref.getDownloadURL().toPromise();
+    this.coverImageFile = coverImageFile;
     this.coverImageUrl$.next(url);
-    this.tempCoverImageUploadPath = snap.metadata.fullPath;
     this.addUserEditingStatus();
   }
 
   async saveCoverImage() {
+    this.shouldAbortTempCoverImage = true;
     const tracker = this.articleSvc.uploadCoverImage(
       this.articleId,
       this.coverImageFile,
@@ -387,11 +376,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       snap.metadata.fullPath,
       url,
     );
+    this.shouldAbortTempCoverImage = false;
     return;
-  }
-
-  deleteTempCoverImage() {
-    this.articleSvc.deleteFile(this.tempCoverImageUploadPath);
   }
 
   cancelUpload(task: AngularFireUploadTask) {
@@ -456,7 +442,6 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   async saveChanges() {
     if (this.coverImageFile) {
       await this.saveCoverImage();
-      this.deleteTempCoverImage();
       this.coverImageFile = null;
     }
     // Create New Article
