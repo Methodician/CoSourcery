@@ -46,7 +46,10 @@ export class ArticleService {
 
   latestArticlesRef(): AngularFirestoreCollection<ArticlePreview> {
     return this.fsdb.collection('articleData/articles/previews', ref =>
-      ref.orderBy('timestamp', 'desc').limit(12),
+      ref
+        .orderBy('timestamp', 'desc')
+        .limit(12)
+        .where('isFlagged', '==', false),
     );
   }
 
@@ -75,7 +78,7 @@ export class ArticleService {
         if (previewObservables.length > 0) {
           for (const article$ of previewObservables) {
             article$.subscribe(article => {
-              if (!!article) {
+              if (!!article && article.isFlagged === false) {
                 articleMap[article.articleId] = article;
                 articleList$.next(Object.values(articleMap));
               }
