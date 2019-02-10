@@ -1,6 +1,16 @@
-import { Component, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+  HostListener,
+} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatChipInputEvent, MatDialog, MatDialogConfig } from '@angular/material';
+import {
+  MatChipInputEvent,
+  MatDialog,
+  MatDialogConfig,
+} from '@angular/material';
 import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
@@ -23,9 +33,8 @@ import { BodyImageMeta, ArticleDetail } from '@class/article-info';
 @Component({
   selector: 'cos-article-edit',
   templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.scss']
+  styleUrls: ['./article-edit.component.scss'],
 })
-
 export class ArticleEditComponent implements OnInit, OnDestroy {
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   @ViewChild('formBoundingBox') formBoundingBox;
@@ -74,8 +83,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   readonly matChipInputSeparatorKeyCodes: number[] = [ENTER];
 
+  // Cover Image State
   coverImageFile: File;
-  tempCoverImageUploadPath: string;
+  shouldAbortTempCoverImage = false;
   coverImageUploadTask: AngularFireUploadTask;
   coverImageUploadPercent$: Observable<number>;
   coverImageUrl$ = new BehaviorSubject<string>(null);
@@ -84,14 +94,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   articleEditForm: FormGroup = this.fb.group({
     articleId: '',
     authorId: '',
-    title: ['', [
-      Validators.required,
-      Validators.maxLength(100)
-    ]],
-    introduction: ['', [
-      Validators.required,
-      Validators.maxLength(300)
-    ]],
+    title: ['', [Validators.required, Validators.maxLength(100)]],
+    introduction: ['', [Validators.required, Validators.maxLength(300)]],
     body: 'This article is empty.',
     bodyImages: {},
     imageUrl: '',
@@ -124,17 +128,18 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           'blockQuote',
           'imageUpload',
           'mediaEmbed',
-          'insertTable'
+          'insertTable',
         ],
-        viewportTopOffset: 70
+        viewportTopOffset: 70,
       },
       // fbImageStorage is declared here but set after articleId is set.
-      fbImageStorage: {}
+      fbImageStorage: {},
     },
-    placeholder: '<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you\'re done.</li></ol>',
+    placeholder:
+      "<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it's so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you're done.</li></ol>",
     content: null,
     toggleBtnOffset: 0,
-  }
+  };
 
   // Top-Level Comments State
   newCommentStub: Comment;
@@ -152,7 +157,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private userSvc: UserService,
     private commentSvc: CommentService,
     private dialog: MatDialog,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.setArticleId();
@@ -180,7 +185,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         this.articleIsNew = true;
         this.formIsInCreateView = true;
       }
-      this.ckeditor.config.fbImageStorage = { storageRef: this.articleSvc.createVanillaStorageRef(`articleBodyImages/${this.articleId}/`) };
+      this.ckeditor.config.fbImageStorage = {
+        storageRef: this.articleSvc.createVanillaStorageRef(
+          `articleBodyImages/${this.articleId}/`,
+        ),
+      };
     });
   }
 
@@ -189,21 +198,25 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
-        this.ckeditor.content = articleData ? articleData.body : this.ckeditor.placeholder;
+        this.ckeditor.content = articleData
+          ? articleData.body
+          : this.ckeditor.placeholder;
         this.setFormData(articleData);
       });
   }
 
   watchFormChanges() {
-    this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe((change) => {
+    this.articleEditFormSubscription = this.articleEditForm.valueChanges.subscribe(
+      change => {
         this.articleState = change;
         if (this.articleEditForm.dirty) {
-        this.setEditSessionTimeout();
-        if (!this.userIsEditingArticle()) {
-          this.addUserEditingStatus();
+          this.setEditSessionTimeout();
+          if (!this.userIsEditingArticle()) {
+            this.addUserEditingStatus();
+          }
         }
-      }
-    });
+      },
+    );
   }
 
   setFormData(data) {
@@ -244,7 +257,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         // Processes images when for one reason or another they are already loaded but may not be rotated.
         this.rotateImage(img);
       } else {
-        img.onload = (ev$) => {
+        img.onload = ev$ => {
           // Processes images when form first loaded
           this.rotateImage(img);
         };
@@ -266,7 +279,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       return;
       // check if it's in the map, if so, set rotation via its orientation
     } else if (this.articleEditForm.value.bodyImages[imgCode]) {
-      rotation = this.exifOrientationToDegrees(this.articleEditForm.value.bodyImages[imgCode].orientation);
+      rotation = this.exifOrientationToDegrees(
+        this.articleEditForm.value.bodyImages[imgCode].orientation,
+      );
       // else add it to the map with it's correct orientation
     } else {
       let orientation = await this.getExifOrientation(img);
@@ -281,13 +296,16 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleEditForm.value.bodyImages[imgCode] = imageObject;
     }
 
-    img.setAttribute('style', `transform:rotate(${rotation}deg); margin: 80px 0 `);
+    img.setAttribute(
+      'style',
+      `transform:rotate(${rotation}deg); margin: 80px 0 `,
+    );
   }
 
   getExifOrientation(img): Promise<number> {
     const promise = new Promise<number>((resolve, reject) => {
       try {
-        exif.getData(img as any, function () {
+        exif.getData(img as any, function() {
           const orientation = exif.getTag(this, 'Orientation');
           return resolve(orientation);
         });
@@ -319,46 +337,47 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   abortChanges() {
+    this.shouldAbortTempCoverImage = true;
     this.cancelUpload(this.coverImageUploadTask);
-    if (this.tempCoverImageUploadPath) {
-      this.deleteTempCoverImage();
-    }
     if (this.articleIsNew) {
       this.articleSvc.deleteArticleRef(this.articleId);
     }
     if (this.articleHasUnsavedChanges()) {
-      this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
+      this.articleSvc.removeArticleEditStatus(
+        this.articleId,
+        this.loggedInUser.uid,
+      );
       clearTimeout(this.editSessionTimeout);
     }
+    this.shouldAbortTempCoverImage = false;
   }
 
   // Cover Image Upload
-  async onSelectCoverImage(e: HtmlInputEvent) {
+  async onSelectCoverImage({ url, coverImageFile }) {
     this.setEditSessionTimeout();
-    this.coverImageFile = e.target.files.item(0);
-    const tracker = this.articleSvc.uploadTempImage(this.coverImageFile);
-    this.coverImageUploadTask = tracker.task;
-    this.coverImageUploadPercent$ = tracker.task.percentageChanges();
-    const snap = await tracker.task.then();
-    const url = await tracker.ref.getDownloadURL().toPromise();
+    this.coverImageFile = coverImageFile;
     this.coverImageUrl$.next(url);
-    this.tempCoverImageUploadPath = snap.metadata.fullPath;
     this.addUserEditingStatus();
   }
 
   async saveCoverImage() {
-    const tracker = this.articleSvc.uploadCoverImage(this.articleId, this.coverImageFile);
+    this.shouldAbortTempCoverImage = true;
+    const tracker = this.articleSvc.uploadCoverImage(
+      this.articleId,
+      this.coverImageFile,
+    );
     this.coverImageUploadTask = tracker.task;
     this.coverImageUploadPercent$ = tracker.task.percentageChanges();
     const snap = await tracker.task.then();
     const url = await tracker.ref.getDownloadURL().toPromise();
     this.updateCoverImageUrl(url);
-    this.articleSvc.trackUploadedCoverImages(this.articleId, snap.metadata.fullPath, url);
+    this.articleSvc.trackUploadedCoverImages(
+      this.articleId,
+      snap.metadata.fullPath,
+      url,
+    );
+    this.shouldAbortTempCoverImage = false;
     return;
-  }
-
-  deleteTempCoverImage() {
-    this.articleSvc.deleteFile(this.tempCoverImageUploadPath);
   }
 
   cancelUpload(task: AngularFireUploadTask) {
@@ -380,7 +399,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (tag.trim() && !isDuplicate) {
       articleTags.push(tag.trim());
       this.articleEditForm.markAsDirty();
-      this.articleEditForm.patchValue({ 'tags': articleTags });
+      this.articleEditForm.patchValue({ tags: articleTags });
       event.input.value = '';
     }
   }
@@ -392,7 +411,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   isTagDuplicate(value): boolean {
     const tagIndex = this.articleState.tags.indexOf(value);
-    return (tagIndex >= 0) ? true : false;
+    return tagIndex >= 0 ? true : false;
   }
 
   removeTag(selectedTag): void {
@@ -401,13 +420,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     if (tagIndex >= 0) {
       articleTags.splice(tagIndex, 1);
       this.articleEditForm.markAsDirty();
-      this.articleEditForm.patchValue({ 'tags': articleTags });
+      this.articleEditForm.patchValue({ tags: articleTags });
     }
   }
 
   // Form Data Handling
   cancelChanges() {
-    const response$ = this.openConfirmDialog('Undo Edits', 'Any unsaved changes will be discarded.', 'Are you sure?');
+    const response$ = this.openConfirmDialog(
+      'Undo Edits',
+      'Any unsaved changes will be discarded.',
+      'Are you sure?',
+    );
     response$.subscribe(shouldReload => {
       if (shouldReload) {
         this.resetEditStates();
@@ -419,30 +442,44 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   async saveChanges() {
     if (this.coverImageFile) {
       await this.saveCoverImage();
-      this.deleteTempCoverImage();
       this.coverImageFile = null;
     }
     // Create New Article
     if (!this.articleState.articleId) {
       try {
-        await this.articleSvc.createArticle(this.loggedInUser, this.articleState, this.articleId);
+        await this.articleSvc.createArticle(
+          this.loggedInUser,
+          this.articleState,
+          this.articleId,
+        );
         this.articleIsNew = false;
         clearTimeout(this.editSessionTimeout);
         this.resetEditStates(); // Unsaved changes checked upon route change
         this.router.navigate([`article/${this.articleId}`]);
       } catch (error) {
-        this.openMessageDialog('Save Error', 'Oops! There was a problem saving your article.', `Error: ${error}`);
+        this.openMessageDialog(
+          'Save Error',
+          'Oops! There was a problem saving your article.',
+          `Error: ${error}`,
+        );
       }
       // Update Existing Article
     } else {
-      this.articleSvc.updateArticle(this.loggedInUser, this.articleState, this.articleId);
+      this.articleSvc.updateArticle(
+        this.loggedInUser,
+        this.articleState,
+        this.articleId,
+      );
       clearTimeout(this.editSessionTimeout);
       this.resetEditStates();
     }
   }
 
   resetEditStates() {
-    this.articleSvc.removeArticleEditStatus(this.articleId, this.loggedInUser.uid);
+    this.articleSvc.removeArticleEditStatus(
+      this.articleId,
+      this.loggedInUser.uid,
+    );
     this.currentArticleEditors[this.loggedInUser.uid] = false;
     this.articleEditForm.markAsPristine();
     this.coverImageFile = null;
@@ -451,7 +488,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   articleHasUnsavedChanges(): boolean {
-    return (this.userIsEditingArticle() || !!this.coverImageFile || this.articleEditForm.dirty);
+    return (
+      this.userIsEditingArticle() ||
+      !!this.coverImageFile ||
+      this.articleEditForm.dirty
+    );
   }
 
   // Editor and User Info Tracking
@@ -504,7 +545,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
 
-    const dialogRef = this.dialog.open(EditTimeoutDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(
+      EditTimeoutDialogComponent,
+      dialogConfig,
+    );
     dialogRef.afterClosed().subscribe(res => {
       this.dialogIsOpen.next(false);
       const editorIsActive = res ? res : false;
@@ -518,7 +562,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   endEditSession() {
     this.dialogIsOpen.next(true);
-    const dialogRef = this.openMessageDialog('Session Timeout', 'Your changes have been discarded.');
+    const dialogRef = this.openMessageDialog(
+      'Session Timeout',
+      'Your changes have been discarded.',
+    );
     dialogRef.afterClosed().subscribe(() => {
       this.dialogIsOpen.next(false);
       this.resetEditStates();
@@ -527,8 +574,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   // UI Display
-  activateCtrl = async(ctrl: CtrlNames) => {
-    if(ctrl === CtrlNames.none){
+  activateCtrl = async (ctrl: CtrlNames) => {
+    if (ctrl === CtrlNames.none) {
       this.ctrlBeingEdited = ctrl;
       return;
     }
@@ -540,29 +587,35 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if (!this.userMap[uid]) {
         await this.userSvc.addUserToMap(uid);
       }
-      this.openMessageDialog('Edit Locked', `The user "${this.userMap[uid].displayName()}" is currently editing this article.`, 'Please try again later.');
+      this.openMessageDialog(
+        'Edit Locked',
+        `The user "${this.userMap[
+          uid
+        ].displayName()}" is currently editing this article.`,
+        'Please try again later.',
+      );
     } else if (this.authCheck()) {
       this.ctrlBeingEdited = ctrl;
     }
-  }
+  };
 
   toggleCtrl = (ctrl: CtrlNames) => {
-    if(this.isCtrlActive(ctrl)){
+    if (this.isCtrlActive(ctrl)) {
       this.activateCtrl(CtrlNames.none);
       return;
     }
     this.activateCtrl(ctrl);
-  }
+  };
 
   isCtrlActive = (ctrl: CtrlNames): boolean => {
     return this.ctrlBeingEdited === ctrl;
-  }
+  };
 
   clickoutCtrl = (ctrl: CtrlNames) => {
-    if(ctrl === this.ctrlBeingEdited){
+    if (ctrl === this.ctrlBeingEdited) {
       this.activateCtrl(CtrlNames.none);
     }
-  }
+  };
 
   authCheck(): boolean {
     if (this.loggedInUser.uid) {
@@ -575,20 +628,31 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   setCkeditorButtonOffset() {
     const viewportTopOffset = this.ckeditor.config.toolbar.viewportTopOffset;
-    const ckeditorTopOffset = viewportTopOffset - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
-    const ckeditorBottomOffset = viewportTopOffset + 75 - this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
-    this.ckeditor.toggleBtnOffset = ((ckeditorTopOffset >= 0) ? ckeditorTopOffset : 0) - ((ckeditorBottomOffset >= 0) ? ckeditorBottomOffset : 0);
+    const ckeditorTopOffset =
+      viewportTopOffset -
+      this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().top;
+    const ckeditorBottomOffset =
+      viewportTopOffset +
+      75 -
+      this.ckeditorBoundingBox.nativeElement.getBoundingClientRect().bottom;
+    this.ckeditor.toggleBtnOffset =
+      (ckeditorTopOffset >= 0 ? ckeditorTopOffset : 0) -
+      (ckeditorBottomOffset >= 0 ? ckeditorBottomOffset : 0);
   }
 
   setStickySaveButton() {
-    const formBottomOffset = this.formBoundingBox.nativeElement.getBoundingClientRect().bottom;
+    const formBottomOffset = this.formBoundingBox.nativeElement.getBoundingClientRect()
+      .bottom;
     const verticalOverflow = formBottomOffset - window.innerHeight;
-    this.saveButtonIsSticky = (verticalOverflow > 0) ? true : false;
+    this.saveButtonIsSticky = verticalOverflow > 0 ? true : false;
   }
 
   // Bookmarking
   checkIfBookmarked() {
-    const ref = this.articleSvc.bookmarkedRef(this.loggedInUser.uid, this.articleId);
+    const ref = this.articleSvc.bookmarkedRef(
+      this.loggedInUser.uid,
+      this.articleId,
+    );
     ref.valueChanges().subscribe(snapshot => {
       if (snapshot && snapshot.toString().length === 13) {
         this.articleIsBookmarked = true;
@@ -601,7 +665,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   bookmarkToggle() {
     if (this.authCheck()) {
       if (this.articleIsBookmarked) {
-        this.articleSvc.unBookmarkArticle(this.loggedInUser.uid, this.articleId);
+        this.articleSvc.unBookmarkArticle(
+          this.loggedInUser.uid,
+          this.articleId,
+        );
       } else {
         this.articleSvc.bookmarkArticle(this.loggedInUser.uid, this.articleId);
       }
@@ -610,8 +677,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   // Top-Level Commenting
   mapUserVotes() {
-    this.commentSvc.getUserVotesRef(this.loggedInUser.uid)
-      .snapshotChanges().subscribe(snaps => {
+    this.commentSvc
+      .getUserVotesRef(this.loggedInUser.uid)
+      .snapshotChanges()
+      .subscribe(snaps => {
         this.userVotesMap = {};
         for (const snap of snaps) {
           this.userVotesMap[snap.key] = snap.payload.val() as any;
@@ -621,7 +690,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   enterNewCommentMode() {
     this.commentEditInfo.commentKey = null;
-    this.newCommentStub = this.commentSvc.createCommentStub(this.loggedInUser.uid, this.articleId, ParentTypes.article);
+    this.newCommentStub = this.commentSvc.createCommentStub(
+      this.loggedInUser.uid,
+      this.articleId,
+      ParentTypes.article,
+    );
     this.commentReplyInfo.replyParentKey = this.articleId;
   }
 
@@ -640,29 +713,36 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     return this.dialog.open(MessageDialogComponent, dialogConfig);
   }
 
-  openConfirmDialog(title: string, msg1: string, msg2: string = null): Observable<boolean> {
+  openConfirmDialog(
+    title: string,
+    msg1: string,
+    msg2: string = null,
+  ): Observable<boolean> {
     const dialogConfig = this.genericDialogConfig(title, msg1, msg2);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     return dialogRef.afterClosed();
   }
 
-  genericDialogConfig(title: string, msg1: string, msg2: string = null): MatDialogConfig {
+  genericDialogConfig(
+    title: string,
+    msg1: string,
+    msg2: string = null,
+  ): MatDialogConfig {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.data = {
       dialogTitle: title ? title : null,
       dialogLine1: msg1 ? msg1 : null,
-      dialogLine2: msg2 ? msg2 : null
+      dialogLine2: msg2 ? msg2 : null,
     };
 
     return dialogConfig;
   }
-
 }
 
 export interface HtmlInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
-};
+}
 
 // Types and Enums
 export enum CtrlNames {
@@ -672,7 +752,6 @@ export enum CtrlNames {
   body = 'body',
   tags = 'tags',
   none = 'none',
-};
+}
 
 export type orientationDegrees = 0 | 90 | 180 | 270;
-
