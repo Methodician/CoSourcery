@@ -29,7 +29,7 @@ import {
   MatSidenavModule,
   MatTooltipModule,
   MatTabsModule,
-  MatDialogModule
+  MatDialogModule,
 } from '@angular/material';
 
 // Services
@@ -40,6 +40,7 @@ import { UploadService } from '@services/upload.service';
 import { UserService } from '@services/user.service';
 import { CommentService } from '@services/comment.service';
 import { DataCleanupService } from '@admin/services/data-cleanup.service';
+import { AdminService } from '@admin/services/admin.service';
 
 // Directives
 import { ClickOutDirective } from '@directives/click-out.directive';
@@ -79,6 +80,7 @@ import { ContributorsComponent } from './components/articles/contributors/contri
 import { CoverImageComponent } from './components/articles/article-edit/cover-image/cover-image.component';
 import { CoverImageEditComponent } from './components/articles/article-edit/cover-image-edit/cover-image-edit.component';
 import { CoverImageDisplayComponent } from './components/articles/article-edit/cover-image-display/cover-image-display.component';
+import { FlagArticlesComponent } from './admin/components/flag-articles/flag-articles.component';
 
 @NgModule({
   declarations: [
@@ -115,6 +117,7 @@ import { CoverImageDisplayComponent } from './components/articles/article-edit/c
     CoverImageComponent,
     CoverImageEditComponent,
     CoverImageDisplayComponent,
+    FlagArticlesComponent,
   ],
   imports: [
     BrowserModule,
@@ -151,17 +154,16 @@ import { CoverImageDisplayComponent } from './components/articles/article-edit/c
   providers: [
     AuthService,
     DataCleanupService,
+    AdminService,
     UploadService,
     NotificationService,
     ArticleService,
     UserService,
     CommentService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-
 export class AppModule {
-
   constructor() {
     fb.initializeApp(environment.fbConfig);
     const fs = fb.firestore();
