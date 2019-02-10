@@ -1,0 +1,43 @@
+<section>
+  <h1>Articles...</h1>
+  <table>
+    <tr>
+      <th>Title</th>
+      <th>Revisions</th>
+      <th>Author</th>
+      <th>Last Updated</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let article of articlePreviews">
+      <td>
+        {{ article.title }}
+        <!-- <pre>
+          {{ article | json }}
+        </pre> -->
+      </td>
+      <td>{{ article.version }}</td>
+      <td>
+        {{ userFromId(article.authorId)?.displayName() }}
+        <!-- <pre>
+            {{ userFromId(article.authorId) | json }}
+        </pre> -->
+      </td>
+      <td>{{ article.lastUpdated.toDate() | date: 'dd/MM/yyyy' }}</td>
+      <td>
+        {{ article.isFlagged || false }}
+        <button
+          *ngIf="!article.isFlagged"
+          (click)="flagArticle(article.articleId)"
+        >
+          Flag Article
+        </button>
+        <button
+          *ngIf="article.isFlagged"
+          (click)="unflagArticle(article.articleId)"
+        >
+          Remove Flag
+        </button>
+      </td>
+    </tr>
+  </table>
+</section>

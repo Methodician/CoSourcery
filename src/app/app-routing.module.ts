@@ -9,6 +9,7 @@ import { DataCleanupComponent } from '@admin/components/data-cleanup/data-cleanu
 import { ProfileComponent } from '@components/account/profile/profile.component';
 import { UnsavedChangesGuard } from '@guards/unsaved-changes.guard';
 import { UnauthorizedComponent } from '@components/general/unauthorized/unauthorized.component';
+import { FlagArticlesComponent } from '@admin/components/flag-articles/flag-articles.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,18 +38,21 @@ const routes: Routes = [
         path: '',
         component: ProfileComponent,
         canActivate: [AuthGuard],
-      }
-    ]
+      },
+    ],
   },
   { path: 'admin/data-cleanup', component: DataCleanupComponent },
+  { path: 'admin/flag-articles', component: FlagArticlesComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    scrollPositionRestoration: 'enabled',
-  })],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'enabled',
+    }),
+  ],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
