@@ -1,8 +1,7 @@
 // Uses Global Default Styles in src/styles.scss
-@import "../../../sass-variables-mixins/vars.scss";
+@import '../../../sass-variables-mixins/vars.scss';
 
 .profile-card {
-
   &__input {
     width: 100%;
     min-width: 0;
@@ -20,6 +19,11 @@
 
     @media screen and (min-width: 500px) {
       grid-template-columns: 1fr 1fr;
+      grid-gap: 20px;
+    }
+
+    @media screen and (min-width: 700px) {
+      grid-template-columns: 1fr 1fr 1fr;
       grid-gap: 20px;
     }
   }
