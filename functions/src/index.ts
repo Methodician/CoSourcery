@@ -317,5 +317,5 @@ exports.createPreviewObject = functions.firestore.document('articleData/articles
 function previewFromArticle(articleObject): ArticlePreview {
     const { articleId, authorId, title, introduction, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags, imageUrl, imageAlt } = articleObject;
     const url = imageUrl && imageUrl.length > 0 ? 'unset' : '';
-    return new ArticlePreview(articleId, authorId, title, introduction, url, imageAlt, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags);
+    return new ArticlePreview(articleId, authorId, title, introduction, url, imageAlt, lastUpdated, timestamp, version, editors, commentCount, viewCount, tags, false);
 }
