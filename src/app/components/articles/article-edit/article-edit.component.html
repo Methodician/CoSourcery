@@ -1,108 +1,109 @@
-<form #formBoundingBox
-      [formGroup]="articleEditForm"
-      class="article-form">
-
-  <section class="article-cover-image"
-           (cosClickOut)="editCoverImage = false">
-    <section class="article-cover-image__display">
-      <img *ngIf="!coverImageUrl$.value"
-           class="article-cover-image__image"
-           src="../../assets/images/logo.svg"
-           alt="Cover Image">
-      <img *ngIf="coverImageUrl$.value"
-           class="article-cover-image__image"
-           [src]="coverImageUrl$ | async"
-           [alt]="articleEditForm.value.imageAlt">
-      <button class="mat-icon-btn"
-              [ngClass]="{'active': editCoverImage}"
-              type="button"
-              (click)="toggleEditControl(CtrlNames.coverImage)">
-        <mat-icon>{{editCoverImage ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editCoverImage ? 'Close Image' : 'Edit
-          Image'}}</span>
-      </button>
-    </section>
-    <section *ngIf="editCoverImage"
-             class="article-cover-image__editor">
-      <p *ngIf="coverImageUploadTask && coverImageUploadPercent$">
-        Progress: {{coverImageUploadPercent$ | async}}% Complete
-      </p>
-      <mat-form-field>
-        <label>Image Alt Description</label>
-        <input #imageAlt
-               matInput
-               type="text"
-               formControlName="imageAlt"
-               maxlength="100">
-        <mat-hint align="end">{{imageAlt.value.length}} / 100</mat-hint>
-      </mat-form-field>
-      <div class="file-input flex-center-align">
-        <input accept="image/*"
-               type="file"
-               (change)="onSelectCoverImage($event)">
-      </div>
-    </section>
+<form #formBoundingBox [formGroup]="articleEditForm" class="article-form">
+  <section
+    class="article-cover-image"
+    (cosClickOut)="clickoutCtrl(CtrlNames.coverImage)"
+  >
+    <cos-cover-image-display
+      [coverImageUrl]="coverImageUrl$ | async"
+      [imageAlt]="articleState?.imageAlt"
+      [isCtrlActive]="isCtrlActive(CtrlNames.coverImage)"
+      (onCtrlToggle)="toggleCtrl(CtrlNames.coverImage)"
+    ></cos-cover-image-display>
+    <cos-cover-image-edit
+      [isCtrlActive]="isCtrlActive(CtrlNames.coverImage)"
+      [shouldAbort]="shouldAbortTempCoverImage"
+      [parentForm]="articleEditForm"
+      (onCoverImageSelected)="onSelectCoverImage($event)"
+    ></cos-cover-image-edit>
   </section>
 
   <section class="article-header">
-    <section class="article-title"
-             (cosClickOut)="editTitle = false">
-      <h2 *ngIf="!editTitle"
-          class="static-display">
-        {{articleEditForm.value.title}}
-        <span *ngIf="articleEditForm.value.title === ''">Add an Article Title</span>
+    <section
+      class="article-title"
+      (cosClickOut)="clickoutCtrl(CtrlNames.title)"
+    >
+      <h2 *ngIf="!isCtrlActive(CtrlNames.title)" class="static-display">
+        {{ articleState?.title }}
+        <span *ngIf="articleState?.title === ''">Add an Article Title</span>
       </h2>
-      <mat-form-field *ngIf="editTitle">
-        <h2><input #title
-                 matInput
-                 type="text"
-                 formControlName="title"
-                 maxlength="100"
-                 required>
+      <mat-form-field *ngIf="isCtrlActive(CtrlNames.title)">
+        <h2>
+          <input
+            #title
+            matInput
+            type="text"
+            formControlName="title"
+            maxlength="100"
+            required
+          />
         </h2>
-        <mat-hint align="end">{{title.value.length}} / 100 </mat-hint>
+        <mat-hint align="end">{{ title.value.length }} / 100 </mat-hint>
         <mat-error>Please give your article a title.</mat-error>
       </mat-form-field>
-      <button class="mat-icon-btn"
-              [ngClass]="{'active': editTitle}"
-              type="button"
-              (click)="toggleEditControl(CtrlNames.title)">
-        <mat-icon>{{editTitle ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTitle ? 'Close Title' : 'Edit Title'}}</span>
+      <button
+        class="mat-icon-btn"
+        [ngClass]="{ active: isCtrlActive(CtrlNames.title) }"
+        type="button"
+        (click)="toggleCtrl(CtrlNames.title)"
+      >
+        <mat-icon>{{
+          isCtrlActive(CtrlNames.title) ? 'clear' : 'edit'
+        }}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{
+          isCtrlActive(CtrlNames.title) ? 'Close Title' : 'Edit Title'
+        }}</span>
       </button>
     </section>
 
     <p class="article-date">
-      <span *ngIf="formIsInCreateView">Current Date: {{articleSvc.tempTimestamp().toDate() | date }}</span>
-      <span *ngIf="!formIsInCreateView">Last Updated: {{articleEditForm.value.lastUpdated?.toDate() | date }}</span>
+      <span *ngIf="formIsInCreateView"
+        >Current Date: {{ articleSvc.tempTimestamp().toDate() | date }}</span
+      >
+      <span *ngIf="!formIsInCreateView"
+        >Last Updated: {{ articleState?.lastUpdated?.toDate() | date }}</span
+      >
     </p>
 
-    <section class="article-intro"
-             (cosClickOut)="editIntro = false">
-      <p *ngIf="!editIntro"
-         class="static-display">
-        {{articleEditForm.value.introduction}}
-        <span *ngIf="articleEditForm.value.introduction === ''">Add an introduction to tell people what your article is
-          about.</span>
+    <section
+      class="article-intro"
+      (cosClickOut)="clickoutCtrl(CtrlNames.intro)"
+    >
+      <p *ngIf="!isCtrlActive(CtrlNames.intro)" class="static-display">
+        {{ articleState?.introduction }}
+        <span *ngIf="articleState?.introduction === ''"
+          >Add an introduction to tell people what your article is about.</span
+        >
       </p>
-      <mat-form-field *ngIf="editIntro">
-        <p><textarea #introduction
-                    matInput
-                    type="text"
-                    formControlName="introduction"
-                    rows="3"
-                    maxlength="300"
-                    required></textarea>
+      <mat-form-field *ngIf="isCtrlActive(CtrlNames.intro)">
+        <p>
+          <textarea
+            #introduction
+            matInput
+            type="text"
+            formControlName="introduction"
+            rows="3"
+            maxlength="300"
+            required
+          ></textarea>
         </p>
-        <mat-hint align="end">{{introduction.value.length}} / 300</mat-hint>
-        <mat-error>Please tell us a little something about what this article is about.</mat-error>
+        <mat-hint align="end">{{ introduction.value.length }} / 300</mat-hint>
+        <mat-error
+          >Please tell us a little something about what this article is
+          about.</mat-error
+        >
       </mat-form-field>
-      <button class="mat-icon-btn"
-              [ngClass]="{'active': editIntro}"
-              type="button"
-              (click)="toggleEditControl(CtrlNames.intro)">
-        <mat-icon>{{editIntro ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editIntro ? 'Close Intro' : 'Edit Intro'}}</span>
+      <button
+        class="mat-icon-btn"
+        [ngClass]="{ active: isCtrlActive(CtrlNames.intro) }"
+        type="button"
+        (click)="toggleCtrl(CtrlNames.intro)"
+      >
+        <mat-icon>{{
+          isCtrlActive(CtrlNames.intro) ? 'clear' : 'edit'
+        }}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{
+          isCtrlActive(CtrlNames.intro) ? 'Close Intro' : 'Edit Intro'
+        }}</span>
       </button>
     </section>
 
@@ -110,127 +111,194 @@
       <div class="counters">
         <div class="counters__item">
           <mat-icon class="counters__icon">comment</mat-icon>
-          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
-                style="left: 0;">
-            {{articleEditForm.value.commentCount}} Comment(s)
+          <span
+            class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+            style="left: 0;"
+          >
+            {{ articleState?.commentCount }} Comment(s)
           </span>
-          <span class="counters__item-stat">{{articleEditForm.value.commentCount}}</span>
+          <span class="counters__item-stat">{{
+            articleState?.commentCount
+          }}</span>
         </div>
         <div class="counters__item">
           <mat-icon class="counters__icon">border_color</mat-icon>
-          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleEditForm.value.version}} Edit(s)</span>
-          <span class="counters__item-stat">{{articleEditForm.value.version}}</span>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+            >{{ articleState?.version }} Edit(s)</span
+          >
+          <span class="counters__item-stat">{{ articleState?.version }}</span>
         </div>
         <div class="counters__item">
           <mat-icon class="counters__icon">loyalty</mat-icon>
-          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above">{{articleEditForm.value.tags.length}} Tag(s)</span>
-          <span class="counters__item-stat">{{articleEditForm.value.tags.length}}</span>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+            >{{ articleState?.tags.length }} Tag(s)</span
+          >
+          <span class="counters__item-stat">{{
+            articleState?.tags.length
+          }}</span>
         </div>
       </div>
-      <div *ngIf="!articleIsNew"
-           class="counters__item counters__item_clickable"
-           (click)="authCheck() ? bookmarkToggle() : null">
-        <mat-icon class="counters__icon">{{articleIsBookmarked && loggedInUser.uid ? 'bookmark' : 'bookmark_border'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
-              style="right: 0;">
-          {{articleIsBookmarked && loggedInUser.uid ? 'Remove Bookmark' : 'Bookmark'}}
+      <div
+        *ngIf="!articleIsNew"
+        class="counters__item counters__item_clickable"
+        (click)="authCheck() ? bookmarkToggle() : null"
+      >
+        <mat-icon class="counters__icon">{{
+          articleIsBookmarked && loggedInUser.uid
+            ? 'bookmark'
+            : 'bookmark_border'
+        }}</mat-icon>
+        <span
+          class="mat-icon-btn__tooltip mat-icon-btn__tooltip_above"
+          style="right: 0;"
+        >
+          {{
+            articleIsBookmarked && loggedInUser.uid
+              ? 'Remove Bookmark'
+              : 'Bookmark'
+          }}
         </span>
       </div>
     </section>
     <section class="article-attributions">
-      <cos-contributors [creatorId]="articleEditForm.value.authorId"
-                        [editorMap]="articleEditForm.value.editors">
+      <cos-contributors
+        [creatorId]="articleState?.authorId"
+        [editorMap]="articleState?.editors"
+      >
       </cos-contributors>
     </section>
   </section>
-  <section #ckeditorBoundingBox
-           class="article-body"
-           [ngClass]="{'not-editable': !loggedInUser.uid || !editBody}">
-    <div class="article-body__interior"
-         [ngClass]="{'border': loggedInUser.uid && editBody}">
-      <button class="mat-icon-btn"
-              [ngClass]="{'active': loggedInUser.uid && editBody}"
-              [ngStyle]="{'transform': 'translateY(' + ckeditor.toggleBtnOffset + 'px)'}"
-              type="button"
-              (click)="toggleEditControl(CtrlNames.body)">
-        <mat-icon>{{loggedInUser.uid && editBody ? 'clear' : 'edit'}}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{loggedInUser.uid && editBody ? 'Close Body' :
-          'Edit Body'}}</span>
+  <section
+    #ckeditorBoundingBox
+    class="article-body"
+    [ngClass]="{
+      'not-editable': !loggedInUser.uid || !isCtrlActive(CtrlNames.body)
+    }"
+  >
+    <div
+      class="article-body__interior"
+      [ngClass]="{ border: loggedInUser.uid && isCtrlActive(CtrlNames.body) }"
+    >
+      <button
+        class="mat-icon-btn"
+        [ngClass]="{ active: loggedInUser.uid && isCtrlActive(CtrlNames.body) }"
+        [ngStyle]="{
+          transform: 'translateY(' + ckeditor.toggleBtnOffset + 'px)'
+        }"
+        type="button"
+        (click)="toggleCtrl(CtrlNames.body)"
+      >
+        <mat-icon>{{
+          loggedInUser.uid && isCtrlActive(CtrlNames.body) ? 'clear' : 'edit'
+        }}</mat-icon>
+        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{
+          loggedInUser.uid && isCtrlActive(CtrlNames.body)
+            ? 'Close Body'
+            : 'Edit Body'
+        }}</span>
       </button>
-      <ckeditor *ngIf="ckeditor.content"
-                (change)="onCKEditorChanged($event)"
-                (ready)="onCKEditorReady($event)"
-                [data]="ckeditor.content"
-                [editor]="ckeditor.build"
-                [config]="ckeditor.config"
-                [disabled]="!loggedInUser.uid || !editBody">
+      <ckeditor
+        *ngIf="ckeditor.content"
+        (change)="onCKEditorChanged($event)"
+        (ready)="onCKEditorReady($event)"
+        [data]="ckeditor.content"
+        [editor]="ckeditor.build"
+        [config]="ckeditor.config"
+        [disabled]="!loggedInUser.uid || !isCtrlActive(CtrlNames.body)"
+      >
       </ckeditor>
     </div>
   </section>
 
-  <section class="article-tags"
-           (cosClickOut)="editTags = false">
+  <section class="article-tags" (cosClickOut)="clickoutCtrl(CtrlNames.tags)">
     <h3>Tags</h3>
-    <p *ngIf="articleEditForm.value.tags.length === 0 && !editTags">This article has no tags.</p>
-    <mat-chip-list *ngIf="!editTags">
-      <mat-chip *ngFor="let articleTag of articleEditForm.value.tags">{{articleTag}}</mat-chip>
+    <p *ngIf="articleState?.tags.length === 0 && !isCtrlActive(CtrlNames.tags)">
+      This article has no tags.
+    </p>
+    <mat-chip-list *ngIf="!isCtrlActive(CtrlNames.tags)">
+      <mat-chip *ngFor="let articleTag of articleState?.tags">{{
+        articleTag
+      }}</mat-chip>
     </mat-chip-list>
 
-    <mat-form-field *ngIf="editTags">
+    <mat-form-field *ngIf="isCtrlActive(CtrlNames.tags)">
       <mat-chip-list #chipList>
-        <mat-chip *ngFor="let articleTag of articleEditForm.value.tags"
-                  (removed)="removeTag(articleTag)">
-          {{articleTag}}
+        <mat-chip
+          *ngFor="let articleTag of articleState?.tags"
+          (removed)="removeTag(articleTag)"
+        >
+          {{ articleTag }}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
-        <input #tagInput
-               [ngClass]="{'error': isInvalidTagInput(tagInput.value)}"
-               maxlength="25"
-               [matChipInputFor]="chipList"
-               [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
-               [matChipInputAddOnBlur]="true"
-               (matChipInputTokenEnd)="isInvalidTagInput(tagInput.value) ? null : addTag($event)">
+        <input
+          #tagInput
+          [ngClass]="{ error: isInvalidTagInput(tagInput.value) }"
+          maxlength="25"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="matChipInputSeparatorKeyCodes"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="
+            isInvalidTagInput(tagInput.value) ? null : addTag($event)
+          "
+        />
       </mat-chip-list>
-      <mat-hint [ngClass]="{'error': isInvalidTagInput(tagInput.value)}">
+      <mat-hint [ngClass]="{ error: isInvalidTagInput(tagInput.value) }">
         No special characters.
       </mat-hint>
-      <mat-hint align="end">{{tagInput.value.length}} / 25</mat-hint>
+      <mat-hint align="end">{{ tagInput.value.length }} / 25</mat-hint>
     </mat-form-field>
-    <button class="mat-icon-btn"
-            [ngClass]="{'active': editTags}"
-            type="button"
-            (click)="toggleEditControl(CtrlNames.tags)">
-      <mat-icon>{{editTags ? 'clear' : 'edit'}}</mat-icon>
-      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{editTags ? 'Close Tags' : 'Edit Tags'}}</span>
+    <button
+      class="mat-icon-btn"
+      [ngClass]="{ active: isCtrlActive(CtrlNames.tags) }"
+      type="button"
+      (click)="toggleCtrl(CtrlNames.tags)"
+    >
+      <mat-icon>{{ isCtrlActive(CtrlNames.tags) ? 'clear' : 'edit' }}</mat-icon>
+      <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{
+        isCtrlActive(CtrlNames.tags) ? 'Close Tags' : 'Edit Tags'
+      }}</span>
     </button>
   </section>
 
   <section class="save-undo-abs-position">
-    <div class="save-undo-sticky-position"
-         [ngClass]="{'extended': articleHasUnsavedChanges(), 'sticky': saveButtonIsSticky, 'disabled': !articleEditForm.valid || !articleHasUnsavedChanges()}">
-
-      <button class="save-control save-button mat-icon-btn mat-icon-btn_no-shadow"
-              type="button"
-              [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
-              (click)="authCheck() ? saveChanges() : null">
+    <div
+      class="save-undo-sticky-position"
+      [ngClass]="{
+        extended: articleHasUnsavedChanges(),
+        sticky: saveButtonIsSticky,
+        disabled: !articleEditForm.valid || !articleHasUnsavedChanges()
+      }"
+    >
+      <button
+        class="save-control save-button mat-icon-btn mat-icon-btn_no-shadow"
+        type="button"
+        [disabled]="!articleEditForm.valid || !articleHasUnsavedChanges()"
+        (click)="authCheck() ? saveChanges() : null"
+      >
         <mat-icon>done</mat-icon>
       </button>
 
-      <div *ngIf="!articleIsNew"
-           class="restore-control flag flag-axle flag-axle-90"
-           [ngClass]="{'flag-axle-90_active': articleHasUnsavedChanges()}">
+      <div
+        *ngIf="!articleIsNew"
+        class="restore-control flag flag-axle flag-axle-90"
+        [ngClass]="{ 'flag-axle-90_active': articleHasUnsavedChanges() }"
+      >
         <div class="flag flag-pole flag-pole_right">
-          <button class="restore-button mat-icon-btn mat-icon-btn_no-shadow"
-                  type="button"
-                  [disabled]="!articleHasUnsavedChanges()"
-                  (click)="cancelChanges()">
+          <button
+            class="restore-button mat-icon-btn mat-icon-btn_no-shadow"
+            type="button"
+            [disabled]="!articleHasUnsavedChanges()"
+            (click)="cancelChanges()"
+          >
             <mat-icon>replay</mat-icon>
           </button>
         </div>
       </div>
 
-      <div class="flag flag-axle flag-axle-270"
-           [ngClass]="{'flag-axle-270_active': articleHasUnsavedChanges()}">
+      <div
+        class="flag flag-axle flag-axle-270"
+        [ngClass]="{ 'flag-axle-270_active': articleHasUnsavedChanges() }"
+      >
         <div class="flag flag-pole flag-pole_left">
           <div class="flag flag-tooltip">
             <span class="flag-tooltip_changes">Unsaved</span>
@@ -244,52 +312,71 @@
 </form>
 
 <!-- Top-Level Comment -->
-<section *ngIf="!articleIsNew"
-         class="article-comments">
+<section *ngIf="!articleIsNew" class="article-comments">
   <section class="article-comments__header">
     <h2 class="article-comments__title">Discussion</h2>
-    <button *ngIf="commentReplyInfo.replyParentKey !== articleId || !loggedInUser.uid"
-            class="cos-btn"
-            (click)="authCheck() ? enterNewCommentMode() : null">
+    <button
+      *ngIf="commentReplyInfo.replyParentKey !== articleId || !loggedInUser.uid"
+      class="cos-btn"
+      (click)="authCheck() ? enterNewCommentMode() : null"
+    >
       Comment
     </button>
   </section>
 
   <section class="comment-wrapper_root">
-    <section *ngIf="commentReplyInfo.replyParentKey === articleId && loggedInUser.uid"
-             class="comment-container comment-container_new-reply comment-content-region">
+    <section
+      *ngIf="commentReplyInfo.replyParentKey === articleId && loggedInUser.uid"
+      class="comment-container comment-container_new-reply comment-content-region"
+    >
       <div class="comment-container__border-decoration">
-        <div class="border-endpoint border-endpoint_top border-endpoint_accent-2"></div>
-        <div class="border-endpoint border-endpoint_bottom border-endpoint_accent-2"></div>
+        <div
+          class="border-endpoint border-endpoint_top border-endpoint_accent-2"
+        ></div>
+        <div
+          class="border-endpoint border-endpoint_bottom border-endpoint_accent-2"
+        ></div>
       </div>
-      <cos-comment [isBeingEdited]="true"
-                   [loggedInUser]="loggedInUser"
-                   [authorInfo]="loggedInUser"
-                   [comment]="newCommentStub">
+      <cos-comment
+        [isBeingEdited]="true"
+        [loggedInUser]="loggedInUser"
+        [authorInfo]="loggedInUser"
+        [comment]="newCommentStub"
+      >
       </cos-comment>
       <section class="comment-controls">
-        <button class="mat-icon-btn mat-icon-btn_small"
-                (click)="onAddComment()">
+        <button
+          class="mat-icon-btn mat-icon-btn_small"
+          (click)="onAddComment()"
+        >
           <mat-icon class="mat-icon_small">check</mat-icon>
-          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Save</span>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left"
+            >Save</span
+          >
         </button>
-        <button class="mat-icon-btn mat-icon-btn_small"
-                (click)="onCancelNewComment()">
+        <button
+          class="mat-icon-btn mat-icon-btn_small"
+          (click)="onCancelNewComment()"
+        >
           <mat-icon class="mat-icon_small">clear</mat-icon>
-          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">Cancel</span>
+          <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left"
+            >Cancel</span
+          >
         </button>
       </section>
     </section>
   </section>
 
   <!-- Existing Comments -->
-  <cos-comment-list [isUnderComment]="false"
-                    [commentReplyInfo]="commentReplyInfo"
-                    [commentEditInfo]="commentEditInfo"
-                    [loggedInUser]="loggedInUser"
-                    [parentKey]="articleId"
-                    [userMap]="userMap"
-                    [userKeys]="userKeys"
-                    [userVotesMap]="userVotesMap">
+  <cos-comment-list
+    [isUnderComment]="false"
+    [commentReplyInfo]="commentReplyInfo"
+    [commentEditInfo]="commentEditInfo"
+    [loggedInUser]="loggedInUser"
+    [parentKey]="articleId"
+    [userMap]="userMap"
+    [userKeys]="userKeys"
+    [userVotesMap]="userVotesMap"
+  >
   </cos-comment-list>
 </section>

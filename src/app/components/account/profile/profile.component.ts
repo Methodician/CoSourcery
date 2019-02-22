@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { UserService, UploadTracker } from '@services/user.service';
+import { UserService } from '@services/user.service';
 import { UserMap, UserInfoOpen } from '@class/user-info';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { Params, ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'cos-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChild('formComponent') formComponent;
@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private userSvc: UserService,
     private _route: ActivatedRoute,
     private _router: Router,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.userMap = this.userSvc.userMap;
@@ -47,7 +47,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.profileId = params['key'];
         } else {
           this.editMode = true;
-          this.dbUser = new UserInfoOpen(user.alias, user.fName, user.lName, user.uid, user.imageUrl, user.email, user.zipCode, user.bio, user.city, user.state);
+          this.dbUser = new UserInfoOpen(
+            user.alias,
+            user.fName,
+            user.lName,
+            user.uid,
+            user.imageUrl,
+            user.email,
+            user.zipCode,
+            user.bio,
+            user.city,
+            user.state,
+          );
           this.profileId = this.loggedInUserId;
         }
       });
@@ -56,7 +67,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.dbUser) {
-      this.userMap[this.dbUser.uid] = new UserInfoOpen(this.dbUser.alias, this.dbUser.fName, this.dbUser.lName, this.dbUser.uid, this.dbUser.imageUrl, this.dbUser.email, this.dbUser.zipCode, this.dbUser.bio, this.dbUser.city, this.dbUser.state);
+      this.userMap[this.dbUser.uid] = new UserInfoOpen(
+        this.dbUser.alias,
+        this.dbUser.fName,
+        this.dbUser.lName,
+        this.dbUser.uid,
+        this.dbUser.imageUrl,
+        this.dbUser.email,
+        this.dbUser.zipCode,
+        this.dbUser.bio,
+        this.dbUser.city,
+        this.dbUser.state,
+      );
     }
     if (this.imageUploadTask) {
       this.cancelUpload(this.imageUploadTask);
@@ -97,14 +119,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async saveProfileImage() {
-    const tracker = this.userSvc.uploadProfileImage(this.loggedInUserId, this.profileImageFile);
+    const tracker = this.userSvc.uploadProfileImage(
+      this.loggedInUserId,
+      this.profileImageFile,
+    );
     this.imageUploadTask = tracker.task;
     this.imageUploadPercent$ = tracker.task.percentageChanges();
     const snap = await tracker.task.then();
     const url = await tracker.ref.getDownloadURL().toPromise();
     this.formComponent.profileForm.patchValue({ imageUrl: url });
     // this.dbUser.imageUrl = url;
-    this.userSvc.trackUploadedProfileImages(this.loggedInUserId, snap.metadata.fullPath, url);
+    this.userSvc.trackUploadedProfileImages(
+      this.loggedInUserId,
+      snap.metadata.fullPath,
+      url,
+    );
     this.userSvc.deleteFile(this.tempImageUploadPath);
     return;
   }
