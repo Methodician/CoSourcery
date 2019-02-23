@@ -28,7 +28,7 @@ const routes: Routes = [
     component: ArticleEditComponent,
   },
   {
-    path: 'profile',
+    path: 'profile', data: {animation: 'profile'},
     children: [
       {
         path: ':key',
