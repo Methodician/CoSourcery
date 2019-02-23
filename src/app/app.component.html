@@ -1,2 +1,4 @@
 <cos-top-nav></cos-top-nav>
-<router-outlet></router-outlet>
+<main [@routeAnimations]="prepareRoute(outlet)" class="content">
+  <router-outlet #outlet="outlet"></router-outlet>
+</main>
