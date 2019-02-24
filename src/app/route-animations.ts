@@ -4,6 +4,7 @@ import {
   style,
   query,
   animate,
+  keyframes,
 } from '@angular/animations';
 
 export const profileSlide =
@@ -22,17 +23,17 @@ export const profileSlide =
       query(':enter', [
         style({
           position: 'absolute',
-          left: '100vw',
+          transform: 'translateX(100%)',
+          'max-height': '100vw',
           width: '100%',
           opacity: 1,
         }),
-      ], { optional: true }),
-      query(':enter', [
-        animate('2s ease',
-          style( {
-            left: 0,
+        animate('1s ease', keyframes([
+          style({
+            transform: 'translateX(0)',
             opacity: 1,
           })
+        ])
         )
       ], { optional: true }),
     ]),
@@ -49,17 +50,15 @@ export const profileSlide =
       ], { optional: true }),
       query(':leave', [
         style({
+          transform: 'translateX(0)',
           position: 'absolute',
-          left: 0,
           width: '100%',
-          opacity: 1,
         }),
-      ], { optional: true }),
-      query(':leave', [
-        animate('2s ease',
-          style( {
-            left: '100vw',
+        animate('1s ease', keyframes([
+          style({
+            transform: 'translateX(100%)',
           })
+        ])
         )
       ], { optional: true }),
     ]),
