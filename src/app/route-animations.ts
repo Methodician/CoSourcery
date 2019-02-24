@@ -18,16 +18,16 @@ export const fader =
           opacity: 1,
           'z-index': '-100',
         }),
-      ]),
+      ], { optional: true }),
       query(':enter', [
         style({
           position: 'absolute',
           left: 0,
           top: '-100vh',
           width: '100%',
-          opacity: 0,
+          // opacity: 0,
         }),
-      ]),
+      ], { optional: true }),
       query(':enter', [
         animate('600ms ease',
           style( {
@@ -35,6 +35,6 @@ export const fader =
             opacity: 1,
           })
         )
-      ]),
+      ], { optional: true }),
     ]),
   ]);
