@@ -28,7 +28,8 @@ const routes: Routes = [
     component: ArticleEditComponent,
   },
   {
-    path: 'profile', data: {animation: 'profile'},
+    path: 'profile',
+    data: {animation: 'Profile'},     // <= set animation state to Profile
     children: [
       {
         path: ':key',
