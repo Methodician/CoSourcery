@@ -38,7 +38,7 @@
       <li *ngIf="authInfo.uid"
           class="menu__item menu__item_collapse">
         <button class="mat-icon-btn"
-                [routerLink]="['/profile', authInfo.uid]">
+                (click)="navigateProfile()">
           <mat-icon>person</mat-icon>
           <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_below">Profile</span>
         </button>
@@ -88,7 +88,7 @@
             </a>
           </li>
           <li class="mobile-menu__item">
-            <a [routerLink]="['/profile', authInfo.uid]"
+            <a (click)="navigateProfile()"
                class="mobile-menu__link"
                (click)="showMobileMenu = false">
               Profile

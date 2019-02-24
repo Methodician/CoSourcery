@@ -4,6 +4,7 @@ import { AuthInfo } from '@class/auth-info';
 import { AuthService } from '@services/auth.service';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'cos-top-nav',
@@ -18,7 +19,8 @@ export class TopNavComponent implements OnInit {
   constructor(
     private authSvc: AuthService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _location: Location,
   ) { }
 
   ngOnInit() {
@@ -29,6 +31,10 @@ export class TopNavComponent implements OnInit {
 
   onSearch(input) {
     this.router.navigate(['search', input]);
+  }
+
+  navigateProfile() {
+    this.router.url.includes('profile') ? this._location.back() : this.router.navigate(['/profile', this.authInfo.uid]);
   }
 
   onLogin() {
