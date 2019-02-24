@@ -6,7 +6,7 @@ import {
   animate,
 } from '@angular/animations';
 
-export const fader =
+export const profileSlide =
   trigger('routeAnimations', [
     // Enter profile transition
     transition('* => Profile', [    // designates that on entry to Profile state from anywhere(*). State is set in routing module.
@@ -22,16 +22,15 @@ export const fader =
       query(':enter', [
         style({
           position: 'absolute',
-          left: 0,
-          top: '-100vh',
+          left: '100vw',
           width: '100%',
-          opacity: 0,
+          opacity: 1,
         }),
       ], { optional: true }),
       query(':enter', [
         animate('2s ease',
           style( {
-            top: 0,
+            left: 0,
             opacity: 1,
           })
         )
@@ -52,7 +51,6 @@ export const fader =
         style({
           position: 'absolute',
           left: 0,
-          top: 0,
           width: '100%',
           opacity: 1,
         }),
@@ -60,8 +58,7 @@ export const fader =
       query(':leave', [
         animate('2s ease',
           style( {
-            top: '-100vh',
-            opacity: 0,
+            left: '100vw',
           })
         )
       ], { optional: true }),

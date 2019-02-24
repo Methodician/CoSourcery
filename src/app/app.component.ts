@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {
-  fader,
+  profileSlide,
 } from './route-animations';
 import { RouterOutlet } from '@angular/router';
 
@@ -9,14 +9,14 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   animations: [
-    fader,
+      profileSlide,
   ]
 })
 export class AppComponent {
 
   constructor() { }
 
-  // this is optional if only using one animation for every route
+  // checks that route should be animated and returns true if it has animation property. Whichs fires @routeAnimations in HTML.
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
