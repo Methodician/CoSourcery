@@ -24,7 +24,7 @@ export const profileSlide =
           'max-height': '100vh',
           transform: 'translateX(100%)',
         }),
-        animate('1s ease', keyframes([
+        animate('850ms ease', keyframes([
           style({
             transform: 'translateX(0)',
           })
@@ -48,7 +48,7 @@ export const profileSlide =
           'max-height': '100vh',
           transform: 'translateX(0)',
         }),
-        animate('1s ease', keyframes([
+        animate('850ms ease', keyframes([
           style({
             transform: 'translateX(100%)',
           })
