@@ -13,25 +13,20 @@ export const profileSlide =
     transition('* => Profile', [    // designates that on entry to Profile state from anywhere(*). State is set in routing module.
       query(':leave', [
         style({
-          position: 'absolute',
-          left: 0,
           width: '100%',
-          opacity: 1,
-          'z-index': '-100',
         }),
       ], { optional: true }),
       query(':enter', [
         style({
+          'z-index': '100',
           position: 'absolute',
-          transform: 'translateX(100%)',
-          'max-height': '100vw',
           width: '100%',
-          opacity: 1,
+          'max-height': '100vh',
+          transform: 'translateX(100%)',
         }),
         animate('1s ease', keyframes([
           style({
             transform: 'translateX(0)',
-            opacity: 1,
           })
         ])
         )
@@ -42,17 +37,16 @@ export const profileSlide =
       query(':enter', [
         style({
           position: 'absolute',
-          left: 0,
           width: '100%',
-          opacity: 1,
-          'z-index': '-100',
         }),
       ], { optional: true }),
       query(':leave', [
         style({
-          transform: 'translateX(0)',
+          'z-index': '100',
           position: 'absolute',
           width: '100%',
+          'max-height': '100vh',
+          transform: 'translateX(0)',
         }),
         animate('1s ease', keyframes([
           style({
