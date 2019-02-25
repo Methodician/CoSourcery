@@ -33,10 +33,6 @@ export class TopNavComponent implements OnInit {
     this.router.navigate(['search', input]);
   }
 
-  navigateProfile() {
-    this.router.url.includes('profile') ? this._location.back() : this.router.navigate(['/profile', this.authInfo.uid]);
-  }
-
   onLogin() {
     this.dialog.open(LoginDialogComponent);
   }
