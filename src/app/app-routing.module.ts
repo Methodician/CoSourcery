@@ -29,7 +29,7 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    data: {animation: 'Profile'},     // <= set animation state to Profile
+    data: { animation: 'Profile' }, // <= set animation state to Profile
     children: [
       {
         path: ':key',
