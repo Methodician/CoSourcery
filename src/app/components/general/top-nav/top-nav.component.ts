@@ -4,14 +4,12 @@ import { AuthInfo } from '@class/auth-info';
 import { AuthService } from '@services/auth.service';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.component';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'cos-top-nav',
   templateUrl: './top-nav.component.html',
-  styleUrls: ['./top-nav.component.scss']
+  styleUrls: ['./top-nav.component.scss'],
 })
-
 export class TopNavComponent implements OnInit {
   authInfo: AuthInfo;
   showMobileMenu = false;
@@ -20,8 +18,7 @@ export class TopNavComponent implements OnInit {
     private authSvc: AuthService,
     private router: Router,
     private dialog: MatDialog,
-    private _location: Location,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.authSvc.authInfo$.subscribe(userData => {
@@ -40,5 +37,4 @@ export class TopNavComponent implements OnInit {
   onLogout() {
     this.authSvc.logout();
   }
-
 }
