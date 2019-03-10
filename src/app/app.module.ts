@@ -81,6 +81,9 @@ import { CoverImageComponent } from './components/articles/article-edit/cover-im
 import { CoverImageEditComponent } from './components/articles/article-edit/cover-image-edit/cover-image-edit.component';
 import { CoverImageDisplayComponent } from './components/articles/article-edit/cover-image-display/cover-image-display.component';
 import { FlagArticlesComponent } from './admin/components/flag-articles/flag-articles.component';
+import { TitleEditComponent } from './components/articles/article-edit/title/title-edit/title-edit.component';
+import { TitleDisplayComponent } from './components/articles/article-edit/title/title-display/title-display.component';
+import { TitleComponent } from './components/articles/article-edit/title/title.component';
 
 @NgModule({
   declarations: [
@@ -118,6 +121,9 @@ import { FlagArticlesComponent } from './admin/components/flag-articles/flag-art
     CoverImageEditComponent,
     CoverImageDisplayComponent,
     FlagArticlesComponent,
+    TitleEditComponent,
+    TitleDisplayComponent,
+    TitleComponent,
   ],
   imports: [
     BrowserModule,

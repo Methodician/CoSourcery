@@ -1,9 +1,33 @@
 // Uses Global Default Styles in src/styles.scss
-@import "../../../sass-variables-mixins/vars.scss";
+@import '../../../sass-variables-mixins/vars.scss';
 // Uses Modified CKEditor Styles
-@import "../../../sass-variables-mixins/ckeditor.scss";
+@import '../../../sass-variables-mixins/ckeditor.scss';
 // Uses CommentList Styles for Top Level Comments Section
-@import "../../comments/comment-list/comment-list.component.scss";
+@import '../../comments/comment-list/comment-list.component.scss';
+
+label,
+input,
+textarea,
+mat-form-field,
+mat-error {
+  font-family: $primary-typeface;
+}
+
+mat-form-field {
+  display: block;
+  margin-bottom: 10px;
+}
+
+mat-error,
+mat-hint {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+label {
+  font-weight: bold;
+  color: $accent-color-1-dark;
+}
 
 .article-form {
   width: 100%;
@@ -14,33 +38,13 @@
   box-shadow: 0 2px 5px $light-gray-50;
   overflow: hidden;
 
-  label, input, textarea, mat-form-field, mat-error {
-    font-family: $primary-typeface;
-  }
-
-  mat-form-field {
-    display: block;
-    margin-bottom: 10px;
-  }
-
   ::ng-deep .mat-form-field-infix {
     padding: 0 0 2px;
     border: none;
   }
-
-  label {
-    font-weight: bold;
-    color: $accent-color-1-dark;
-  }
-
-  mat-error, mat-hint {
-    font-size: 0.75rem;
-    line-height: 1rem;
-  }
 }
 
 .article-cover-image {
-
   &__display {
     position: relative;
     margin-bottom: 5px;
@@ -99,12 +103,13 @@
   box-shadow: 0 2px 4px $light-gray-50;
 }
 
-.article-title, .article-intro {
+.article-title,
+.article-intro {
   position: relative;
 
   mat-form-field {
     width: 100%;
-    padding-right: 50px
+    padding-right: 50px;
   }
 
   input {
@@ -129,22 +134,7 @@
   }
 }
 
-.article-title {
-
-  h2 {
-    margin: 0;
-    padding-right: 5px;
-    color: $primary-color;
-    line-height: 1.5;
-  }
-
-  h2.static-display {
-    padding: 5px 0;
-  }
-}
-
 .article-intro {
-
   p {
     margin: 0;
     padding-top: 5px;
@@ -217,7 +207,6 @@
     }
 
     @media screen and (min-width: 500px) {
-
       &:not(:first-child) {
         margin-left: 20px;
       }
@@ -260,7 +249,8 @@
       right: 10px;
     }
 
-    &:hover button, button.active {
+    &:hover button,
+    button.active {
       visibility: visible;
     }
   }
@@ -367,7 +357,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: lighten($accent-color-1-dark, 15%);;
+  background-color: lighten($accent-color-1-dark, 15%);
 
   &-axle {
     height: 0;
@@ -379,7 +369,7 @@
 
       &_active {
         transform: rotate(-360deg);
-        transition: transform cubic-bezier(.4,-0.2,.4,1.2) 0.6s;
+        transition: transform cubic-bezier(0.4, -0.2, 0.4, 1.2) 0.6s;
       }
     }
 
@@ -389,7 +379,7 @@
 
       &_active {
         transform: rotate(0deg);
-        transition: transform cubic-bezier(.4,-0.2,.4,1.2) 0.6s;
+        transition: transform cubic-bezier(0.4, -0.2, 0.4, 1.2) 0.6s;
       }
     }
   }
@@ -421,14 +411,14 @@
       display: block;
     }
 
-    &_save, &_restore {
+    &_save,
+    &_restore {
       display: none;
     }
   }
 }
 
 .save-control:hover ~ .flag {
-
   .flag-tooltip_changes {
     display: none;
   }
@@ -439,7 +429,6 @@
 }
 
 .restore-control:hover ~ .flag {
-
   .flag-tooltip_changes {
     display: none;
   }
@@ -451,7 +440,7 @@
 
 .save-button {
   transform: scale(0);
-  transition: transform cubic-bezier(.5,-0.35,.5,1.35) 0.5s;
+  transition: transform cubic-bezier(0.5, -0.35, 0.5, 1.35) 0.5s;
 }
 
 .restore-button {
