@@ -18,5 +18,5 @@ export class CoverImageDisplayComponent implements OnInit {
 
   toggleCtrl = () => {
     this.onCtrlToggle.emit();
-  };
+  }
 }
