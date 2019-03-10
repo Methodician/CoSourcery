@@ -24,7 +24,9 @@
     >
       <h2 *ngIf="!isCtrlActive(CtrlNames.title)" class="static-display">
         {{ articleState?.title }}
-        <span *ngIf="articleState?.title === ''">Add an Article Title</span>
+        <span *ngIf="articleState?.title === ''"
+          >Add a Short, Descriptive Title</span
+        >
       </h2>
       <mat-form-field *ngIf="isCtrlActive(CtrlNames.title)">
         <h2>
@@ -71,7 +73,8 @@
       <p *ngIf="!isCtrlActive(CtrlNames.intro)" class="static-display">
         {{ articleState?.introduction }}
         <span *ngIf="articleState?.introduction === ''"
-          >Add an introduction to tell people what your article is about.</span
+          >Add an introduction to tell people what your article is about. It can
+          be a few words or several sentences, but should be pretty short.</span
         >
       </p>
       <mat-form-field *ngIf="isCtrlActive(CtrlNames.intro)">
@@ -87,10 +90,7 @@
           ></textarea>
         </p>
         <mat-hint align="end">{{ introduction.value.length }} / 300</mat-hint>
-        <mat-error
-          >Please tell us a little something about what this article is
-          about.</mat-error
-        >
+        <mat-error>Please add an introduction.</mat-error>
       </mat-form-field>
       <button
         class="mat-icon-btn"
@@ -213,7 +213,8 @@
   <section class="article-tags" (cosClickOut)="clickoutCtrl(CtrlNames.tags)">
     <h3>Tags</h3>
     <p *ngIf="articleState?.tags.length === 0 && !isCtrlActive(CtrlNames.tags)">
-      This article has no tags.
+      This article has no tags. Click the edit icon, enter a tag, and press
+      enter.
     </p>
     <mat-chip-list *ngIf="!isCtrlActive(CtrlNames.tags)">
       <mat-chip *ngFor="let articleTag of articleState?.tags">{{
@@ -243,7 +244,7 @@
         />
       </mat-chip-list>
       <mat-hint [ngClass]="{ error: isInvalidTagInput(tagInput.value) }">
-        No special characters.
+        No special characters. Type, then press enter to submit each tag.
       </mat-hint>
       <mat-hint align="end">{{ tagInput.value.length }} / 25</mat-hint>
     </mat-form-field>
