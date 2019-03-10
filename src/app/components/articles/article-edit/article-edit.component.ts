@@ -163,6 +163,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.setArticleId();
     this.watchFormChanges();
     this.watchArticle();
+    this.initializeArticleState();
     this.watchUserInfo();
     this.watchCurrentEditors();
   }
@@ -175,6 +176,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   // Form Setup & Breakdown
+  initializeArticleState = () => {
+    this.articleState = this.articleEditForm.value;
+  };
+
   setArticleId() {
     this.route.params.subscribe(params => {
       if (params['key']) {
