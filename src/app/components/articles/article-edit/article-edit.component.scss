@@ -48,21 +48,6 @@ label {
   &__display {
     position: relative;
     margin-bottom: 5px;
-
-    button {
-      visibility: hidden;
-      position: absolute;
-      right: 15px;
-      bottom: 15px;
-
-      &.active {
-        visibility: visible;
-      }
-    }
-
-    &:hover button {
-      visibility: visible;
-    }
   }
 
   &__image {
@@ -103,7 +88,7 @@ label {
   box-shadow: 0 2px 4px $light-gray-50;
 }
 
-.article-title,
+:host ::ng-deep .article-title,
 .article-intro {
   position: relative;
 

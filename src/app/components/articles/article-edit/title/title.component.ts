@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -6,12 +6,14 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './title.component.html',
   styleUrls: ['../article-edit.component.scss'],
 })
-export class TitleComponent implements OnInit {
+export class TitleComponent {
   @Input() parentForm: FormGroup;
   @Input() isActive: boolean;
   @Input() title: string;
 
-  constructor() {}
+  @Output() onCtrlToggle = new EventEmitter();
 
-  ngOnInit() {}
+  toggleCtrl = () => {
+    this.onCtrlToggle.emit();
+  };
 }
