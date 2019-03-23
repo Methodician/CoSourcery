@@ -5,18 +5,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   templateUrl: './cover-image-display.component.html',
   styleUrls: ['./cover-image-display.component.scss'],
 })
-export class CoverImageDisplayComponent implements OnInit {
+export class CoverImageDisplayComponent {
   @Input() coverImageUrl: string;
   @Input() imageAlt: string;
   @Input() isCtrlActive: boolean;
 
   @Output() onCtrlToggle: EventEmitter<any> = new EventEmitter();
 
-  constructor() {}
-
-  ngOnInit() {}
-
   toggleCtrl = () => {
     this.onCtrlToggle.emit();
-  }
+  };
 }

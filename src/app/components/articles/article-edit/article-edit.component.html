@@ -26,20 +26,8 @@
         [parentForm]="articleEditForm"
         [isActive]="isCtrlActive(CtrlNames.title)"
         [title]="articleState?.title"
+        (onCtrlToggle)="toggleCtrl(CtrlNames.title)"
       ></cos-title>
-      <button
-        class="mat-icon-btn"
-        [ngClass]="{ active: isCtrlActive(CtrlNames.title) }"
-        type="button"
-        (click)="toggleCtrl(CtrlNames.title)"
-      >
-        <mat-icon>{{
-          isCtrlActive(CtrlNames.title) ? 'clear' : 'edit'
-        }}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{
-          isCtrlActive(CtrlNames.title) ? 'Close Title' : 'Edit Title'
-        }}</span>
-      </button>
     </section>
 
     <p class="article-date">
