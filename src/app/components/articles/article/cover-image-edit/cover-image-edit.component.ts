@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
-import { HtmlInputEvent } from '../article-edit.component';
+import { HtmlInputEvent } from '../article.component';
 import { ArticleService } from '@services/article.service';
 import { FormGroup } from '@angular/forms';
 

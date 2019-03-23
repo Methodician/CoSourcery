@@ -31,9 +31,9 @@ import * as firebase from 'firebase';
 import { BodyImageMeta, ArticleDetail } from '@class/article-info';
 
 @Component({
-  selector: 'cos-article-edit',
-  templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.scss'],
+  selector: 'cos-article',
+  templateUrl: './article.component.html',
+  styleUrls: ['./article.component.scss'],
 })
 export class ArticleEditComponent implements OnInit, OnDestroy {
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;

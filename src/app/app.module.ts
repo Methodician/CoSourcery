@@ -57,7 +57,7 @@ import { TruncateStringPipe } from '@pipes/truncate-string.pipe';
 
 // Components
 import { AppComponent } from 'app/app.component';
-import { ArticleEditComponent } from '@components/articles/article-edit/article-edit.component';
+import { ArticleEditComponent } from '@components/articles/article/article.component';
 import { ArticlePreviewCardComponent } from '@components/articles/article-preview-card/article-preview-card.component';
 import { CommentComponent } from '@components/comments/comment/comment.component';
 import { CommentListComponent } from '@components/comments/comment-list/comment-list.component';
@@ -77,12 +77,12 @@ import { ProfileViewComponent } from '@components/account/profile-view/profile-v
 import { ProfileContributionsComponent } from '@components/account/profile-contributions/profile-contributions.component';
 import { ProfileCardComponent } from '@components/account/profile-card/profile-card.component';
 import { ContributorsComponent } from './components/articles/contributors/contributors.component';
-import { CoverImageEditComponent } from './components/articles/article-edit/cover-image-edit/cover-image-edit.component';
-import { CoverImageDisplayComponent } from './components/articles/article-edit/cover-image-display/cover-image-display.component';
+import { CoverImageEditComponent } from './components/articles/article/cover-image-edit/cover-image-edit.component';
+import { CoverImageDisplayComponent } from './components/articles/article/cover-image-display/cover-image-display.component';
 import { FlagArticlesComponent } from './admin/components/flag-articles/flag-articles.component';
-import { TitleEditComponent } from './components/articles/article-edit/title/title-edit/title-edit.component';
-import { TitleDisplayComponent } from './components/articles/article-edit/title/title-display/title-display.component';
-import { TitleComponent } from './components/articles/article-edit/title/title.component';
+import { TitleEditComponent } from './components/articles/article/title/title-edit/title-edit.component';
+import { TitleDisplayComponent } from './components/articles/article/title/title-display/title-display.component';
+import { TitleComponent } from './components/articles/article/title/title.component';
 
 @NgModule({
   declarations: [
