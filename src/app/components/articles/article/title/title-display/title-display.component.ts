@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'cos-title-display',
   templateUrl: './title-display.component.html',
-  styleUrls: ['../../article-edit.component.scss', '../title.component.scss'],
+  styleUrls: ['../../article.component.scss', '../title.component.scss'],
 })
 export class TitleDisplayComponent {
   @Input() shouldDisplay: boolean;

@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'cos-title',
   templateUrl: './title.component.html',
-  styleUrls: ['../article-edit.component.scss'],
+  styleUrls: ['../article.component.scss'],
 })
 export class TitleComponent {
   @Input() parentForm: FormGroup;
