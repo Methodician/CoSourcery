@@ -152,8 +152,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    // private meta: Meta,
-    // private title: Title,
+    private meta: Meta,
+    private title: Title,
     private router: Router,
     private route: ActivatedRoute,
     private articleSvc: ArticleService,
@@ -206,6 +206,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
+        this.updateMetaData(articleData);
         this.ckeditor.content = articleData
           ? articleData.body
           : this.ckeditor.placeholder;
@@ -226,6 +227,28 @@ export class ArticleComponent implements OnInit, OnDestroy {
       },
     );
   }
+
+  updateMetaData = (article: ArticleDetail) => {
+    const { title, introduction, body, tags } = article;
+    console.log(tags);
+    this.title.setTitle(`CoSourcery - ${title}`);
+    const description = this.createMetaDescription(introduction, body);
+    this.meta.updateTag({
+      name: 'description',
+      content: description,
+    });
+  };
+
+  createMetaDescription = (intro: string, body: string) => {
+    const introLength = intro.length;
+    if (introLength > 325) return intro.substr(0, 325);
+    const lengthToFill = 350 - introLength;
+    const cleanBody = body
+      .replace(/<\/?[^>]+(>|$)/g, ' ')
+      .replace('&nbsp;', '')
+      .replace(/\s+/g, ' ');
+    return intro.concat(' - ').concat(cleanBody.substr(0, lengthToFill));
+  };
 
   setFormData(data) {
     if (data) {
