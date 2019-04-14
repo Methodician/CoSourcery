@@ -1,5 +1,5 @@
-// import * as firebase from 'firebase';
-
+// import * as firebase from 'firebase/app';
+// import 'firebase/database';
 export class UserPresence {
   // constructor(private connection, private lastOnline, private userKey: string) {
   constructor() {

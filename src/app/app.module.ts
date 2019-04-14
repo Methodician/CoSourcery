@@ -2,6 +2,7 @@ import { environment } from 'environments/environment';
 
 // Firebase and AngularFire imports
 import * as fb from 'firebase/app';
+import 'firebase/firestore';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';

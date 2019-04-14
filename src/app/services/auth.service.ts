@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import * as fb from 'firebase';
+import * as fb from 'firebase/app';
+import 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import { AuthInfo } from '@class/auth-info';
 import { AngularFireDatabase } from '@angular/fire/database';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   fbAuth = fb.auth();
-  authInfo$ = new BehaviorSubject<AuthInfo>(new AuthInfo(null, false, null, null));
+  authInfo$ = new BehaviorSubject<AuthInfo>(
+    new AuthInfo(null, false, null, null),
+  );
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -20,7 +22,14 @@ export class AuthService {
   ) {
     this.afAuth.user.subscribe(user => {
       if (user) {
-        this.authInfo$.next(new AuthInfo(user.uid, user.emailVerified, user.displayName, user.email));
+        this.authInfo$.next(
+          new AuthInfo(
+            user.uid,
+            user.emailVerified,
+            user.displayName,
+            user.email,
+          ),
+        );
       } else {
         this.authInfo$.next(new AuthInfo(null, false, null, null));
       }
@@ -40,8 +49,8 @@ export class AuthService {
     const uid = this.authInfo$.value.uid;
     const updates = {};
     const snapshot = await this.rtdb
-      .list(`articleData/editStatus/articlesByEditor/${uid}`).query
-      .once('value');
+      .list(`articleData/editStatus/articlesByEditor/${uid}`)
+      .query.once('value');
     const val = snapshot.val();
     if (!val) return;
     const articleIds = Object.keys(val);
@@ -67,7 +76,9 @@ export class AuthService {
         take(1),
         map(res => {
           return !!res;
-        })).toPromise();
+        }),
+      )
+      .toPromise();
   }
 
   async sendVerificationEmail() {
@@ -75,8 +86,10 @@ export class AuthService {
     try {
       return await user.sendEmailVerification();
     } catch (err) {
-      alert('It looks like your verification email was not sent. Please try again or contact support.' + err);
+      alert(
+        'It looks like your verification email was not sent. Please try again or contact support.' +
+          err,
+      );
     }
   }
-
 }

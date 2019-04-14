@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase';
-
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
-fsdb = firebase.firestore();
+  fsdb = firebase.firestore();
 
+  constructor() {}
 
-  constructor() { }
-
-
-
-
-
-    // kb: added this
+  // kb: added this
   // maybe store the article id here in the future as well
   createFeatureNotification(authorId: string): void {
     const id = this.fsdb.collection(`userData/${authorId}/notifications`).doc();
@@ -25,7 +20,7 @@ fsdb = firebase.firestore();
       notificationType: 'articleFeature',
       // timestamp: new Date(),
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      timeViewed: null
+      timeViewed: null,
     };
     this.fsdb.doc(`userData/${authorId}/notifications/${id}`).set(notification);
   }
