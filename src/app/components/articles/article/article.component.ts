@@ -11,8 +11,9 @@ import {
   MatDialog,
   MatDialogConfig,
 } from '@angular/material';
-import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Meta, Title } from '@angular/platform-browser';
+import { ENTER } from '@angular/cdk/keycodes';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
@@ -35,7 +36,7 @@ import { BodyImageMeta, ArticleDetail } from '@class/article-info';
   templateUrl: './article.component.html',
   styleUrls: ['./article.component.scss'],
 })
-export class ArticleEditComponent implements OnInit, OnDestroy {
+export class ArticleComponent implements OnInit, OnDestroy {
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   @ViewChild('formBoundingBox') formBoundingBox;
   @HostListener('window:beforeunload', ['$event'])
@@ -136,7 +137,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       fbImageStorage: {},
     },
     placeholder:
-      '<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it\'s so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you\'re done.</li></ol>',
+      "<h2>Creating a New Article</h2><ol><li>Add an eye-catching <strong>Cover Image</strong> above.</li><li>Choose a concise, meaningful, and interesting <strong>Title</strong>.</li><li>Write a brief <strong>Intro</strong> to outline the topic of your article and why it's so cool!</li><li>Add the <strong>Body</strong> of your article by editing this block of content.</li><li>Add some <strong>Tags</strong> below to help people find your article.</li><li>Click <strong>Save Article</strong> when you're done.</li></ol>",
     content: null,
     toggleBtnOffset: 0,
   };
@@ -151,6 +152,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
+    // private meta: Meta,
+    // private title: Title,
     private router: Router,
     private route: ActivatedRoute,
     private articleSvc: ArticleService,
@@ -178,7 +181,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   // Form Setup & Breakdown
   initializeArticleState = () => {
     this.articleState = this.articleEditForm.value;
-  }
+  };
 
   setArticleId() {
     this.route.params.subscribe(params => {
@@ -602,7 +605,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     } else if (this.authCheck()) {
       this.ctrlBeingEdited = ctrl;
     }
-  }
+  };
 
   toggleCtrl = (ctrl: CtrlNames) => {
     if (this.isCtrlActive(ctrl)) {
@@ -610,17 +613,17 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       return;
     }
     this.activateCtrl(ctrl);
-  }
+  };
 
   isCtrlActive = (ctrl: CtrlNames): boolean => {
     return this.ctrlBeingEdited === ctrl;
-  }
+  };
 
   clickoutCtrl = (ctrl: CtrlNames) => {
     if (ctrl === this.ctrlBeingEdited) {
       this.activateCtrl(CtrlNames.none);
     }
-  }
+  };
 
   authCheck(): boolean {
     if (this.loggedInUser.uid) {

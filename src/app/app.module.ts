@@ -57,7 +57,7 @@ import { TruncateStringPipe } from '@pipes/truncate-string.pipe';
 
 // Components
 import { AppComponent } from 'app/app.component';
-import { ArticleEditComponent } from '@components/articles/article/article.component';
+import { ArticleComponent } from '@components/articles/article/article.component';
 import { ArticlePreviewCardComponent } from '@components/articles/article-preview-card/article-preview-card.component';
 import { CommentComponent } from '@components/comments/comment/comment.component';
 import { CommentListComponent } from '@components/comments/comment-list/comment-list.component';
@@ -91,7 +91,7 @@ import { TitleComponent } from './components/articles/article/title/title.compon
     HomeComponent,
     ProfileComponent,
     RegisterComponent,
-    ArticleEditComponent,
+    ArticleComponent,
     ArticlePreviewCardComponent,
     RelatedArticlePipe,
     ArticleSearchPipe,
