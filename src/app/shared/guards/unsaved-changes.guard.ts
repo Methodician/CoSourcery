@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { CanDeactivate } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { ArticleEditComponent } from '@components/articles/article/article.component';
+import { ArticleComponent } from '@components/articles/article/article.component';
 import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UnsavedChangesGuard implements CanDeactivate<ArticleEditComponent> {
+export class UnsavedChangesGuard implements CanDeactivate<ArticleComponent> {
 
   constructor(
     private dialog: MatDialog
   ) { }
 
-  canDeactivate(component: ArticleEditComponent): Observable<boolean> | boolean {
+  canDeactivate(component: ArticleComponent): Observable<boolean> | boolean {
     if (component.articleHasUnsavedChanges()) {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
