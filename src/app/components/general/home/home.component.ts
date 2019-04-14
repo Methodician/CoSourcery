@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
     this.title.setTitle('CoSourcery - Discover cool stuff!');
     const description =
       "CoSourcery is empowering the makers and hackers of the world to discover and share useful information about how to accomplish their goals. We're really into decentralized farming and indoor gardening";
-    this.meta.addTag({ name: 'description', content: description });
+    this.meta.updateTag({ name: 'description', content: description });
   };
 
   initializeArticles() {
