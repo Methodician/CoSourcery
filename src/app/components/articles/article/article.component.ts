@@ -241,7 +241,6 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
     const keywords = tags.join(', ').toLowerCase();
     this.meta.updateTag({ name: 'keywords', content: keywords });
-    console.log('keywords', keywords);
   };
 
   createMetaDescription = (intro: string, body: string) => {
