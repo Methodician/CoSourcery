@@ -230,13 +230,18 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
   updateMetaData = (article: ArticleDetail) => {
     const { title, introduction, body, tags } = article;
-    console.log(tags);
+
     this.title.setTitle(`CoSourcery - ${title}`);
+
     const description = this.createMetaDescription(introduction, body);
     this.meta.updateTag({
       name: 'description',
       content: description,
     });
+
+    const keywords = tags.join(', ').toLowerCase();
+    this.meta.updateTag({ name: 'keywords', content: keywords });
+    console.log('keywords', keywords);
   };
 
   createMetaDescription = (intro: string, body: string) => {
