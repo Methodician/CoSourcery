@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ArticleEditComponent } from './article-edit.component';
+import { TitleDisplayComponent } from './title-display.component';
 
-xdescribe('ArticleEditComponent', () => {
-  let component: ArticleEditComponent;
-  let fixture: ComponentFixture<ArticleEditComponent>;
+describe('TitleDisplayComponent', () => {
+  let component: TitleDisplayComponent;
+  let fixture: ComponentFixture<TitleDisplayComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ArticleEditComponent ]
+      declarations: [ TitleDisplayComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ArticleEditComponent);
+    fixture = TestBed.createComponent(TitleDisplayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

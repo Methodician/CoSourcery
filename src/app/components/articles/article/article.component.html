@@ -22,39 +22,12 @@
       class="article-title"
       (cosClickOut)="clickoutCtrl(CtrlNames.title)"
     >
-      <h2 *ngIf="!isCtrlActive(CtrlNames.title)" class="static-display">
-        {{ articleState?.title }}
-        <span *ngIf="articleState?.title === ''"
-          >Add a Short, Descriptive Title</span
-        >
-      </h2>
-      <mat-form-field *ngIf="isCtrlActive(CtrlNames.title)">
-        <h2>
-          <input
-            #title
-            matInput
-            type="text"
-            formControlName="title"
-            maxlength="100"
-            required
-          />
-        </h2>
-        <mat-hint align="end">{{ title.value.length }} / 100 </mat-hint>
-        <mat-error>Please give your article a title.</mat-error>
-      </mat-form-field>
-      <button
-        class="mat-icon-btn"
-        [ngClass]="{ active: isCtrlActive(CtrlNames.title) }"
-        type="button"
-        (click)="toggleCtrl(CtrlNames.title)"
-      >
-        <mat-icon>{{
-          isCtrlActive(CtrlNames.title) ? 'clear' : 'edit'
-        }}</mat-icon>
-        <span class="mat-icon-btn__tooltip mat-icon-btn__tooltip_left">{{
-          isCtrlActive(CtrlNames.title) ? 'Close Title' : 'Edit Title'
-        }}</span>
-      </button>
+      <cos-title
+        [parentForm]="articleEditForm"
+        [isActive]="isCtrlActive(CtrlNames.title)"
+        [title]="articleState?.title"
+        (onCtrlToggle)="toggleCtrl(CtrlNames.title)"
+      ></cos-title>
     </section>
 
     <p class="article-date">

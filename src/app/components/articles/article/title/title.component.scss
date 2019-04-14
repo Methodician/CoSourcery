@@ -1,0 +1,30 @@
+@import '../../../../sass-variables-mixins/vars.scss';
+
+h2 {
+  margin: 0;
+  padding-right: 5px;
+  color: $primary-color;
+  line-height: 1.5;
+}
+
+h2.static-display {
+  padding: 5px 0;
+}
+
+// ---below being affected by :host ::ngdeep in article.component.scss
+// input {
+//   margin-top: 0;
+//   padding: 5px 0;
+// }
+
+// mat-form-field {
+//   width: 100%;
+//   padding-right: 50px;
+// }
+
+// button {
+//   // visibility: hidden;
+//   position: absolute;
+//   right: 15px;
+//   bottom: 15px;
+// }

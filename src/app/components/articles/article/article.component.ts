@@ -11,8 +11,9 @@ import {
   MatDialog,
   MatDialogConfig,
 } from '@angular/material';
-import { ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Meta, Title } from '@angular/platform-browser';
+import { ENTER } from '@angular/cdk/keycodes';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
@@ -31,11 +32,11 @@ import * as firebase from 'firebase';
 import { BodyImageMeta, ArticleDetail } from '@class/article-info';
 
 @Component({
-  selector: 'cos-article-edit',
-  templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.scss'],
+  selector: 'cos-article',
+  templateUrl: './article.component.html',
+  styleUrls: ['./article.component.scss'],
 })
-export class ArticleEditComponent implements OnInit, OnDestroy {
+export class ArticleComponent implements OnInit, OnDestroy {
   @ViewChild('ckeditorBoundingBox') ckeditorBoundingBox;
   @ViewChild('formBoundingBox') formBoundingBox;
   @HostListener('window:beforeunload', ['$event'])
@@ -151,6 +152,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
+    private meta: Meta,
+    private title: Title,
     private router: Router,
     private route: ActivatedRoute,
     private articleSvc: ArticleService,
@@ -203,6 +206,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
+        this.updateMetaData(articleData);
         this.ckeditor.content = articleData
           ? articleData.body
           : this.ckeditor.placeholder;
@@ -223,6 +227,32 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       },
     );
   }
+
+  updateMetaData = (article: ArticleDetail) => {
+    const { title, introduction, body, tags } = article;
+
+    this.title.setTitle(`CoSourcery - ${title}`);
+
+    const description = this.createMetaDescription(introduction, body);
+    this.meta.updateTag({
+      name: 'description',
+      content: description,
+    });
+
+    const keywords = tags.join(', ').toLowerCase();
+    this.meta.updateTag({ name: 'keywords', content: keywords });
+  };
+
+  createMetaDescription = (intro: string, body: string) => {
+    const introLength = intro.length;
+    if (introLength > 325) return intro.substr(0, 325);
+    const lengthToFill = 350 - introLength;
+    const cleanBody = body
+      .replace(/<\/?[^>]+(>|$)/g, ' ')
+      .replace('&nbsp;', '')
+      .replace(/\s+/g, ' ');
+    return intro.concat(' - ').concat(cleanBody.substr(0, lengthToFill));
+  };
 
   setFormData(data) {
     if (data) {

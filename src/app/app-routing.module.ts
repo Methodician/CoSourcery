@@ -4,7 +4,7 @@ import { AuthGuard } from '@guards/auth.guard';
 
 import { HomeComponent } from '@components/general/home/home.component';
 import { RegisterComponent } from '@components/account/register/register.component';
-import { ArticleEditComponent } from '@components/articles/article-edit/article-edit.component';
+import { ArticleComponent } from '@components/articles/article/article.component';
 import { DataCleanupComponent } from '@admin/components/data-cleanup/data-cleanup.component';
 import { ProfileComponent } from '@components/account/profile/profile.component';
 import { UnsavedChangesGuard } from '@guards/unsaved-changes.guard';
@@ -20,12 +20,12 @@ const routes: Routes = [
     path: 'createarticle',
     canActivate: [AuthGuard],
     canDeactivate: [UnsavedChangesGuard],
-    component: ArticleEditComponent,
+    component: ArticleComponent,
   },
   {
     path: 'article/:key',
     canDeactivate: [UnsavedChangesGuard],
-    component: ArticleEditComponent,
+    component: ArticleComponent,
   },
   {
     path: 'profile',

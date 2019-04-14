@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { ArticleService } from '@services/article.service';
 import { ArticlePreview } from '@class/article-info';
 import { AuthService } from '@services/auth.service';
@@ -10,7 +11,7 @@ import { TabList, TabItem } from '../filter-menu/filter-menu.component';
   selector: 'cos-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [ArticleService]
+  providers: [ArticleService],
 })
 export class HomeComponent implements OnInit {
   @ViewChild('filterMenu') filterMenu;
@@ -32,13 +33,23 @@ export class HomeComponent implements OnInit {
     private articleSvc: ArticleService,
     private authSvc: AuthService,
     private route: ActivatedRoute,
-  ) { }
+    private meta: Meta,
+    private title: Title,
+  ) {}
 
   ngOnInit() {
     this.initializeArticles();
     this.watchAuthInfo();
     this.watchRoutePrams();
+    this.updateMetaData();
   }
+
+  updateMetaData = () => {
+    this.title.setTitle('CoSourcery - Discover cool stuff!');
+    const description =
+      "CoSourcery is empowering the makers and hackers of the world to discover and share useful information about how to accomplish their goals. We're really into decentralized farming and indoor gardening";
+    this.meta.updateTag({ name: 'description', content: description });
+  };
 
   initializeArticles() {
     this.latestArticles = this.articleSvc.latestArticlesRef().valueChanges();
@@ -101,4 +112,3 @@ export class HomeComponent implements OnInit {
     // console.log('filterTabSelected', $event);
   }
 }
-
