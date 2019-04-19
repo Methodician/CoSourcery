@@ -6,7 +6,6 @@ import * as admin from 'firebase-admin';
 admin.initializeApp();
 const adminFS = admin.firestore();
 const adminDB = admin.database();
-adminFS.settings({ timestampsInSnapshots: true });
 
 import * as algoliasearch from 'algoliasearch';
 const client = algoliasearch(functions.config().algolia.app_id, functions.config().algolia.admin_key);

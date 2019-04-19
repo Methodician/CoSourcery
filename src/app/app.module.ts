@@ -1,8 +1,6 @@
 import { environment } from 'environments/environment';
 
 // Firebase and AngularFire imports
-import * as fb from 'firebase/app';
-import 'firebase/firestore';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -168,11 +166,4 @@ import { TitleComponent } from './components/articles/article/title/title.compon
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-  constructor() {
-    fb.initializeApp(environment.fbConfig);
-    const fs = fb.firestore();
-    const settings = { timestampsInSnapshots: true };
-    fs.settings(settings);
-  }
-}
+export class AppModule {}
