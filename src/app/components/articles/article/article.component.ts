@@ -4,6 +4,8 @@ import {
   OnInit,
   OnDestroy,
   HostListener,
+  PLATFORM_ID,
+  Inject,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {
@@ -31,6 +33,7 @@ import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.co
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { BodyImageMeta, ArticleDetail } from '@class/article-info';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'cos-article',
@@ -151,6 +154,9 @@ export class ArticleComponent implements OnInit, OnDestroy {
   userKeys: string[];
   userVotesMap: KeyMap<VoteDirections> = {};
 
+  isInBrowser = false;
+  isEditorImported = false;
+
   constructor(
     private fb: FormBuilder,
     private meta: Meta,
@@ -161,7 +167,23 @@ export class ArticleComponent implements OnInit, OnDestroy {
     private userSvc: UserService,
     private commentSvc: CommentService,
     private dialog: MatDialog,
-  ) {}
+    @Inject(PLATFORM_ID) private platform: Object,
+  ) {
+    if (isPlatformBrowser(this.platform)) {
+      this.initializeCkEditor();
+      this.isInBrowser = true;
+    }
+    console.log('traditional', InlineEditor);
+  }
+
+  initializeCkEditor = async () => {
+    // TRY BACK TRACK - THIS DYNAMIC IMPORT MAY NOT BE NEEDED.
+    const InlineCkEditor = await import('@ckeditor/ckeditor5-build-inline');
+    console.log('lazy', InlineCkEditor);
+
+    // this.ckeditor.build = InlineEditor;
+    this.isEditorImported = true;
+  };
 
   ngOnInit() {
     this.setArticleId();
@@ -207,6 +229,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
       .getArticleRefById(this.articleId)
       .valueChanges()
       .subscribe(articleData => {
+        if (this.articleState.title === '') this.articleState = articleData;
         this.updateMetaData(articleData);
         this.ckeditor.content = articleData
           ? articleData.body

@@ -171,7 +171,7 @@
         }}</span>
       </button>
       <ckeditor
-        *ngIf="ckeditor.content"
+        *ngIf="isInBrowser && ckeditor.content"
         (change)="onCKEditorChanged($event)"
         (ready)="onCKEditorReady($event)"
         [data]="ckeditor.content"
@@ -180,6 +180,9 @@
         [disabled]="!loggedInUser.uid || !isCtrlActive(CtrlNames.body)"
       >
       </ckeditor>
+      <textarea *ngIf="!isInBrowser" cols="30" rows="10">
+        {{ articleState.body }}
+      </textarea>
     </div>
   </section>
 
