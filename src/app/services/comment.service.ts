@@ -5,12 +5,11 @@ import 'firebase/database';
 import { combineLatest } from 'rxjs/operators';
 import { Comment, ParentTypes, VoteDirections } from '@class/comment';
 
-const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
-
 @Injectable({
   providedIn: 'root',
 })
 export class CommentService {
+  serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
   constructor(private rtdb: AngularFireDatabase) {}
 
   createCommentStub(
@@ -76,8 +75,8 @@ export class CommentService {
       authorId: comment.authorId,
       text: comment.text,
       parentKey: comment.parentKey,
-      lastUpdated: serverTimestamp,
-      timestamp: serverTimestamp,
+      lastUpdated: this.serverTimestamp,
+      timestamp: this.serverTimestamp,
       parentType: comment.parentType,
       replyCount: comment.replyCount,
       voteCount: comment.voteCount,
@@ -88,7 +87,7 @@ export class CommentService {
 
   updateComment(comment: Comment, commentKey: string) {
     const commentToSave = {
-      lastUpdated: serverTimestamp,
+      lastUpdated: this.serverTimestamp,
       text: comment.text,
     };
     return this.rtdb
@@ -99,7 +98,7 @@ export class CommentService {
   removeComment(commentKey) {
     return this.rtdb
       .object(`commentData/comments/${commentKey}`)
-      .update({ removedAt: serverTimestamp });
+      .update({ removedAt: this.serverTimestamp });
   }
 
   watchCommentsByParent(parentKey: string) {
