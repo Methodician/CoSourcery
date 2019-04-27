@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import * as fb from 'firebase/app';
-import 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import { AuthInfo } from '@class/auth-info';
@@ -11,7 +9,6 @@ import { AngularFireDatabase } from '@angular/fire/database';
   providedIn: 'root',
 })
 export class AuthService {
-  fbAuth = fb.auth();
   authInfo$ = new BehaviorSubject<AuthInfo>(
     new AuthInfo(null, false, null, null),
   );
