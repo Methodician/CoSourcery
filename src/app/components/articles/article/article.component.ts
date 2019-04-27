@@ -171,17 +171,14 @@ export class ArticleComponent implements OnInit, OnDestroy {
   ) {
     if (isPlatformBrowser(this.platform)) {
       this.initializeCkEditor();
-      // this.isInBrowser = true;
+      this.isInBrowser = true;
     }
-    // console.log('traditional', InlineEditor);
   }
 
   initializeCkEditor = async () => {
-    // TRY BACK TRACK - THIS DYNAMIC IMPORT MAY NOT BE NEEDED.
-    // const InlineCkEditor = await import('@ckeditor/ckeditor5-build-inline');
-    // console.log('lazy', InlineCkEditor.default);
-    // this.ckeditor.build = InlineCkEditor;
-    // this.isEditorImported = true;
+    const InlineCkEditor = await import('@ckeditor/ckeditor5-build-inline');
+    this.ckeditor.build = InlineCkEditor.default;
+    this.isEditorImported = true;
   };
 
   ngOnInit() {
@@ -252,6 +249,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   updateMetaData = (article: ArticleDetail) => {
+    if (!article) return;
     const { title, introduction, body, tags } = article;
 
     this.title.setTitle(`CoSourcery - ${title}`);

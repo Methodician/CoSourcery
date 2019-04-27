@@ -180,9 +180,7 @@
         [disabled]="!loggedInUser.uid || !isCtrlActive(CtrlNames.body)"
       >
       </ckeditor>
-      <textarea *ngIf="!isInBrowser" cols="30" rows="10">
-        {{ articleState.body }}
-      </textarea>
+      <article *ngIf="!isInBrowser" [innerHTML]="articleState.body"></article>
     </div>
   </section>
 
