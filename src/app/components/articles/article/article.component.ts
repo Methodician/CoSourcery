@@ -19,7 +19,7 @@ import { ENTER } from '@angular/cdk/keycodes';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
-import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
+// import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from '@class/user-info';
@@ -120,7 +120,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   // CKEditor setup
   ckEditorReady = false;
   ckeditor = {
-    build: InlineEditor,
+    build: null,
     config: {
       toolbar: {
         items: [
@@ -171,18 +171,17 @@ export class ArticleComponent implements OnInit, OnDestroy {
   ) {
     if (isPlatformBrowser(this.platform)) {
       this.initializeCkEditor();
-      this.isInBrowser = true;
+      // this.isInBrowser = true;
     }
-    console.log('traditional', InlineEditor);
+    // console.log('traditional', InlineEditor);
   }
 
   initializeCkEditor = async () => {
     // TRY BACK TRACK - THIS DYNAMIC IMPORT MAY NOT BE NEEDED.
-    const InlineCkEditor = await import('@ckeditor/ckeditor5-build-inline');
-    console.log('lazy', InlineCkEditor);
-
-    // this.ckeditor.build = InlineEditor;
-    this.isEditorImported = true;
+    // const InlineCkEditor = await import('@ckeditor/ckeditor5-build-inline');
+    // console.log('lazy', InlineCkEditor.default);
+    // this.ckeditor.build = InlineCkEditor;
+    // this.isEditorImported = true;
   };
 
   ngOnInit() {
