@@ -123,7 +123,7 @@ import { TitleComponent } from './components/articles/article/title/title.compon
     TitleComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'CoSourcery' }),
     AppRoutingModule,
     MatButtonModule,
     MatInputModule,

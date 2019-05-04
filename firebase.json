@@ -15,15 +15,15 @@
   },
   "hosting": {
     "public": "dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "**/*.@(css|js)",
+        "destination": "/index2.html"
+      },
+      {
         "source": "**",
-        "destination": "/index.html"
+        "function": "ssr"
       }
     ]
   },
