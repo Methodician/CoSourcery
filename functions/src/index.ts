@@ -6,8 +6,8 @@ import { enableProdMode } from '@angular/core';
 import * as express from 'express';
 import { renderModuleFactory } from '@angular/platform-server';
 // Can't use this because there is no TS definitions so using require
-// import { AppServerModuleNgFactory } from '../dist/server/main';
-const { AppServerModuleNgFactory } = require('../dist/server/main');
+import { AppServerModuleNgFactory } from '../dist/server/main';
+// const { AppServerModuleNgFactory } = require('../../dist/server/main');
 // end SSR-spec
 
 import * as functions from 'firebase-functions';
@@ -33,15 +33,15 @@ import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
-import {
-  ArticleDetail,
-  ArticlePreview,
-} from '../../src/app/shared/class/article-info';
+// import { Comment, ParentTypes } from '../../src/app/shared/class/comment';
+// import {
+//   ArticleDetail,
+//   ArticlePreview,
+// } from '../../src/app/shared/class/article-info';
 
 // This was the only way I found to make things environment dependent... See Algolia Indexing function for usage example.
-import { environment as devEnv } from '../../src/environments/environment';
-import { environment as prodEnv } from '../../src/environments/environment.prod';
+import { environment as devEnv } from '../environments/environment';
+import { environment as prodEnv } from '../environments/environment.prod';
 enum Projects {
   cosourcerytest = 'cosourcerytest',
   cosourcery = 'cosourcery',
@@ -104,7 +104,7 @@ const trackArticleAuthorship = article => {
 };
 exports.onCreateArticleDetail = functions.firestore
   .document('articleData/articles/articles/{articleId}')
-  .onCreate(async (snap, context) => {
+  .onCreate(async snap => {
     const article = snap.data();
     try {
       await trackArticleAuthorship(article);
@@ -156,7 +156,7 @@ exports.trackCommentVotes = functions.database
     const diff = after - before;
     const commentKey = context.params['commentKey'];
     const commentRef = adminDB.ref(`commentData/comments/${commentKey}`);
-    return commentRef.transaction((commmentToUpdate: Comment) => {
+    return commentRef.transaction((commmentToUpdate: any) => {
       if (!commmentToUpdate) {
         return null;
       }
@@ -169,7 +169,7 @@ exports.trackCommentVotes = functions.database
 
 exports.trackCommentDeletions = functions.database
   .ref('commentData/comments/{commentKey}/removedAt')
-  .onCreate(async (snap, context) => {
+  .onCreate(async snap => {
     const commentRef = snap.ref.parent;
     const archiveRef = snap.ref.parent.parent.parent.child('commentArchive');
     const commentSnap = await commentRef.once('value').then();
@@ -182,9 +182,10 @@ exports.trackCommentDeletions = functions.database
 exports.bubbleUpCommentCount = functions.database
   .ref('commentData/comments/{commentKey}/replyCount')
   .onUpdate(async (change, context) => {
+    console.log('change is never read ==>', change);
     const incrementReplyCount = (commentRef: admin.database.Reference) => {
       return commentRef
-        .transaction((commentToUpdate: Comment) => {
+        .transaction((commentToUpdate: any) => {
           if (commentToUpdate) {
             let replyCount = commentToUpdate.replyCount || 0;
             replyCount = replyCount + 1;
@@ -206,7 +207,7 @@ exports.bubbleUpCommentCount = functions.database
       return adminFS
         .runTransaction(async t => {
           const snapshot = await t.get(articleDocRef);
-          const article: ArticleDetail = snapshot.data() as any;
+          const article: any = snapshot.data() as any;
           let commentCount = article.commentCount || 0;
           commentCount = commentCount + 1;
           t.update(articleDocRef, { commentCount: commentCount });
@@ -224,12 +225,13 @@ exports.bubbleUpCommentCount = functions.database
     );
     const snap = await parentCommentRef.once('value').then();
     const comment = snap.val();
-    if (comment.parentType === ParentTypes.article) {
+    if (comment.parentType === 'article') {
       const articleRef = adminFS.doc(
         `articleData/articles/articles/${comment.parentKey}`,
       );
       return incrementCommentCount(articleRef);
-    } else if (comment.parentType === ParentTypes.comment) {
+      // } else if (comment.parentType === ParentTypes.comment) {
+    } else if (comment.parentType === 'comment') {
       const ref = adminDB.ref(`commentData/comments/${comment.parentKey}`);
       return incrementReplyCount(ref);
     }
@@ -240,10 +242,10 @@ exports.bubbleUpCommentCount = functions.database
 
 exports.countNewComment = functions.database
   .ref('commentData/comments/{commentKey}')
-  .onCreate(async (snap, context) => {
+  .onCreate(async snap => {
     const incrementReplyCount = (commentRef: admin.database.Reference) => {
       return commentRef
-        .transaction((commentToUpdate: Comment) => {
+        .transaction((commentToUpdate: any) => {
           if (commentToUpdate) {
             let replyCount = commentToUpdate.replyCount || 0;
             replyCount = replyCount + 1;
@@ -265,7 +267,7 @@ exports.countNewComment = functions.database
       return adminFS
         .runTransaction(async t => {
           const snapshot = await t.get(articleDocRef);
-          const article: ArticleDetail = snapshot.data() as any;
+          const article: any = snapshot.data();
           let commentCount = article.commentCount || 0;
           commentCount = commentCount + 1;
           t.update(articleDocRef, { commentCount: commentCount });
@@ -278,13 +280,13 @@ exports.countNewComment = functions.database
         });
     };
 
-    const comment: Comment = snap.val();
-    if (comment.parentType === ParentTypes.article) {
+    const comment: any = snap.val();
+    if (comment.parentType === 'article') {
       const articleRef = adminFS.doc(
         `articleData/articles/articles/${comment.parentKey}`,
       );
       return incrementCommentCount(articleRef);
-    } else if (comment.parentType === ParentTypes.comment) {
+    } else if (comment.parentType === 'comment') {
       const commentRef = adminDB.ref(
         `commentData/comments/${comment.parentKey}`,
       );
@@ -297,7 +299,7 @@ exports.countNewComment = functions.database
 exports.trackCommentAuthorsAndParents = functions.database
   .ref('commentData/comments/{commentKey}')
   .onCreate((snap, context) => {
-    const comment: Comment = snap.val();
+    const comment: any = snap.val();
     const key = context.params.commentKey;
     const commentRef = snap.ref;
     return Promise.all([
@@ -402,7 +404,7 @@ exports.createPreviewObject = functions.firestore
     }
   });
 
-function previewFromArticle(articleObject): ArticlePreview {
+function previewFromArticle(articleObject): any {
   const {
     articleId,
     authorId,
@@ -418,14 +420,12 @@ function previewFromArticle(articleObject): ArticlePreview {
     imageUrl,
     imageAlt,
   } = articleObject;
-  const url = imageUrl && imageUrl.length > 0 ? 'unset' : '';
-  return new ArticlePreview(
+  // const url = imageUrl && imageUrl.length > 0 ? 'unset' : '';
+  return {
     articleId,
     authorId,
     title,
     introduction,
-    url,
-    imageAlt,
     lastUpdated,
     timestamp,
     version,
@@ -433,6 +433,8 @@ function previewFromArticle(articleObject): ArticlePreview {
     commentCount,
     viewCount,
     tags,
-    false,
-  );
+    imageUrl: imageUrl && imageUrl.length > 0 ? 'unset' : '',
+    imageAlt,
+    false
+    };
 }
