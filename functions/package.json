@@ -12,7 +12,7 @@
   "engines": {
     "node": "8"
   },
-  "main": "lib/functions/src/index.js",
+  "main": "lib/src/index.js",
   "dependencies": {
     "@angular/animations": "^7.2.13",
     "@angular/cdk": "^7.3.7",
@@ -43,8 +43,8 @@
     "zone.js": "^0.8.29"
   },
   "devDependencies": {
-    "tslint": "^5.8.0",
-    "typescript": "^3.1.6"
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
   },
   "private": true
 }

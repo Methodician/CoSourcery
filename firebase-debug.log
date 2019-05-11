@@ -1,0 +1,250 @@
+[debug] [2019-05-10T21:11:35.939Z] ----------------------------------------------------------------------
+[debug] [2019-05-10T21:11:35.942Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\metho\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2019-05-10T21:11:35.942Z] CLI Version:   6.9.1
+[debug] [2019-05-10T21:11:35.942Z] Platform:      win32
+[debug] [2019-05-10T21:11:35.942Z] Node Version:  v10.15.0
+[debug] [2019-05-10T21:11:35.944Z] Time:          Fri May 10 2019 14:11:35 GMT-0700 (Pacific Daylight Time)
+[debug] [2019-05-10T21:11:35.944Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-05-10T21:11:35.958Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-05-10T21:11:35.959Z] > authorizing via signed-in user
+[debug] [2019-05-10T21:11:35.959Z] [iam] checking project cosourcerytest for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasedatabase.instances.update","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2019-05-10T21:11:35.961Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/cosourcerytest:testIamPermissions  
+
+[debug] [2019-05-10T21:11:36.334Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-10T21:11:36.339Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/cosourcerytest  
+ 
+[debug] [2019-05-10T21:11:36.667Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'cosourcerytest'...
+[info] 
+[info] i  deploying database, storage, firestore, functions, hosting
+[info] Running command: npm --prefix "functions" run lint
+[info] Running command: npm --prefix "functions" run build
+[info] +  functions: Finished running predeploy script.
+[info] i  database: checking rules syntax...
+[debug] [2019-05-10T21:12:26.027Z] >>> HTTP REQUEST PUT https://cosourcerytest.firebaseio.com/.settings/rules.json?dryRun=true  
+ {
+  "rules": {
+    ".read": "true",
+    "articleData": {
+      "userBookmarksPerArticle": {
+        "$articleId": {
+          "$uid": {
+            ".write": "auth.uid == $uid"
+          }
+        }
+      },
+      "editStatus": {
+        ".write": "auth != null"
+      }
+    },
+    "commentData": {
+      "comments": {
+        "$commentId": {
+          ".write": "auth != null && (!data.exists() || auth.uid === data.child('authorId').val())"
+        }
+      },
+      "votesByUser": {
+        "$uid": {
+          ".write": "auth.uid == $uid"
+        }
+      }
+    },
+    "userInfo": {
+      "articleBookmarksPerUser": {
+        "$uid": {
+          ".write": "auth.uid == $uid"
+        }
+      },
+      "open": {
+        "$uid": {
+          ".write": "auth.uid == $uid"
+        }
+      }
+    }
+  }
+}
+
+[debug] [2019-05-10T21:12:26.558Z] <<< HTTP RESPONSE 200
+[info] +  database: rules syntax for database cosourcerytest is valid
+[debug] [2019-05-10T21:12:26.569Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/cosourcerytest  
+ 
+[debug] [2019-05-10T21:12:27.288Z] <<< HTTP RESPONSE 200
+[info] i  storage: checking storage.rules for compilation errors...
+[debug] [2019-05-10T21:12:27.293Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/cosourcerytest:test  
+
+[debug] [2019-05-10T21:12:27.827Z] <<< HTTP RESPONSE 200
+[info] +  storage: rules file storage.rules compiled successfully
+[info] i  firestore: checking firestore.rules for compilation errors...
+[info] i  firestore: reading indexes from firestore.indexes.json...
+[debug] [2019-05-10T21:12:27.835Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/cosourcerytest:test  
+
+[debug] [2019-05-10T21:12:28.287Z] <<< HTTP RESPONSE 200
+[info] +  firestore: rules file firestore.rules compiled successfully
+[debug] [2019-05-10T21:12:28.295Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json",
+    "build": "tsc",
+    "serve": "npm run build && firebase serve --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "8"
+  },
+  "main": "lib/src/index.js",
+  "dependencies": {
+    "@angular/animations": "^7.2.13",
+    "@angular/cdk": "^7.3.7",
+    "@angular/common": "^7.2.13",
+    "@angular/compiler": "^7.2.13",
+    "@angular/core": "^7.2.13",
+    "@angular/fire": "^5.1.2",
+    "@angular/forms": "^7.2.13",
+    "@angular/http": "^7.2.13",
+    "@angular/material": "^7.3.7",
+    "@angular/platform-browser": "^7.2.13",
+    "@angular/platform-browser-dynamic": "^7.2.13",
+    "@angular/platform-server": "^7.2.14",
+    "@angular/router": "^7.2.13",
+    "@ckeditor/ckeditor5-build-inline": "git+https://github.com/Methodician/ckeditor5-build-inline.git#random-file-names",
+    "@google-cloud/storage": "^2.3.1",
+    "algoliasearch": "^3.30.0",
+    "child-process-promise": "^2.2.1",
+    "exif-js": "^2.3.0",
+    "express": "^4.16.4",
+    "firebase": "^5.10.0",
+    "firebase-admin": "^7.3.0",
+    "firebase-functions": "^2.3.0",
+    "hammerjs": "^2.0.8",
+    "promise-polyfill": "^8.1.0",
+    "rxjs": "^6.4.0",
+    "smoothscroll-polyfill": "^0.4.3",
+    "zone.js": "^0.8.29"
+  },
+  "devDependencies": {
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2019-05-10T21:12:28.298Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/cosourcerytest?view=CONSUMER_VIEW  
+ 
+[debug] [2019-05-10T21:12:28.301Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/cosourcerytest?view=CONSUMER_VIEW  
+ 
+[debug] [2019-05-10T21:12:29.219Z] <<< HTTP RESPONSE 200
+[info] +  functions: all necessary APIs are enabled
+[debug] [2019-05-10T21:12:29.353Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-10T21:12:29.354Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/cosourcerytest  
+ 
+[debug] [2019-05-10T21:12:29.649Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-10T21:12:29.650Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/146479623747:getServerAppConfig  
+ 
+[debug] [2019-05-10T21:12:30.003Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-10T21:12:30.005Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/cosourcerytest/versions  
+
+[debug] [2019-05-10T21:12:40.550Z] <<< HTTP RESPONSE 503
+[debug] [2019-05-10T21:12:40.550Z] <<< HTTP RESPONSE BODY
+[error] 
+[error] Error: HTTP Error: 503, The service is currently unavailable.
+[debug] [2019-05-10T21:12:40.836Z] Error Context: {
+  "body": {
+    "error": {
+      "code": 503,
+      "message": "The service is currently unavailable.",
+      "status": "UNAVAILABLE"
+    }
+  },
+  "response": {
+    "statusCode": 503,
+    "body": {
+      "error": {
+        "code": 503,
+        "message": "The service is currently unavailable.",
+        "status": "UNAVAILABLE"
+      }
+    },
+    "headers": {
+      "vary": "X-Origin, Referer, Origin,Accept-Encoding",
+      "content-type": "application/json; charset=UTF-8",
+      "date": "Fri, 10 May 2019 21:12:43 GMT",
+      "server": "ESF",
+      "cache-control": "private",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "alt-svc": "quic=\":443\"; ma=2592000; v=\"46,44,43,39\"",
+      "accept-ranges": "none",
+      "transfer-encoding": "chunked"
+    },
+    "request": {
+      "uri": {
+        "protocol": "https:",
+        "slashes": true,
+        "auth": null,
+        "host": "firebasehosting.googleapis.com",
+        "port": 443,
+        "hostname": "firebasehosting.googleapis.com",
+        "hash": null,
+        "search": null,
+        "query": null,
+        "pathname": "/v1beta1/sites/cosourcerytest/versions",
+        "path": "/v1beta1/sites/cosourcerytest/versions",
+        "href": "https://firebasehosting.googleapis.com/v1beta1/sites/cosourcerytest/versions"
+      },
+      "method": "POST"
+    }
+  }
+}
+[debug] [2019-05-10T21:12:54.108Z] ----------------------------------------------------------------------
+[debug] [2019-05-10T21:12:54.116Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\metho\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2019-05-10T21:12:54.117Z] CLI Version:   6.9.1
+[debug] [2019-05-10T21:12:54.117Z] Platform:      win32
+[debug] [2019-05-10T21:12:54.117Z] Node Version:  v10.15.0
+[debug] [2019-05-10T21:12:54.120Z] Time:          Fri May 10 2019 14:12:54 GMT-0700 (Pacific Daylight Time)
+[debug] [2019-05-10T21:12:54.121Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-05-10T21:12:54.158Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-05-10T21:12:54.166Z] > authorizing via signed-in user
+[debug] [2019-05-10T21:12:54.166Z] [iam] checking project cosourcerytest for permissions ["firebase.projects.get"]
+[debug] [2019-05-10T21:12:54.183Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/cosourcerytest:testIamPermissions  
+
+[debug] [2019-05-10T21:12:54.686Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-10T21:12:54.697Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/cosourcerytest  
+ 
+[debug] [2019-05-10T21:12:55.193Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\metho\apps\CoSourcery stuff\CoSourcery'...
+[info] 
+[warn] !  Your requested "node" version "8" doesn't match your global version "10"
+[debug] [2019-05-10T21:12:55.226Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/146479623747/clients/_:getWebAppConfig  
+ 
+[debug] [2019-05-10T21:12:55.230Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/146479623747:getServerAppConfig  
+ 
+[debug] [2019-05-10T21:12:55.606Z] <<< HTTP RESPONSE 200
+[info] +  functions: Emulator started at http://localhost:5001
+[debug] [2019-05-10T21:12:55.654Z] <<< HTTP RESPONSE 200
+[info] i  functions: Watching "C:\Users\metho\apps\CoSourcery stuff\CoSourcery\functions" for Cloud Functions...
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+[debug] [2019-05-10T21:13:01.062Z] Functions runtime initialized.
+[debug] [2019-05-10T21:13:01.062Z] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"protect_env":true,"admin_stubs":true}
+[warn] !  The Cloud Functions emulator requires the module "firebase-admin" to be installed. This package is in your package.json, but it's not available. You probably need to run "npm install" in your functions directory.
+[info] i  functions: Your functions could not be parsed due to an issue with your node_modules (see above)
+[info] [hosting] Rewriting / to http://localhost:5001/cosourcerytest/us-central1/ssr for local Function ssr
+[debug] [2019-05-10T21:13:21.971Z] [functions] GET request to function ssr accepted.
+[debug] [2019-05-10T21:13:21.988Z] [functions] Waiting for runtime to be ready!
+[debug] [2019-05-10T21:13:34.390Z] Functions runtime initialized.
+[info] i  functions: Beginning execution of "ssr"
+[debug] [2019-05-10T21:13:34.392Z] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"protect_env":true,"admin_stubs":true}
+[warn] !  The Cloud Functions emulator requires the module "firebase-admin" to be installed. This package is in your package.json, but it's not available. You probably need to run "npm install" in your functions directory.
+[info] i  functions: Your functions could not be parsed due to an issue with your node_modules (see above)
+[warn] !  Failed to load functions source code.
+[info] Error parsing triggers: Cannot find module '../dist/server/main'
+
+Try running "npm install" in your functions directory before deploying.

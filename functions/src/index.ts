@@ -207,7 +207,7 @@ exports.bubbleUpCommentCount = functions.database
       return adminFS
         .runTransaction(async t => {
           const snapshot = await t.get(articleDocRef);
-          const article: any = snapshot.data() as any;
+          const article: any = snapshot.data();
           let commentCount = article.commentCount || 0;
           commentCount = commentCount + 1;
           t.update(articleDocRef, { commentCount: commentCount });
@@ -395,7 +395,7 @@ exports.createPreviewObject = functions.firestore
     const previewRef = adminFS.doc(`articleData/articles/previews/${id}`);
     if (context.eventType !== 'google.firestore.document.delete') {
       // destructuring because Firebase doesn't like custom Object types.
-      const previewObject = { ...previewFromArticle(articleObject) };
+      const previewObject = articleObject;
       return previewRef.set(previewObject).catch(error => {
         console.log(error);
       });
@@ -403,38 +403,3 @@ exports.createPreviewObject = functions.firestore
       return null;
     }
   });
-
-function previewFromArticle(articleObject): any {
-  const {
-    articleId,
-    authorId,
-    title,
-    introduction,
-    lastUpdated,
-    timestamp,
-    version,
-    editors,
-    commentCount,
-    viewCount,
-    tags,
-    imageUrl,
-    imageAlt,
-  } = articleObject;
-  // const url = imageUrl && imageUrl.length > 0 ? 'unset' : '';
-  return {
-    articleId,
-    authorId,
-    title,
-    introduction,
-    lastUpdated,
-    timestamp,
-    version,
-    editors,
-    commentCount,
-    viewCount,
-    tags,
-    imageUrl: imageUrl && imageUrl.length > 0 ? 'unset' : '',
-    imageAlt,
-    false
-    };
-}
