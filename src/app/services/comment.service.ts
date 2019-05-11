@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
-import * as firebase from 'firebase/app';
-import 'firebase/database';
+import { firebase } from '@firebase/app';
+import '@firebase/database';
 import { combineLatest } from 'rxjs/operators';
 import { Comment, ParentTypes, VoteDirections } from '@class/comment';
 

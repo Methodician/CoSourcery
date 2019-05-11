@@ -28,7 +28,7 @@ import { LoginDialogComponent } from '@modals/login-dialog/login-dialog.componen
 import { MessageDialogComponent } from '@modals/message-dialog/message-dialog.component';
 import * as exif from 'exif-js';
 import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.component';
-import * as firebase from 'firebase/app';
+import { firebase } from '@firebase/app';
 import 'firebase/storage';
 import { BodyImageMeta, ArticleDetail } from '@class/article-info';
 
