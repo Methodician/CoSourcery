@@ -22,6 +22,7 @@
     "@angular/material": "^7.3.7",
     "@angular/platform-browser": "^7.2.13",
     "@angular/platform-browser-dynamic": "^7.2.13",
+    "@angular/platform-server": "^7.2.13",
     "@angular/router": "^7.2.13",
     "@ckeditor/ckeditor5-build-inline": "git+https://github.com/Methodician/ckeditor5-build-inline.git#random-file-names",
     "algoliasearch": "^3.30.0",
@@ -47,6 +48,7 @@
     "@types/jasminewd2": "^2.0.6",
     "@types/node": "^8.10.38",
     "codelyzer": "~4.2.1",
+    "express": "^4.16.4",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~1.7.1",
@@ -55,8 +57,12 @@
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.3.0",
+    "ts-loader": "^6.0.0",
     "ts-node": "^5.0.1",
     "tslint": "^5.11.0",
-    "typescript": "3.2.4"
+    "typescript": "3.2.4",
+    "webpack-cli": "^3.3.2",
+    "ws": "^7.0.0",
+    "xmlhttprequest": "^1.8.0"
   }
 }
