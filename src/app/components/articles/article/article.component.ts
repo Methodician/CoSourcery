@@ -4,6 +4,8 @@ import {
   OnInit,
   OnDestroy,
   HostListener,
+  PLATFORM_ID,
+  Inject,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {
@@ -17,7 +19,7 @@ import { ENTER } from '@angular/cdk/keycodes';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { ArticleService } from '@services/article.service';
 import { UserService } from '@services/user.service';
-import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
+// import * as InlineEditor from '@ckeditor/ckeditor5-build-inline';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UserInfoOpen, UserMap } from '@class/user-info';
@@ -31,6 +33,7 @@ import { ConfirmDialogComponent } from '@modals/confirm-dialog/confirm-dialog.co
 import { firebase } from '@firebase/app';
 import 'firebase/storage';
 import { BodyImageMeta, ArticleDetail } from '@class/article-info';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'cos-article',
@@ -117,7 +120,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   // CKEditor setup
   ckEditorReady = false;
   ckeditor = {
-    build: InlineEditor,
+    build: null,
     config: {
       toolbar: {
         items: [
@@ -151,6 +154,9 @@ export class ArticleComponent implements OnInit, OnDestroy {
   userKeys: string[];
   userVotesMap: KeyMap<VoteDirections> = {};
 
+  // platform browser stuff
+  isInBrowser = false;
+
   constructor(
     private fb: FormBuilder,
     private meta: Meta,
@@ -161,7 +167,13 @@ export class ArticleComponent implements OnInit, OnDestroy {
     private userSvc: UserService,
     private commentSvc: CommentService,
     private dialog: MatDialog,
-  ) {}
+    @Inject(PLATFORM_ID) private platform: Object,
+  ) {
+    if (isPlatformBrowser(this.platform)) {
+      this.initializeCkEditor();
+      this.isInBrowser = true;
+    }
+  }
 
   ngOnInit() {
     this.setArticleId();
@@ -178,6 +190,11 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.articleEditFormSubscription.unsubscribe();
     this.abortChanges();
   }
+
+  initializeCkEditor = async () => {
+    const InlineCkEditor = await import('@ckeditor/ckeditor5-build-inline');
+    this.ckeditor.build = InlineCkEditor.default;
+  };
 
   // Form Setup & Breakdown
   initializeArticleState = () => {
