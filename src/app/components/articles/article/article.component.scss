@@ -1,9 +1,9 @@
 // Uses Global Default Styles in src/styles.scss
-@import '../../../sass-variables-mixins/vars.scss';
+@import '../../../sass/vars.scss';
 // Uses Modified CKEditor Styles
-@import '../../../sass-variables-mixins/ckeditor.scss';
+@import '../../../sass/ckeditor.scss';
 // Uses CommentList Styles for Top Level Comments Section
-@import '../../comments/comment-list/comment-list.component.scss';
+// @import '../../comments/comment-list/comment-list.component.scss';
 
 label,
 input,
@@ -36,7 +36,6 @@ label {
   margin: 24px auto;
   padding: 20px 20px 40px;
   box-shadow: 0 2px 5px $light-gray-50;
-  overflow: hidden;
 
   ::ng-deep .mat-form-field-infix {
     padding: 0 0 2px;
@@ -88,130 +87,10 @@ label {
   box-shadow: 0 2px 4px $light-gray-50;
 }
 
-:host ::ng-deep .article-title,
-.article-intro {
-  position: relative;
-
-  mat-form-field {
-    width: 100%;
-    padding-right: 50px;
-  }
-
-  input {
-    margin-top: 0;
-    padding: 5px 0;
-  }
-
-  button {
-    visibility: hidden;
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin-left: 10px;
-
-    &.active {
-      visibility: visible;
-    }
-  }
-
-  &:hover button {
-    visibility: visible;
-  }
-}
-
-.article-intro {
-  p {
-    margin: 0;
-    padding-top: 5px;
-    padding-right: 3px;
-  }
-
-  p.static-display {
-    min-height: 80px;
-  }
-
-  textarea {
-    margin: 0 0 2px;
-    padding: 0;
-  }
-
-  mat-form-field {
-    margin-bottom: 0;
-  }
-}
-
 .article-date {
   margin: 0 0 5px;
   color: $medium-gray;
   font-size: 0.8rem;
-}
-
-.article-utils {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 20px;
-  padding: 0 15px;
-  border-radius: 4px;
-  background-color: lighten($accent-color-1-dark, 30%);
-
-  @media screen and (min-width: 500px) {
-    padding: 0 20px;
-  }
-}
-
-.counters {
-  display: flex;
-  align-items: center;
-
-  &__item {
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    color: #fff;
-    cursor: default;
-
-    &:not(:first-child) {
-      margin-left: 15px;
-    }
-
-    &:hover .mat-icon-btn__tooltip {
-      visibility: visible;
-    }
-
-    &-stat {
-      display: block;
-      margin-left: 5px;
-      font-size: 0.9rem;
-    }
-
-    &_clickable {
-      cursor: pointer;
-    }
-
-    @media screen and (min-width: 500px) {
-      &:not(:first-child) {
-        margin-left: 20px;
-      }
-
-      &-stat {
-        margin-left: 15px;
-        font-size: 1rem;
-      }
-    }
-  }
-
-  &__icon {
-    height: auto;
-    width: auto;
-    font-size: 1.2rem;
-
-    @media screen and (min-width: 500px) {
-      font-size: 1.5rem;
-    }
-  }
 }
 
 .article-body {
@@ -431,21 +310,4 @@ label {
 .restore-button {
   position: absolute;
   right: -45px;
-}
-
-.article-comments {
-  margin-bottom: 48px;
-
-  &__header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 24px;
-  }
-
-  &__title {
-    margin-top: 0;
-    color: $primary-color;
-    text-align: center;
-  }
 }

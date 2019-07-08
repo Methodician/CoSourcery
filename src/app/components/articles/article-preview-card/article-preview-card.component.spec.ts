@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArticlePreviewCardComponent } from './article-preview-card.component';
 
-xdescribe('ArticlePreviewCardComponent', () => {
+describe('ArticlePreviewCardComponent', () => {
   let component: ArticlePreviewCardComponent;
   let fixture: ComponentFixture<ArticlePreviewCardComponent>;
 

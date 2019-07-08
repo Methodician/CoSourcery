@@ -1,29 +1,31 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "src",
-    "importHelpers": true,
-    "paths": {
-      "@modals/*": ["app/components/modals/*"],
-      "@directives/*": ["app/directives/*"],
-      "@components/*": ["app/components/*"],
-      "@admin/*": ["app/admin/*"],
-      "@services/*": ["app/services/*"],
-      "@class/*": ["app/shared/class/*"],
-      "@guards/*": ["app/shared/guards/*"],
-      "@pipes/*": ["app/shared/pipes/*"],
-      "@env/*": ["environments/*"]
-    },
+    "baseUrl": "./",
+    "incremental": true,
+    "downlevelIteration": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
+    "module": "esnext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "noUnusedLocals": true,
-    "target": "es5",
-    "types": ["node"],
-    "typeRoots": ["../node_modules/@types"],
-    "lib": ["es2017", "dom"]
+    "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"],
+    "paths": {
+      "@modals/*": ["src/app/components/modals/*", "app/components/modals/*"],
+      "@directives/*": ["src/app/directives/*", "app/directives/*"],
+      "@components/*": ["src/app/components/*", "app/components/*"],
+      "@admin/*": ["src/app/admin/*", "app/admin/*"],
+      "@services/*": ["src/app/services/*", "app/services/*"],
+      "@models/*": ["src/app/models/*", "app/models/*"],
+      "@guards/*": ["src/app/shared/guards/*", "app/shared/guards/*"],
+      "@pipes/*": ["src/app/shared/pipes/*", "app/shared/pipes/*"],
+      "@helpers/*": ["src/app/shared/helpers/*", "app/shared/helpers/*"],
+      "@env/*": ["src/environments/*", "../environments/*"]
+    }
   }
 }

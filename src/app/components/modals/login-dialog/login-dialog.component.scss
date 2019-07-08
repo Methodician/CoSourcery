@@ -1,5 +1,5 @@
 // Uses Global Default Styles in src/styles.scss
-@import "../../../sass-variables-mixins/vars.scss";
+@import '../../../sass/vars.scss';
 
 .login-form {
   width: 65vw;
@@ -39,7 +39,8 @@ mat-form-field {
   min-width: 100px;
 }
 
-mat-error, mat-hint {
+mat-error,
+mat-hint {
   font-size: 0.75rem;
   line-height: 1rem;
 }

@@ -1,3 +1,10 @@
 {
-    "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "files.autoSave": "onFocusChange",
+  "editor.formatOnSave": true,
+  "prettier.singleQuote": true,
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "prettier.trailingComma": "es5",
+  "cSpell.words": ["ckeditor", "clickout", "downvote", "upvote"]
 }

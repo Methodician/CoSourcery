@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 @Component({
   selector: 'cos-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.scss']
+  styleUrls: ['./confirm-dialog.component.scss'],
 })
 export class ConfirmDialogComponent {
   dialogTitle: string;
@@ -13,10 +13,11 @@ export class ConfirmDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: {
-      dialogTitle: string,
-      dialogLine1: string,
-      dialogLine2: string
+    @Inject(MAT_DIALOG_DATA)
+    data: {
+      dialogTitle: string;
+      dialogLine1: string;
+      dialogLine2: string;
     }
   ) {
     this.dialogTitle = data.dialogTitle ? data.dialogTitle : 'Message Title';
@@ -24,12 +25,11 @@ export class ConfirmDialogComponent {
     this.dialogLine2 = data.dialogLine2 ? data.dialogLine2 : null;
   }
 
-  onSelectNo(): void {
+  onSelectNo = () => {
     this.dialogRef.close(false);
-  }
+  };
 
-  onSelectYes(): void {
+  onSelectYes = () => {
     this.dialogRef.close(true);
-  }
-
+  };
 }

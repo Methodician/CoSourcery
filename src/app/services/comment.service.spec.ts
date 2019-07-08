@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CommentService } from './comment.service';
 
-xdescribe('CommentService', () => {
+describe('CommentService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {

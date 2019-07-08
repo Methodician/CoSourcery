@@ -1,15 +1,12 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { ArticleService } from './article.service';
 
-xdescribe('ArticleService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ArticleService]
-    });
-  });
+describe('ArticleService', () => {
+  beforeEach(() => TestBed.configureTestingModule({}));
 
-  it('should be created', inject([ArticleService], (service: ArticleService) => {
+  it('should be created', () => {
+    const service: ArticleService = TestBed.get(ArticleService);
     expect(service).toBeTruthy();
-  }));
+  });
 });

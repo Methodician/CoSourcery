@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 @Component({
   selector: 'cos-message-dialog',
   templateUrl: './message-dialog.component.html',
-  styleUrls: ['./message-dialog.component.scss']
+  styleUrls: ['./message-dialog.component.scss'],
 })
 export class MessageDialogComponent {
   dialogTitle: string;
@@ -13,10 +13,11 @@ export class MessageDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<MessageDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: {
-      dialogTitle: string,
-      dialogLine1: string,
-      dialogLine2: string
+    @Inject(MAT_DIALOG_DATA)
+    data: {
+      dialogTitle: string;
+      dialogLine1: string;
+      dialogLine2: string;
     }
   ) {
     this.dialogTitle = data.dialogTitle ? data.dialogTitle : 'Message Title';
@@ -24,8 +25,7 @@ export class MessageDialogComponent {
     this.dialogLine2 = data.dialogLine2 ? data.dialogLine2 : null;
   }
 
-  onConfirm() {
+  onConfirm = () => {
     this.dialogRef.close();
-  }
-
+  };
 }

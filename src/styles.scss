@@ -1,31 +1,49 @@
 /* GLOBAL DEFAULT STYLES */
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import "./app/sass-variables-mixins/vars.scss";
-@import "./app/sass-variables-mixins/mixins.scss";
-@import "./app/sass-variables-mixins/buttons.scss";
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import './app/sass/vars.scss';
+@import './app/sass/mixins.scss';
+@import './app/sass/buttons.scss';
 
-*, html, body {
+*,
+html,
+body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
 }
 
 /* Typography */
-body, h1, h2, h3, h4, h5, h6, p, li, input, button {
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li,
+input,
+button {
   font-family: $primary-typeface;
-	word-wrap: break-word;
+  word-wrap: break-word;
 }
 
 body {
   font-size: 16px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 15px 0;
   line-height: 1.2;
 }
@@ -36,7 +54,11 @@ h1 {
   font-size: 1.5rem;
 }
 
-h2, h3, h4, h5, h6 {
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: $dark-gray;
 }
 
@@ -69,7 +91,6 @@ a {
 }
 
 @media screen and (min-width: 768px) {
-
   h1 {
     font-size: 2rem;
   }
@@ -93,7 +114,6 @@ a {
 
 /* Text Formatting */
 .text {
-
   &.left {
     text-align: left;
   }
@@ -107,7 +127,7 @@ a {
   }
 
   &.normal {
-    font-weight: normal
+    font-weight: normal;
   }
 
   &.strong {
@@ -120,7 +140,11 @@ a {
 }
 
 /* Flex Presets */
-.flex, .flex-column, .flex-center, .flex-center-align, .flex-center-justify {
+.flex,
+.flex-column,
+.flex-center,
+.flex-center-align,
+.flex-center-justify {
   display: flex;
 }
 
