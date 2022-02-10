@@ -29,7 +29,7 @@
     "exif-js": "^2.3.0",
     "firebase": "^5.10.0",
     "hammerjs": "^2.0.8",
-    "node-sass": "^4.10.0",
+    "node-sass": "^7.0.0",
     "promise-polyfill": "^8.1.0",
     "rxjs": "^6.4.0",
     "smoothscroll-polyfill": "^0.4.3",
